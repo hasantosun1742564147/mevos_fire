@@ -4,21 +4,18 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
 
+    # App Store Connect entegrasyonu Codemagic dashboard'dan eklendikten sonra
+    # integrations:
+    #   app_store_connect: My_ASC_Key
+
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
       vars:
         BUNDLE_ID: "com.mevos.fire"
-        APP_STORE_APPLE_ID: Paste_Your_Apple_ID_Here
-      # App Store Connect API Key (Codemagic dashboard'dan ekle)
-      app_store_connect:
-        api_key: APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: APP_STORE_CONNECT_ISSUER_ID
       ios_signing:
-        distribution_type: app_store        # TestFlight / App Store için
-        # distribution_type: ad_hoc         # Cihaza doğrudan yüklemek için
+        distribution_type: app_store
         bundle_identifier: com.mevos.fire
 
     triggering:
@@ -43,21 +40,11 @@ workflows:
         ignore_failure: true
 
       - name: iOS IPA build al
-        script: |
-          flutter build ipa \
-            --release \
-            --export-options-plist=/Users/builder/export_options.plist
+        script: flutter build ipa --release
 
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
-
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true        # TestFlight'a otomatik gönder
-        submit_to_app_store: false        # App Store'a manuel onay ile gönder
 
   ios-adhoc:
     name: iOS Ad Hoc Build (Cihaza Doğrudan)
