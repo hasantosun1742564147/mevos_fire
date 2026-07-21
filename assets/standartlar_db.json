@@ -1,0 +1,4604 @@
+[
+    {
+        "numara": "TS EN ISO 12100",
+        "ad": "Makinalarda güvenlik - Tasarım için genel prensipler - Riskin değerlendirilmesi ve azaltılması",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 13850",
+        "ad": "Makinelerde güvenlik - Acil durumlarda durdurma teçhizatı - Tasarım prensipleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 13857",
+        "ad": "Makinalarda güvenlik - Kol ve bacakların ulaşabileceği bölgelerde tehlikenin önlenmesi için güvenlik mesafeleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 349+A1",
+        "ad": "Makinalarda güvenlik - İnsan vücut azalarını ezilmeye karşı korumak için asgari açıklıklar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4413",
+        "ad": "Hidrolik akışkan gücü - Sistemleri ve bileşenleri için genel kurallar ve güvenlik gerekleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4414",
+        "ad": "Pnömatik akışkan gücü - Sistemler ve bileşenleri için genel kurallar ve güvenlik gerekleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 842+A1",
+        "ad": "Makinalarda güvenlik - Görsel tehlike sinyalleri - Genel kurallar ve deney",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 60204-1",
+        "ad": "Makinalarda güvenlik - Makinelerin elektriksel donanımı - Bölüm 1: Genel şartlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13001-1",
+        "ad": "Krenler - Genel tasarım - Bölüm 1: Temel ilkeler ve şartlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13001-2",
+        "ad": "Krenler - Genel tasarım - Bölüm 2: Yük etkileri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13001-3-1",
+        "ad": "Krenler - Genel tasarım - Bölüm 3-1: Sınır durumlar ve çelik yapılar için yeterlilik kanıtı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13001-3-2",
+        "ad": "Krenler - Genel tasarım - Bölüm 3-2: Sınır durumlar ve tel halatlar için yeterlilik kanıtı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13001-3-3",
+        "ad": "Krenler - Genel tasarım - Bölüm 3-3: Sınır durumlar ve makara temaslı zincirler için yeterlilik kanıtı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13586+A1",
+        "ad": "Vinçler (krenler) - Erişim",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13557+A2",
+        "ad": "Vinçler (krenler) - Kumandalar ve kumanda yerleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14492-1",
+        "ad": "Vinçler (krenler) - Güç tahrikli vinçler ve ceraskallar - Bölüm 1: Güç tahrikli vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14492-2+A1",
+        "ad": "Vinçler (krenler) - Güç tahrikli vinçler ve ceraskallar - Bölüm 2: Güç tahrikli ceraskallar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15011+A1",
+        "ad": "Krenler - Köprülü ve portal krenler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14985",
+        "ad": "Vinçler (kren) - Döner kollu vinç",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13852-1",
+        "ad": "Vinçler - Kıyı ötesi vinçler - Bölüm 1: Genel amaçlı kıyı ötesi vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13852-2",
+        "ad": "Vinçler - Kıyı ötesi vinçler - Bölüm 2: Yüzer vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13157+A1",
+        "ad": "Vinçler (krenler) - Güvenlik - Elle tahrik edilen kaldırma teçhizatı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13000:2010+A1",
+        "ad": "Vinçler - Mobil vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12999+A2",
+        "ad": "Vinçler - Yükleyici vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14439+A2",
+        "ad": "Krenler (vinçler) - Güvenlik - Kule krenler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS ISO 9927-1",
+        "ad": "Vinçler - Muayeneler - Bölüm 1: Genel",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS ISO 4309",
+        "ad": "Vinçler - Tel halatlar - Muayene ve hizmet dışı bırakmak için uygulama kuralları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-3+A1",
+        "ad": "Çelik tel halatlar için sonlandırıcılar - Güvenlik - Bölüm 3: Kelepçeler ve kelepçe güvenliği",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-4",
+        "ad": "Çelik tel halatlar için sonlandırıcılar - Güvenlik - Bölüm 4: Metal ve reçine ile soketleme",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-6+A1",
+        "ad": "Çelik tel halatlar için sonlandırıcılar - Güvenlik - Bölüm 6: Asimetrik kamalı soket",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-7+A1",
+        "ad": "Çelik tel halatlar için sonlandırıcılar - Güvenlik - Bölüm 7: Simetrik kamalı soket",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1493",
+        "ad": "Taşıt kaldırma donanımları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1494+A1",
+        "ad": "Yüklü iken hareket ettirilebilen veya yüklü iken hareket ettirilemeyen krikolar ve ilgili kaldırma teçhizatı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14010+A1",
+        "ad": "Makinalarda güvenlik - Motorlu taşıtlarda güç tahrikli park ettirme teçhizatı - Güvenlik ve EMC şartları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1495+A2",
+        "ad": "Kaldırma platformları - Sütunlu çalışma platformları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1808",
+        "ad": "Asılı erişim donanımı güvenlik kuralları - Tasarım hesapları, kararlılık kriterleri, yapılış - Deneyler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 280+A1",
+        "ad": "Yükseltilebilen seyyar iş platformları - Tasarım hesapları - Denge kriterleri - Yapım - Güvenlik - Muayene ve deneyler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12159",
+        "ad": "İnşaat asansörleri - Personel ve malzeme taşımak için - Düşey kılavuz raylı, kabinli",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12158-1+A1",
+        "ad": "Eşyalar için inşaat vinçleri - Bölüm 1: Ulaşılabilir platformlu vinçler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-40",
+        "ad": "Asansörler - Yapım ve montaj için güvenlik kuralları - Bölüm 40: Hareket engelli yolcular için merdiven asansörleri ve eğimli kaldırma platformları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-41",
+        "ad": "Asansörler - Yapım ve montaj için güvenlik kuralları - Bölüm 41: Hareket engelli insanların kullanımı için düşey kaldırma platformları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-3+A1",
+        "ad": "Asansörler - Yapım ve montaj için güvenlik kuralları - Bölüm 3: Elektrikli ve hidrolik servis asansörleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-31",
+        "ad": "Asansörler - İnsan ve eşya taşımak için - Yapılış ve tesis ile ilgili güvenlik kuralları - Bölüm 31: Sadece açık yük asansörleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-43",
+        "ad": "Asansörler - Yapım ve montaj için güvenlik kuralları - Bölüm 43: Vinçler için asansörler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1570-1:2011+A1",
+        "ad": "Kaldırma tablaları için güvenlik kuralları - Bölüm 1: Sabit iki konum için çalışan kaldırma tablaları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1570-2",
+        "ad": "Kaldırma tablaları için güvenlik kuralları - Bölüm 2: 2'den fazla sabit iniş, düşey yolculuk hızı 0,15 m/s'yi aşmayan mallar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1756-1+A1",
+        "ad": "Kuyruktan kaldırıcılar - Tekerlekli taşıtlara takılan platform kaldırıcılar - Güvenlik kuralları - Bölüm 1: Eşyaların kaldırılması",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1756-2+A1",
+        "ad": "Kuyruktan kaldırıcılar - Tekerlekli taşıtlara takılan platform kaldırıcılar - Güvenlik kuralları - Bölüm 2: İnsanlar için",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 528",
+        "ad": "Raylı sistem depolama ve depodan alma teçhizatı - Güvenlik",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13414-1+A2",
+        "ad": "Çelik tel halat sapanlar - Güvenlik - Bölüm 1: Genel kaldırma uygulamaları için sapanlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13414-2+A2",
+        "ad": "Çelik tel halat sapanlar - Güvenlik - Bölüm 2: İmalatçı tarafından verilecek kullanım ve bakım bilgisi için hususlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13414-3+A1",
+        "ad": "Çelik tel halat sapanlar - Güvenlik - Bölüm 3: Sonsuz ve gözlü halat sapanlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-1+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 1: Genel kabul şartları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-2+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 2: Zincir sapanları için orta toleranslı zincir - Kalite sınıfı 8",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-3+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 3: Zincir sapanları için orta toleranslı zincir - Kalite sınıfı 4",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-4+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 4: Zincir sapanlar - Kalite sınıfı 8",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-5+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 5: Zincir sapanlar - Kalite sınıfı 4",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-6+A1",
+        "ad": "Kısa baklalı zincir - Kaldırma amaçları için - Güvenlik - Bölüm 6: Zincir sapanlar - İmalatçı tarafından temin edilecek kullanım ve bakım bilgileri için teknik şartname",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS ISO 3056",
+        "ad": "Kalibre edilmemiş yuvarlak çelik baklalı kaldırma zinciri ve zincir sapanları, kullanım ve bakım",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1492-1+A1",
+        "ad": "Tekstil sapanlar - Güvenlik - Bölüm 1: Genel amaçlı kullanımlar için suni liflerden yapılan düz kalın dokuma sapanlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1492-2+A1",
+        "ad": "Tekstil sapanlar - Güvenlik - Bölüm 2: Genel amaçlı kullanımlar için suni liflerden yapılan yuvarlak sapanlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1492-4+A1",
+        "ad": "Tekstil sapanları - Güvenlik - Bölüm 4: Genel hizmetler için doğal ve suni lifli halatlardan yapılan kaldırma amaçlı sapanlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13155+A2",
+        "ad": "Vinçler - Güvenlik - Sabitlenmemiş yükler için sapanlar (mıknatıs, vakum, travers, levha kıskaçları vb.)",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 17096",
+        "ad": "Cranes - Safety - Load lifting attachments",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.20",
+        "ad": "Below-the-Hook Lifting Devices - kanca altı kaldırma cihazları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 115-1",
+        "ad": "Yürüyen merdiven ve yürüyen bantlar için güvenlik - Bölüm 1: Yapım ve montaj",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 115-2",
+        "ad": "Yürüyen merdiven ve yürüyen bantlar için güvenlik - Bölüm 2: Mevcut yürüyen merdiven ve yürüyen bantların güvenliğinin iyileştirilmesi için kurallar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 4.004",
+        "ad": "Periodic Inspection of Industrial Trucks - Endüstriyel araçların periyodik muayene esasları",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3691-1",
+        "ad": "Endüstriyel araçlar - Güvenlik gereksinimleri ve doğrulama - Bölüm 1: Sürücülü kendinden tahrikli endüstriyel araçlar (forklift, istif makinesi, transpalet)",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3691-2",
+        "ad": "Endüstriyel araçlar - Güvenlik kuralları - Bölüm 2: Kendinden Tahrikli Değişken Erişimli Araçlar",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3691-5",
+        "ad": "Endüstriyel araçlar - Güvenlik gereksinimleri ve doğrulama - Bölüm 5: Yaya tarafından kumanda edilen araçlar",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "DIN ISO 606",
+        "ad": "Short-pitch transmission precision roller and bush chains, attachments and associated chain sprockets - Yük kaldırma zincirleri",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "DIN ISO 4347",
+        "ad": "Leaf chains, clevises and sheaves - Dimensions, measuring forces, tensile strengths - Yaprak zincirler",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS ISO 5057",
+        "ad": "Endüstriyel araçlar - Kullanımda olan fork lift çatal kollarının muayenesi ve tamiri",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-1+A5",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 1: Genel özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-2+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 2: Çekici dozerler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-3+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 3: Yükleyiciler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-4+A2",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 4: Kazıcı yükleyiciler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-5+A3",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 5: Hidrolik kazıcılar (ekskavatör) için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-6+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 6: Damperli kamyonlar için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-7+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 7: Skreyperler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-8+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 8: Greyderler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-9+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 9: Boru döşeyiciler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-10+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 10: Trençerler için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-11+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 11: Toprak ve çöp sıkıştırıcılar için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-12+A1",
+        "ad": "İnşaat ve kazı makinaları - Güvenlik - Bölüm 12: Halatlı kazıcılar için özellikler",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-1+A1",
+        "ad": "Seyyar (mobil) yol inşaat makinaları - Güvenlik - Bölüm 1: Genel kurallar",
+        "kategori": "Mobil Yol İnşa Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-2+A1",
+        "ad": "Seyyar (mobil) yol inşaat makinaları - Güvenlik - Bölüm 2: Yol düzeltme makinaları için özel kurallar",
+        "kategori": "Mobil Yol İnşa Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-3+A1",
+        "ad": "Seyyar (mobil) yol inşaat makinaları - Güvenlik - Bölüm 3: Zemin stabilize ve geri dönüşüm makinaları için özel kurallar",
+        "kategori": "Mobil Yol İnşa Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-4:2011",
+        "ad": "Seyyar (mobil) yol inşaat makinaları - Güvenlik - Bölüm 4: Zemin sıkıştırma makinaları için özel kurallar",
+        "kategori": "Mobil Yol İnşa Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-6+A1",
+        "ad": "Seyyar (mobil) yol inşaat makinaları - Güvenlik - Bölüm 6: Hendek kazıcı makineleri için özel kurallar",
+        "kategori": "Mobil Yol İnşa Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1004",
+        "ad": "Prefabrik elemanlardan yapılmış seyyar erişim ve çalışma kuleleri (seyyar iskele) - Malzemeler, boyutlar, tasarım yükleri, emniyet ve performans gerekleri",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1398",
+        "ad": "Hareketli yükleme rampaları (seviyeleyiciler) - Güvenlik şartları",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 131-1",
+        "ad": "Merdivenler - Bölüm 1: Terimler, tarifler, tipler, fonksiyonel boyutlar",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 131-2+A2",
+        "ad": "Merdivenler - Bölüm 2: Özellikler, deneyler, işaretleme",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 131-4",
+        "ad": "Merdivenler - Bölüm 4: Tek veya çok menteşeli merdivenler",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 131-6",
+        "ad": "Merdivenler - Bölüm 6: Teleskopik merdivenler",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 131-7",
+        "ad": "Merdivenler - Bölüm 9: Platformlu seyyar merdivenler",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15635",
+        "ad": "Çelik statik saklama sistemleri (endüstriyel raflar) - Saklama ekipmanlarının uygulama ve bakımı",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13241:2003+A2",
+        "ad": "Kapılar - Endüstriyel ve ticari yapılar ile garajlarda kullanılan - Mamul standardı, performans özellikleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12453",
+        "ad": "Kapılar ve girişler - Endüstriyel ve ticarî alanlar ile garajlarda kullanılan - Güçle çalıştırılan kapıların kullanım güvenliği - Kurallar",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12604",
+        "ad": "Kapılar - Endüstriyel ve ticarî yapılar ile garajlarda kullanılan - Mekanik hususlar - Şartlar",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12605",
+        "ad": "Kapılar - Endüstriyel ve ticarî yapılar ile garajlarda kullanılan - Mekanik hususlar - Deney metotları",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-1+A1",
+        "ad": "Basınçlı donanım - Bölüm 1: Terimler ve tarifler - Basınç, sıcaklık, hacim ve anma boyutları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TSE CEN/TR 764-6",
+        "ad": "Endüstriyel ısıl işlem teçhizatı - Bölüm 6: Çalıştırma talimatlarının yapısı ve içeriği",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-7",
+        "ad": "Basınçlı donanım - Bölüm 7: Ateşle temas etmeyen basınçlı donanım için emniyet sistemleri",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4126-1",
+        "ad": "Aşırı basınca karşı koruma için emniyet cihazları - Bölüm 1: Emniyet vanaları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4126-2",
+        "ad": "Aşırı basınca karşı koruma için emniyet cihazları - Bölüm 2: Patlama diskli emniyet cihazları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4126-3",
+        "ad": "Aşırı basınca karşı koruma için emniyet tertibatları - Bölüm 3: Birleşik emniyet vanası ve patlama diskli emniyet tertibatları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4126-4",
+        "ad": "Aşırı basınca karşı koruma için emniyet cihazları - Bölüm 4: Pilot kumandalı emniyet vanaları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4126-6",
+        "ad": "Aşırı basınca karşı koruma için emniyet cihazları - Bölüm 6: Patlama diskli emniyet cihazlarının uygulaması, seçimi ve montajı",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 837-2",
+        "ad": "Basınç ölçerler - Bölüm 2: Basınç ölçerler için seçim ve montaj tavsiyeleri",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 1203 EN 286-1",
+        "ad": "Tanklar - Basit - Alev almayan - Basınçlı - Hava veya azot depolamak için tasarımlanmış - Bölüm 1: Genel amaçlar için basınçlı tanklar (hava tankı)",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13445-5",
+        "ad": "Basınçlı kaplar - Ateşle temas etmeyen - Bölüm 5: Muayene ve deney",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 1911",
+        "ad": "Düşey hidrofor (su basınçlandırma) tankları - Su besleme sistemleri için",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 10576",
+        "ad": "Membranlı hidrofor tankı",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 11490",
+        "ad": "Hidrofor (su basınçlandırma) tankları - Yatay",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13831",
+        "ad": "Su tesisatları için diyaframlı kapalı genleşme tankları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 736",
+        "ad": "Sıcak su hazırlayıcılar (Boylerler) - Sıcak su, kaynar su veya buhar ile çalışan",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12897",
+        "ad": "Su temini - Dolaylı olarak ısıtılan havalandırmasız (kapalı) ısıtıcılı su depoları için özellikler (akümülasyon tankı)",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11111-1",
+        "ad": "Tekstil makinaları - Güvenlik kuralları - Bölüm 1: Genel kurallar (boyama kazanı)",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11111-7",
+        "ad": "Tekstil makinaları - Güvenlik kuralları - Bölüm 7: Boyama ve son işlem makinaları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13458-1",
+        "ad": "Kriyojenik kaplar - Statik, vakum yalıtımlı kaplar - Bölüm 1: Temel özellikler",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13458-2",
+        "ad": "Kriyojenik kaplar - Statik, vakum yalıtımlı tanklar - Bölüm 2: Tasarım, yapım, muayene ve deney",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 21009-2",
+        "ad": "Kriyojenik tanklar - Statik vakumla yalıtılmış tanklar - Bölüm 3: İşletme kuralları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14197-1",
+        "ad": "Kriyojenik kaplar - Statik, vakumsuz yalıtımlı kaplar - Bölüm 1: Kurallar",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14197-2",
+        "ad": "Kriyojenik kaplar - Statik, vakumsuz yalıtımlı kaplar - Bölüm 2: Tasarım, imalat, muayene ve deneyler",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14197-3",
+        "ad": "Kriyojenik tanklar - Sabit, vakumsuz yalıtımlı tanklar - Bölüm 3: İşletme kuralları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12817",
+        "ad": "LPG donanımı ve aksesuarları - Muayene ve yeterliliğinin yeniden değerlendirilmesi - Anma kapasitesi 13 m³'ten küçük LPG tankları",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12819",
+        "ad": "LPG donanımı ve aksesuarları - Muayene ve yeterliliğinin yeniden değerlendirilmesi - Anma kapasitesi 13 m³'ten büyük tanklar",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 285",
+        "ad": "Sterilizasyon - Buhar otoklavları - Büyük otoklavlar",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13060",
+        "ad": "Küçük buhar sterilizatörleri",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 11673",
+        "ad": "Tencereler - Yemek pişirmek için - Sanayi tipi (paslanmaz çelikten) - Pişirme kazanı",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12953-1",
+        "ad": "Silindirik kazanlar - Bölüm 1: Genel",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 377-5 EN 12953-5",
+        "ad": "Silindirik kazanlar - Bölüm 5: Kazanların basınçlı kısımlarının imalâtı, dokümantasyonu ve işaretlenmesi esnasında muayene",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12953-6",
+        "ad": "Silindirik kazanlar - Bölüm 6: Kazan donanımı için özellikler",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12952-1",
+        "ad": "Su borulu kazanlar ve yardımcı tesisatları - Bölüm 1: Genel",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12952-6",
+        "ad": "Su borulu kazanlar ve yardımcı tesisatları - Bölüm 6: İmalat sırasında muayene; basınca maruz kalan parçaların dokümantasyonu ve işaretlenmesi",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12952-7",
+        "ad": "Su borulu kazanlar ve yardımcı tesisatları - Bölüm 7: Kazan donanımı için gerekler",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 303-1",
+        "ad": "Kazanlar - Cebri çekiş brülörlü kazanlar - Bölüm 1: Terim ve tarifler, genel özellikler, deneyler ve işaretleme",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 303-2",
+        "ad": "Kazanlar - Bölüm 2: Cebri çekiş brülörlü kazanlar - Püskürtmeli yakıt brülörlü kazanlar için özel şartlar",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14394+A1",
+        "ad": "Kazanlar - Cebri çekiş brülörlü kazanlar - Anma ısı gücü 10 MW'ı aşmayan ve azami işletme sıcaklığı 110 °C olan",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12828+A1",
+        "ad": "Isıtma sistemleri - Binalarda - Suyla çalışan ısıtma sistemlerinin tasarımı",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "DIN 4754-1",
+        "ad": "Heat transfer installations working with organic heat transfer fluids - Part 1: Safety requirements, test (kızgın yağ kazanı)",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "DIN 4754-2",
+        "ad": "Heat transfer installations working with organic heat transfer fluids - Part 2: Draught diverter (kızgın yağ - çekiş deflektörü)",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "DIN 4754-3",
+        "ad": "Heat transfer installations working with organic heat transfer fluids - Part 3: Level controller (kızgın yağ - seviye kontrolörü)",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS HD 60364-1",
+        "ad": "Alçak gerilim elektrik tesisleri - Bölüm 1: Ana prensipler, genel karakteristiklerin değerlendirilmesi ve tarifler",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS HD 60364-6",
+        "ad": "Alçak gerilim elektrik tesisleri - Bölüm 6: Elektrik tesislerinde doğrulama (muayene ve deney)",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS HD 60364-4-41",
+        "ad": "Alçak gerilim elektrik tesisleri - Bölüm 4-41: Güvenlik için koruma - Elektrik çarpmasına karşı koruma",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 61008-1",
+        "ad": "Artık akımla çalışan devre kesiciler - Ayrılmaz bir bütün hâlinde aşırı akım koruması bulunmayan - Ev ve benzeri yerlerde kullanılan (RCCB) - Bölüm 1: Genel kurallar",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 61009-1",
+        "ad": "Artık akımla çalışan devre kesiciler - Ayrılmaz bir bütün hâlinde aşırı akım koruması bulunan - Ev ve benzeri yerlerde kullanılan (RCBO) - Bölüm 1: Genel kurallar",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 62305-1",
+        "ad": "Yıldırımdan korunma - Bölüm 1: Genel kurallar (paratoner tesisat)",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 62305-3",
+        "ad": "Yıldırımdan korunma - Bölüm 3: Yapılarda fiziksel hasar ve hayati tehlike",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 50160",
+        "ad": "Genel elektrik şebekeleri tarafından sağlanan elektriğin gerilim karakteristikleri (enerji kalitesi analizi)",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1709",
+        "ad": "Kablolu taşıma tesisatları - Muayene için güvenlik kuralları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 16719",
+        "ad": "İnşaat asansörleri - Güvenlik gereksinimleri ve doğrulama",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12158-2+A1",
+        "ad": "Eşyalar için inşaat vinçleri - Bölüm 2: Eğimli yük taşıma tertibatları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-44",
+        "ad": "Asansörler - Yapım ve montaj için güvenlik kuralları - Bölüm 44: Rüzgar türbinlerindeki kaldırma donanımları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14502-1",
+        "ad": "Krenler - Kişi kaldırma ekipmanı - Bölüm 1: Asılı sepetler",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-1",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 1: Genel kurallar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-3+A1",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 3: Yük yükleme teçhizatı",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-4",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 4: Yolcu merdivenleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-6",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 6: Taşıyıcı araçlar",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-8",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 8: Uçak çekme ve itme araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-9",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 9: Konveyör bantlı yük araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-10+A1",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 10: Catering araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-11",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 11: Köprü araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-15",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 15: Akaryakıt ikmal araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12312-19+A1",
+        "ad": "Uçak yer destek donanımları - Güvenlik - Bölüm 19: Engelli yolcu kaldırma araçları",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 618+A1",
+        "ad": "Sürekli taşıma donanımları ve sistemleri - Vidalı konveyörler için güvenlik ve EMC gereksinimleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 619+A1",
+        "ad": "Sürekli taşıma donanımları ve sistemleri - Parça yükler için mekanik taşıma ekipmanları için güvenlik ve EMC gereksinimleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 620",
+        "ad": "Sürekli taşıma donanımları ve sistemleri - Sabit bant konveyörler için güvenlik ve EMC gereksinimleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12810-1",
+        "ad": "Yapı cephe iskeleleri - Bölüm 1: Ürün özellikleri",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12810-2",
+        "ad": "Yapı cephe iskeleleri - Bölüm 2: Özel tasarım yöntemleri",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12811-1",
+        "ad": "Geçici yapı ekipmanı - Çalışma iskelesi - Bölüm 1: Performans gereksinimleri ve genel tasarım",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 13662",
+        "ad": "Yapı iskeleleri - Güvenlik gereksinimleri ve deney yöntemleri",
+        "kategori": "İnşa ve Yapı Ekipmanları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13509",
+        "ad": "Katodik koruma ölçme teknikleri",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12954",
+        "ad": "Gömülü ya da denizaltı metalik yapılar için katodik koruma - Genel ilkeler ve uygulama",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13636",
+        "ad": "Gömülü metalik depolama tankları ve borular için katodik koruma",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 13174",
+        "ad": "Katodik koruma - Liman yapıları için katodik koruma",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS ISO 8528-1",
+        "ad": "Almaşık akımla çalışan döner elektrik jeneratör takımları - Bölüm 1: Uygulamalar, özellikler ve performans",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TSE CEN/TS 54-14",
+        "ad": "Yangın algılama ve uyarı sistemleri - Bölüm 14: Planlama, tasarım, kurulum, devreye alma, kullanım ve bakım için kılavuz",
+        "kategori": "Elektriksel Ölçüm ve Kontroller",
+        "aciklama": ""
+    },
+    {
+        "numara": "TSE ISO/TS 11602-2",
+        "ad": "Yangın söndürme ve yanıcı madde azaltma - Taşınabilir ve tekerlekli yangın söndürücüler - Bölüm 2: İnceleme ve bakım",
+        "kategori": "Yangın",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 16092-1",
+        "ad": "Takım tezgâhları güvenliği - Presler - Bölüm 1: Mekanik presler için güvenlik gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 16092-3",
+        "ad": "Takım tezgâhları güvenliği - Presler - Bölüm 3: Hidrolik presler için güvenlik gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12622+A1",
+        "ad": "Takım tezgâhları güvenliği - Hidrolik abkant presler",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 16092-4",
+        "ad": "Takım tezgâhları güvenliği - Presler - Bölüm 4: Pnömatik presler için güvenlik gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 23125",
+        "ad": "Takım tezgâhları güvenliği - Tornalar",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 847-3",
+        "ad": "Ağaç işleme takımları - Güvenlik gereksinimleri - Bölüm 3: Malzeme sıkıştırma ve besleme ekipmanı gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 16090-1",
+        "ad": "Takım tezgâhları güvenliği - İşleme merkezleri, freze ve transfer makineleri - Bölüm 1: Güvenlik gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 16093",
+        "ad": "Takım tezgâhları güvenliği - Soğuk metal kesme testereleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 16089",
+        "ad": "Takım tezgâhları güvenliği - Hareketsiz taşlama makineleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1807-2",
+        "ad": "Ağaç işleme makineleri güvenliği - Şerit testereler - Bölüm 2: Optimizasyon şerit testereler",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12268",
+        "ad": "Gıda işleme makineleri - Bant testereler (gıda) - Güvenlik ve hijyen gereksinimleri",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12717+A1",
+        "ad": "Takım tezgâhları güvenliği - Delme tezgâhları",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13985+A1",
+        "ad": "Takım tezgâhları güvenliği - Giyotin makaslar",
+        "kategori": "Tezgâhlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 16228-1",
+        "ad": "Sondaj ekipmanları ve temel makineleri - Güvenlik - Bölüm 1: Genel kurallar",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12001",
+        "ad": "Beton ve harç için taşıma-püskürtme ve yerleştirme makineleri - Güvenlik gereksinimleri (beton pompası)",
+        "kategori": "İnşaat ve Kazı Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 497",
+        "ad": "Silindirik ve alev borulu su borulu kazanlar - Tasarım ve imalat şartları",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 430",
+        "ad": "Sıcak su kazanları - Tasarım, yapım ve deney şartları",
+        "kategori": "Kazanlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 1446",
+        "ad": "LPG ekipmanı - Yerüstü ve yeraltı LPG tankları için genel şartlar",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 8991",
+        "ad": "Çelik depolama tankları - Atmosferik basınçlı, yerüstü ve yeraltı",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 712",
+        "ad": "Dikine silindirik çelik depolama tankları - Genel şartlar",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12573-1",
+        "ad": "Kaynaklı statik termoplastik depolama tankları - Bölüm 1: Tasarım ve hesaplama",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12573-2",
+        "ad": "Kaynaklı statik termoplastik depolama tankları - Bölüm 2: İmalat",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12573-3",
+        "ad": "Kaynaklı statik termoplastik depolama tankları - Bölüm 3: Test ve kabul",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12285-2",
+        "ad": "Çelik tanklar - Yatay silindirik tek ve çift cidarlı yerüstü tanklar - Tehlikeli sıvı depolama",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 2610",
+        "ad": "Petrol ürünleri depolama ve taşıma terminal operasyonları - Tasarım, inşaat, işletme, bakım ve emniyet",
+        "kategori": "Ateşle Temas Etmeyen Basınçlı Kaplar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14492-2",
+        "ad": "Krenler - Gucle tahrik edilen vincler ve irgat - Bölüm 2: Gucle tahrik edilen vincler",
+        "kategori": "Kaldırma",
+        "aciklama": "Elektrikli vinclerin tasarımı, imalatı ve test kurallari. Guc, fren, atis limitleri ve güvenlik aksesuarlarini kapsar."
+    },
+    {
+        "numara": "TS EN 12999",
+        "ad": "Krenler - YÜkleme krenleri (araç ustu vinc)",
+        "kategori": "Kaldırma",
+        "aciklama": "Arac ustu yÜkleme krenlerinin (arayana vinc) tasarım ve güvenlik gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 13000",
+        "ad": "Krenler - Mobil krenler",
+        "kategori": "Kaldırma",
+        "aciklama": "Mobil krenlerin güvenligi, kararliligi, konfigurasyonu ve test yÖntemlerini ele alır."
+    },
+    {
+        "numara": "TS EN 14439",
+        "ad": "Krenler - Güvenlik - Kule krenleri",
+        "kategori": "Kaldırma",
+        "aciklama": "Kule krenlerinin tasarım, imalat, montaj ve test güvenligi kurallari."
+    },
+    {
+        "numara": "TS EN 15011",
+        "ad": "Krenler - Kopru ve portal krenler",
+        "kategori": "Kaldırma",
+        "aciklama": "Kopru ve portal krenlerin tasarım, imalat, montaj ve test gereksinimlerini kapsar."
+    },
+    {
+        "numara": "TS EN 14238",
+        "ad": "Krenler - El ile tahrik edilen konum cihazları",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13135",
+        "ad": "Krenler - Güvenlik - Elektromekanik aksamlar için tasarım",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12385-1",
+        "ad": "Çelik tel halatlar - Güvenlik - Bölüm 1: Genel gereksinimler",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12385-4",
+        "ad": "Çelik tel halatlar - Güvenlik - Bölüm 4: Genel kaldırma amaçlı vincler için çelik halatlar",
+        "kategori": "Kaldırma",
+        "aciklama": "Kaldırma amaçlı çelik tel halatların secimi, kullanımı ve muayenesi için genel şartlar."
+    },
+    {
+        "numara": "TS EN 818-1",
+        "ad": "Kaldırma amaçlı kısa halkalı zincirler - Güvenlik - Bölüm 1: Genel kabul şartları",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-2",
+        "ad": "Kaldırma amaçlı kısa halkalı zincirler - Bölüm 2: Orta toleranslı",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-4",
+        "ad": "Kaldırma amaçlı kısa halkalı zincirler - Bölüm 4: Zincir sapanı - Sınıf 8",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1677-1",
+        "ad": "Esnek kaldırma ekipmanı bileşen parçaları - Güvenlik - Bölüm 1: Dövme çelik kancalar sınıf 8",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1677-2",
+        "ad": "Esnek kaldırma ekipmanı bileşen parçaları - Güvenlik - Bölüm 2: Dövme çelik kilitlemeli kancalar sınıf 8",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1677-3",
+        "ad": "Esnek kaldırma ekipmanı bileşen parçaları - Güvenlik - Bölüm 3: Dövme çelik özler - Sınıf 8",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1677-4",
+        "ad": "Esnek kaldırma ekipmanı bileşen parçaları - Güvenlik - Bölüm 4: Bağlama halkasından oluşan kilitlemesiz kancalar sınıf 8",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1677-5",
+        "ad": "Esnek kaldırma ekipmanı bileşen parçaları - Güvenlik - Bölüm 5: Dövme çelik sapan bileşenleri sınıf 4",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13414-1",
+        "ad": "Çelik tel halat sapanları - Güvenlik - Bölüm 1: Sapan",
+        "kategori": "Kaldırma",
+        "aciklama": "Çelik tel halat sapanlarının tasarımı, imalatı, test edilmesi ve kullanımı için güvenlik şartları."
+    },
+    {
+        "numara": "TS EN 13414-2",
+        "ad": "Çelik tel halat sapanları - Güvenlik - Bölüm 2: Markalama ve teknik belgeleme",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13414-3",
+        "ad": "Çelik tel halat sapanları - Güvenlik - Bölüm 3: Kovanlı dokme metal uçlu sapanlar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1492-1",
+        "ad": "Tekstil sapanları - Güvenlik - Bölüm 1: Bez örücü bez sapanlar",
+        "kategori": "Kaldırma",
+        "aciklama": "Bez örücü bez sapanların minimum kopma yükü, işaret ve kullanım koşullarını tanımlar."
+    },
+    {
+        "numara": "TS EN 1492-2",
+        "ad": "Tekstil sapanları - Güvenlik - Bölüm 2: Halka biçimli sapanlar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 280",
+        "ad": "Hareketli yükseltme çalışma platformları - Tasarım hesapları, kararlılık kriterleri, yapı, güvenlik, inceleme ve testler",
+        "kategori": "Kaldırma",
+        "aciklama": "Hareketli yükseltme çalışma platformlarının tasarım hesapları, kararlılık kriterleri ve güvenlik testleri."
+    },
+    {
+        "numara": "TS EN 1570-1",
+        "ad": "Kaldırma tablaları için güvenlik gereksinimleri - Bölüm 1: 1000 kg'a kadar kaldırma kapasiteli yükleme ve boşaltma kaldırma tablaları için",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 4308-1",
+        "ad": "Krenler ve kaldırma ekipmanları - Tel halatların seçimi - Bölüm 1: Genel",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 4301-1",
+        "ad": "Krenler - Sınıflandırma - Bölüm 1: Genel",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.2",
+        "ad": "Köprü ve portal krenler, troliler ve makaralar",
+        "kategori": "Kaldırma",
+        "aciklama": "Köprü ve portal krenlerin güvenli işletimi, inceleme ve test kriterleri (ABD standardı)."
+    },
+    {
+        "numara": "ASME B30.5",
+        "ad": "Mobil ve lokomotif krenler",
+        "kategori": "Kaldırma",
+        "aciklama": "Mobil ve lokomotif krenlerin güvenli işletimi ve denetimi için ABD ulusal standardı."
+    },
+    {
+        "numara": "ASME B30.9",
+        "ad": "Sapanlar",
+        "kategori": "Kaldırma",
+        "aciklama": "Sapan donanımı (Çelik halat, zincir, tekstil) için güvenlik esaslari ve muayene kurallari."
+    },
+    {
+        "numara": "ASME B30.10",
+        "ad": "Kancalar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.16",
+        "ad": "Sabit yer vincler",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.17",
+        "ad": "Kren ve monorail sistemleri",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.20",
+        "ad": "Asagidan kumandalı kaldırma tertibatı",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.22",
+        "ad": "Eklemli kollu krenler",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 1.001",
+        "ad": "FEM - Cak krenler - Tasarım gereksinimleri ve catı tayinleri",
+        "kategori": "Kaldırma",
+        "aciklama": "Avrupa Malzeme İşletme Birligi (FEM) tarafindan kren tasarımı için yayin."
+    },
+    {
+        "numara": "FEM 9.511",
+        "ad": "FEM - Istifleyiciler (stacker) - Seri uretim serisnden kaldırma mast düzenleri",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3691-4",
+        "ad": "Endustriyel araclar - Güvenlik gereksinimleri ve doĞrulama - Bölüm 4: Suruculessiz araclar ve sistemler",
+        "kategori": "Forklift",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1726-1",
+        "ad": "Malzeme tasimi - Endustriyel aracların güvenliği - Bölüm 1: 10000 kg'a kadar kapasiteli motorlu araclar",
+        "kategori": "Forklift",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1175",
+        "ad": "Endustriyel aracların güvenliği - Elektrikli gereksinimler",
+        "kategori": "Forklift",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 16307-1",
+        "ad": "Endustriyel araclar - Güvenlik gereksinimleri ve doĞrulama - Bölüm 1: Ek gereksinimler",
+        "kategori": "Forklift",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 6055",
+        "ad": "Endustriyel araclar - Surucu koruma baskı yari - Teknik Özellikler ve testler",
+        "kategori": "Forklift",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 45001",
+        "ad": "İş saĞlıĞı ve güvenligi yönetim sistemleri - Şartlar ve kullanım kılavuzu",
+        "kategori": "İSG",
+        "aciklama": "İş saĞlıĞı ve güvenligi (ISG) yönetim sistemleri uluslararasi standardı. Risk değerlendirmesi, yasal uyum ve calisanlarin aktif katilimini temel alır. OHSAS 18001'in uluslararasi karsıligi."
+    },
+    {
+        "numara": "OHSAS 18001",
+        "ad": "İş saĞlıĞı ve güvenligi yönetim sistemi - Şartlar",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 18001",
+        "ad": "İş saĞlıĞı ve güvenligi yönetim sistemleri - Şartlar",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 13849-1",
+        "ad": "Makinalarin güvenliği - Güvenlikle ilgili kontrol sistemlerinin parçaları - Bölüm 1: Tasarım için genel ilkeler",
+        "kategori": "İSG",
+        "aciklama": "Güvenliğe iliskin makine kontrol sistemi parçaları için performans seviyesi (PL) belirleme yontemi ve tasarım ilkeleri."
+    },
+    {
+        "numara": "TS EN ISO 13849-2",
+        "ad": "Makinalarin güvenliği - Güvenlikle ilgili kontrol sistemlerinin parçaları - Bölüm 2: Doğrulama",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 62061",
+        "ad": "Makinalarin güvenliği - Güvenlikle ilgili elektrikli, elektronik ve programlanabilir elektronik kontrol sistemlerinin fonksiyonel güvenliği",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 294",
+        "ad": "Makinelerin güvenliği - Ust extremitelere ulasimi onleme için emniyet mesafeleri",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11200",
+        "ad": "Kişisel koruyucu donanim - Is elbiseleri, kulakliklar ve eldivenler dahil",
+        "kategori": "İSG",
+        "aciklama": ""
+    },
+    {
+        "numara": "NFPA 13",
+        "ad": "Yağmurlama sistemi kurulumu standardı (sprinkler)",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Otomatik yağmurlama (sprinkler) sistemlerinin tasarımı, kurulumu ve testine iliskin temel ABD standardı. Sistem turu, boru boyutu, kafa secimi ve test prosedurlerini kapsar."
+    },
+    {
+        "numara": "NFPA 14",
+        "ad": "Standpipe ve hortum sistemleri kurulum standardı",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Standpipe ve hortum sistemlerinin kurulumuna iliskin ABD standardı. Bina ici yangin suyu tesisatini kapsar."
+    },
+    {
+        "numara": "NFPA 20",
+        "ad": "Yangin pompasi tesislerinin kurulumu için standart",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Yangin pompasi tesislerinin tasarımı, kurulumu ve testini düzenleyen ABD standardı."
+    },
+    {
+        "numara": "NFPA 25",
+        "ad": "Su tabanli yangin koruma sistemlerinin incelenmesi, test edilmesi ve bakimi için standart",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Su bazli yangin koruma sistemlerinin (sprinkler, standpipe, halon alternatifi) periyodik denetim, test ve bakim kurallarini tanımlar."
+    },
+    {
+        "numara": "NFPA 72",
+        "ad": "Ulusal yangin alarm ve işaret kodu",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangin alarm sistemi ekipmanı, kurulumu, bakim ve denetimini düzenleyen ABD ulusal kodudur."
+    },
+    {
+        "numara": "NFPA 10",
+        "ad": "Tasınabilir yangin sondurucular standardı",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Tasınabilir yangin sondurucuların secimi, kurulumu, denetimi ve bakimina iliskin ABD standardı."
+    },
+    {
+        "numara": "NFPA 101",
+        "ad": "Güvenli yaşam kodu",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Binalarda insanların güvenli tahliyesini saglayan yapı tasarımı ve malzeme kurallarini iceren ABD yasam güvenligi kodu."
+    },
+    {
+        "numara": "NFPA 11",
+        "ad": "Alcak, orta ve yüksek genisleme kopuk sistemleri standardı",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": ""
+    },
+    {
+        "numara": "NFPA 12",
+        "ad": "Karbondioksit sondurme sistemleri standardı",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "CO2 sondurme sistemlerinin tasarımı, kurulumu ve testine iliskin standart."
+    },
+    {
+        "numara": "NFPA 15",
+        "ad": "Su sis sistemleri kurulum standardı",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Su spreyi (water spray) sondurme sistemlerinin tasarım ve kurulum kurallari."
+    },
+    {
+        "numara": "NFPA 17",
+        "ad": "Kuru kimyasal sondurme sistemi standardı",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": ""
+    },
+    {
+        "numara": "NFPA 750",
+        "ad": "Su sis sondurme sistemleri standardı",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Su sis (water mist) sondurme sistemlerinin tasarımı ve testine iliskin standart."
+    },
+    {
+        "numara": "TS EN 12845",
+        "ad": "Sabit yanginla mucadele sistemleri - Otomatik sprinkler sistemleri - Tasarım, kurulum ve bakim",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Otomatik sprinkler sistemlerinin tasarımı, kurulumu ve bakimina iliskin Avrupa standardı. NFPA 13'ün Avrupa karsıligi olarak genis hizmet alanlarina uygulanir."
+    },
+    {
+        "numara": "ISO 14520-1",
+        "ad": "Gazlı söndürme sistemleri - Fiziksel özellikler ve sistem tasarımı - Bölüm 1: Genel şartlar",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Toplam taşkın gazlı söndürme sistemlerinin tasarımı, kurulumu, testi ve bakımına ilişkin temel standart. Minimum tasarım konsantrasyonu, güvenlik katsayısı (1.2×MEC), deşarj süresi ve boru boyutlandırma esaslarını kapsar."
+    },
+    {
+        "numara": "ISO 14520-2",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 2: CO₂ söndürme sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Karbondioksit (CO₂) toplam taşkın ve yerel uygulama sistemleri. Sınıf A yüzey yangınları min. %34, derin oturmuş (Sınıf A derin) min. %50 tasarım konsantrasyonu gerektirir. YALNIZCA insan bulunmayan hacimler için uygundur."
+    },
+    {
+        "numara": "ISO 14520-5",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 5: HFC 227ea söndürme sistemleri (FM-200)",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "HFC-227ea (FM-200) toplam taşkın sistemleri. Sınıf A tasarım konsantrasyonu min. %7.9, NOAEL %9.0. Elektrik/elektronik odalar ve makine daireleri için uygundur."
+    },
+    {
+        "numara": "ISO 14520-8",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 8: IG-01 (Argon) söndürme sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Saf argon (IG-01) inert gaz söndürme sistemleri. Sınıf A tasarım konsantrasyonu min. %38.5. NOAEL %40. İnsan varlığında (kontrollü boşaltma ile) kullanılabilir."
+    },
+    {
+        "numara": "ISO 14520-9",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 9: IG-100 (Azot) söndürme sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Saf azot (IG-100) inert gaz söndürme sistemleri. Sınıf A tasarım konsantrasyonu min. %38.0. Oksijen seyreltme yöntemi ile söndürme. Kolay temin edilebilir."
+    },
+    {
+        "numara": "ISO 14520-10",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 10: IG-55 (Argonite) söndürme sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "N₂/Ar (50/50) karışımı IG-55 (Argonite) söndürme sistemleri. Sınıf A tasarım konsantrasyonu min. %38.5. NOAEL %40. Çevre dostu, insan varlığında kullanılabilir."
+    },
+    {
+        "numara": "ISO 14520-11",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 11: IG-541 (Inergen) söndürme sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "N₂/Ar/CO₂ (52/40/8) karışımı IG-541 (Inergen) söndürme sistemleri. Sınıf A tasarım konsantrasyonu min. %38.5. NOAEL %40. İnsan varlığında kullanılabilir."
+    },
+    {
+        "numara": "ISO 14520-15",
+        "ad": "Gazlı söndürme sistemleri - Bölüm 15: FK-5-1-12 söndürme sistemleri (Novec 1230)",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "FK-5-1-12 (Novec 1230) toplam taşkın sistemleri. Sınıf A tasarım konsantrasyonu min. %4.2, NOAEL %10.0. Düşük GWP. Hassas ekipman, arşiv ve müzeler için idealdir."
+    },
+    {
+        "numara": "TS EN 15004-1",
+        "ad": "Sabit söndürme sistemleri - Gazlı söndürme sistemleri - Bölüm 1: Tasarım, kurulum ve bakım için şartlar",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "ISO 14520-1'in Avrupa versiyonu. Gazlı söndürme sistemleri genel tasarım ve kurulum şartları. Türkiye'de uygulanabilir EN standardı."
+    },
+    {
+        "numara": "TS EN 15004-2",
+        "ad": "Sabit söndürme sistemleri - Gazlı söndürme sistemleri - Bölüm 2: HFC 227ea sistemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "ISO 14520-5'in Avrupa versiyonu. FM-200 (HFC-227ea) sistemleri için Türkiye'de geçerli EN standardı."
+    },
+    {
+        "numara": "TS EN 15004-6",
+        "ad": "Sabit söndürme sistemleri - Gazlı söndürme sistemleri - Bölüm 6: FK-5-1-12 sistemleri (Novec 1230)",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "ISO 14520-15'in Avrupa versiyonu. Novec 1230 sistemleri için Türkiye'de geçerli EN standardı."
+    },
+    {
+        "numara": "NFPA 2001",
+        "ad": "Temiz ajan söndürme sistemleri standardı",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Halokarbon ve inert gaz temiz ajan sistemleri. FM-200, Novec 1230, IG serisi ajanları kapsar. ISO 14520 ile paralel standart."
+    },
+    {
+        "numara": "TS EN 12094-1",
+        "ad": "Sabit söndürme sistemleri - Gaz söndürme sistemleri için bileşenler - Bölüm 1: Otomatik kontrol ve gecikme aygıtlarının şartları ve deney yöntemleri",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 54-1",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 1: Giris",
+        "kategori": "Yangın Alarm",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 54-2",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 2: Kontrol ve gosterge donanımı",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangin alarm paneli (yangın alarm kontrol paneli) teknik gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 54-3",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 3: Sesli alarm cihazları",
+        "kategori": "Yangın Alarm",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 54-4",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 4: Guc kaynagi ekipmanlari",
+        "kategori": "Yangın Alarm",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 54-5",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 5: Isı algilayicilari - Nokta algilayicilari",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Isı algilayicilarin (termal dedektör) tip, test ve işaretleme şartlarıni kapsar."
+    },
+    {
+        "numara": "TS EN 54-7",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 7: Duman algilayicilari - Nokta algilayicilari",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Duman algilayicilarin (optik/iyonizasyon) şart, test ve işaretleme gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 54-11",
+        "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 11: Elle çalıştırılan alarm noktalari",
+        "kategori": "Yangın Alarm",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 671-1",
+        "ad": "Sabit yanginla mucadele sistemleri - Hortumlu sistemler - Bölüm 1: Yanma hortumlu dolayi olan hortum makaralari",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 671-2",
+        "ad": "Sabit yanginla mucadele sistemleri - Hortumlu sistemler - Bölüm 2: Yari rijit hortumlu hortum makaralari",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1866-1",
+        "ad": "Tasınabilir yangin sondurucular - Teknik Özellikler ve performans - Bölüm 1: CO2 sondurucular",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 3-7",
+        "ad": "Tasınabilir yangin sondurucular - Bölüm 7: Ã–zellikler, performans gereksinimleri ve test yÖntemleri",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 862",
+        "ad": "Yangin muslugu - Tasarım ve boyut gereksinimleri",
+        "kategori": "Yangın",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 15614-5",
+        "ad": "Kaynak prosedur seklimine ve değerlendirmesine iliskin şartname - Bölüm 5: Titanyum, zirkonyum ve bunların alasimları için ark kaynak proseduru",
+        "kategori": "Yangın",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13445-1",
+        "ad": "Ateşli gazlarla temas etmeyen basınçlı kaplar - Bölüm 1: Genel",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Ateşli gaz temas etmeyen basınçlı kaplar serisi; genel kavramları, terminoloji ve referansları ele alır."
+    },
+    {
+        "numara": "TS EN 13445-2",
+        "ad": "Ateşli gazlarla temas etmeyen basınçlı kaplar - Bölüm 2: Malzemeler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13445-3",
+        "ad": "Ateşli gazlarla temas etmeyen basınçlı kaplar - Bölüm 3: Tasarım",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Basınçlı kap tasarımında kullanılan formüller, yÜk kombinasyonları ve Çeper kalınlıkları hesabi."
+    },
+    {
+        "numara": "TS EN 13445-4",
+        "ad": "Ateşli gazlarla temas etmeyen basınçlı kaplar - Bölüm 4: İmalat",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13480-1",
+        "ad": "Metalik endüstriyel borular - Bölüm 1: Genel",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13480-2",
+        "ad": "Metalik endüstriyel borular - Bölüm 2: Malzemeler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13480-3",
+        "ad": "Metalik endüstriyel borular - Bölüm 3: Tasarım ve hesaplama",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Metalik endüstriyel boru hatlarinin tasarım, hesaplama ve esneklik analizine iliskin şartlar."
+    },
+    {
+        "numara": "TS EN 13480-5",
+        "ad": "Metalik endüstriyel borular - Bölüm 5: Muayene ve test",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 286-1",
+        "ad": "Basit ateşli gazlarla temas etmeyen basınçlı kaplar - Bölüm 1: Hava ve azot için basınçlı kaplar",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-1",
+        "ad": "Basınçlı ekipman - Terminoloji - Bölüm 1: Basınç, sıcaklık, hacim ve anma çapi",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-5",
+        "ad": "Basınçlı ekipman - Basınçlı boru sistemleri ve basınçlı kaplar için güvenlik sistemleri",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1012-1",
+        "ad": "Kompresörler ve vakum pompalar - Güvenlik gereksinimleri - Bölüm 1: Hava kompresörleri",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Hava kompresörlerinin güvenlik gereksinimlerini, tasarım kriterlerini ve testlerini kapsar."
+    },
+    {
+        "numara": "TS EN 1012-2",
+        "ad": "Kompresörler ve vakum pompalar - Güvenlik gereksinimleri - Bölüm 2: Vakum pompalar",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME VIII-1",
+        "ad": "ASME Kazan ve Basınçlı Kap Kodu - Bölüm VIII Bölüm 1: Basınçlı kap olusturma kurallari",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "ASME Kazan ve Basınçlı Kap Kodunun basınçlı kap tasarım ve imalat kurallarini iceren bölümü. Ceper hesabi, malzeme şartları ve muayene prosedurlerini kapsar."
+    },
+    {
+        "numara": "PED 2014/68/EU",
+        "ad": "Basınçlı ekipman direktifi",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "AB Basınçlı Ekipman Direktifi: basınçlı kap, boru hatti, vanat ve aksesuarlarin AB pazarinda serbest dolasımi için uygunluk şartlarıni tanımlar."
+    },
+    {
+        "numara": "AD 2000",
+        "ad": "AD 2000 Merkezi - Basınçlı kaplar için kurallar (Almanya)",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Boyut ve basınçlı kap hesapları için Alman kurallar seti; Özellikle kimya ve petrokimya sektöründe kullanilir."
+    },
+    {
+        "numara": "IEC 60364-1",
+        "ad": "Alçak gerilim elektrik tesisatı - Bölüm 1: Temel ilkeler, genel Özellikler değerlendirmesi ve tanımlar",
+        "kategori": "Elektrik",
+        "aciklama": "Binalardaki alcak gerilim elektrik tesisatinin tasarımı, kurulumu ve dogrulanmasi için temel ilke ve tanımları belirler."
+    },
+    {
+        "numara": "IEC 60364-4-41",
+        "ad": "Alçak gerilim elektrik tesisatı - Bölüm 4-41: Koruma onlemleri - Elektrik carpmasi korumasi",
+        "kategori": "Elektrik",
+        "aciklama": "Elektrik tasarımında dokunma gerilimine karsi koruma yöntemlerini (topraklama, kesici, RCCB) tanımlar."
+    },
+    {
+        "numara": "IEC 60364-5-54",
+        "ad": "Alçak gerilim elektrik tesisatı - Bölüm 5-54: Elektriksel ekipman secimi ve kurulumu - Topraklama düzenlemeleri ve koruyucu iletkenler",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "IEC 60529",
+        "ad": "Kasalar tarafindan saglanan koruma dereceleri (IP kodu)",
+        "kategori": "Elektrik",
+        "aciklama": "Cihaz kasalarinin toz ve suya karsi koruma derecelerini tanımlamak için IP kodlama sistemini (Örn. IP54, IP67) belirler."
+    },
+    {
+        "numara": "IEC 60204-1",
+        "ad": "Makinalarin güvenliği - Makinalarin elektriksel donanımı - Bölüm 1: Genel gereksinimler",
+        "kategori": "Elektrik",
+        "aciklama": "Makine elektriksel donanımınin tasarımı, kurulumu ve dokümantasyonu için güvenlik ve teknik gereksinimler."
+    },
+    {
+        "numara": "IEC 61439-1",
+        "ad": "Alcak gerilim pano kombinasyonu - Bölüm 1: Genel kurallar ve testler",
+        "kategori": "Elektrik",
+        "aciklama": "Alcak gerilim pano kombinasyonlarınin tasarım, test ve imalat genel kurallarini tanımlar."
+    },
+    {
+        "numara": "IEC 61439-2",
+        "ad": "Alcak gerilim pano kombinasyonu - Bölüm 2: Guc dağıtim tablolari",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "IEC 62305-1",
+        "ad": "Yıldırımdan koruma - Bölüm 1: Genel ilkeler",
+        "kategori": "Elektrik",
+        "aciklama": "Yıldırım koruma sistemlerinin genel ilkelerini, tehditleri ve koruma felsefesini icerir."
+    },
+    {
+        "numara": "IEC 62305-2",
+        "ad": "Yıldırımdan koruma - Bölüm 2: Risk yönetimi",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "IEC 62305-3",
+        "ad": "Yıldırımdan koruma - Bölüm 3: Yapılarda fiziksel hasar ve can kaybi",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "IEC 62305-4",
+        "ad": "Yıldırımdan koruma - Bölüm 4: Yapılardaki elektrik ve elektronik sistemler",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 50110-1",
+        "ad": "Elektriksel tesisatlarda çalışma - Bölüm 1: Genel gereksinimler",
+        "kategori": "Elektrik",
+        "aciklama": "İşletildiği sirada elektrik tesisatinda çalışma (bakim, test, ölçüm) güvenligi kurallarini belirler."
+    },
+    {
+        "numara": "TS EN 60079-0",
+        "ad": "Patlayıcı atmosferler - Bölüm 0: Ekipman - Genel gereksinimler",
+        "kategori": "Elektrik",
+        "aciklama": "Patlayıcı atmosferde kullanilacak elektrik ekipmanının genel tasarım ve test gereksinimlerini tanımlayan temel standart."
+    },
+    {
+        "numara": "TS EN 60079-1",
+        "ad": "Patlayıcı atmosferler - Bölüm 1: Alev gecirmez muhafaza 'd' ile ekipman korumasi",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 60079-10-1",
+        "ad": "Patlayıcı atmosferler - Bölüm 10-1: Sınıflandırma - Patlayıcı gaz atmosferine sahip alanlar",
+        "kategori": "Elektrik",
+        "aciklama": "Parlayıcı/patlayıcı gaz karisimlarinin mevcut olabilecegi alanlarin sınıflandırılması (Zone 0, 1, 2) esaslarini tanımlar."
+    },
+    {
+        "numara": "TS EN 60079-14",
+        "ad": "Patlayıcı atmosferler - Bölüm 14: Elektriksel kurulum tasarımı, secimi ve olusturulmasi",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 60309-1",
+        "ad": "Endüstriyel amaçlar için pisler ve prizler - Bölüm 1: Genel gereksinimler",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 60898-1",
+        "ad": "Elektrik tesisatları - Gerilimi 440 V'a kadar alcak gerilim tesislerinde ev ve benzeri kullanımı için devre kesiciler - Bölüm 1: AC çalışma için devre kesiciler",
+        "kategori": "Elektrik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 15614-1",
+        "ad": "Kaynak prosedür spesifikasyonu ve onaylanmasi - Bölüm 1: Çelik için ark ve gaz kaynak proseduru",
+        "kategori": "Kaynak",
+        "aciklama": "Çelik için kaynak prosedür spesifikasyonunun (WPS) nasil olusturulacagini ve onaylanacagini (WPQR) tanımlar."
+    },
+    {
+        "numara": "TS EN ISO 15614-2",
+        "ad": "Kaynak prosedür spesifikasyonu ve onaylanmasi - Bölüm 2: Aluminyum ve aluminyum alasimları için ark kaynak proseduru",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 9606-1",
+        "ad": "Kaynak personelinin sinav - Erime kaynak - Bölüm 1: Celiklerin kaynagi",
+        "kategori": "Kaynak",
+        "aciklama": "Kaynak personelinin (kaynakci) çelik kaynagi yetkinlik sinavlari için kabul kriterleri ve belgelendirme kurallarini kapsar."
+    },
+    {
+        "numara": "TS EN ISO 9606-2",
+        "ad": "Kaynak personelinin sinav - Erime kaynak - Bölüm 2: Aluminyum ve aluminyum alasimları",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3834-1",
+        "ad": "Metal malzemelerin erime kaynagi için kalite gereksinimleri - Bölüm 1: Kalite gereksinimi duzeyleri secim kriterleri",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3834-2",
+        "ad": "Metal malzemelerin erime kaynagi için kalite gereksinimleri - Bölüm 2: Kapsamli kalite gereksinimleri",
+        "kategori": "Kaynak",
+        "aciklama": "Metal malzemelerin erime kaynaginda kapsamli kalite gereksinimlerini tanımlayan standart. İmalat kalite güvencesini kapsar."
+    },
+    {
+        "numara": "TS EN ISO 3834-3",
+        "ad": "Metal malzemelerin erime kaynagi için kalite gereksinimleri - Bölüm 3: Standart kalite gereksinimleri",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 3834-4",
+        "ad": "Metal malzemelerin erime kaynagi için kalite gereksinimleri - Bölüm 4: Temel kalite gereksinimleri",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15085-1",
+        "ad": "Demiryolu uygulamaları - Demiryolu aracı ve bileşenlerinin kaynak yapımı - Bölüm 1: Genel",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 15609-1",
+        "ad": "Metalik malzemelerin kaynak prosedür spesifikasyonu ve onaylanması - Kaynak prosedür spesifikasyonu - Bölüm 1: Ark kaynak",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 6520-1",
+        "ad": "Kaynak - Metal kaynaklarında geometrik kusurların sınıflandırması - Bölüm 1: Erime kaynak",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 5817",
+        "ad": "Kaynak - çelikte, nikelde, titanyumda ve bunların alasimlarında erime kaynakla yapılan derzler - Kusur seviyeleri",
+        "kategori": "Kaynak",
+        "aciklama": "Çelik malzemelerde erime kaynakla yapılan derzlerin kabul edilebilir kusur seviyeleri (B, C, D) ve değerlendirme kriterleri."
+    },
+    {
+        "numara": "TS EN ISO 17637",
+        "ad": "Kaynakların tahribatsız muayenesi - Erime kaynakların gözle muayenesi",
+        "kategori": "Kaynak",
+        "aciklama": "Kaynak derzlerinin gözle muayenesine ilişkin teknik, nitelik ve kayıt gereksinimleri."
+    },
+    {
+        "numara": "TS EN ISO 17638",
+        "ad": "Kaynakların tahribatsız muayenesi - Manyetik partikul muayenesi",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 23277",
+        "ad": "Kaynakların tahribatsız muayenesi - Penetrant muayene - Kabul seviyeleri",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11666",
+        "ad": "Kaynakların tahribatsız muayenesi - Ultrasonik muayene - Kabul seviyeleri",
+        "kategori": "Kaynak",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 9712",
+        "ad": "Tahribatsız muayene - NDT personelinin niteliği ve sertifikasyonu",
+        "kategori": "NDT",
+        "aciklama": "NDT personelinin eğitim, sınav, sertifikasyon ve yeniden sertifikasyon şartlarını tanımlayan uluslararası standart."
+    },
+    {
+        "numara": "TS EN 1435",
+        "ad": "Kaynakların tahribatsız muayenesi - Kaynaklı bağlantıların radyografik muayenesi",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 17636-1",
+        "ad": "Kaynakların tahribatsız muayenesi - Radyografik muayene - Bölüm 1: X ve gama radyasyonu ile film teknik kullanan radyografı",
+        "kategori": "NDT",
+        "aciklama": "Kaynak muayenesinde X veya gama isini kullanan radyografik muayene tekniklerini ve kabul kriterlerini tanımlar."
+    },
+    {
+        "numara": "TS EN ISO 16810",
+        "ad": "Tahribatsız muayene - Ultrasonik muayene - Genel ilkeler",
+        "kategori": "NDT",
+        "aciklama": "Ultrasonik muayenenin genel ilkelerini, ekipman gereksinimlerini ve uygulama politikasini icerir."
+    },
+    {
+        "numara": "TS EN 1330-4",
+        "ad": "Tahribatsız muayene - Terminoloji - Bölüm 4: Ultrasonik muayene ile ilgili terimler",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 10863",
+        "ad": "Kaynakların tahribatsız muayenesi - Ultrasonik muayene - Difraksiyon zaman geçiş tekniği (TOFD)",
+        "kategori": "NDT",
+        "aciklama": "Kaynakların ultrasonik TOFD (Diffraction Time of Flight) yöntemi ile muayene tekniklerini ve değerlendirme kriterlerini kapsar."
+    },
+    {
+        "numara": "TS EN 10204",
+        "ad": "Metalik ürünler - Muayene belgelerinin türleri",
+        "kategori": "NDT",
+        "aciklama": "Metalik ürünlerin muayene belgeleri türlerini (2.1, 2.2, 3.1, 3.2) ve içeriklerini tanımlar."
+    },
+    {
+        "numara": "TS EN 1090-1",
+        "ad": "Çelik ve aluminyum yapıların imalatı ve montaji - Bölüm 1: çelik ve aluminyum yapılar için uygunluk değerlendirmesi şartları",
+        "kategori": "Yapı",
+        "aciklama": "Yapısal çelik ve aluminyum ürünlerin pazara arzi için uygunluk değerlendirmesi (CE işaretlemesi) şartlarını tanımlar."
+    },
+    {
+        "numara": "TS EN 1090-2",
+        "ad": "Çelik ve aluminyum yapıların imalatı ve montaji - Bölüm 2: çelik yapılar için teknik gereksinimler",
+        "kategori": "Yapı",
+        "aciklama": "Çelik yapıların kaynak yapımı, boyut toleransı ve muayene şartlarını kapsar. CE işaretlemesi için temel standart."
+    },
+    {
+        "numara": "TS EN 1090-3",
+        "ad": "Çelik ve aluminyum yapıların imalatı ve montaji - Bölüm 3: Aluminyum yapılar için teknik gereksinimler",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1990",
+        "ad": "Eurokod - Yapısal tasarım esasları",
+        "kategori": "Yapı",
+        "aciklama": "Yapı tasarımında esas alınan güvenlik konsepti, yük kombinasyonları ve performans kriterlerini belirleyen Eurokod temel standardı."
+    },
+    {
+        "numara": "EN 1991-1-1",
+        "ad": "Eurokod 1: Yapılar üzerindeki etkiler - Bölüm 1-1: Genel etkiler - Hacim ağırlıkları, özkılıçlar ve binalardaki yönetmeliği yükler",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1991-1-4",
+        "ad": "Eurokod 1: Yapılar üzerindeki etkiler - Bölüm 1-4: Genel etkiler - Rüzgar etkileri",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1993-1-1",
+        "ad": "Eurokod 3: Çelik yapıların tasarımı - Bölüm 1-1: Genel kurallar ve binalara ilişkin kurallar",
+        "kategori": "Yapı",
+        "aciklama": "Eurokod 3 - Çelik yapı analizi, sınır durum tasarımı ve kesit sınıflandırması için genel kurallar."
+    },
+    {
+        "numara": "EN 1993-1-8",
+        "ad": "Eurokod 3: Çelik yapıların tasarımı - Bölüm 1-8: Bağlantı tasarımı",
+        "kategori": "Yapı",
+        "aciklama": "Çelik yapılarda civata ve kaynaklı birleşimlerin tasarım hesapları."
+    },
+    {
+        "numara": "TS EN 10025-1",
+        "ad": "Yapısal çelik sıcak haddeli ürünler - Bölüm 1: Genel teknik teslimat şartları",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10025-2",
+        "ad": "Yapısal çelik sıcak haddeli ürünler - Bölüm 2: ıkartılmaz ince yapısal çeliklerin teknik teslimat şartları",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10210-1",
+        "ad": "Yapısal amaçlar için sıcak tamamlanmış çelik içi boş profiller - Bölüm 1: Teknik teslimat şartları",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10219-1",
+        "ad": "Yapısal amaçlar için soğuk şekilli kaynak yapılan içi boş profiller - Bölüm 1: Teknik teslimat şartları",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 898-1",
+        "ad": "Çelik bağlantı elemanları mekanik Özellikler - Bölüm 1: Cıvatalar, vidalar ve saplamalar - Belirtilen sınıflar M1.6-M39 için",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 9001",
+        "ad": "Kalite yönetim sistemleri - Şartlar",
+        "kategori": "Kalite",
+        "aciklama": "Uluslararası kalite yönetim sistemi standardı. Müşteriye yönelik ürün/hizmet sunmak için proses yaklaşımlı bir yapı tanımlar; periyodik iç denetim ve süreç iyileştirme gerektirir."
+    },
+    {
+        "numara": "ISO 9000",
+        "ad": "Kalite yönetim sistemleri - Temel bilgiler ve sözlük",
+        "kategori": "Kalite",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 9004",
+        "ad": "Kalite yönetim sistemleri - Sürekli başarı için bir organizasyonun yönetimi - Kalite yönetim yaklaşımı",
+        "kategori": "Kalite",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 14001",
+        "ad": "Çevre yönetim sistemleri - Şartlar ve kullanım kılavuzu",
+        "kategori": "Kalite",
+        "aciklama": "Çevre yönetim sistemi şartlarını belirler. Enerji kullanımı, atık yönetimi ve yasal uyumu içeren bir yönetim çerçevesi oluşturur."
+    },
+    {
+        "numara": "ISO 14004",
+        "ad": "Çevre yönetim sistemleri - Prensiplere ilişkin genel yönlendirme, sistemler ve destekleme teknikleri",
+        "kategori": "Kalite",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 19011",
+        "ad": "Yönetim sistemi yukurt denetimleri için kılavuz",
+        "kategori": "Kalite",
+        "aciklama": "İç ve dış yönetim sistemi denetimlerinin planlanması, yürütülmesi ve raporlanması için kılavuz."
+    },
+    {
+        "numara": "ISO 50001",
+        "ad": "Enerji yönetim sistemleri - Şartlar ve kullanım kılavuzu",
+        "kategori": "Kalite",
+        "aciklama": "Enerji yönetim sistemi standardı. Enerji tüketiminin azaltılması, performansın izlenmesi ve süreç iyileştirmesini sağlar."
+    },
+    {
+        "numara": "ISO 17020",
+        "ad": "Uygunluk değerlendirmesi - Çeşitli muayene yapan kuruluşların işleyişi için gereksinimler",
+        "kategori": "Muayene",
+        "aciklama": "Muayene kuruluşlarının (periyodik kontrol) teknik yetkinlik ve yönetim sistemi gereksinimlerini tanımlar. Akreditasyonun temel standardı."
+    },
+    {
+        "numara": "ISO 17025",
+        "ad": "Deney ve kalibrasyon laboratuvarlarının yetkinliği için genel şartlar",
+        "kategori": "Muayene",
+        "aciklama": "Deney ve kalibrasyon laboratuvarlarının teknik yetkinlik şartlarını ve belgelendirme gereksinimlerini kapsar."
+    },
+    {
+        "numara": "ISO 17065",
+        "ad": "Uygunluk değerlendirmesi - Ürün, proses ve hizmetleri sertifikalandiran kuruluslar için şartlar",
+        "kategori": "Muayene",
+        "aciklama": "Ürün, proses ve hizmet sertifikasyonu yapan kuruluslarin uygunluk değerlendirme gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 45011",
+        "ad": "Ürün sertifikasyonu için şartlar - Sertifikasyon kuruluslari için genel şartlar (CE işaretlemesi)",
+        "kategori": "Muayene",
+        "aciklama": ""
+    },
+    {
+        "numara": "2006/42/EC",
+        "ad": "Makine direktifi",
+        "kategori": "Direktif",
+        "aciklama": "AB Makine Direktifi: Avrupa pazarinda satisa sunulan makinelerin temel saglik ve güvenlik gereksinimlerini tanımlayan direktif. CE işaretlemesi zorunludur."
+    },
+    {
+        "numara": "2014/68/EU",
+        "ad": "Basınçlı ekipman direktifi (PED)",
+        "kategori": "Direktif",
+        "aciklama": ""
+    },
+    {
+        "numara": "2014/34/EU",
+        "ad": "Patlayıcı atmosferler direktifi (ATEX)",
+        "kategori": "Direktif",
+        "aciklama": "ATEX Direktifi: Patlayıcı atmosferde kullanilacak ekipman ve koruyucu sistemlerin AB sertifikasyon gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "2014/30/EU",
+        "ad": "Elektromanyetik uyumluluk direktifi (EMC)",
+        "kategori": "Direktif",
+        "aciklama": ""
+    },
+    {
+        "numara": "2014/35/EU",
+        "ad": "Alcak gerilim direktifi (LVD)",
+        "kategori": "Direktif",
+        "aciklama": ""
+    },
+    {
+        "numara": "2009/105/EC",
+        "ad": "Basit basınçlı kaplar direktifi",
+        "kategori": "Direktif",
+        "aciklama": ""
+    },
+    {
+        "numara": "97/23/EC",
+        "ad": "Basınçlı ekipman direktifi (PED eskisi)",
+        "kategori": "Direktif",
+        "aciklama": ""
+    },
+    {
+        "numara": "REACH",
+        "ad": "Kimyasalların kayıt, değerlendirme, yetkilendirme ve kısıtlanması (Yönetmelik (EC) No 1907/2006)",
+        "kategori": "Çevre",
+        "aciklama": ""
+    },
+    {
+        "numara": "RoHS",
+        "ad": "Belirli tehlikeli maddelerin kullanımını kısıtlama direktifi (2011/65/EU)",
+        "kategori": "Çevre",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 14031",
+        "ad": "Çevre yönetimi - Çevre yönetimi performans değerlendirmesi - kılavuz",
+        "kategori": "Çevre",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 14040",
+        "ad": "Çevre yönetimi - Yasam dongusu değerlendirmesi - Ilkeler ve çerçeve",
+        "kategori": "Çevre",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 14064-1",
+        "ad": "Seragazlari - Bölüm 1: Kurulus duzeyi seragazi emisyonları ve uzaklastirilmasi için nicellestirme ve raporlamaya yonelik kılavuz",
+        "kategori": "Çevre",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1626",
+        "ad": "Kriyojenik kaplar - Kriyojenik hizmet için valflar",
+        "kategori": "Gaz",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13348",
+        "ad": "Bakir ve bakır alasimlari - Tıbbi gazlar veya vakum için dikizsiz yuvarlak bakir boru",
+        "kategori": "Gaz",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 10286",
+        "ad": "Tüp gazlari - Terminoloji",
+        "kategori": "Gaz",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13952",
+        "ad": "Gaz tesisati malzemeleri ve bileşenleri - Polietilen boru sısırma armatürleri",
+        "kategori": "Gaz",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1775",
+        "ad": "Doğal gaz tesisatı - Iç tesisatın tasarımı, işletme ve bakim gereksinimleri",
+        "kategori": "Gaz",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-1",
+        "ad": "Asansor imalat ve montaj için güvenlik kurallari - Bölüm 1: Elektrikli asansorler",
+        "kategori": "Asansör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-2",
+        "ad": "Asansor imalat ve montaj için güvenlik kurallari - Bölüm 2: Hidrolik asansorler",
+        "kategori": "Asansör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-20",
+        "ad": "Asansorler için güvenlik kurallari - İnsan ve yÜk taşımaciligi için asansorler - Yeni asansorler için kuralar",
+        "kategori": "Asansör",
+        "aciklama": "Yeni insanli ve yuklu asansorlerin tasarım, imalat, montaj ve testine iliskin guncellenmis güvenlik şartları."
+    },
+    {
+        "numara": "TS EN 81-50",
+        "ad": "Asansorler için güvenlik kurallari - Tasarım kurallari, hesaplamalar, muayeneler ve testler için Açiklamalar ve testler - Asansor bileşenleri",
+        "kategori": "Asansör",
+        "aciklama": ""
+    },
+    {
+        "numara": "2014/33/EU",
+        "ad": "Asansör direktifi",
+        "kategori": "Asansör",
+        "aciklama": "AB Asansor Direktifi: Asansorlerin ve güvenlik aksesuarlarinin tasarım, imalat ve CE işaretlemesi şartlarıni kapsar."
+    },
+    {
+        "numara": "TS EN 13018",
+        "ad": "Tahribatsız muayene - Gözle muayene - Genel ilkeler",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 23278",
+        "ad": "Kaynakların tahribatsız muayenesi - Manyetik partikul muayenesi - Kabul seviyeleri",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 17640",
+        "ad": "Kaynakların tahribatsız muayenesi - Ultrasonik muayene - Teknikleri, test seviyeleri ve değerlendirme",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 10675-1",
+        "ad": "Kaynakların tahribatsız muayenesi - Radyografik muayene için kabul kriterleri - Bölüm 1: çelik, nikel, titanyum ve bunların alaşımları",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13477-1",
+        "ad": "Tahribatsız muayene - Akustik emisyon - Ekipman karakterizasyonu - Bölüm 1: Ekipman tanımı",
+        "kategori": "NDT",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 281",
+        "ad": "Hareketli rulmanlar - Dinamik yük taşıma kapasiteleri ve nominal ömür",
+        "kategori": "Mekanik",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 286-1",
+        "ad": "Boyutsal toleransların ISO kodu sistemi - Bölüm 1: Boyutsal toleranslar, sapmalar ve uyumlar tabanları",
+        "kategori": "Mekanik",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 1829",
+        "ad": "Yatay profil seç ölçülen seçimi tolerans sınıfları",
+        "kategori": "Mekanik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10083-1",
+        "ad": "Sertleştirilebilir çelikler - Bölüm 1: Genel teknik teslimat şartları",
+        "kategori": "Mekanik",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 6336-1",
+        "ad": "Silindirik dişli çarkların taşıma kapasitesinin hesabı - Bölüm 1: Temel ilkeler, giriş ve genel etki faktörleri",
+        "kategori": "Mekanik",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 2510",
+        "ad": "Çakma krenlerin güvenlik kuralları",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 3558",
+        "ad": "Portatif krenler - Güvenlik kuralları",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 5341",
+        "ad": "Bilyalı ve makaralı vinçler için güvenlik gereksinimleri",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-1",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 1: Dolu ve boş ekler",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-3",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 3: Fermuarlı beketle",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-4",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 4: Metal halka koplajhariç olan metal kovalama",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-5",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 5: U cıvatalar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-6",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 6: Asimetrik kama ve kovalar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13411-7",
+        "ad": "Çelik tel halatların uçlarının dondurulması - Bölüm 7: Simetrik kama ve kovalar",
+        "kategori": "Kaldırma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 11782",
+        "ad": "Basınçlı Taşınabilir Gaz Tüpleri - Muayene ve Test",
+        "kategori": "TS - Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12516-1",
+        "ad": "Vanaların hesabı - Bölüm 1: Çelik vana gövdeleri - Tasarım yöntemi için tablolar",
+        "kategori": "TS - Vana",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14399-1",
+        "ad": "Yapısal bağlantıları için yüksek mukavemetli yapısal cıvata takımları - Bölüm 1: Genel gereksinimler",
+        "kategori": "TS - Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 795",
+        "ad": "Kişisel koruyucu donanım - Halat bağlantı sistemleri ve halat güvenlik sistemi için ankor cihazları - Şartlar ve testler",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 361",
+        "ad": "Kişisel koruyucu donanım - Bütün vücut kulenim elemanları",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 358",
+        "ad": "Kişisel koruyucu donanım - İş koruyucu kemer ve iş tokaları - Güvenlik gereksinimleri ve test yöntemleri",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 354",
+        "ad": "Kişisel koruyucu donanım - Sacak halatları",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 355",
+        "ad": "Kişisel koruyucu donanım - Enerji soğurucu donanım",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 362",
+        "ad": "Kişisel koruyucu donanım - Birbirine geçirmeli bağlantılar",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 353-1",
+        "ad": "Kişisel koruyucu donanım - Dikey katı ancia sistemleri dahil güvenli çıkış sistemleri - Bölüm 1: Katı destekler için tiplerine ve testlerine ilişkin şartlar",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 363",
+        "ad": "Kişisel koruyucu donanım - Düşmeyi Önleyici sistem - Genel açıklamalar",
+        "kategori": "TS - Kişisel Koruyucu",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 166",
+        "ad": "Kişisel göz koruması - Teknik Özellikler",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 397",
+        "ad": "Endüstriyel güvenlik baretleri",
+        "kategori": "KKD",
+        "aciklama": "Endüstriyel güvenlik baretlerinin mekanik etki, ısı ve elektrik dayanımı test gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 388",
+        "ad": "Koruyucu eldivenler - Mekanik riskler",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 374-1",
+        "ad": "Kimyasallara ve mikroorganizmalara karşı koruyucu eldivenler - Bölüm 1: Terminoloji ve performans gereksinimleri",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12568",
+        "ad": "Ayak ve bacak koruyucular - Bürünluk ve taban zırhı için şartları ve test yöntemleri",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 20345",
+        "ad": "Bireysel koruyucu donanım - Emniyet ayakkabıları",
+        "kategori": "KKD",
+        "aciklama": "Korunma burnu ve delmeye dirençli taban iceren emniyet ayakkabilarinin teknik Özellikleri ve test yöntemlerini kapsar."
+    },
+    {
+        "numara": "TS EN ISO 20346",
+        "ad": "Bireysel koruyucu donanım - Koruyucu ayakkabılar",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 149",
+        "ad": "Solunum koruyucu cihazlar - Partiküllere karşı filtreli yarım yüz maskeler - Şartlar, deney, işaret",
+        "kategori": "KKD",
+        "aciklama": "FFP1/FFP2/FFP3 filtreli yarim yuz koruyucu maskelerin performans sınıflandırması ve test gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 140",
+        "ad": "Solunum koruyucu cihazlar - Yarım maskeler ve çeyrek maskeler - Şartlar, deney, işaret",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 136",
+        "ad": "Solunum koruyucu cihazlar - Tam yüz maskeler - Şartlar, deney ve işaret",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1073-1",
+        "ad": "Koruyucu giysi - İyonlaştırılmış radyasyonun etkisine karşı - Bölüm 1: Tasarım gereksinimleri test ve işaret gereksinimleri",
+        "kategori": "KKD",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13094",
+        "ad": "Tehlikeli maddelerin karayolu ile taşınması için tanklar - Metalik tanklar - Tasarım ve imalat şartları",
+        "kategori": "Depolama",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13160-1",
+        "ad": "Yuvalarında basınç/vakum sızıntı dedeksiyon sistemleri - Bölüm 1: Genel ilkeler",
+        "kategori": "Depolama",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13352",
+        "ad": "Taşınabilir tanklar - Plastik malzemeli iç tank - Muayene ve doğrulama",
+        "kategori": "Depolama",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12285-1",
+        "ad": "Yeraltı yerleştirilmiş çelik tanklar - Bölüm 1: Çift cidarlı yatay silindirik tanklar imalat ve test",
+        "kategori": "Depolama",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 650",
+        "ad": "Petrol ürünleri, petrol kimyasalları ve bunların ürünlerini depolamak için kaynaklı çelik tanklar",
+        "kategori": "Depolama",
+        "aciklama": "Petrol ürünleri, petrokimyasallar ve su için kaynaklı çelik depolama tanklarının tasarım, imalat ve test standardı (ABD)."
+    },
+    {
+        "numara": "API 653",
+        "ad": "Tank denetimi, tamir, değişimi ve yeniden kurulum",
+        "kategori": "Depolama",
+        "aciklama": "Mevcut çelik depolama tanklarının periyodik denetim, değerlendirme, tamir ve yeniden hizmete alma standardı."
+    },
+    {
+        "numara": "API 620",
+        "ad": "Büyük düşük basınçlı depolama tanklarının tasarımı ve imalatı",
+        "kategori": "Depolama",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 14122-1",
+        "ad": "Makinelerin güvenliği - Makinelere kalıcı erişim araçları - Bölüm 1: Ergonomik ilkeler iki seviye arasında sabit erişim araçlarının seçimi",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 14122-2",
+        "ad": "Makinelerin güvenliği - Makinelere kalıcı erişim araçları - Bölüm 2: Çalışma platformları ve geçit yolları",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 14122-3",
+        "ad": "Makinelerin güvenliği - Makinelere kalıcı erişim araçları - Bölüm 3: Merdivenler, merdiven korkulukları ve bariyerler",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 14122-4",
+        "ad": "Makinelerin güvenliği - Makinelere kalıcı erişim araçları - Bölüm 4: Sabit merdivenler",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1263-1",
+        "ad": "Güvenlik ağları - Bölüm 1: Güvenlik gereksinimleri, test yöntemleri",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": "İnşaat alanlarında kullanılan güvenlik ağı sistemlerinin boyut, test ve işaretleme şartlarını tanımlar."
+    },
+    {
+        "numara": "TS EN 13374",
+        "ad": "Geçici kenar koruma sistemleri - Ürün tanımlaması, testler",
+        "kategori": "Yüksek Çalışma",
+        "aciklama": "Geçici kenar koruma (parapet, kaldırım kenarı koruyucu) sistemlerinin sınıflaması, tasarımı ve testini kapsar."
+    },
+    {
+        "numara": "TS EN 618",
+        "ad": "Sürekli işlem makineleri - Vidalı konveyörler için güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": "Vidalı ve zincirli konveyorlerin güvenli tasarımı, imalatı ve testini kapsayan standart."
+    },
+    {
+        "numara": "TS EN 619",
+        "ad": "Sürekli işlem makineleri - Birim yük taşıma mekanik ekipmanları için güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": "Birim yük taşıma (palet, kutu, koli) mekanik sistemlerinin güvenlik gereksinimlerini düzenler."
+    },
+    {
+        "numara": "TS EN 617",
+        "ad": "Sürekli işlem makineleri - Silo, bunker ve depolama gereci için güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": "Silo, bunker ve depolama tesisatlarinin güvenliğini (bas basınçi, dolu sensor, erişim) tanımlar."
+    },
+    {
+        "numara": "TS EN 615",
+        "ad": "Sürekli işlem makineleri - Askılı konveyor düzenleri için güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14973",
+        "ad": "Yer altı madenciliği - Bant konveyor bantları - Güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 1050",
+        "ad": "Taşıma makineleri - özcük bilimi",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 81-3",
+        "ad": "Asansörler için güvenlik kuralları - Eşya asansörleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14502-2",
+        "ad": "Krenler - Kişi kaldırma ekipmanı - Bölüm 2: yükseltilebilir operatör kabinleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13136",
+        "ad": "Soğutma sistemleri - Basınç düşmesi için gereksinimler ve taşıma hesabı",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13559",
+        "ad": "Krenler - Güvenlik - Spreyder (Konteyner taşıma aparatı)",
+        "kategori": "Konveyör",
+        "aciklama": "Konteyner kaldırma spreyderlerin tasarım, imalat ve güvenlik gereksinimlerini kapsar."
+    },
+    {
+        "numara": "TS EN 13586",
+        "ad": "Krenler - Erişim gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": "Kren operatörü ve bakım personeli için güvenli erişim (merdiven, platform) gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 13157",
+        "ad": "Krenler - Güvenlik - Elle tahrik edilen kaldırma ekipmanı",
+        "kategori": "Konveyör",
+        "aciklama": "Elle kumandalı vinc, palanga ve makaralı kaldırma ekipmanının güvenlik gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "TS EN 13155",
+        "ad": "Krenler - Güvenlik - Sabit olmayan yük kaldırma ekipmanı",
+        "kategori": "Konveyör",
+        "aciklama": "Elektromıknatıs, vakum levhası ve clamp gibi değiştirilebilir yük kaldırma ekipmanının güvenliğini düzenler."
+    },
+    {
+        "numara": "TS EN 13410",
+        "ad": "Monoray (tek ray) taşıma sistemleri - Güvenlik gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.11",
+        "ad": "Monorail ve kollu iskeleler (underhung cran)",
+        "kategori": "Konveyör",
+        "aciklama": "Havai monorail ve kollu iskele (underhung) taşıma sistemlerinin güvenli işletimini düzenler."
+    },
+    {
+        "numara": "ASME B30.3",
+        "ad": "Insaat kule krenleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B30.4",
+        "ad": "Portal ve kule krenleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 2.002",
+        "ad": "Kaldırma ekipmanı tasarımı için FEM kuralları",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 9.751",
+        "ad": "Depolama ve geri alma makineleri sürücülerinin tasarımı",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1459-1",
+        "ad": "Purtuzlu arazi araç krenler - Güvenlik gereksinimleri - Tekerlekli taşıyıcılar",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1757-1",
+        "ad": "Endüstriyel araçlar güvenliği - Yayaya itilen araçlar - Bölüm 1: Palet arabaları",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 17206",
+        "ad": "Krenler - Köprü ve portal krenler için ek gereksinimler (1 ton üzeri)",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1251-1",
+        "ad": "Kriyojenik kaplar - Taşınabilir vakumlu yalıtımlı kaplar - Genel gereksinimler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12245",
+        "ad": "Taşınabilir gaz tüpleri - Tam sargılı kompozit tüpler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12257",
+        "ad": "Taşınabilir gaz tüpleri - Dikişsiz sarılmış termis işlemli alüminyum alaşımlı tüpler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 9809-1",
+        "ad": "Gaz tüpleri - Yeniden doldurulabilir dikişsiz çelik gaz tüpleri - Tasarım, yapım ve testler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 9809-3",
+        "ad": "Gaz tüpleri - Normalleştirilmiş çelik - Bölüm 3: Tasarım, imalat ve testler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11118",
+        "ad": "Gaz tüpleri - Yeniden doldurulamaz metalik gaz tüpleri",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS 11782",
+        "ad": "Taşınabilir basınçlı gaz tupleri - Muayene ve test",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 11114-1",
+        "ad": "Gaz tüpleri - Tüp ve vana malzemelerinin gaz içerikleriyle uyumluluğu - Bölüm 1: Metalik malzemeler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 14245",
+        "ad": "Gaz tüpleri - LPG tüp vanaları teknik şartları ve testleri",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TPED 2010/35/EU",
+        "ad": "Taşınabilir Basınçlı Ekipman Direktifi - AB içinde gaz tüp ve tanklarının serbest dolaşımı",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 510",
+        "ad": "Basınçlı kap muayene kodu - Servis içi muayene, derecelendirme, tamir ve değişim",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 579-1",
+        "ad": "Servis içindeki ekipman için uygunluk değerlendirmesi (FFS) esasları",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 520-1",
+        "ad": "Basınç tahliye ve depresorizasyon sistemleri - Boyutlandırma, seçim ve kurulum - Bölüm 1",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 521",
+        "ad": "Basınç tahliye ve depresorizasyon sistemleri için kılavuz",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "API 650",
+        "ad": "Petrol ürünleri için kaynaklı çelik tanklar - Tasarım ve imalat",
+        "kategori": "Basınçlı Kap",
+        "aciklama": "Petrol ürünleri, petrokimyasallar ve su için kaynaklı çelik depolama tanklarının tasarım, imalat ve test standardı (ABD)."
+    },
+    {
+        "numara": "ASME VIII-2",
+        "ad": "ASME Kazan ve Basınçlı Kap Kodu - Bölüm VIII Bölüm 2: Alternatif kuralar",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-2",
+        "ad": "Basınçlı ekipman - Bölüm 2: Basınç, sıcaklık, hacim ve anma çap denklemleri",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 764-3",
+        "ad": "Basınçlı ekipman - Bölüm 3: Tasarım amaçlı malzeme teknik özelliklerinin tanımlanması",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B16.5",
+        "ad": "Boru flanşları ve flanşlı fittingler - NPS 1/2 - NPS 24 inch",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B16.9",
+        "ad": "Fabrika yapımı kaynaklı boru bağlantıları",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B16.11",
+        "ad": "Dövme bağlantılar - Soket kaynaklı ve dişli",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10253-1",
+        "ad": "Alın kaynaklı boru bağlantıları - Bölüm 1: Genel kullanım için karbon çelik",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10253-2",
+        "ad": "Alın kaynaklı boru bağlantıları - Bölüm 2: Alümsız ve ferritik alaşımlı çelik - Muayene ile",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10216-1",
+        "ad": "Basınçlı amaçlar için dikişsiz çelik borular - Bölüm 1: Oda sıcaklığında ve üstünde",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10217-1",
+        "ad": "Basınçlı amaçlar için kaynaklı çelik borular - Bölüm 1: Elektrik direnç kaynaklı",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10297-1",
+        "ad": "Mekanik ve genel mühendislik amaçları için dikişsiz çelik borular - Bölüm 1",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1092-1",
+        "ad": "Flanşlar ve flanşlı bağlantıları - Bölüm 1: Çelik flanşlar",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1594",
+        "ad": "Doğal gaz boru hatları - Maksimum işletme basıncı 16 bar üstü - İşlevsel gereksinimler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13175",
+        "ad": "LPG ekipmanı ve aksesuarları - Basınç regülatorleri ve otomatik değiştirme cihazları",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14129",
+        "ad": "LPG ekipmanı ve aksesuarları - LPG kapları için emniyet valfları",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 560",
+        "ad": "LPG ekipmanı ve aksesuarları - Hortum birleştirme elemanı",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13799",
+        "ad": "LPG ekipmanı ve aksesuarları - Basınç göstergesi tasarımı",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14359",
+        "ad": "LPG doldurma operasyonları - LPG tanker araçları için genel şartlar",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13160-1",
+        "ad": "Sızıntı algılama sistemleri - Bölüm 1: Genel ilkeler",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12953-5",
+        "ad": "Alev borulu kazanlar - Muayene sırasında ve sonrasında - Bölüm 5",
+        "kategori": "Basınçlı Kap",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-1",
+        "ad": "İş makineleri (toprak iş makineleri) - Güvenlik - Bölüm 1: Genel gereksinimler",
+        "kategori": "İş Makineleri",
+        "aciklama": "Toprak işlemek için kullanılan tüm iş makineleri (ekskavatör, yükleyici, dozer) için genel güvenlik gereksinimlerinin temel standardı."
+    },
+    {
+        "numara": "TS EN 474-2",
+        "ad": "İş makineleri - Güvenlik - Bölüm 2: Bulldozer gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-3",
+        "ad": "İş makineleri - Güvenlik - Bölüm 3: Yükleyici (loader) gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "Tekerlekli ve paletli yükleyici (loader) tiplerinde güvenlik gereksinimleri, görüş alanı, stabilite ve yük kapasitesi."
+    },
+    {
+        "numara": "TS EN 474-4",
+        "ad": "İş makineleri - Güvenlik - Bölüm 4: Kazıcı yükleyici (backhoe loader) gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "İki işlevli kazıcı-yükleyicilerin (JCB tipi makineler) güvenlik gereksinimleri ve performans kriterleri."
+    },
+    {
+        "numara": "TS EN 474-5",
+        "ad": "İş makineleri - Güvenlik - Bölüm 5: Katı gövdeli damperli araçlara uygulanan gereksinimler",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-6",
+        "ad": "İş makineleri - Güvenlik - Bölüm 6: Damperli araç gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-7",
+        "ad": "İş makineleri - Güvenlik - Bölüm 7: Kazıyıcı (scraper) gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-8",
+        "ad": "İş makineleri - Güvenlik - Bölüm 8: Greyder gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-9",
+        "ad": "İş makineleri - Güvenlik - Bölüm 9: Boru hattı kazıcı gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-10",
+        "ad": "İş makineleri - Güvenlik - Bölüm 10: Hendek kazıcısı gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-11",
+        "ad": "İş makineleri - Güvenlik - Bölüm 11: Zemin kompaktatoru gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 474-12",
+        "ad": "İş makineleri - Güvenlik - Bölüm 12: Yol silindiri gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 6165",
+        "ad": "İş makineleri - Temel tipler - Sozcukbilimi",
+        "kategori": "İş Makineleri",
+        "aciklama": "İş makinelerinin (ekskavatör, yÜkleyici, dozer, greyder vb.) temel turleri ve terminolojisini tanımlayan uluslararasi standart."
+    },
+    {
+        "numara": "ISO 6682",
+        "ad": "İş makineleri - Kontroller için konfor ve erisim bölgeleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 6683",
+        "ad": "İş makineleri - Emniyet kemeri ve emniyet kemeri bağlantıları - Performans gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "İş makinelerinde operatÖrÜ korumak için emniyet kemeri ve kemer bağlantı sistemlerinin performans gereksinimlerini tanımlar."
+    },
+    {
+        "numara": "ISO 7096",
+        "ad": "İş makineleri - Operator koltuĞundan gecen titreşim değerlendirmesi",
+        "kategori": "İş Makineleri",
+        "aciklama": "Operator koltuĞu aracılıĞıyla aktarilan tam vucut titreşimlerin olculmesi ve değerlendirilmesi."
+    },
+    {
+        "numara": "ISO 7131",
+        "ad": "İş makineleri - YÜkleyiciler - Terminoloji ve ticari Özellikler",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 7135",
+        "ad": "İş makineleri - Hidrolik ekskavatörler - Terminoloji ve ticari Özellikler",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 3450",
+        "ad": "İş makineleri - Frenleme sistemleri - Performans gereksinimleri ve test yÖntemleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "İş makinelerinde frenleme sisteminin tasarımı, performansi ve test prosedürlerini kapsar."
+    },
+    {
+        "numara": "ISO 2867",
+        "ad": "İş makineleri - Erisim sistemleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 3411",
+        "ad": "İş makineleri - İnsan fiziksel boyutları ve asgari çalışma alani",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 11684",
+        "ad": "İş makineleri - Güvenlik işaretleri ve tehlike piktogramları - Genel ilkeler",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 15817",
+        "ad": "İş makineleri - Uzaktan operatör kontrol sistemleri için güvenlik gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 13766",
+        "ad": "İş makineleri - Elektromanyetik uyumluluk",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-1",
+        "ad": "Mobil yol insaat makineleri - Güvenlik - Bölüm 1: Ortak gereksinimler",
+        "kategori": "İş Makineleri",
+        "aciklama": "Asfaltseverik, frezeli ve kompaksiyon makineleri de dahil mobil yol insaat makineleri için ortak güvenlik gereksinimleri."
+    },
+    {
+        "numara": "TS EN 500-2",
+        "ad": "Mobil yol insaat makineleri - Güvenlik - Bölüm 2: Binder ve alayt makineleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-3",
+        "ad": "Mobil yol insaat makineleri - Güvenlik - Bölüm 3: Toprak frezeleme makineleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-4",
+        "ad": "Mobil yol insaat makineleri - Güvenlik - Bölüm 4: Kompakcilar",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 500-6",
+        "ad": "Mobil yol insaat makineleri - Güvenlik - Bölüm 6: Hendek kazici makineleri",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 10263-1",
+        "ad": "İş makineleri - Operator kabini ortami - Bölüm 1: Havalanma, filtrasyon, ısıtma ve soğutma",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 10263-4",
+        "ad": "İş makineleri - Operator kabini ortami - Bölüm 4: Silindirlerin ve motorlarin boyutu",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13000",
+        "ad": "Krenler - Mobil krenler",
+        "kategori": "İş Makineleri",
+        "aciklama": "Mobil krenlerin güvenligi, kararliligi, konfigurasyonu ve test yÖntemlerini ele alır."
+    },
+    {
+        "numara": "ASME B56.6",
+        "ad": "Purtuzlu arazi forklift araclari güvenlik standardı (ABD)",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 10567",
+        "ad": "İş makineleri - Hidrolik ekskavatör ve tasgiyicileri - Kaldırma kapasitesi",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 17757",
+        "ad": "İş makineleri ve madencilik makineleri - Otonom ve yari otonom makineler için güvenlik",
+        "kategori": "İş Makineleri",
+        "aciklama": "Otonom ve yari otonom is makineleri ve madencilik makineleri için güvenlik gereksinimlerini tanımlayan standart."
+    },
+    {
+        "numara": "TS EN 12733",
+        "ad": "Tarimsal ve orman makineleri - Motorlu cim bicerler - Güvenlik",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13531",
+        "ad": "İş makineleri - Devrilmeye karşı koruma yapısı (TOPS) - Ufuk dışı yolculuk için mini ekskavatörler",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 3449",
+        "ad": "İş makineleri - Düşen cisim koruma yapısı (FOPS) - Laboratuvar testleri ve performans gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "Düşen cisim koruma yapısı (FOPS) - bağımsız cisim düşme testleri ve kabul kriterleri."
+    },
+    {
+        "numara": "ISO 3471",
+        "ad": "İş makineleri - Devrilmeye karşı koruma yapısı (ROPS) - Laboratuvar testleri ve performans gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "Devrilmeye karşı koruma yapısı (ROPS) - statik ve dinamik yük testleri ve performans kriterleri."
+    },
+    {
+        "numara": "ISO 8082-1",
+        "ad": "Orman makineleri - Devrilmeye karşı koruma yapısı - Statik testler ve kabul kriterleri - Bölüm 1",
+        "kategori": "İş Makineleri",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13524",
+        "ad": "İş makineleri - Makine kontrol sistemleri - Güvenlik gereksinimleri",
+        "kategori": "İş Makineleri",
+        "aciklama": "İş makinelerinde güvenlikle ilgili kontrol sistemi parçalarınin fonksiyonel güvenliğini kapsar."
+    },
+    {
+        "numara": "TS EN 806-1",
+        "ad": "Binalar içinde icme suyu tasıyan tesisatlara iliskin şartlar - Bölüm 1: Genel",
+        "kategori": "Tesisat",
+        "aciklama": "Binalardaki icme suyu tesislarine iliskin teknik gereksinimler - genel esaslar, tanımlar ve temel prensipler."
+    },
+    {
+        "numara": "TS EN 806-2",
+        "ad": "Icme suyu tesisat tasarımı - Bölüm 2: Tasarım esaslari",
+        "kategori": "Tesisat",
+        "aciklama": "Icme suyu tesisat tasarımı - boru boyutlandırma yontemi, malzeme secimi ve tesisat düzeni esaslari."
+    },
+    {
+        "numara": "TS EN 806-3",
+        "ad": "Icme suyu tesisati - Boru boyutlandırma - Bölüm 3",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 806-4",
+        "ad": "Icme suyu tesisati - Kurulum - Bölüm 4",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 806-5",
+        "ad": "Icme suyu tesisati - İşletme ve bakim - Bölüm 5",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1717",
+        "ad": "Binalarda icme suyu korumasi - Kirleticilere karsi geri akcaklama onleme",
+        "kategori": "Tesisat",
+        "aciklama": "Icme suyu tesisatinda kirleticilerin geri akisini onlemek için uygulanması gereken ekipman ve kurallari tanımlar."
+    },
+    {
+        "numara": "TS EN 12828",
+        "ad": "Binalarda ısıtma sistemleri - Sicak su ısıtma sistemleri tasarımı",
+        "kategori": "Tesisat",
+        "aciklama": "Sicak sulu bina ısıtma sistemlerinin tasarımı - bufer tank, genlesme deposu ve emniyet elemanlari dahil."
+    },
+    {
+        "numara": "TS EN 12831-1",
+        "ad": "Binalarda enerji performansi - Isıtma sistemleri isi yukü hesabi - Bölüm 1: Ulusal hesaplama yontemi",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14511-1",
+        "ad": "Klima üniteleri, su soğutma gruplari - Bölüm 1: Terimler ve tanımlar",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14511-2",
+        "ad": "Klima üniteleri, su soğutma gruplari - Bölüm 2: Test şartları",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14511-3",
+        "ad": "Klima üniteleri, su soğutma gruplari - Bölüm 3: Test yÖntemleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13779",
+        "ad": "Konut dışı binalarda havalandirma - Havalandırma ve klima sistemi gereksinimleri",
+        "kategori": "Tesisat",
+        "aciklama": "Konut dışı (ticari ve endüstriyel) binalarda havalandırma ve klima sistemi tasarımı - debiler, filtreler, konfor."
+    },
+    {
+        "numara": "TS EN 15251",
+        "ad": "Binalar için iç çevre girdisi parametreleri - Havalandırma, termal konfor, aydınlatma ve akustik",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15232-1",
+        "ad": "Binalarda enerji performansi - Bina otomasyonu, klima ve bina yönetim sistemleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 16798-1",
+        "ad": "Binalarda enerji performansi - Havalandirma için ic cevre kalite parametreleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1751",
+        "ad": "Binalarda havalandirma - Hava terminal cihazları - Aerodinamik testler",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12237",
+        "ad": "Binalarda havalandirma - Kanal tesisat - Dairesel levha metal kanal mukavemet ve sizdimazlik",
+        "kategori": "Tesisat",
+        "aciklama": "Dairesel levha metal hava kanallarinin mukavemet ve hava sizdimazligi test ve sınıflandırması."
+    },
+    {
+        "numara": "TS EN 1507",
+        "ad": "Binalarda havalandirma - Dikdortgen kesitli levha metal hava kanallari - Mukavemet ve sizdimazlik",
+        "kategori": "Tesisat",
+        "aciklama": "Dikdortgen levha metal hava kanallarinin mukavemet ve hava sizdimazligi test prosedürleri."
+    },
+    {
+        "numara": "TS EN 12236",
+        "ad": "Binalarda havalandirma - Kanal tesisat - Aski ve destekleri",
+        "kategori": "Tesisat",
+        "aciklama": "Hava kanallarinin aski, destek ve tasinici sistemlerine iliskin tasarım ve kurulum gereksinimleri."
+    },
+    {
+        "numara": "TS EN 12101-2",
+        "ad": "Duman ve isi kontrolu için sistemler - Bölüm 2: Doğal duman ve isi boşaltma sistemleri (NSHEV)",
+        "kategori": "Tesisat",
+        "aciklama": "Doğal duman ve isi boşaltma sistemleri - cati aydınlatıcilari ve duvar menfezleri tasarımı ve testleri."
+    },
+    {
+        "numara": "TS EN 12101-3",
+        "ad": "Duman ve isi kontrolu için sistemler - Bölüm 3: Mekanik duman boşaltma sistemleri - Fanlar",
+        "kategori": "Tesisat",
+        "aciklama": "Mekanik duman boşaltma sistemleri - fan secimi, duct hesabi ve kontrol devresi gereksinimleri."
+    },
+    {
+        "numara": "TS EN 12101-6",
+        "ad": "Duman ve isi kontrolu için sistemler - Bölüm 6: Basınç farkı sistemleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "ASME B31.1",
+        "ad": "Guc borusu - İş makineleri, kazanlar, turetler için boru hatti tasarım ve imalat sanatlari",
+        "kategori": "Tesisat",
+        "aciklama": "Guc için boru hatti tasarım ve imalat kurallari - kazanlar, buhar hatları ve endustriyel işletmeler."
+    },
+    {
+        "numara": "ASME B31.3",
+        "ad": "Proses borusu - Kimyasal ve petrokimyasal işletmeler için boru hatti tasarımı",
+        "kategori": "Tesisat",
+        "aciklama": "Kimyasal tesis ve petrokimya işletmelerinde proses boru hatlarinin tasarımı, imalatı ve testi."
+    },
+    {
+        "numara": "ASME B31.4",
+        "ad": "Sivi boru hatti taşıma sistemleri - Ham petrol, doğalgaz sivisi ve alcol için",
+        "kategori": "Tesisat",
+        "aciklama": "Ham petrol, rafine ürünler ve LPG'nin boru hatti ile taşınması için tasarım ve işletme standardı."
+    },
+    {
+        "numara": "ASME B31.8",
+        "ad": "Gaz iletim ve dagitim boru hatti sistemleri",
+        "kategori": "Tesisat",
+        "aciklama": "Doğal gaz iletim ve dagitim boru hatlarinin tasarım, imalat, test ve işletme kurallari."
+    },
+    {
+        "numara": "TS EN 15001-1",
+        "ad": "Gaz altyapısı - 0.5 bar üzerindeki işletme basınçlı gaz tesisatları - Tasarım ve inşaat",
+        "kategori": "Tesisat",
+        "aciklama": "Yüksek işletme basınçlı (0.5 bar üzeri) gaz donanımı ve tesisatının tasarımı ve yapımı."
+    },
+    {
+        "numara": "TS EN ISO 17292",
+        "ad": "Metal topçuk valflar - Petrokimya ve ilgili endüstriler için",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 736-1",
+        "ad": "Valflar - Terminoloji - Valf tipleri",
+        "kategori": "Tesisat",
+        "aciklama": "Valf turlerinin terminolojisini (kelebek, glob, pistonlu, giyotin vb.) tanımlayan standart."
+    },
+    {
+        "numara": "TS EN 736-3",
+        "ad": "Valflar - Terminoloji - Valf bileşenlerinin tanımlanması",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12266-1",
+        "ad": "Endüstriyel valflar - Metalik valfların testi - Bölüm 1: Basınç testi, test proseduru ve kabul kriterleri",
+        "kategori": "Tesisat",
+        "aciklama": "Endustriyel metalik valflarin gövde ve koltuk sizdimazlik testi prosedürleri ve kabul kriterleri."
+    },
+    {
+        "numara": "TS EN 13959",
+        "ad": "Çek valflar - Pn 2.5 ila 160 ve DN 6 ila 400 ile flanslı ve flanssız",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1333",
+        "ad": "Boru fittinglari - PN tanımlanması",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13480-4",
+        "ad": "Metalik endustriyel borular - Bölüm 4: Kurulum ve işletme",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14376",
+        "ad": "Is yerlerinde gaz algilama sistemleri - Yanabilir gazlarin algilama cihazları",
+        "kategori": "Tesisat",
+        "aciklama": "Is yerlerinde patlamaya karsi koruma için yanabilir gaz algilama sistemlerine iliskin gereksinimler."
+    },
+    {
+        "numara": "TS EN 549",
+        "ad": "Gaz yakicilari ve gaz cihazları için contalar ve diyaframlar için kaucuk malzemeler",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 161",
+        "ad": "Gaz yakicilari ve gaz cihazları için otomatik kapama valflari",
+        "kategori": "Tesisat",
+        "aciklama": "Gaz sistemlerinde kullanılan otomatik kapama valflarinin güvenlik, test ve işaretleme gereksinimleri."
+    },
+    {
+        "numara": "TS EN 1643",
+        "ad": "Gaz yakicilari ve gaz doğal gaz cihazları için valflar - Dogru işlemleri doĞrulama sistemleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14800",
+        "ad": "Gaz cihazları için esnek hortumlar - Bakım ile ilgili gereksinimler",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10255",
+        "ad": "Kaynak ve diş acmaya uygun alaşımsız çelik borular - Teslimat teknik şartları",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10312",
+        "ad": "Kaynak yapılan paslanmaz çelik borular - Suyu taşımak için",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 4437-2",
+        "ad": "Gaz yakıt dagitimi için gomulu polietilen borular - Bölüm 2: Borular",
+        "kategori": "Tesisat",
+        "aciklama": "Doğal gaz dagitimi için gomulu polietilen borularin tasarım, boyutlar ve testleri."
+    },
+    {
+        "numara": "TS EN 12845",
+        "ad": "Sabit yanginla mucadele sistemleri - Otomatik sprinkler sistemleri - Tasarım, kurulum ve bakim",
+        "kategori": "Tesisat",
+        "aciklama": "Otomatik sprinkler sistemlerinin tasarımı, kurulumu ve bakimina iliskin Avrupa standardı. NFPA 13'ün Avrupa karsıligi olarak genis hizmet alanlarina uygulanir."
+    },
+    {
+        "numara": "TS EN 671-3",
+        "ad": "Sabit yanginla mucadele sistemleri - Hortumlu sistemler - Bölüm 3: Bakim",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12464-1",
+        "ad": "Isik ve aydinlatma - Is yerlerinin aydinlatilmasi - Bölüm 1: Ic is yerleri",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13201-1",
+        "ad": "Yol aydinlatması - Bölüm 1: Performans kriterlerinin secimi",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14336",
+        "ad": "İş makineleri - Sicak su ısıtma sistemi kurulumu ve komisyonu",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 6946",
+        "ad": "Yapı bileşenleri ve inşaat elemanları - Isıl direnç ve ısıl iletkenlik - Hesap yöntemi",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12502-1",
+        "ad": "Metalik malzemelerin korozyondan korunması - Isıl su sistemleri için kılavuz",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15976",
+        "ad": "Esnek hortumlar - Bölüm 1: Esnek hortum parametreleri tami",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12976-1",
+        "ad": "Güneş enerjili ısıtma sistemleri - Fabrika yapımı sistemler - Bölüm 1: Genel gereksinimler",
+        "kategori": "Tesisat",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15512",
+        "ad": "Statik depolama sistemleri - Ayarlanabilir palet rafları- Yapısal tasarım",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": "Ayarlanabilir palet rafı sistemlerinin yapısal tasarımı - kesit sınıflandırması, yük kombinasyonları, bağlantı hesapları."
+    },
+    {
+        "numara": "TS EN 15620",
+        "ad": "Statik depolama sistemleri - Ayarlanabilir palet rafları - Toleranslar, deformasyonlar ve boşluklar",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": "Depo rafı sistemlerinde izin verilen maksimum deformasyon değerleri ve yapısal boşluk kriterleri."
+    },
+    {
+        "numara": "TS EN 15629",
+        "ad": "Depolama sistemleri - Depolama ekipmanı teknik Özelliklerinin belirlenmesi",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": "Depolama ekipmanının siparis asamasinda belirlenmesi gereken teknik Özellikler (yuk, boyut, cevresel şartlar)."
+    },
+    {
+        "numara": "TS EN 15878",
+        "ad": "Statik depolama sistemleri - Terimler ve tanımlar",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 15963",
+        "ad": "Statik depolama sistemleri - Giriş çıkışlı ve geçişli raflar - Yapısal tasarım",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": "Giriş-çıkış (drive-in) ve geçişli raf sistemlerinin yapısal hesap esasları."
+    },
+    {
+        "numara": "TS EN 16206",
+        "ad": "Statik depolama sistemleri - Geçişli ve giriş çıkışlı raflar - Performans gereksinimleri",
+        "kategori": "Endüstriyel Raf",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14904",
+        "ad": "Zemin yüzeyler - Çok amaçlı kapalı spor alanları için spor zeminleri - Teknik özellikler",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1726-2",
+        "ad": "Malzeme taşıma makinelerinin güvenliği - Endüstriyel araçlar - Bölüm 2: Ek gereksinimler",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 10.2.02",
+        "ad": "FEM - Raf tasarımı için yapısal güvenlik rehberi",
+        "kategori": "Yapı",
+        "aciklama": "FEM - Palet rafları ve muhtelif depolama ekipmanının yapısal tasarımı için FEM rehber dökümanı."
+    },
+    {
+        "numara": "FEM 10.2.07",
+        "ad": "FEM - Çelik statik depolama sistemlerinin tasarımı",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 10.2.08",
+        "ad": "FEM - Raf sistemleri için zemin durumu ve yük taşıma kapasitesi",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "FEM 10.3.01",
+        "ad": "FEM - Raf sistemlerinin incelenmesi ve bakımı için kılavuz",
+        "kategori": "Yapı",
+        "aciklama": "FEM - Raf sistemlerinin periyodik incelemesi ve onarımında uygulanacak prosedürler rehberi."
+    },
+    {
+        "numara": "FEM 9.831",
+        "ad": "FEM - Depolama ve geri alma makineleri - Emniyet gereksinimleri",
+        "kategori": "Konveyör",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 818-7",
+        "ad": "Kaldırma amaçlı kısa halkalı zincirler - Güvenlik - Bölüm 7: Sınıf T - Yük inceltici zincirleri",
+        "kategori": "Kaldırma İletme Makinaları",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1991-1-1",
+        "ad": "Eurokod 1: Yapılar üzerindeki etkiler - Hacim ağırlıkları, öz ağırlık ve yapı yükler",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1993-1-3",
+        "ad": "Eurokod 3: Çelik yapıların tasarımı - Soguk sekilli elemanlar ve profilleme",
+        "kategori": "Yapı",
+        "aciklama": "Soguk sekilli çelik elemanlarin (raf profil, plaka) tasarım esaslari ve burkulma kontrolleri."
+    },
+    {
+        "numara": "EN 1993-1-5",
+        "ad": "Eurokod 3: Çelik yapıların tasarımı - Plak elemanlari",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10326",
+        "ad": "Surekli sicak daldirma kaplamali levha çelik ve serit - Teknik teslimat şartları",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 10169",
+        "ad": "Surekli organik kaplamali (rulo kaplamali) levha çelik ürünler - Teknik şartlar",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 9227",
+        "ad": "Korozyon testleri yapay atmosferlerde - Tuz sprey testleri",
+        "kategori": "Yapı",
+        "aciklama": "Tuz spreyi (salt spray) ile yapay korozyon testi - kaplama ve yuzey islemi performansinin değerlendirilmesi."
+    },
+    {
+        "numara": "TS EN 15696",
+        "ad": "Endustriyel araclar - Toplama istasyonlu araclar - Güvenlik gereksinimleri",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 528-1",
+        "ad": "Rayli yÜkleme kaldırma araçları - Güvenlik gereksinimleri ve doĞrulama",
+        "kategori": "Endüstriyel Araçlar",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13698-1",
+        "ad": "Palet üretim Özellikleri - Bölüm 1: Düz ahşap palet yapısı için",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13698-2",
+        "ad": "Palet üretim Özellikler - Bölüm 2: Sandıklı ahşap palet yapısı için",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 445",
+        "ad": "Paletler - Açıklama ve nominaller",
+        "kategori": "Yapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "ISO 6780",
+        "ad": "Amacsal genel kullanım için duz paletler - Sınıflandırma boyutlar ve toleranslar",
+        "kategori": "Yapı",
+        "aciklama": "Avrupa standart palet boyutları (1200x1000, 1200x800 mm) ve toleranslarini tanımlar."
+    },
+    {
+        "numara": "TS EN 13241",
+        "ad": "Endustriyel, ticari garaj kapıları ve geçitler - Ürün standardı, performans Özellikleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Endustriyel, ticari ve garaj kapılarının CE işaretlemesi için temel ürün standardı - performans, güvenlik ve dayaniklilik kategorizasyonu."
+    },
+    {
+        "numara": "TS EN 12445",
+        "ad": "Endustriyel, ticari ve garaj kapıları - Motorlu kapılarda güvenlik - Test yÖntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "EN 12453 kapsaminda motorlu endustriyel kapı güvenlik doĞrulama test metodlari."
+    },
+    {
+        "numara": "TS EN 12978",
+        "ad": "Endustriyel, ticari ve garaj kapıları - Güvenlik cihazları - Gereksinimler ve test yÖntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Motorlu kapı sistemlerinde kullanılan güvenlik cihazlarının (fotosel, sicak kenar, patlama manigi) gereksinimleri."
+    },
+    {
+        "numara": "TS EN 12433-1",
+        "ad": "Endustriyel, ticari ve garaj kapıları - Terminoloji - Bölüm 1: Mekanik kapi tipler",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12433-2",
+        "ad": "Endustriyel, ticari ve garaj kapıları - Terminoloji - Bölüm 2: Genel terimler",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12635",
+        "ad": "Endustriyel, ticari ve garaj kapıları - Kurulum ve kullanim",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Endustriyel kapıların montajı, ilk devreye alma ve kullanım sırasında uyulacak kurallar."
+    },
+    {
+        "numara": "TS EN 16005",
+        "ad": "Motorlu yaya kapıları - Kullanım için güvenlik - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Motorlu yaya kapılarının (kayar, dönel, katlanır) güvenli kullanım gereksinimleri ve test metodolojisi."
+    },
+    {
+        "numara": "TS EN 1634-1",
+        "ad": "Kapı ve kepenkler için yangın direnci ve duman Özellikleri - Bölüm 1: Yangın direnci testi",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Kapı, kepenkler ve yangın kapaklarının yangın direnci testi - EI, E ve EW sınıflandırması kriterleri."
+    },
+    {
+        "numara": "TS EN 1634-3",
+        "ad": "Kapı ve kapaklar için duman kontrolü - Bölüm 3: Duman sızıntı testi",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14351-1",
+        "ad": "Pencereler ve dış yaya kapıları - Ürün standardı - Bölüm 1: Dirençli olmayan önceki yangın Özellikleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13241-1",
+        "ad": "Endüstriyel, ticari ve garaj kapıları ve geçitler - Ürün standardı - Bölüm 1",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 179",
+        "ad": "Bina donanımları - Panik çıkışı için acil çıkış teçhizatları - Çubukla çalıştırılmış kapı kilit mekanizmaları",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Panik çıkış kapılarında kullanılan kol kumandalı kilit mekanizmalarının güvenlik ve performans şartları."
+    },
+    {
+        "numara": "TS EN 1125",
+        "ad": "Bina donanımları - Panik donanımı - Bar çalıştırılması - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Panik bar (push bar) ile çalıştırılmış kapı kilit mekanizmalarının güvenlik ve performans gereksinimleri."
+    },
+    {
+        "numara": "TS EN 1155",
+        "ad": "Bina donanımları - Kapı tutucular için elektrikli açık-tutma cihazları - Gereksinimler ve test",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1935",
+        "ad": "Bina donanımları - Tek eksenli menteşeler - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1906",
+        "ad": "Bina donanımları - Kapı kolları ve kapı düğmeleri - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1303",
+        "ad": "Bina donanımları - Silindirik kilitleme sistemleri - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12320",
+        "ad": "Bina donanımları - Asma kilitler ve kilitler - Gereksinimler ve test yöntemleri",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14600",
+        "ad": "Kapı, pencere ve acilabilir cam çerçeveleri - Çerçeve elemanlarının erişim kontrolü - Gereksinimler ve testler",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1627",
+        "ad": "Yaya kapi ve pencereler - Hırsıza karsi gereksinimler ve sınıflandırılma",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Yaya kapılarının hırsıza karsi dirençini sınıflandıran standart (RC1-RC6 direnç sınıflari)."
+    },
+    {
+        "numara": "TS EN 1628",
+        "ad": "Yaya kapi ve pencereler - Hırsıza karsi - Statik baskı yükleme altında test",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1629",
+        "ad": "Yaya kapi ve pencereler - Hırsıza karsi - Dinamik baskı yükleme altında test",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 1630",
+        "ad": "Yaya kapi ve pencereler - Hırsıza karşı - Manuel delme girişimine karşı test",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN ISO 10077-1",
+        "ad": "Pencere kapi ve panjur - Isıl performans - Isıl geçirgenlik hesaplama yontemi",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Pencere, kapı ve panjur elemanlarının ısıl geçirgenlik degerinin (U degeri) hesaplama yontemi."
+    },
+    {
+        "numara": "TS EN 13123-1",
+        "ad": "Pencereler, kapılar ve panjurlar - Patlama dirençi - Gereksinimler ve sınıflandırma - Bölüm 1",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12519",
+        "ad": "Pencereler ve kapılar - Terminoloji",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 14388",
+        "ad": "Yol trafiği gürültü azaltma cihazları - Teknik Özellikler",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13659",
+        "ad": "Panjurlar - Performans gereksinimleri dahil güvenlik",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 13830",
+        "ad": "Perde duvarlar - Ürün standardı",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12400",
+        "ad": "Pencereler ve kapi - Dayaniklilik - Gereksinimler ve sınıflandırma",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12046-1",
+        "ad": "İşletme kuvvetleri - Test yÖntemleri - Bölüm 1: Pencereler",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12046-2",
+        "ad": "İşletme kuvvetleri - Test yÖntemleri - Bölüm 2: Kapilar",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12211",
+        "ad": "Pencereler ve dış kapılar - Ruzgar yükleme altinda hava gecirimsizligii - Test yontemi",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12210",
+        "ad": "Pencereler ve dış kapılar - Ruzgar yükleme altinda hava gecirimsizligii - Sınıflandırma",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12208",
+        "ad": "Pencereler ve kapılar - Su sızdırmazlığı - Sınıflandırma",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12207",
+        "ad": "Pencereler ve kapılar - Hava geçirimsizliği - Sınıflandırma",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "TS EN 12150-1",
+        "ad": "Binalarda cam - Isıl olarak temperlenmiş soda kireç güvenlik camı - Tanım ve açıklama",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": "Isıl temperlenmiş (ESG) cam kimyasal ve mekanik özellikleri - bina cephe ve endüstriyel cam gereksinimleri."
+    },
+    {
+        "numara": "TS EN ISO 12543-1",
+        "ad": "Cam binalarda - Lamineli cam ve lamineli güvenlik camı - Bölüm 1: Tanımlar",
+        "kategori": "Endüstriyel Kapı",
+        "aciklama": ""
+    },
+    {
+        "numara": "EN 1991-1-2",
+        "ad": "Yapılara etkiyen yükler — Yangın etkileri. Yangın yükü yoğunluğu, büyüme hızı ve",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yapılara etkiyen yükler — Yangın etkileri. Yangın yükü yoğunluğu, büyüme hızı ve yangın senaryosu hesabı."
+    },
+    {
+        "numara": "ISO 1716",
+        "ad": "Yapı malzemeleri ve ürünlerinin yanma ısısının tayini — Net ısıl değer (NCV) bel",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yapı malzemeleri ve ürünlerinin yanma ısısının tayini — Net ısıl değer (NCV) belirleme yöntemi."
+    },
+    {
+        "numara": "ISO 5660-1",
+        "ad": "Yangın tepkisi deneyleri — Isı salım hızı, duman üretim hızı ve kütle kaybı hızı",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yangın tepkisi deneyleri — Isı salım hızı, duman üretim hızı ve kütle kaybı hızı. Koni kalorimetre yöntemi."
+    },
+    {
+        "numara": "NFPA 557",
+        "ad": "Yangın yükü yoğunluğu hesabı standardı — Bina kullanım tipine göre referans yoğu",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yangın yükü yoğunluğu hesabı standardı — Bina kullanım tipine göre referans yoğunluk tabloları."
+    },
+    {
+        "numara": "ISO 24679-1",
+        "ad": "Yangın güvenliği mühendisliği — Yapıda yangın davranışının değerlendirilmesi.",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yangın güvenliği mühendisliği — Yapıda yangın davranışının değerlendirilmesi."
+    },
+    {
+        "numara": "ISO 16733-1",
+        "ad": "Yangın güvenliği mühendisliği — Yangın senaryosu ve yangın modellemesi seçimi.",
+        "kategori": "Yangın Yükü",
+        "aciklama": "Yangın güvenliği mühendisliği — Yangın senaryosu ve yangın modellemesi seçimi."
+    },
+    {
+        "numara": "PD 7974-1",
+        "ad": "BSI — Yapılarda yangın güvenliği mühendisliği uygulaması: Yangın başlangıcı ve g",
+        "kategori": "Yangın Yükü",
+        "aciklama": "BSI — Yapılarda yangın güvenliği mühendisliği uygulaması: Yangın başlangıcı ve gelişimi."
+    },
+    {
+        "numara": "ISO 14520-12",
+        "ad": "IG-100 (Azot) söndürme sistemleri — inert gaz.",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "IG-100 (Azot) söndürme sistemleri — inert gaz."
+    },
+    {
+        "numara": "ISO 14520-13",
+        "ad": "IG-01 (Argon) söndürme sistemleri — inert gaz.",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "IG-01 (Argon) söndürme sistemleri — inert gaz."
+    },
+    {
+        "numara": "NFPA 12A",
+        "ad": "Halon 1301 söndürme sistemleri — ABD, mevcut sistemler.",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Halon 1301 söndürme sistemleri — ABD, mevcut sistemler."
+    },
+    {
+        "numara": "VdS 2380",
+        "ad": "Almanya — Gazlı söndürme sistemleri tasarım ve kurulum yönergeleri.",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Almanya — Gazlı söndürme sistemleri tasarım ve kurulum yönergeleri."
+    },
+    {
+        "numara": "NFPA 13R",
+        "ad": "Konut binalarında sprinkler sistemleri — 4 kata kadar yapılar.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Konut binalarında sprinkler sistemleri — 4 kata kadar yapılar."
+    },
+    {
+        "numara": "NFPA 13D",
+        "ad": "Tek ve iki ailelik konutlarda sprinkler sistemleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Tek ve iki ailelik konutlarda sprinkler sistemleri."
+    },
+    {
+        "numara": "NFPA 16",
+        "ad": "Köpük-su sprey ve köpük-su sprinkler sistemleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Köpük-su sprey ve köpük-su sprinkler sistemleri."
+    },
+    {
+        "numara": "EN 14339",
+        "ad": "Yeraltı yangın hidranti sistemleri — Tasarım ve kurulum.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Yeraltı yangın hidranti sistemleri — Tasarım ve kurulum."
+    },
+    {
+        "numara": "EN 14384",
+        "ad": "Yerüstü yangın hidranti sistemleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Yerüstü yangın hidranti sistemleri."
+    },
+    {
+        "numara": "EN 671-1",
+        "ad": "Sabit yangın söndürme donanımı — Yarı sert hortumlu makara sistemleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Sabit yangın söndürme donanımı — Yarı sert hortumlu makara sistemleri."
+    },
+    {
+        "numara": "EN 671-2",
+        "ad": "Sabit yangın söndürme donanımı — Düz hortumlu hidrant sistemleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Sabit yangın söndürme donanımı — Düz hortumlu hidrant sistemleri."
+    },
+    {
+        "numara": "EN 671-3",
+        "ad": "Sabit yangın söndürme donanımı — Bakım, Bölüm 3.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Sabit yangın söndürme donanımı — Bakım, Bölüm 3."
+    },
+    {
+        "numara": "EN 12259-1",
+        "ad": "Sabit yangın söndürme sistemleri — Sprinkler ve su spreyi bileşenleri.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Sabit yangın söndürme sistemleri — Sprinkler ve su spreyi bileşenleri."
+    },
+    {
+        "numara": "TS EN 14972-1",
+        "ad": "Sabit söndürme sistemleri — Su sisi sistemleri, Bölüm 1: Tasarım ve kurulum.",
+        "kategori": "Su Bazlı Söndürme",
+        "aciklama": "Sabit söndürme sistemleri — Su sisi sistemleri, Bölüm 1: Tasarım ve kurulum."
+    },
+    {
+        "numara": "EN 13565-1",
+        "ad": "Sabit köpük söndürme sistemleri — Bölüm 1: Gereksinimler ve test yöntemleri.",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": "Sabit köpük söndürme sistemleri — Bölüm 1: Gereksinimler ve test yöntemleri."
+    },
+    {
+        "numara": "EN 13565-2",
+        "ad": "Sabit köpük söndürme sistemleri — Bölüm 2: Tasarım, kurulum ve bakım.",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": "Sabit köpük söndürme sistemleri — Bölüm 2: Tasarım, kurulum ve bakım."
+    },
+    {
+        "numara": "ISO 7203-1",
+        "ad": "Yangın söndürücü maddeler — Sıvı akaryakıt yangınları için köpük konsantreleri.",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": "Yangın söndürücü maddeler — Sıvı akaryakıt yangınları için köpük konsantreleri."
+    },
+    {
+        "numara": "NFPA 30",
+        "ad": "Yanıcı ve tutuşabilir sıvılar kodu — Depolama ve taşıma.",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": "Yanıcı ve tutuşabilir sıvılar kodu — Depolama ve taşıma."
+    },
+    {
+        "numara": "API 2021",
+        "ad": "Petrol endüstrisi — Depo tankları yangın önleme ve söndürme.",
+        "kategori": "Köpüklü Söndürme",
+        "aciklama": "Petrol endüstrisi — Depo tankları yangın önleme ve söndürme."
+    },
+    {
+        "numara": "NFPA 17A",
+        "ad": "Islak kimyasal (wet chemical) söndürme sistemleri — Ticari mutfak uygulamaları.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Islak kimyasal (wet chemical) söndürme sistemleri — Ticari mutfak uygulamaları."
+    },
+    {
+        "numara": "TS EN 15751",
+        "ad": "Avrupa — Ticari mutfak ekipmanı için sabit yangın söndürme sistemleri.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Avrupa — Ticari mutfak ekipmanı için sabit yangın söndürme sistemleri."
+    },
+    {
+        "numara": "UL 300",
+        "ad": "ABD ürün onay standardı — Yemek pişirme alanları söndürme sistemleri.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "ABD ürün onay standardı — Yemek pişirme alanları söndürme sistemleri."
+    },
+    {
+        "numara": "UL 300A",
+        "ad": "Otomatik söndürme sistemleri — Pişirme aleti üstü yangın tehlikesi.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Otomatik söndürme sistemleri — Pişirme aleti üstü yangın tehlikesi."
+    },
+    {
+        "numara": "TS EN 1825-1",
+        "ad": "Mutfak davlumbazı gres tutucular ve filtreler.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Mutfak davlumbazı gres tutucular ve filtreler."
+    },
+    {
+        "numara": "TS EN 1825-2",
+        "ad": "Mutfak davlumbazı gres tutucular — Seçim, kurulum ve bakım.",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Mutfak davlumbazı gres tutucular — Seçim, kurulum ve bakım."
+    },
+    {
+        "numara": "NFPA 96",
+        "ad": "Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme",
+        "kategori": "Mutfak Söndürme",
+        "aciklama": "Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme."
+    },
+    {
+        "numara": "EN 54-5",
+        "ad": "Yangın algılama ve alarm sistemleri — Isı detektörleri, noktasal.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Isı detektörleri, noktasal."
+    },
+    {
+        "numara": "EN 54-7",
+        "ad": "Yangın algılama ve alarm sistemleri — Duman detektörleri, dağılım tipi optik.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Duman detektörleri, dağılım tipi optik."
+    },
+    {
+        "numara": "EN 54-10",
+        "ad": "Yangın algılama ve alarm sistemleri — Alev detektörleri, noktasal.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Alev detektörleri, noktasal."
+    },
+    {
+        "numara": "EN 54-11",
+        "ad": "Yangın algılama ve alarm sistemleri — Manuel yangın alarm butonu.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Manuel yangın alarm butonu."
+    },
+    {
+        "numara": "EN 54-12",
+        "ad": "Yangın algılama ve alarm sistemleri — Duman detektörleri, doğrusal ışın tipi.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Duman detektörleri, doğrusal ışın tipi."
+    },
+    {
+        "numara": "EN 54-13",
+        "ad": "Yangın algılama ve alarm sistemleri — Sistem bileşenlerinin uyumluluğu ve bağlan",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Sistem bileşenlerinin uyumluluğu ve bağlanabilirliği."
+    },
+    {
+        "numara": "EN 54-16",
+        "ad": "Yangın algılama ve alarm sistemleri — Sesli alarm kontrol ve gösterge donanımı.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Sesli alarm kontrol ve gösterge donanımı."
+    },
+    {
+        "numara": "EN 54-17",
+        "ad": "Yangın algılama ve alarm sistemleri — Kısa devre izolatörleri.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Kısa devre izolatörleri."
+    },
+    {
+        "numara": "EN 54-18",
+        "ad": "Yangın algılama ve alarm sistemleri — Giriş/çıkış cihazları.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Giriş/çıkış cihazları."
+    },
+    {
+        "numara": "EN 54-20",
+        "ad": "Yangın algılama ve alarm sistemleri — Duman detektörleri, aspirasyonlu tip.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Duman detektörleri, aspirasyonlu tip."
+    },
+    {
+        "numara": "EN 54-21",
+        "ad": "Yangın algılama ve alarm sistemleri — Alarm iletim ve arıza uyarı yönlendirme do",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Alarm iletim ve arıza uyarı yönlendirme donanımı."
+    },
+    {
+        "numara": "EN 54-23",
+        "ad": "Yangın algılama ve alarm sistemleri — Görsel uyarı cihazları.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Görsel uyarı cihazları."
+    },
+    {
+        "numara": "EN 54-25",
+        "ad": "Yangın algılama ve alarm sistemleri — Radyo bağlantılı (kablosuz) sistem bileşen",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Yangın algılama ve alarm sistemleri — Radyo bağlantılı (kablosuz) sistem bileşenleri."
+    },
+    {
+        "numara": "VdS 2095",
+        "ad": "Almanya — Yangın alarm sistemleri planlama ve kurulum yönergeleri.",
+        "kategori": "Yangın Alarm",
+        "aciklama": "Almanya — Yangın alarm sistemleri planlama ve kurulum yönergeleri."
+    },
+    {
+        "numara": "EN 12101-1",
+        "ad": "Duman ve ısı tahliye sistemleri — Duman ve ısı kontrol perdelerinin özellikleri.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Duman ve ısı kontrol perdelerinin özellikleri."
+    },
+    {
+        "numara": "EN 12101-2",
+        "ad": "Duman ve ısı tahliye sistemleri — Doğal duman ve ısı tahliye ventilatörleri.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Doğal duman ve ısı tahliye ventilatörleri."
+    },
+    {
+        "numara": "EN 12101-3",
+        "ad": "Duman ve ısı tahliye sistemleri — Mekanik duman tahliye sistemleri, motorlu duma",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Mekanik duman tahliye sistemleri, motorlu duman egzoz fanları."
+    },
+    {
+        "numara": "EN 12101-4",
+        "ad": "Duman ve ısı tahliye sistemleri — Kurulum, kabul testi, rutin bakım ve onarım kı",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Kurulum, kabul testi, rutin bakım ve onarım kılavuzu."
+    },
+    {
+        "numara": "EN 12101-6",
+        "ad": "Duman ve ısı tahliye sistemleri — Basınçlı duman kontrol sistemleri, kit özellik",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Basınçlı duman kontrol sistemleri, kit özellikleri."
+    },
+    {
+        "numara": "EN 12101-7",
+        "ad": "Duman ve ısı tahliye sistemleri — Kanalsız doğal duman tahliyesi.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Kanalsız doğal duman tahliyesi."
+    },
+    {
+        "numara": "EN 12101-8",
+        "ad": "Duman ve ısı tahliye sistemleri — Tünel için doğal duman tahliye sistemi kontrol",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Tünel için doğal duman tahliye sistemi kontrol panelleri."
+    },
+    {
+        "numara": "EN 12101-9",
+        "ad": "Duman ve ısı tahliye sistemleri — Yangın kontrol damperlerinin kontrolü.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Yangın kontrol damperlerinin kontrolü."
+    },
+    {
+        "numara": "EN 12101-10",
+        "ad": "Duman ve ısı tahliye sistemleri — Güç besleme kitleri.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Duman ve ısı tahliye sistemleri — Güç besleme kitleri."
+    },
+    {
+        "numara": "NFPA 92",
+        "ad": "ABD — Duman kontrol sistemleri standardı. Basınçlı merdivenler, atrium duman yön",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "ABD — Duman kontrol sistemleri standardı. Basınçlı merdivenler, atrium duman yönetimi."
+    },
+    {
+        "numara": "EN 1634-1",
+        "ad": "Yangın ve duman kontrol kapı ve pencere takımları — Yangına direnç deneyi.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Yangın ve duman kontrol kapı ve pencere takımları — Yangına direnç deneyi."
+    },
+    {
+        "numara": "EN 1634-3",
+        "ad": "Yangın kapıları — Yangın ve duman geçirgenliği deneyi.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Yangın kapıları — Yangın ve duman geçirgenliği deneyi."
+    },
+    {
+        "numara": "EN 15650",
+        "ad": "Havalandırma sistemleri için yangın damperleri.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Havalandırma sistemleri için yangın damperleri."
+    },
+    {
+        "numara": "EN 15882-1",
+        "ad": "Yangın kontrol damperlerinin genişletilmiş uygulama.",
+        "kategori": "Duman Kontrolü",
+        "aciklama": "Yangın kontrol damperlerinin genişletilmiş uygulama."
+    },
+    {
+        "numara": "EN 3-7",
+        "ad": "Taşınabilir yangın söndürücüler — Performans, test yöntemleri ve yapı.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Taşınabilir yangın söndürücüler — Performans, test yöntemleri ve yapı."
+    },
+    {
+        "numara": "EN 3-8",
+        "ad": "Taşınabilir yangın söndürücüler — Ek gereksinimler ve testler.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Taşınabilir yangın söndürücüler — Ek gereksinimler ve testler."
+    },
+    {
+        "numara": "EN 3-9",
+        "ad": "Taşınabilir yangın söndürücüler — CO₂ söndürücüler.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Taşınabilir yangın söndürücüler — CO₂ söndürücüler."
+    },
+    {
+        "numara": "EN 3-10",
+        "ad": "Taşınabilir yangın söndürücüler — Özel gereksinimler.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Taşınabilir yangın söndürücüler — Özel gereksinimler."
+    },
+    {
+        "numara": "EN 1866-1",
+        "ad": "Taşınabilir CO₂ söndürücüler.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Taşınabilir CO₂ söndürücüler."
+    },
+    {
+        "numara": "TS EN 1568-3",
+        "ad": "Yangın söndürücü maddeler — Köpük konsantreleri.",
+        "kategori": "Yangın Söndürücüler",
+        "aciklama": "Yangın söndürücü maddeler — Köpük konsantreleri."
+    },
+    {
+        "numara": "EN 1992-1-2",
+        "ad": "Betonarme yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 2).",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Betonarme yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 2)."
+    },
+    {
+        "numara": "EN 1993-1-2",
+        "ad": "Çelik yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 3).",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Çelik yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 3)."
+    },
+    {
+        "numara": "EN 1994-1-2",
+        "ad": "Kompozit çelik-beton yapılar — Yangın etkisi altında tasarım (Eurocode 4).",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Kompozit çelik-beton yapılar — Yangın etkisi altında tasarım (Eurocode 4)."
+    },
+    {
+        "numara": "EN 1995-1-2",
+        "ad": "Ahşap yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 5).",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Ahşap yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 5)."
+    },
+    {
+        "numara": "EN 1996-1-2",
+        "ad": "Yığma yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 6).",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Yığma yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 6)."
+    },
+    {
+        "numara": "ISO 834-1",
+        "ad": "Standart yangın eğrisi — Yapı elemanlarının yangına direnç deneyi.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Standart yangın eğrisi — Yapı elemanlarının yangına direnç deneyi."
+    },
+    {
+        "numara": "ISO 834-2",
+        "ad": "Alternatif ve parametrik yangın eğrileri.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Alternatif ve parametrik yangın eğrileri."
+    },
+    {
+        "numara": "EN 13501-1",
+        "ad": "Yapı malzemeleri ve ürünlerinin yangın performansı sınıflandırması.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Yapı malzemeleri ve ürünlerinin yangın performansı sınıflandırması."
+    },
+    {
+        "numara": "EN 13501-2",
+        "ad": "Yapı elemanlarının yangına direnç sınıflandırması.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Yapı elemanlarının yangına direnç sınıflandırması."
+    },
+    {
+        "numara": "EN 13501-3",
+        "ad": "Yangın durumundaki havalandırma servis ürünleri sınıflandırması.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Yangın durumundaki havalandırma servis ürünleri sınıflandırması."
+    },
+    {
+        "numara": "EN 13501-4",
+        "ad": "Duman kontrol kapılar ve yapı elemanları sınıflandırması.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Duman kontrol kapılar ve yapı elemanları sınıflandırması."
+    },
+    {
+        "numara": "EN 13501-5",
+        "ad": "Çatılar — Dışarıdan gelen yangına maruz kalma sınıflandırması.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "Çatılar — Dışarıdan gelen yangına maruz kalma sınıflandırması."
+    },
+    {
+        "numara": "NFPA 220",
+        "ad": "ABD — Yapı inşaat tipleri standardı.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "ABD — Yapı inşaat tipleri standardı."
+    },
+    {
+        "numara": "UL 263",
+        "ad": "ABD — Yapı elemanlarının yangına direnç deneyleri.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "ABD — Yapı elemanlarının yangına direnç deneyleri."
+    },
+    {
+        "numara": "ASTM E119",
+        "ad": "ABD — Yapı malzemeleri ve sistemlerinin yangın dayanımı deneyleri.",
+        "kategori": "Yapısal Yangına Direnç",
+        "aciklama": "ABD — Yapı malzemeleri ve sistemlerinin yangın dayanımı deneyleri."
+    },
+    {
+        "numara": "ISO 31000",
+        "ad": "Risk yönetimi — Kılavuz ilkeler ve genel çerçeve.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Risk yönetimi — Kılavuz ilkeler ve genel çerçeve."
+    },
+    {
+        "numara": "ISO 16069",
+        "ad": "Güvenlik işaret sistemleri — Acil kaçış aydınlatması ve yönlendirmesi.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Güvenlik işaret sistemleri — Acil kaçış aydınlatması ve yönlendirmesi."
+    },
+    {
+        "numara": "EN 50172",
+        "ad": "Acil kaçış aydınlatma sistemleri — Kurulum ve işletme.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Acil kaçış aydınlatma sistemleri — Kurulum ve işletme."
+    },
+    {
+        "numara": "NFPA 1",
+        "ad": "ABD — Yangın kodu. Bina kullanımı, çıkış, tahliye ve risk.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "ABD — Yangın kodu. Bina kullanımı, çıkış, tahliye ve risk."
+    },
+    {
+        "numara": "EN ISO 7010",
+        "ad": "Güvenlik işaretleri — Acil çıkış, yangın teçhizatı ve tehlike işaretleri.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Güvenlik işaretleri — Acil çıkış, yangın teçhizatı ve tehlike işaretleri."
+    },
+    {
+        "numara": "TS 9811",
+        "ad": "Türkiye — Yangın için güvenlik işaretleri.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Türkiye — Yangın için güvenlik işaretleri."
+    },
+    {
+        "numara": "TBDY 2018",
+        "ad": "Türkiye Bina Deprem Yönetmeliği — Bölüm 3: Yapısal çelik, yangın etkisi.",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Türkiye Bina Deprem Yönetmeliği — Bölüm 3: Yapısal çelik, yangın etkisi."
+    },
+    {
+        "numara": "Binaların Yangından Korunması Hakkında Yönetmelik",
+        "ad": "Türkiye — Yapılarda yangından korunma, tahliye, söndürme ve alarm sistemleri ger",
+        "kategori": "Risk Değerlendirme",
+        "aciklama": "Türkiye — Yapılarda yangından korunma, tahliye, söndürme ve alarm sistemleri gereksinimleri."
+    },
+    {
+        "numara": "NFPA 850",
+        "ad": "Elektrik santrallerinde yangın koruması — Türbin sahaları, trafo ve kablo güzerg",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Elektrik santrallerinde yangın koruması — Türbin sahaları, trafo ve kablo güzergâhları."
+    },
+    {
+        "numara": "NFPA 804",
+        "ad": "Nükleer santraller için yangın koruma standardı.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Nükleer santraller için yangın koruma standardı."
+    },
+    {
+        "numara": "NFPA 409",
+        "ad": "Uçak hangarları yangın koruma standardı.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Uçak hangarları yangın koruma standardı."
+    },
+    {
+        "numara": "NFPA 415",
+        "ad": "Uçak yakıt ikmal sistemleri ve çalışma alanları.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Uçak yakıt ikmal sistemleri ve çalışma alanları."
+    },
+    {
+        "numara": "EN 1127-1",
+        "ad": "Patlayıcı ortamlar — Patlamadan korunma, temel kavramlar.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Patlayıcı ortamlar — Patlamadan korunma, temel kavramlar."
+    },
+    {
+        "numara": "EN 60079-10-1",
+        "ad": "Patlayıcı ortamlar — Tehlikeli bölgelerin sınıflandırılması (gaz).",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Patlayıcı ortamlar — Tehlikeli bölgelerin sınıflandırılması (gaz)."
+    },
+    {
+        "numara": "IEC 61511",
+        "ad": "İşlevsel güvenlik — Proses endüstrisi güvenlik enstrüman sistemleri.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "İşlevsel güvenlik — Proses endüstrisi güvenlik enstrüman sistemleri."
+    },
+    {
+        "numara": "API 610",
+        "ad": "Petrokimya tesislerinde pompalar — Yangın güvenliği gereksinimleri.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Petrokimya tesislerinde pompalar — Yangın güvenliği gereksinimleri."
+    },
+    {
+        "numara": "NFPA 654",
+        "ad": "Yanıcı toz yangını ve patlamasına karşı koruma.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Yanıcı toz yangını ve patlamasına karşı koruma."
+    },
+    {
+        "numara": "NFPA 68",
+        "ad": "Patlama basıncı tahliyesi standardı.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Patlama basıncı tahliyesi standardı."
+    },
+    {
+        "numara": "NFPA 69",
+        "ad": "Patlama önleme sistemleri standardı.",
+        "kategori": "Endüstriyel Risk",
+        "aciklama": "Patlama önleme sistemleri standardı."
+    }
+]
