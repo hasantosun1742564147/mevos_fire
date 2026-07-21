@@ -14,9 +14,10 @@ workflows:
       cocoapods: default
       vars:
         BUNDLE_ID: "com.mevos.fire"
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.mevos.fire
+      # ios_signing: Apple Developer hesabı gerektirir ($99/yıl)
+      # ios_signing:
+      #   distribution_type: app_store
+      #   bundle_identifier: com.mevos.fire
 
     triggering:
       events:
@@ -39,11 +40,11 @@ workflows:
         script: flutter test
         ignore_failure: true
 
-      - name: iOS IPA build al
-        script: flutter build ipa --release
+      - name: iOS build al (imzasız - test amaçlı)
+        script: flutter build ios --release --no-codesign
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/iphoneos/Runner.app
       - /tmp/xcodebuild_logs/*.log
 
   ios-adhoc:
