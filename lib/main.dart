@@ -10,29 +10,45 @@ import 'package:url_launcher/url_launcher.dart';
 void main() => runApp(const MevosFireApp());
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
-// GROQ API
+// GEMINI API
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 
-Future<String> groqChat({
+Future<String> geminiChat({
   required String apiKey,
   required List<Map<String, String>> mesajlar,
-  String model = 'llama-3.3-70b-versatile',
   int maxTokens = 1024,
 }) async {
+  final sistemMesaj = mesajlar.where((m) => m['role'] == 'system').firstOrNull;
+  final diger = mesajlar.where((m) => m['role'] != 'system').toList();
+  final contents = diger.map((m) {
+    final role = (m['role'] == 'assistant') ? 'model' : m['role']!;
+    return {
+      'role': role,
+      'parts': [
+        {'text': m['content']!},
+      ],
+    };
+  }).toList();
+  final body = <String, dynamic>{
+    'contents': contents,
+    'generationConfig': {'maxOutputTokens': maxTokens},
+  };
+  if (sistemMesaj != null) {
+    body['system_instruction'] = {
+      'parts': [
+        {'text': sistemMesaj['content']!},
+      ],
+    };
+  }
   late http.Response res;
   try {
     res = await http
         .post(
-          Uri.parse('https://api.groq.com/openai/v1/chat/completions'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $apiKey',
-          },
-          body: jsonEncode({
-            'model': model,
-            'messages': mesajlar,
-            'max_tokens': maxTokens,
-          }),
+          Uri.parse(
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=$apiKey',
+          ),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(body),
         )
         .timeout(const Duration(seconds: 30));
   } on TimeoutException {
@@ -45,24 +61,27 @@ Future<String> groqChat({
 
   if (res.statusCode == 200) {
     final d = jsonDecode(res.body) as Map<String, dynamic>;
-    return ((d['choices'] as List).first['message']['content'] as String)
-        .trim();
-  } else if (res.statusCode == 401) {
+    final candidates = d['candidates'] as List;
+    final parts = candidates.first['content']['parts'] as List;
+    return (parts.first['text'] as String).trim();
+  } else if (res.statusCode == 401 || res.statusCode == 403) {
     throw Exception('Geçersiz API anahtarı. Lütfen güncelleyiniz.');
   } else {
-    throw Exception('Groq hatası: ${res.statusCode}');
+    final d = jsonDecode(res.body) as Map<String, dynamic>;
+    final msg = (d['error'] as Map?)?['message'] ?? res.statusCode.toString();
+    throw Exception('Gemini hatası: $msg');
   }
 }
 
-Future<String?> _groqApiAl(BuildContext context) async {
+Future<String?> _geminiApiAl(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
-  final mevcut = prefs.getString('groq_api_key') ?? '';
+  final mevcut = prefs.getString('gemini_api_key') ?? '';
   if (mevcut.isNotEmpty) return mevcut;
   if (!context.mounted) return null;
-  return _groqApiDiyaloguGoster(context, prefs);
+  return _geminiApiDiyaloguGoster(context, prefs);
 }
 
-Future<String?> _groqApiDiyaloguGoster(
+Future<String?> _geminiApiDiyaloguGoster(
   BuildContext context,
   SharedPreferences prefs,
 ) async {
@@ -71,20 +90,20 @@ Future<String?> _groqApiDiyaloguGoster(
   final result = await showDialog<String>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: const Text('Groq API Anahtarı'),
+      title: const Text('Gemini API Anahtarı'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Yapay zeka için ücretsiz Groq API anahtarı gereklidir.',
+            'Yapay zeka için ücretsiz Google Gemini API anahtarı gereklidir.',
             style: TextStyle(fontSize: 13, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             icon: const Icon(Icons.open_in_browser_rounded, size: 16),
             label: const Text(
-              'console.groq.com/keys',
+              'aistudio.google.com/apikey',
               style: TextStyle(fontSize: 13),
             ),
             style: OutlinedButton.styleFrom(
@@ -95,7 +114,7 @@ Future<String?> _groqApiDiyaloguGoster(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: () async {
-              final uri = Uri.parse('https://console.groq.com/keys');
+              final uri = Uri.parse('https://aistudio.google.com/apikey');
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
@@ -106,7 +125,7 @@ Future<String?> _groqApiDiyaloguGoster(
             controller: ctrl,
             obscureText: true,
             decoration: const InputDecoration(
-              labelText: 'Groq API Anahtarı',
+              labelText: 'Gemini API Anahtarı',
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.key_rounded),
             ),
@@ -126,7 +145,7 @@ Future<String?> _groqApiDiyaloguGoster(
     ),
   );
   if (result != null && result.isNotEmpty) {
-    await prefs.setString('groq_api_key', result);
+    await prefs.setString('gemini_api_key', result);
     return result;
   }
   return null;
@@ -138,6 +157,7 @@ Future<String?> _groqApiDiyaloguGoster(
 
 // API Base URL
 const kApiBase = 'https://www.mevos.com.tr';
+const kAppVersion = '2.0.0'; // güncelleme kontrolü için mevcut sürüm
 
 void _cikisYap(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
@@ -247,7 +267,63 @@ class _StartupEkraniState extends State<_StartupEkrani> {
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => const AnaSayfa()));
+      _guncellemKontrol();
     }
+  }
+
+  Future<void> _guncellemKontrol() async {
+    try {
+      final res = await http
+          .get(Uri.parse('$kApiBase/api/fire_version.php'))
+          .timeout(const Duration(seconds: 8));
+      if (res.statusCode != 200) return;
+      final data = jsonDecode(res.body) as Map<String, dynamic>;
+      final sunucuVersiyon = data['version'] as String? ?? '';
+      final indirUrl = data['download_url'] as String? ?? '';
+      if (sunucuVersiyon.isEmpty || !mounted) return;
+      if (_versiyonKarsilastir(sunucuVersiyon, kAppVersion) > 0) {
+        await showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            title: const Text('Yeni Sürüm Mevcut'),
+            content: Text(
+              'Uygulama v$sunucuVersiyon sürümüne güncellendi.\n'
+              'En yeni özellikleri kullanmak için güncelleyiniz.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Sonra'),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  if (indirUrl.isNotEmpty) {
+                    await launchUrl(
+                      Uri.parse(indirUrl),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  }
+                },
+                child: const Text('Güncelle'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (_) {}
+  }
+
+  /// Pozitif: a > b, negatif: a < b, 0: eşit
+  int _versiyonKarsilastir(String a, String b) {
+    final pa = a.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+    final pb = b.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+    for (var i = 0; i < 3; i++) {
+      final diff = (i < pa.length ? pa[i] : 0) - (i < pb.length ? pb[i] : 0);
+      if (diff != 0) return diff;
+    }
+    return 0;
   }
 
   void _girisEkranineGit() {
@@ -339,23 +415,6 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
       _yukleniyor = true;
       _hata = null;
     });
-
-    // Yerel admin girişi
-    if (_emailCtrl.text.trim().toLowerCase() == 'REDACTED_EMAIL' &&
-        _sifreCtrl.text == 'REDACTED_SECRET') {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', 'local_admin_token');
-      await prefs.setString('user_name', 'Admin');
-      await prefs.setString('user_email', 'REDACTED_EMAIL');
-      await prefs.setInt('is_premium', 1);
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const AnaSayfa()),
-          (route) => false,
-        );
-      }
-      return;
-    }
 
     try {
       final response = await http
@@ -722,6 +781,645 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
 }
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// KAYITLI PROJELER
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class _Proje {
+  final String id, ad, modul, tarih, veri;
+  const _Proje({
+    required this.id,
+    required this.ad,
+    required this.modul,
+    required this.tarih,
+    this.veri = '',
+  });
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'ad': ad,
+    'modul': modul,
+    'tarih': tarih,
+    'veri': veri,
+  };
+  factory _Proje.fromJson(Map<String, dynamic> j) => _Proje(
+    id: j['id'] as String,
+    ad: j['ad'] as String,
+    modul: j['modul'] as String,
+    tarih: j['tarih'] as String,
+    veri: j['veri'] as String? ?? '',
+  );
+}
+
+class ProjeServisi {
+  static const _key = 'kayitli_projeler_v1';
+  static final hesapSinyali = ValueNotifier<bool>(false);
+  static String hesapVeri = ''; // son hesap özeti — proje kaydında kullanılır
+  static Map<String, String>? kayitliGirdiler; // yüklenen proje girdileri
+
+  static Future<List<_Proje>> yukle() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_key) ?? [];
+    return raw
+        .map((s) => _Proje.fromJson(jsonDecode(s) as Map<String, dynamic>))
+        .toList()
+      ..sort((a, b) => b.tarih.compareTo(a.tarih));
+  }
+
+  static Future<void> kaydet(_Proje p) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_key) ?? [];
+    raw.add(jsonEncode(p.toJson()));
+    await prefs.setStringList(_key, raw);
+  }
+
+  static Future<void> sil(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_key) ?? [];
+    raw.removeWhere((s) {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return m['id'] == id;
+    });
+    await prefs.setStringList(_key, raw);
+  }
+}
+
+class KayitliProjeler extends StatefulWidget {
+  const KayitliProjeler({super.key});
+  @override
+  State<KayitliProjeler> createState() => _KayitliProjelerState();
+}
+
+class _KayitliProjelerState extends State<KayitliProjeler> {
+  List<_Proje> _projeler = [];
+  bool _yukleniyor = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _yukle();
+  }
+
+  Future<void> _yukle() async {
+    final list = await ProjeServisi.yukle();
+    if (mounted)
+      setState(() {
+        _projeler = list;
+        _yukleniyor = false;
+      });
+  }
+
+  Future<void> _sil(_Proje p) async {
+    final onay = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Projeyi Sil'),
+        content: Text('"${p.ad}" projesi silinecek. Emin misiniz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('İptal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Sil', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (onay == true) {
+      await ProjeServisi.sil(p.id);
+      _yukle();
+    }
+  }
+
+  void _ac(_Proje p) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => _ProjeDetaySayfasi(proje: p)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFEF2F2),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFB91C1C),
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Kayıtlı Projeler',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: _yukleniyor
+          ? const Center(child: CircularProgressIndicator())
+          : _projeler.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.folder_open_rounded,
+                    size: 64,
+                    color: Colors.grey.shade300,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Henüz kayıtlı proje yok',
+                    style: TextStyle(color: Colors.grey.shade500),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: _projeler.length,
+              itemBuilder: (_, i) {
+                final p = _projeler[i];
+                final tarihStr = () {
+                  try {
+                    final dt = DateTime.parse(p.tarih);
+                    return '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}  ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+                  } catch (_) {
+                    return p.tarih;
+                  }
+                }();
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.folder_rounded,
+                      color: Color(0xFFB91C1C),
+                    ),
+                    title: Text(
+                      p.ad,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${p.modul}  ·  $tarihStr',
+                      style: const TextStyle(fontSize: 11),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => _sil(p),
+                    ),
+                    onTap: () => _ac(p),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
+
+class _ProjeKaydetBant extends StatelessWidget {
+  final String modulAdi;
+  const _ProjeKaydetBant({required this.modulAdi});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.bookmark_border_rounded,
+            size: 18,
+            color: Color(0xFFB91C1C),
+          ),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Text(
+              'Hesabı proje olarak kaydet',
+              style: TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+          ),
+          TextButton(
+            onPressed: () => _kaydetDiyalog(context),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFFB91C1C),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            ),
+            child: const Text(
+              'Kaydet',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _kaydetDiyalog(BuildContext context) async {
+    final ctrl = TextEditingController();
+    final ad = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          'Projeyi Kaydet',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: 'Proje Adı',
+            hintText: 'örn. Ofis Binası Zemin Kat',
+            border: const OutlineInputBorder(),
+            isDense: true,
+          ),
+          onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('İptal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
+            child: const Text(
+              'Kaydet',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (ad == null || ad.isEmpty) return;
+    final proje = _Proje(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      ad: ad,
+      modul: modulAdi,
+      tarih: DateTime.now().toIso8601String(),
+      veri: ProjeServisi.hesapVeri,
+    );
+    await ProjeServisi.kaydet(proje);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('"$ad" kaydedildi'),
+          backgroundColor: const Color(0xFF15803D),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+}
+
+class _ProjeDetaySayfasi extends StatelessWidget {
+  final _Proje proje;
+  const _ProjeDetaySayfasi({required this.proje});
+
+  static Widget? _modulSayfasi(String modul) => switch (modul) {
+    'Yangın Yükü Hesabı' => const YanginYukuSayfasi(),
+    'Davlumbaz Söndürme' => const DavlumbazSondurme(),
+    'Gazlı Söndürme Sistemi' => const GazliSondurme(),
+    'Lityum Pil Yangını' => const LityumPilYangini(),
+    'Sprinkler Sistemi' => const SprinkleSistemi(),
+    'Duman Algılama' => const DumanAlgilama(),
+    'Duman Kontrolü' => const DumanKontrol(),
+    _ => null,
+  };
+
+  String _formatTarih(String iso) {
+    try {
+      final d = DateTime.parse(iso);
+      return '${d.day.toString().padLeft(2, '0')}.${d.month.toString().padLeft(2, '0')}.${d.year}';
+    } catch (_) {
+      return iso;
+    }
+  }
+
+  void _yenidenHesapla(BuildContext context) {
+    final sayfa = _modulSayfasi(proje.modul);
+    if (sayfa == null) return;
+    // Kaydedilen girdileri aktarır
+    if (proje.veri.startsWith('{')) {
+      try {
+        final j = jsonDecode(proje.veri) as Map<String, dynamic>;
+        final inputs = j['i'];
+        if (inputs is Map) {
+          ProjeServisi.kayitliGirdiler = Map<String, String>.from(
+            inputs.map((k, v) => MapEntry(k.toString(), v.toString())),
+          );
+        }
+      } catch (_) {}
+    }
+    ProjeServisi.hesapSinyali.value = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xFFB91C1C),
+            foregroundColor: Colors.white,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  proje.ad,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  proje.modul,
+                  style: const TextStyle(fontSize: 11, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+          body: Column(
+            children: [
+              Expanded(child: sayfa),
+              ValueListenableBuilder<bool>(
+                valueListenable: ProjeServisi.hesapSinyali,
+                builder: (_, val, __) => val
+                    ? _ProjeKaydetBant(modulAdi: proje.modul)
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // JSON format ile geriye dönük uyum
+    String resultsText = proje.veri;
+    if (proje.veri.startsWith('{')) {
+      try {
+        final j = jsonDecode(proje.veri) as Map<String, dynamic>;
+        resultsText = j['r'] as String? ?? proje.veri;
+      } catch (_) {}
+    }
+    final satirlar = resultsText.isEmpty ? <String>[] : resultsText.split('\n');
+    return Scaffold(
+      backgroundColor: const Color(0xFFFEF2F2),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFB91C1C),
+        foregroundColor: Colors.white,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              proje.ad,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              proje.modul,
+              style: const TextStyle(fontSize: 11, color: Colors.white70),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Tarih bilgisi
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_today_rounded,
+                  size: 14,
+                  color: Colors.black45,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Kaydedilme: ${_formatTarih(proje.tarih)}',
+                  style: const TextStyle(fontSize: 12, color: Colors.black45),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            if (satirlar.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: const Color(0xFFFED7AA),
+                    width: 1.5,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x0F000000), blurRadius: 6),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.bookmark_rounded,
+                          size: 18,
+                          color: Color(0xFF92400E),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Hesap Sonuçları',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF92400E),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 12),
+                    ...satirlar.asMap().entries.map((entry) {
+                      final satir = entry.value;
+                      // Bölüm başlığı
+                      if (satir.startsWith('## ')) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 4),
+                          child: Text(
+                            satir.substring(3),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0369A1),
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        );
+                      }
+                      // Veri satırı
+                      final parcalar = satir.split('  |  ');
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 4,
+                          children: parcalar.map((p) {
+                            final colonIdx = p.indexOf(': ');
+                            if (colonIdx >= 0) {
+                              final key = p.substring(0, colonIdx);
+                              final value = p.substring(colonIdx + 2);
+                              return RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '$key  ',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: value,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF78350F),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return Text(
+                              p,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black54,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+            ] else ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Bu proje için kaydedilmiş hesap sonucu bulunamadı.',
+                  style: TextStyle(fontSize: 13, color: Colors.black54),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+
+            if (_modulSayfasi(proje.modul) != null)
+              ElevatedButton.icon(
+                onPressed: () => _yenidenHesapla(context),
+                icon: const Icon(Icons.calculate_rounded),
+                label: const Text('Yeniden Hesapla'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFB91C1C),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  minimumSize: const Size(double.infinity, 0),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _KaydedilmisVeriPaneli extends StatefulWidget {
+  final String veri;
+  const _KaydedilmisVeriPaneli({required this.veri});
+  @override
+  State<_KaydedilmisVeriPaneli> createState() => _KaydedilmisVeriPaneliState();
+}
+
+class _KaydedilmisVeriPaneliState extends State<_KaydedilmisVeriPaneli> {
+  bool _acik = true;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFFFF7ED),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () => setState(() => _acik = !_acik),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.bookmark_rounded,
+                    size: 16,
+                    color: Color(0xFF92400E),
+                  ),
+                  const SizedBox(width: 6),
+                  const Expanded(
+                    child: Text(
+                      'Kaydedilen Değerler',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF92400E),
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _acik ? Icons.expand_less : Icons.expand_more,
+                    size: 18,
+                    color: const Color(0xFF92400E),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_acik)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+              child: Text(
+                widget.veri,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF78350F),
+                  height: 1.5,
+                ),
+              ),
+            ),
+          const Divider(height: 1),
+        ],
+      ),
+    );
+  }
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // ANA SAYFA
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 
@@ -810,6 +1508,7 @@ class AnaSayfa extends StatelessWidget {
   }
 
   void _git(BuildContext context, Widget sayfa, String baslik) {
+    ProjeServisi.hesapSinyali.value = false;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -826,7 +1525,17 @@ class AnaSayfa extends StatelessWidget {
               ),
             ],
           ),
-          body: sayfa,
+          body: Column(
+            children: [
+              Expanded(child: sayfa),
+              ValueListenableBuilder<bool>(
+                valueListenable: ProjeServisi.hesapSinyali,
+                builder: (_, val, __) => val
+                    ? _ProjeKaydetBant(modulAdi: baslik)
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -857,7 +1566,7 @@ class AnaSayfa extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: Text(
-              'v1.0',
+              'v2.0',
               style: TextStyle(
                 fontSize: 11,
                 color: Colors.white.withOpacity(0.7),
@@ -903,7 +1612,7 @@ class AnaSayfa extends StatelessWidget {
 
             // Modül kartları
             _ModulKarti(
-              baslik: 'Yangın Yükü & Söndürme',
+              baslik: 'Yangın Yükü Hesabı',
               aciklama:
                   'EN 1991-1-2 yangın yükü yoğunluğu + ISO 14520 / EN 12845 söndürme maddesi hesabı',
               ikon: Icons.whatshot_rounded,
@@ -911,7 +1620,7 @@ class AnaSayfa extends StatelessWidget {
               onTap: () => _git(
                 context,
                 const YanginYukuSayfasi(),
-                'Yangın Yükü & Söndürme',
+                'Yangın Yükü Hesabı',
               ),
             ),
             const SizedBox(height: 12),
@@ -931,7 +1640,7 @@ class AnaSayfa extends StatelessWidget {
             _ModulKarti(
               baslik: 'Gazlı Söndürme Sistemi',
               aciklama:
-                  'Toplam taşkın gazlı söndürme — ISO 14520 / NFPA 2001 · FM-200 · Novec 1230 · CO² · Inert gazlar',
+                  'Toplam hacim gazlı söndürme ve baskı makineleri — TS EN 15004 / NFPA 2001 · FM-200 · Novec 1230 · CO² · Inert gazlar',
               ikon: Icons.cloud_rounded,
               renk: const Color(0xFF0891B2),
               onTap: () => _git(
@@ -959,6 +1668,27 @@ class AnaSayfa extends StatelessWidget {
               renk: const Color(0xFF0EA5E9),
               onTap: () =>
                   _git(context, const SprinkleSistemi(), 'Sprinkler Sistemi'),
+            ),
+            const SizedBox(height: 12),
+            _ModulKarti(
+              baslik: 'Duman Algılama',
+              aciklama:
+                  'Nokta dedektör yerleşimi · Yapı tipi · Oda tipi — TS EN 54-7 / EN 54-14',
+              ikon: Icons.sensors_rounded,
+              renk: const Color(0xFF7C2D12),
+              onTap: () =>
+                  _git(context, const DumanAlgilama(), 'Duman Algılama'),
+            ),
+            const SizedBox(height: 12),
+            _ModulKarti(
+              baslik: 'Duman Kontrolü',
+              aciklama:
+                  'Doğal tahliye · Mekanik tahliye · Basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6',
+              ikon: Icons.air_rounded,
+              renk: const Color(0xFF374151),
+
+              onTap: () =>
+                  _git(context, const DumanKontrol(), 'Duman Kontrolü'),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1020,6 +1750,17 @@ class AnaSayfa extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            const SizedBox(height: 12),
+            _ModulKarti(
+              baslik: 'Kayıtlı Projeler',
+              aciklama: 'Kaydettiğiniz tüm hesap projeleri',
+              ikon: Icons.folder_rounded,
+              renk: const Color(0xFF92400E),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const KayitliProjeler()),
+              ),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -1180,10 +1921,16 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   double? _toplamMJ, _yogunluk;
   String? _riskSinifi, _hata;
   Color? _riskRenk;
-  double? _tBuyume, _tSabit, _tToplam;
+  double? _tBuyume, _tSabit, _tToplam, _qPik;
+  String? _sinirlayanFaktor;
 
   // ¦¦ Büyüme hızı (manuel seçim veya _e5'ten otomatik)
   String _buyumeHiz = 'Orta'; // varsayılan
+
+  // ¦¦ Havalandırma sınırlı Q_max (opsiyonel)
+  bool _havaGoster = false;
+  final _avCtrl = TextEditingController();
+  final _heqCtrl = TextEditingController();
   static const Map<String, _BuyumeVeri> _buyumeSpec = {
     'Çok Yavaş': _BuyumeVeri('Çok Yavaş', 600, 250),
     'Yavaş': _BuyumeVeri('Yavaş', 400, 250),
@@ -1250,7 +1997,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   static const List<_SondAjan> _ajanlar = [
     _SondAjan(
       ad: 'CO² (Karbondioksit)',
-      standart: 'ISO 14520-2 / NFPA 12',
+      standart: 'TS EN 15004-2 / NFPA 12',
       spesifik: 0.5685,
       konsan: 34.0,
       inert: false,
@@ -1259,7 +2006,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     ),
     _SondAjan(
       ad: 'HFC-227ea (FM-200)',
-      standart: 'EN 15004-5:2020 / ISO 14520-9:2016 / NFPA 2001',
+      standart: 'TS EN 15004-5:2020 / NFPA 2001',
       spesifik: 0.1374, // @20°C: S = 0.1269 + 0.000513×20 (Tablo 2)
       konsan: 7.9, // Yüzey A min. %7,9; Derin A min. %8,5 (Tablo 4)
       inert: false,
@@ -1267,7 +2014,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     ),
     _SondAjan(
       ad: 'FK-5-1-12 (Novec 1230)',
-      standart: 'ISO 14520-15 / NFPA 2001 / TS EN 15004-6',
+      standart: 'TS EN 15004-6 / NFPA 2001',
       spesifik: 0.0664,
       konsan: 4.2,
       inert: false,
@@ -1275,7 +2022,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     ),
     _SondAjan(
       ad: 'IG-541 (Inergen)',
-      standart: 'ISO 14520-11 / NFPA 2001 / TS EN 15004-9',
+      standart: 'TS EN 15004-9 / NFPA 2001',
       spesifik: 0.6575,
       konsan: 38.5,
       inert: true,
@@ -1283,7 +2030,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     ),
     _SondAjan(
       ad: 'IG-55 (Argonite)',
-      standart: 'ISO 14520-10 / NFPA 2001 / TS EN 15004-10',
+      standart: 'TS EN 15004-10 / NFPA 2001',
       spesifik: 0.6888,
       konsan: 38.5,
       inert: true,
@@ -1324,6 +2071,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Sunucu Odası (yoğun)': 3500,
     'Elektrik Panosu Odası (PVC)': 1500,
     'Elektrik Panosu Odası (XLPE)': 1200,
+    'MCC Odası': 1200,
+    'Hücre Odası (OG Şalt)': 1000,
+    'Trafo Odası (kuru tip)': 600,
+    'Trafo Odası (yağlı)': 2000,
     'UPS Odası': 800,
     'Arşiv Odası (kâğıt)': 3000,
     'Kapalı Otopark': 730,
@@ -1443,6 +2194,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'LPG Depolama Tesisi': 'Y', // YT-1
     'Akaryakıt Servis İstasyonu': 'Y', // YT-1
     'Patlayıcı Madde Deposu': 'Y', // YT-4
+    'MCC Odası': 'O',
+    'Hücre Odası (OG Şalt)': 'O',
+    'Trafo Odası (kuru tip)': 'O',
+    'Trafo Odası (yağlı)': 'Y',
   };
 
   // Referans değer kaynakları
@@ -1462,6 +2217,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Sunucu Odası (yoğun)': 'NFPA 75 / IEC 60950',
     'Elektrik Panosu Odası (PVC)': 'IEC 60332 / EN 1991-1-2',
     'Elektrik Panosu Odası (XLPE)': 'IEC 60332 / EN 1991-1-2',
+    'MCC Odası': 'IEC 60332 / EN 1991-1-2',
+    'Hücre Odası (OG Şalt)': 'IEC 60332 / EN 1991-1-2',
+    'Trafo Odası (kuru tip)': 'IEC 60076 / EN 1991-1-2',
+    'Trafo Odası (yağlı)': 'IEC 60076 / NFPA 15',
     'UPS Odası': 'NFPA 75 / EN 1991-1-2',
     'Arşiv Odası (kâğıt)': 'EN 1991-1-2 Ek E, Tablo E.4',
     'Kapalı Otopark': 'EN 1991-1-2 Ek E, Tablo E.4',
@@ -1523,6 +2282,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Sunucu Odası (yoğun)': _BuyumeVeri('Hızlı', 150, 500),
     'Elektrik Panosu Odası (PVC)': _BuyumeVeri('Orta', 300, 250),
     'Elektrik Panosu Odası (XLPE)': _BuyumeVeri('Orta', 300, 250),
+    'MCC Odası': _BuyumeVeri('Hızlı', 150, 500),
+    'Hücre Odası (OG Şalt)': _BuyumeVeri('Orta', 300, 250),
+    'Trafo Odası (kuru tip)': _BuyumeVeri('Orta', 300, 250),
+    'Trafo Odası (yağlı)': _BuyumeVeri('Çok Hızlı', 75, 1000),
     'Arşiv Odası (kâğıt)': _BuyumeVeri('Hızlı', 150, 500),
     // BYKHY eklemeleri
     'Tek/İki Ailelik Ev': _BuyumeVeri('Orta', 300, 250),
@@ -1544,7 +2307,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Akaryakıt Servis İstasyonu': _BuyumeVeri('Çok Hızlı', 75, 1000),
   };
 
-  // ¦¦ NCV tablosu (EN 1991-1-2 E.3 / ISO 1716)
+  // ¦¦ NCV tablosu (EN 1991-1-2 E.3 / ISO 1716 — teorik; PMMA/PP/ABS: ISO 5660-1
+  // koni kalorimetre @25 kW/m² etkin yanma ısısı, EN 15004-1 Ek C Tablo C.2;
+  // diğer sıvı/karma malzemeler: SFPE Yangın Koruma Mühendisliği El Kitabı tipik değerleri)
   static const Map<String, double> _ncv = {
     'Ahşap / Kereste': 17.5,
     'Kontrplak / MDF': 17.0,
@@ -1553,30 +2318,85 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Tekstil (sentetik)': 30.0,
     'Yün': 20.0,
     'Giysi': 20.0,
+    'Deri': 20.0,
     'Polietilen (PE)': 40.0,
-    'Polipropilen (PP)': 40.0,
+    'Polipropilen (PP)': 39.6,
     'PVC (sert)': 20.0,
     'PVC (esnek/kablo)': 22.0,
     'Polistiren (PS)': 40.0,
     'EPS köpük': 38.0,
     'XPS köpük': 38.5,
-    'ABS Plastik': 35.0,
+    'ABS Plastik': 29.1,
+    'PMMA (Pleksiglas)': 23.3,
+    'Epoksi Reçine': 30.0,
+    'Polyester Reçine (CTP/FRP)': 30.0,
     'Poliüretan köpük (sert)': 25.0,
     'Poliüretan köpük (esnek)': 23.0,
-    'Kauçuk (doğal)': 32.0,
+    'Kauçuk (doğal)': 44.5,
     'Lastik (araç)': 30.0,
     'Benzin': 45.0,
     'Dizel': 45.0,
     'LPG': 46.4,
-    'Metanol': 30.0,
-    'Etanol': 30.0,
+    'Propan': 46.3,
+    'Doğalgaz (CNG)': 50.0,
+    'Metanol': 20.0,
+    'Etanol': 26.8,
+    'Aseton / Solvent (genel)': 29.0,
     'Boya / Vernik (solventli)': 30.0,
     'Asfalt / Bitüm': 40.0,
+    'Kömür': 30.0,
+    'Trafo Yağı (mineral)': 41.9,
+    'Hidrolik Yağ': 42.0,
     'Elektrik Kablosu (PVC)': 22.0,
     'Elektrik Kablosu (XLPE)': 32.0,
     'Li-ion Batarya': 10.0,
     'Mobilya (karma)': 20.0,
     'Diğer (manuel)': 0.0,
+  };
+
+  // Fiziksel hal: 'K' = Katı, 'S' = Sıvı, 'G' = Gaz, 'D' = Diğer (manuel)
+  static const Map<String, String> _malzemeKategori = {
+    'Ahşap / Kereste': 'K',
+    'Kontrplak / MDF': 'K',
+    'Kâğıt / Karton': 'K',
+    'Tekstil (pamuklu)': 'K',
+    'Tekstil (sentetik)': 'K',
+    'Yün': 'K',
+    'Giysi': 'K',
+    'Deri': 'K',
+    'Polietilen (PE)': 'K',
+    'Polipropilen (PP)': 'K',
+    'PVC (sert)': 'K',
+    'PVC (esnek/kablo)': 'K',
+    'Polistiren (PS)': 'K',
+    'EPS köpük': 'K',
+    'XPS köpük': 'K',
+    'ABS Plastik': 'K',
+    'PMMA (Pleksiglas)': 'K',
+    'Epoksi Reçine': 'K',
+    'Polyester Reçine (CTP/FRP)': 'K',
+    'Poliüretan köpük (sert)': 'K',
+    'Poliüretan köpük (esnek)': 'K',
+    'Kauçuk (doğal)': 'K',
+    'Lastik (araç)': 'K',
+    'Asfalt / Bitüm': 'K',
+    'Kömür': 'K',
+    'Elektrik Kablosu (PVC)': 'K',
+    'Elektrik Kablosu (XLPE)': 'K',
+    'Li-ion Batarya': 'K',
+    'Mobilya (karma)': 'K',
+    'Benzin': 'S',
+    'Dizel': 'S',
+    'Metanol': 'S',
+    'Etanol': 'S',
+    'Aseton / Solvent (genel)': 'S',
+    'Boya / Vernik (solventli)': 'S',
+    'Trafo Yağı (mineral)': 'S',
+    'Hidrolik Yağ': 'S',
+    'LPG': 'G',
+    'Propan': 'G',
+    'Doğalgaz (CNG)': 'G',
+    'Diğer (manuel)': 'D',
   };
 
   bool get _isPano => _mod == _Mod.pano;
@@ -1707,20 +2527,47 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     if (buyumeVeri != null) {
       final veri = buyumeVeri;
       final ta = veri.tAlfa.toDouble();
-      // Enerji-sınırlı tepe değeri: Q_eff = min(alan bazlı, enerji bazlı)
+      // Q_max = min(yakıt yüzeyi sınırlı, enerji sınırlı, [opsiyonel] havalandırma sınırlı)
       double qEff = veri.rhrF * alan / 1000.0;
+      String sinirlayan = 'Yakıt Yüzeyi (RHRf × A)';
       if (toplam > 0) {
         final double qEnerji = math
             .pow(3.0 * toplam / ta, 2.0 / 3.0)
             .toDouble();
-        if (qEnerji < qEff) qEff = qEnerji;
+        if (qEnerji < qEff) {
+          qEff = qEnerji;
+          sinirlayan = 'Toplam Enerji (düşük yangın yükü)';
+        }
+      }
+      if (_havaGoster) {
+        final av = double.tryParse(_avCtrl.text.replaceAll(',', '.'));
+        final heq = double.tryParse(_heqCtrl.text.replaceAll(',', '.'));
+        final totalKg = _malzemeler.fold(0.0, (s, m) => s + m.kg);
+        if (av != null && av > 0 && heq != null && heq > 0 && totalKg > 0) {
+          final huOrt = toplam / totalKg; // MJ/kg — ağırlıklı ort. ısıl değer
+          final mDotV =
+              0.09 * av * math.sqrt(heq); // kg/s — Kawagoe ventilasyon faktörü
+          final qMaxV = mDotV * huOrt * 0.8; // MW (η≈0,8 yanma verimliliği)
+          if (qMaxV < qEff) {
+            qEff = qMaxV;
+            sinirlayan = 'Havalandırma (açıklık — yaklaşık)';
+          }
+        }
       }
       tBuy = ta * math.sqrt(qEff);
-      final eBuy = (1e6 / (ta * ta)) * (tBuy! * tBuy! * tBuy!) / 3.0 / 1e6;
-      final e70 = 0.70 * toplam;
-      final eSab = (e70 - eBuy).clamp(0.0, double.infinity);
-      tSab = tBuy! + eSab * 1000.0 / (qEff * 1000.0);
-      tToplam = tSab! + (0.30 * toplam) * 1000.0 / (qEff * 1000.0 / 2.0);
+      final eBuy = (tBuy! * tBuy! * tBuy!) / (3.0 * ta * ta); // MJ
+      // Sabit faz hedefi: toplam yükün %70'i (Eurocode Ek E varsayımı), enerji korunumlu
+      final hedefSabitSonu = math.min(0.70 * toplam, toplam);
+      final eSab = (hedefSabitSonu - eBuy).clamp(0.0, double.infinity);
+      tSab = tBuy! + (qEff > 0 ? eSab / qEff : 0.0);
+      // Bozunma enerjisi = gerçek kalan enerji (sabit %30 varsayımı yerine — toplamı asla aşmaz)
+      final eBozunma = (toplam - (eBuy + eSab)).clamp(0.0, double.infinity);
+      tToplam = tSab! + (qEff > 0 ? eBozunma / (qEff / 2.0) : 0.0);
+      _qPik = qEff;
+      _sinirlayanFaktor = sinirlayan;
+    } else {
+      _qPik = null;
+      _sinirlayanFaktor = null;
     }
 
     // TS EN 3-7 taşınabilir söndürücü hesabı (depo modunda yapılmaz)
@@ -1783,6 +2630,54 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
         _hesaplaAjan();
       }
     }
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'mod': _mod.name,
+        'alan': _alanCtrl.text,
+        'basinc': _basincCtrl.text,
+        'binaAra': _binaAraCtrl.text,
+        'secilenBina': _secilenBina ?? '',
+        'malzemeler': jsonEncode(
+          _malzemeler
+              .map((m) => {'ad': m.ad, 'kg': m.kg, 'ncv': m.ncv})
+              .toList(),
+        ),
+        'depoAlan': _depoAlanCtrl.text,
+        'depolar': jsonEncode(
+          _depolar
+              .map(
+                (d) => {
+                  'tur': d.tur,
+                  'miktar': d.miktar,
+                  'birim': d.birim,
+                  'adet': d.adet,
+                },
+              )
+              .toList(),
+        ),
+        'pW': _pWCtrl.text,
+        'pH': _pHCtrl.text,
+        'pD': _pDCtrl.text,
+        'pKablo': _pKablo,
+        'pDolum': _pDolum.toString(),
+        'sYuks': _sYuksCtrl.text,
+        'sRakim': _sRakimCtrl.text,
+        'sRakimGoster': _sRakimGoster.toString(),
+        'sKonsan': _sKonsanCtrl.text,
+        'sAjanIdx': _sAjanIdx.toString(),
+      },
+      'r':
+          '## Yang\u0131n Y\u00fck\u00fc Hesab\u0131\n'
+          'Toplam Yang\u0131n Y\u00fck\u00fc: ${_toplamMJ?.toStringAsFixed(1) ?? "-"} MJ  |  '
+          'Yo\u011funluk: ${_yogunluk?.toStringAsFixed(1) ?? "-"} MJ/m\u00b2  |  '
+          'Risk S\u0131n\u0131f\u0131: ${_riskSinifi ?? "-"}\n'
+          '${_sAjanMiktar != null ? "## S\u00f6nd\u00fcrme Ajan Hesab\u0131\nAjan: ${_ajanlar[_sAjanIdx].ad}  |  Miktar: ${_sAjanMiktar!.toStringAsFixed(1)} ${_ajanlar[_sAjanIdx].ad.startsWith("ABC")
+                    ? "kg"
+                    : _ajanlar[_sAjanIdx].inert
+                    ? "Nm\u00b3"
+                    : "kg"}  |  Silindir: ${_sSilindirSayisi?.toStringAsFixed(0) ?? "-"} adet" : ""}',
+    });
+    ProjeServisi.hesapSinyali.value = true;
   }
 
   void _hesaplaAjan() {
@@ -1842,6 +2737,77 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      _mod = _Mod.values.firstWhere(
+        (e) => e.name == (g['mod'] ?? 'bina'),
+        orElse: () => _Mod.bina,
+      );
+      _alanCtrl.text = g['alan'] ?? '';
+      _basincCtrl.text = g['basinc'] ?? '4';
+      _binaAraCtrl.text = g['binaAra'] ?? '';
+      _secilenBina = g['secilenBina']?.isEmpty == true
+          ? null
+          : g['secilenBina'];
+      final malStr = g['malzemeler'] ?? '';
+      if (malStr.isNotEmpty) {
+        try {
+          final list = jsonDecode(malStr) as List;
+          _malzemeler
+            ..clear()
+            ..addAll(
+              list.map(
+                (e) => _Malzeme(
+                  ad: e['ad'] as String,
+                  kg: (e['kg'] as num).toDouble(),
+                  ncv: (e['ncv'] as num).toDouble(),
+                ),
+              ),
+            );
+        } catch (_) {}
+      }
+      _depoAlanCtrl.text = g['depoAlan'] ?? '';
+      final depStr = g['depolar'] ?? '';
+      if (depStr.isNotEmpty) {
+        try {
+          final list = jsonDecode(depStr) as List;
+          _depolar
+            ..clear()
+            ..addAll(
+              list.map(
+                (e) => _Depo(
+                  tur: e['tur'] as String,
+                  miktar: (e['miktar'] as num).toDouble(),
+                  birim: e['birim'] as String,
+                  adet: (e['adet'] as num).toInt(),
+                ),
+              ),
+            );
+        } catch (_) {}
+      }
+      _pWCtrl.text = g['pW'] ?? '';
+      _pHCtrl.text = g['pH'] ?? '';
+      _pDCtrl.text = g['pD'] ?? '';
+      _pKablo = g['pKablo'] ?? 'PVC';
+      _pDolum = double.tryParse(g['pDolum'] ?? '0.35') ?? 0.35;
+      _sYuksCtrl.text = g['sYuks'] ?? '';
+      _sRakimCtrl.text = g['sRakim'] ?? '';
+      _sRakimGoster = g['sRakimGoster'] == 'true';
+      _sKonsanCtrl.text = g['sKonsan'] ?? '7.9';
+      _sAjanIdx = int.tryParse(g['sAjanIdx'] ?? '1') ?? 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+          _hesapla();
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _alanCtrl.dispose();
     _basincCtrl.dispose();
@@ -1853,6 +2819,8 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     _sYuksCtrl.dispose();
     _sRakimCtrl.dispose();
     _sKonsanCtrl.dispose();
+    _avCtrl.dispose();
+    _heqCtrl.dispose();
     super.dispose();
   }
 
@@ -1884,17 +2852,17 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             segments: const [
               ButtonSegment(
                 value: _Mod.bina,
-                label: Text('Bina'),
+                label: Text('Bina', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.domain_rounded),
               ),
               ButtonSegment(
                 value: _Mod.pano,
-                label: Text('Elektrik Panosu'),
+                label: Text('Elektrik Panosu', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.electrical_services_rounded),
               ),
               ButtonSegment(
                 value: _Mod.depo,
-                label: Text('Yakıt / Depo'),
+                label: Text('Yakıt / Depo', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.local_gas_station_rounded),
               ),
             ],
@@ -1932,6 +2900,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                     araCtrl: _binaAraCtrl,
                     secenekler: _refYog.keys.toList(),
                     secilenBina: _secilenBina,
+                    tehlikeMap: _ek1TehlikeSinifi,
                   ),
                 );
                 if (sec != null) {
@@ -2050,6 +3019,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               ),
               decoration: _decor(
                 'Kat Alanı  A  (m²)',
+                lblFontSize: 12,
                 Icons.square_foot_rounded,
                 suffix: 'm²',
               ),
@@ -2096,6 +3066,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               (i) => _MalzemeSatir(
                 malzeme: _malzemeler[i],
                 ncvMap: _ncv,
+                kategoriMap: _malzemeKategori,
                 onSil: _malzemeler.length > 1
                     ? () => setState(() => _malzemeler.removeAt(i))
                     : null,
@@ -2246,6 +3217,94 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               'Girilirse yangın yükü yoğunluğu (MJ/m²) hesaplanır.',
               style: TextStyle(fontSize: 11, color: Colors.black38),
             ),
+          ],
+          if (_mod != _Mod.depo) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Checkbox(
+                  value: _havaGoster,
+                  activeColor: _kC,
+                  onChanged: (v) => setState(() => _havaGoster = v ?? false),
+                ),
+                const Expanded(
+                  child: Text(
+                    'Havalandırma sınırlı Q_max hesabına dahil et (opsiyonel)',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+            if (!_havaGoster)
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 4),
+                child: Text(
+                  'Not: Varsayılan hesap yalnızca yakıt yüzeyi sınırlı Q_max (RHRf×A) kullanır; '
+                  'açıklık (pencere/kapı) sınırlı Q_max hesaba katılmaz (EN 1991-1-2 Ek E).',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.black45,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            if (_havaGoster) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _avCtrl,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: _decor(
+                        'Açıklık (Pencere/Kapı) Alanı  Aᵥ',
+                        Icons.window_rounded,
+                        suffix: 'm²',
+                        lblFontSize: 11,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _heqCtrl,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: _decor(
+                        'Açıklık Yüksekliği  h_eq',
+                        Icons.height_rounded,
+                        suffix: 'm',
+                        lblFontSize: 11,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Aᵥ: mahaldeki tüm pencere/kapı açıklıklarının toplam alanı  ·  '
+                'h_eq: bu açıklıkların ortalama yüksekliği (mahal/oda yüksekliği DEĞİL).',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.black45,
+                  height: 1.4,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Q̇ₘₐₓ,ᵥ ≈ 0,09×Aᵥ×√h_eq × Hu_ort × 0,8  —  yaklaşık Kawagoe ventilasyon '
+                'faktörü (Drysdale / SFPE); kesin tasarım için tam açıklık faktörü hesabı gereklidir.',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.black45,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ],
           ElevatedButton.icon(
             onPressed: _hesapla,
@@ -2497,6 +3556,18 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                             sure: _tToplam!,
                             renk: const Color(0xFF7C3AED),
                           ),
+                          if (_qPik != null && _sinirlayanFaktor != null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              'Tepe Q̇: ${_qPik!.toStringAsFixed(2)} MW  '
+                              '·  Sınırlayan faktör: $_sinirlayanFaktor',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Color(0xFF134E4A),
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -3042,7 +4113,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
           ],
           const SizedBox(height: 20),
           const Text(
-            'Kaynak: EN 1991-1-2:2002 Ek E · ISO 14520 · EN 12845 · NFPA 557 · TS 862-7 EN 3-7+A1',
+            'Kaynak: EN 1991-1-2:2002 Ek E · ISO 14520 · EN 12845 · TS 862-7 EN 3-7+A1',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 10, color: Colors.black38),
           ),
@@ -3067,17 +4138,21 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     ),
   );
 
-  InputDecoration _decor(String lbl, IconData ico, {String? suffix}) =>
-      InputDecoration(
-        labelText: lbl,
-        prefixIcon: Icon(ico),
-        border: const OutlineInputBorder(),
-        suffixText: suffix,
-        labelStyle: const TextStyle(color: _kC),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: _kC, width: 2),
-        ),
-      );
+  InputDecoration _decor(
+    String lbl,
+    IconData ico, {
+    String? suffix,
+    double? lblFontSize,
+  }) => InputDecoration(
+    labelText: lbl,
+    prefixIcon: Icon(ico),
+    border: const OutlineInputBorder(),
+    suffixText: suffix,
+    labelStyle: TextStyle(color: _kC, fontSize: lblFontSize),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: _kC, width: 2),
+    ),
+  );
 
   InputDecoration _sBordDecor(String lbl, IconData ico) => InputDecoration(
     labelText: lbl,
@@ -3351,10 +4426,12 @@ class _BinaSeciciSheet extends StatefulWidget {
   final TextEditingController araCtrl;
   final List<String> secenekler;
   final String? secilenBina;
+  final Map<String, String> tehlikeMap;
   const _BinaSeciciSheet({
     required this.araCtrl,
     required this.secenekler,
     this.secilenBina,
+    required this.tehlikeMap,
   });
   @override
   State<_BinaSeciciSheet> createState() => _BinaSeciciSheetState();
@@ -3362,6 +4439,20 @@ class _BinaSeciciSheet extends StatefulWidget {
 
 class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
   List<String> _filtreli = [];
+
+  static const _grupSirasi = ['D', 'O', 'Y', '?'];
+  static const _grupAdi = {
+    'D': 'Düşük Tehlike  (Ek-1/A)',
+    'O': 'Orta Tehlike  (Ek-1/B)',
+    'Y': 'Yüksek Tehlike  (Ek-1/C)',
+    '?': 'Sınıflandırılmamış',
+  };
+  static const _grupRenk = {
+    'D': Color(0xFF16A34A),
+    'O': Color(0xFFD97706),
+    'Y': Color(0xFFDC2626),
+    '?': Color(0xFF6B7280),
+  };
 
   @override
   void initState() {
@@ -3437,45 +4528,86 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
                       style: TextStyle(color: Colors.black45),
                     ),
                   )
-                : ListView.builder(
-                    controller: scrollCtrl,
-                    itemCount: _filtreli.length,
-                    itemBuilder: (_, i) {
-                      final item = _filtreli[i];
-                      final secili = item == widget.secilenBina;
-                      return ListTile(
-                        dense: true,
-                        selected: secili,
-                        selectedTileColor: const Color(
-                          0xFF0F766E,
-                        ).withOpacity(0.08),
-                        leading: Icon(
-                          Icons.domain_rounded,
-                          size: 18,
-                          color: secili
-                              ? const Color(0xFF0F766E)
-                              : Colors.black38,
-                        ),
-                        title: Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: secili
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: secili
-                                ? const Color(0xFF0F766E)
-                                : Colors.black87,
-                          ),
-                        ),
-                        trailing: secili
-                            ? const Icon(
-                                Icons.check_circle_rounded,
-                                color: Color(0xFF0F766E),
-                                size: 18,
-                              )
-                            : null,
-                        onTap: () => Navigator.pop(context, item),
+                : Builder(
+                    builder: (_) {
+                      final gruplu = <String, List<String>>{
+                        for (final g in _grupSirasi) g: [],
+                      };
+                      for (final item in _filtreli) {
+                        final g = widget.tehlikeMap[item] ?? '?';
+                        (gruplu[g] ?? gruplu['?']!).add(item);
+                      }
+                      final rows = <(String, bool)>[];
+                      for (final g in _grupSirasi) {
+                        final items = gruplu[g]!;
+                        if (items.isEmpty) continue;
+                        rows.add((g, true));
+                        for (final it in items) {
+                          rows.add((it, false));
+                        }
+                      }
+                      return ListView.builder(
+                        controller: scrollCtrl,
+                        itemCount: rows.length,
+                        itemBuilder: (_, i) {
+                          final (text, isHeader) = rows[i];
+                          if (isHeader) {
+                            final ad = _grupAdi[text] ?? text;
+                            final renk = _grupRenk[text] ?? Colors.black54;
+                            return Container(
+                              width: double.infinity,
+                              color: renk.withOpacity(0.08),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                ad,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: renk,
+                                ),
+                              ),
+                            );
+                          }
+                          final item = text;
+                          final secili = item == widget.secilenBina;
+                          return ListTile(
+                            dense: true,
+                            selected: secili,
+                            selectedTileColor: const Color(
+                              0xFF0F766E,
+                            ).withOpacity(0.08),
+                            leading: Icon(
+                              Icons.domain_rounded,
+                              size: 18,
+                              color: secili
+                                  ? const Color(0xFF0F766E)
+                                  : Colors.black38,
+                            ),
+                            title: Text(
+                              item,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: secili
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: secili
+                                    ? const Color(0xFF0F766E)
+                                    : Colors.black87,
+                              ),
+                            ),
+                            trailing: secili
+                                ? const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: Color(0xFF0F766E),
+                                    size: 18,
+                                  )
+                                : null,
+                            onTap: () => Navigator.pop(context, item),
+                          );
+                        },
                       );
                     },
                   ),
@@ -3520,11 +4652,13 @@ Widget _En37BilgiSatir(String baslik, String deger) => Padding(
 class _MalzemeSatir extends StatefulWidget {
   final _Malzeme malzeme;
   final Map<String, double> ncvMap;
+  final Map<String, String> kategoriMap;
   final VoidCallback? onSil;
   final VoidCallback onDegisti;
   const _MalzemeSatir({
     required this.malzeme,
     required this.ncvMap,
+    required this.kategoriMap,
     required this.onSil,
     required this.onDegisti,
   });
@@ -3534,6 +4668,7 @@ class _MalzemeSatir extends StatefulWidget {
 
 class _MalzemeSatirState extends State<_MalzemeSatir> {
   late TextEditingController _kgC, _ncvC;
+  final _araCtrl = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -3547,6 +4682,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
   void dispose() {
     _kgC.dispose();
     _ncvC.dispose();
+    _araCtrl.dispose();
     super.dispose();
   }
 
@@ -3564,42 +4700,57 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: widget.ncvMap.containsKey(widget.malzeme.ad)
-                        ? widget.malzeme.ad
-                        : null,
-                    hint: widget.ncvMap.containsKey(widget.malzeme.ad)
-                        ? null
-                        : Text(
-                            widget.malzeme.ad,
-                            style: const TextStyle(fontSize: 12),
+                  child: GestureDetector(
+                    onTap: () async {
+                      _araCtrl.clear();
+                      final sec = await showModalBottomSheet<String>(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(16),
                           ),
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Malzeme',
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      labelStyle: TextStyle(color: kC),
-                    ),
-                    items: widget.ncvMap.keys
-                        .map(
-                          (k) => DropdownMenuItem(
-                            value: k,
-                            child: Text(
-                              k,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) {
-                        widget.malzeme.ad = v;
-                        widget.malzeme.ncv = widget.ncvMap[v]!;
-                        _ncvC.text = widget.malzeme.ncv.toString();
+                        ),
+                        builder: (ctx) => _MalzemeSeciciSheet(
+                          araCtrl: _araCtrl,
+                          secenekler: widget.ncvMap.keys.toList(),
+                          kategoriMap: widget.kategoriMap,
+                          secilenMalzeme: widget.malzeme.ad,
+                        ),
+                      );
+                      if (sec != null) {
+                        setState(() {
+                          widget.malzeme.ad = sec;
+                          widget.malzeme.ncv = widget.ncvMap[sec] ?? 0.0;
+                          _ncvC.text = widget.malzeme.ncv.toString();
+                        });
                         widget.onDegisti();
                       }
                     },
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Malzeme',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        labelStyle: TextStyle(color: kC),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.malzeme.ad,
+                              style: const TextStyle(fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_drop_down_rounded,
+                            color: Colors.black54,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 if (widget.onSil != null) ...[
@@ -3627,10 +4778,11 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                     ),
                     decoration: const InputDecoration(
                       labelText: 'Kütle (kg)',
+
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'kg',
-                      labelStyle: TextStyle(color: kC),
+                      labelStyle: TextStyle(fontSize: 12, color: kC),
                     ),
                     onChanged: (v) {
                       final d = double.tryParse(v.replaceAll(',', '.'));
@@ -3653,7 +4805,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'MJ/kg',
-                      labelStyle: TextStyle(color: kC),
+                      labelStyle: TextStyle(fontSize: 12, color: kC),
                     ),
                     onChanged: (v) {
                       final d = double.tryParse(v.replaceAll(',', '.'));
@@ -3668,6 +4820,228 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// Aramalı, katı/sıvı/gaz kategorilerine ayrılmış malzeme seçici bottom sheet
+class _MalzemeSeciciSheet extends StatefulWidget {
+  final TextEditingController araCtrl;
+  final List<String> secenekler;
+  final Map<String, String> kategoriMap;
+  final String? secilenMalzeme;
+  const _MalzemeSeciciSheet({
+    required this.araCtrl,
+    required this.secenekler,
+    required this.kategoriMap,
+    this.secilenMalzeme,
+  });
+  @override
+  State<_MalzemeSeciciSheet> createState() => _MalzemeSeciciSheetState();
+}
+
+class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
+  List<String> _filtreli = [];
+  final Set<String> _acikGruplar = {};
+
+  static const _grupSirasi = ['K', 'S', 'G', 'D'];
+  static const _grupAdi = {'K': 'Katı', 'S': 'Sıvı', 'G': 'Gaz', 'D': 'Diğer'};
+  static const _grupIkon = {
+    'K': Icons.widgets_rounded,
+    'S': Icons.water_drop_rounded,
+    'G': Icons.cloud_rounded,
+    'D': Icons.help_outline_rounded,
+  };
+  static const _grupRenk = {
+    'K': Color(0xFF0F766E),
+    'S': Color(0xFF2563EB),
+    'G': Color(0xFF7C3AED),
+    'D': Color(0xFF6B7280),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _filtreli = widget.secenekler;
+    widget.araCtrl.addListener(_filtrele);
+    if (widget.secilenMalzeme != null) {
+      _acikGruplar.add(widget.kategoriMap[widget.secilenMalzeme] ?? 'D');
+    }
+  }
+
+  void _filtrele() {
+    final q = widget.araCtrl.text.toLowerCase();
+    setState(() {
+      _filtreli = q.isEmpty
+          ? widget.secenekler
+          : widget.secenekler
+                .where((s) => s.toLowerCase().contains(q))
+                .toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.araCtrl.removeListener(_filtrele);
+    super.dispose();
+  }
+
+  Widget _grupBaslik(String g, int adet, bool acik) {
+    final ad = _grupAdi[g] ?? g;
+    final renk = _grupRenk[g] ?? Colors.black54;
+    final ikon = _grupIkon[g] ?? Icons.circle;
+    return InkWell(
+      onTap: () => setState(() {
+        if (_acikGruplar.contains(g)) {
+          _acikGruplar.remove(g);
+        } else {
+          _acikGruplar.add(g);
+        }
+      }),
+      child: Container(
+        width: double.infinity,
+        color: renk.withOpacity(0.08),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          children: [
+            Icon(ikon, size: 16, color: renk),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '$ad  ·  $adet malzeme',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: renk,
+                ),
+              ),
+            ),
+            AnimatedRotation(
+              turns: acik ? 0.5 : 0.0,
+              duration: const Duration(milliseconds: 150),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 20,
+                color: renk,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _malzemeSatiri(String item) {
+    final secili = item == widget.secilenMalzeme;
+    return ListTile(
+      dense: true,
+      selected: secili,
+      selectedTileColor: const Color(0xFF0F766E).withOpacity(0.08),
+      title: Text(
+        item,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: secili ? FontWeight.bold : FontWeight.normal,
+          color: secili ? const Color(0xFF0F766E) : Colors.black87,
+        ),
+      ),
+      trailing: secili
+          ? const Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFF0F766E),
+              size: 18,
+            )
+          : null,
+      onTap: () => Navigator.pop(context, item),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.65,
+      maxChildSize: 0.92,
+      minChildSize: 0.4,
+      builder: (ctx, scrollCtrl) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: widget.araCtrl,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: 'Malzeme ara...',
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: widget.araCtrl.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, size: 18),
+                        onPressed: () => widget.araCtrl.clear(),
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: _filtreli.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Sonuç bulunamadı',
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                  )
+                : Builder(
+                    builder: (_) {
+                      final gruplu = <String, List<String>>{
+                        for (final g in _grupSirasi) g: [],
+                      };
+                      for (final item in _filtreli) {
+                        final g = widget.kategoriMap[item] ?? 'D';
+                        (gruplu[g] ?? gruplu['D']!).add(item);
+                      }
+                      for (final g in _grupSirasi) {
+                        gruplu[g]!.sort(
+                          (a, b) => a.toLowerCase().compareTo(b.toLowerCase()),
+                        );
+                      }
+                      final aramaVar = widget.araCtrl.text.isNotEmpty;
+                      return ListView(
+                        controller: scrollCtrl,
+                        children: [
+                          for (final g in _grupSirasi)
+                            if (gruplu[g]!.isNotEmpty) ...[
+                              _grupBaslik(
+                                g,
+                                gruplu[g]!.length,
+                                aramaVar || _acikGruplar.contains(g),
+                              ),
+                              if (aramaVar || _acikGruplar.contains(g))
+                                for (final item in gruplu[g]!)
+                                  _malzemeSatiri(item),
+                            ],
+                        ],
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -4204,8 +5578,53 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           'NFPA 17A §7.3 — ${_wetAjanlar[_ajanIdx].ad} uygulaması.\n'
           'Tehlike sınıfı: $tehlike  ·  Ekipman puanı: ${puan.toStringAsFixed(1)}  ·  '
           'Min. deşarj: 30 s  ·  Filtre alanı: ${alanM2.toStringAsFixed(2)} m².\n'
-          'Ek baca / kanallar için ek nozul hesabı yapılmalıdır.';
+          'Ek baca / kanallar i\u00e7in ek nozul hesab\u0131 yap\u0131lmal\u0131d\u0131r.';
     });
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'uz': _uzCtrl.text,
+        'gen': _genCtrl.text,
+        'ajanIdx': _ajanIdx.toString(),
+        'ekipman': _ekipmanSayilari.entries
+            .where((e) => e.value > 0)
+            .map((e) => '${e.key}:${e.value}')
+            .join(','),
+      },
+      'r':
+          '## Davlumbaz S\u00f6nd\u00fcrme Sistemi\n'
+          'Uzunluk: ${_uzCtrl.text} cm  |  Geni\u015flik: ${_genCtrl.text} cm\n'
+          'Ajan: ${_wetAjanlar[_ajanIdx].ad}\n'
+          '## Hesap Sonu\u00e7lar\u0131\n'
+          'Kimyasal: ${_sChem?.toStringAsFixed(2) ?? "-"} L  |  Nozul: ${_noSpr?.toStringAsFixed(0) ?? "-"} adet\n'
+          'Tehlike S\u0131n\u0131f\u0131: ${_tehlikeSinifi ?? "-"}  |  Hazard Puan\u0131: ${_hazardPuan?.toStringAsFixed(1) ?? "-"}',
+    });
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      _uzCtrl.text = g['uz'] ?? '';
+      _genCtrl.text = g['gen'] ?? '';
+      _ajanIdx = int.tryParse(g['ajanIdx'] ?? '0') ?? 0;
+      final ekipStr = g['ekipman'] ?? '';
+      if (ekipStr.isNotEmpty) {
+        for (final p in ekipStr.split(',')) {
+          final kv = p.split(':');
+          if (kv.length == 2) {
+            final k = int.tryParse(kv[0]);
+            final v = int.tryParse(kv[1]);
+            if (k != null && v != null && v > 0) _ekipmanSayilari[k] = v;
+          }
+        }
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hesapla();
+      });
+    }
   }
 
   @override
@@ -5140,6 +6559,8 @@ class _GazAjanData {
   final double
   loael; // % — NFPA 2001:2022 Tablo 5.6.2.1 — tahliye zorunlu sınır
   final double silindirKapasite;
+  final double?
+  rhoLiquid; // kg/m³ — boru içi sıvı yoğunluk (halokarbon ajanlar için)
 
   const _GazAjanData({
     required this.ad,
@@ -5156,6 +6577,7 @@ class _GazAjanData {
     required this.noael,
     required this.loael,
     required this.silindirKapasite,
+    this.rhoLiquid,
   });
 }
 
@@ -5211,6 +6633,78 @@ class _GazNfpaSatir extends StatelessWidget {
               height: 1.45,
               color: Color(0xFF78350F),
             ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Yangın sınıfı A / AD için madde listesi açıklama kutusu
+class _GazSinifAciklama extends StatelessWidget {
+  final String baslik;
+  final List<String> maddeler;
+  final String kaynak;
+  const _GazSinifAciklama({
+    required this.baslik,
+    required this.maddeler,
+    required this.kaynak,
+  });
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF0F9FF),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: const Color(0xFFBAE6FD)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          baslik,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0369A1),
+          ),
+        ),
+        const SizedBox(height: 4),
+        ...maddeler.map(
+          (m) => Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '├ ',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF0369A1),
+                    fontFamily: 'monospace',
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    m,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF0C4A6E),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          kaynak,
+          style: const TextStyle(
+            fontSize: 10,
+            color: Colors.black38,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ],
@@ -5275,8 +6769,11 @@ class GazliSondurme extends StatefulWidget {
   State<GazliSondurme> createState() => _GazliSondurmeState();
 }
 
-class _GazliSondurmeState extends State<GazliSondurme> {
+class _GazliSondurmeState extends State<GazliSondurme>
+    with SingleTickerProviderStateMixin {
   static const Color _kGaz = Color(0xFF0891B2);
+
+  late final TabController _tabCtrl = TabController(length: 3, vsync: this);
 
   bool _olcuModu = true;
   final _wCtrl = TextEditingController();
@@ -5306,6 +6803,17 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     _konsanCtrl.text = def.toStringAsFixed(1);
   }
 
+  // (nominal_mm, min_kg_s, max_kg_s) — üretici nozul akış tablosundan
+  static const List<(int, double, double)> _nozulTablosu = [
+    (10, 0.3, 1.0),
+    (15, 0.6, 1.6),
+    (20, 1.1, 2.7),
+    (25, 1.9, 3.9),
+    (32, 3.4, 6.0),
+    (40, 4.7, 9.0),
+    (50, 7.8, 16.0),
+  ];
+
   static const List<(int, double)> _dnTablosu = [
     (15, 15.8),
     (20, 21.9),
@@ -5323,18 +6831,19 @@ class _GazliSondurmeState extends State<GazliSondurme> {
   static const List<_GazAjanData> _ajanlar = [
     _GazAjanData(
       ad: 'HFC-227ea (FM-200)',
-      standart: 'EN 15004-5:2020 / ISO 14520-9:2016 / NFPA 2001',
+      standart: 'TS EN 15004-5:2020 / NFPA 2001',
       inert: false,
       konsanA: 7.9, // Tablo 4: Yüzey A — min. tasarım %7,9
       konsanADerin: 8.5, // Tablo 4: Higher Hazard Class A — min. tasarım %8,5
       konsanB: 9.0, // Tablo 4: Sınıf B (heptan) — min. tasarım %9,0
-      konsanC: 8.0,
+      konsanC: 7.9, // NFPA 2001 §4.3: Sınıf C = Sınıf A konsantrasyonu
       spesifik20: 0.1269, // k1 — S = k1 + k2×T (EN 15004-5 §6.3 Tablo 3)
       spesifK2: 0.000513, // k2 — S = 0.1269 + 0.000513×T → @20°C: 0.1374 m³/kg
       noael: 9.0, // Tablo 5: NOAEL = %9,0
       loael: 10.5, // Tablo 5: LOAEL = %10,5
       silindirKapasite: 100.0,
       silindirBirim: 'kg',
+      rhoLiquid: 1410.0, // kg/m³ — 20°C sıvı yoğunluğu (ISO 14520-9 §6.3)
       aciklama:
           'Sıvılaşmış halokarbon. 25/42/50 bar N₂ şişeleme. '
           'Maks. dolum yoğunluğu 1150 kg/m³. '
@@ -5342,38 +6851,44 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     ),
     _GazAjanData(
       ad: 'FK-5-1-12 (Novec 1230)',
-      standart: 'ISO 14520-15 / NFPA 2001 / TS EN 15004-6',
+      standart: 'TS EN 15004-6 / NFPA 2001',
       inert: false,
       konsanA: 4.2,
       konsanADerin: 4.2,
       konsanB: 5.9,
-      konsanC: 4.5,
+      konsanC: 4.2, // NFPA 2001 §4.3: Sınıf C = Sınıf A konsantrasyonu
       spesifik20: 0.0664,
       noael: 10.0,
       loael: 10.0,
       silindirKapasite: 80.0,
       silindirBirim: 'kg',
+      rhoLiquid: 1616.0, // kg/m³ — 20°C sıvı yoğunluğu (3M/Kidde teknik veri)
       aciklama: 'Düşük GWP. Hassas ekipman odaları, arşivler, müzeler.',
     ),
     _GazAjanData(
       ad: 'CO² (Karbondioksit)',
-      standart: 'ISO 14520-2 / NFPA 12',
+      standart: 'TS EN 15004-2 / NFPA 12',
       inert: false,
-      konsanA: 34.0,
-      konsanADerin: 50.0,
-      konsanB: 34.0,
-      konsanC: 34.0,
+      konsanA: 34.0, // NFPA 12 §5.3.2 / EN 15004-2: min. %34 Sınıf A yüzey
+      konsanADerin: 50.0, // NFPA 12 §5.4.2: derin yerleşik yangın min. %50
+      konsanB:
+          37.0, // NFPA 12 Tablo A.5.3.2.1: toluen/benzen ref. %37; heptan %34, IPA/etanol %53
+      konsanC: 34.0, // Sınıf A konsantrasyonu
       spesifik20: 0.5685,
       noael: -1.0,
       loael: -1.0,
       silindirKapasite: 45.0,
       silindirBirim: 'kg',
+      rhoLiquid:
+          775.0, // kg/m³ — 20°C doyma noktası sıvı CO₂ (~57 bar, NFPA 12)
       aciklama:
-          'Toplam taşkın — YALNIZCA insan bulunmayan hacimler için tasarlanmıştır.',
+          'Toplam taşkın — YALNIZCA insan bulunmayan hacimler. '
+          'Sınıf B konsantrasyonu yakıta özel: heptan %34, toluen/benzen %37, '
+          'etil asetat %38, MEK %40, IPA/etanol/metanol %53 (NFPA 12 Tablo A.5.3.2.1).',
     ),
     _GazAjanData(
       ad: 'IG-541 (Inergen)',
-      standart: 'ISO 14520-11 / NFPA 2001 / TS EN 15004-9',
+      standart: 'TS EN 15004-9 / NFPA 2001',
       inert: true,
       konsanA: 38.5,
       konsanADerin: 38.5,
@@ -5388,7 +6903,7 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     ),
     _GazAjanData(
       ad: 'IG-55 (Argonite)',
-      standart: 'ISO 14520-10 / NFPA 2001 / TS EN 15004-10',
+      standart: 'TS EN 15004-10 / NFPA 2001',
       inert: true,
       konsanA: 38.5,
       konsanADerin: 38.5,
@@ -5403,7 +6918,7 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     ),
     _GazAjanData(
       ad: 'IG-100 (Azot)',
-      standart: 'ISO 14520-9 / NFPA 2001 / TS EN 15004-8',
+      standart: 'TS EN 15004-8 / NFPA 2001',
       inert: true,
       konsanA: 38.0,
       konsanADerin: 38.0,
@@ -5417,7 +6932,7 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     ),
     _GazAjanData(
       ad: 'IG-01 (Argon)',
-      standart: 'ISO 14520-12:2005 / TS EN 15004-7:2009',
+      standart: 'TS EN 15004-7:2009 / NFPA 2001',
       inert: true,
       konsanA: 41.9, // Çizelge 4: Yüzey sınıfı A — asg. tasarım %41,9
       konsanADerin: 49.2, // Çizelge 4: Yüksek tehlike sınıfı A — asg. %49,2
@@ -5440,10 +6955,13 @@ class _GazliSondurmeState extends State<GazliSondurme> {
   String? _hata;
   double? _netHacim, _konsantrasyon, _ajanMiktar, _silindirSayisi;
   String? _noaelUyari;
-  double? _boruCapMin, _boruAkisHizi, _akisDebiM3s;
+  double? _boruCapMin, _boruAkisHizi, _akisDebiM3s, _akisKgs;
   int? _boruDN;
   // Nozul & dağıtım borusu
   int? _nozulSayisi;
+  int?
+  _nozulBoreIdx; // null = otomatik (alan/hacim), aksi = _nozulTablosu indeksi
+  double? _nozulAkisKgs; // kg/s — nozul başına kütle debisi
   int? _dalBoruDN;
   double? _dalBoruHizi, _dalBoruCapMin;
   double? _tahminiBoruMetraj; // m — sadece ölçü modunda
@@ -5515,7 +7033,7 @@ class _GazliSondurmeState extends State<GazliSondurme> {
       noaelUyari =
           '⚠ CO² yüksek konsantrasyonlarda hayati tehlike oluşturur. '
           'Yalnızca insan bulunmayan hacimler için kullanılmalıdır. '
-          'NFPA 12 §4.1 / ISO 14520-2.';
+          'TS EN 15004-2 / NFPA 12.';
     } else if (c >= ajan.loael && ajan.loael > 0) {
       noaelUyari =
           '⚠ Tasarım konsantrasyonu (${c.toStringAsFixed(1)}%) '
@@ -5543,6 +7061,8 @@ class _GazliSondurmeState extends State<GazliSondurme> {
       _boruCapMin = null;
       _boruDN = null;
       _akisDebiM3s = null;
+      _akisKgs = null;
+      _nozulAkisKgs = null;
       _nozulSayisi = null;
       _dalBoruDN = null;
       _dalBoruHizi = null;
@@ -5554,17 +7074,34 @@ class _GazliSondurmeState extends State<GazliSondurme> {
     final tSure = double.tryParse(_desarjCtrl.text.replaceAll(',', '.'));
     if (tSure != null && tSure > 0) {
       final tVal2 = double.tryParse(_tCtrl.text.replaceAll(',', '.')) ?? 20.0;
-      const vRef = 30.0; // m/s — referans üst sınır
-      double qM3s;
+      // Kütle debisi (her iki ajan türü için ortak)
+      final massFlowKgs = miktar / tSure; // kg/s
+
+      // ── Boru içi volumetrik debi ve hız limiti belirleme ──────────────
+      // Sıvılaşmış ajanlar (FM-200, Novec, CO₂):
+      //   Boru içinde SIVI olarak akar → ρ_sıvı kullanılır, v_maks = 6 m/s
+      //   (ISO 14520-1 Ek E, tipik üretici tasarım kriterleri)
+      // Atıl gazlar (IG-541, IG-55, IG-100, IG-01):
+      //   200 bar depodan ~40 bar tahliye basıncında GAZ olarak akar
+      //   v_maks = 30 m/s (ISO 14520-1 Ek E)
+      final double qM3s; // boru içi volumetrik debi (m³/s)
+      final double vRef; // m/s — seçilen hız limiti
+
       if (ajan.inert) {
-        qM3s = (miktar / tSure) * (273.15 + tVal2) / 273.15;
+        // Atmosferik hacim → tahliye basıncına (≈40 bar) dönüştür
+        final qAtm =
+            (miktar / tSure) * (273.15 + tVal2) / 273.15; // Nm³/s → m³/s atm
+        const pDischargeBar =
+            40.0; // bar — 200 bar depo için tipik ortalama tahliye basıncı
+        qM3s = qAtm / pDischargeBar; // m³/s boru içinde
+        vRef = 30.0;
       } else {
-        final sT = ajan.spesifK2 != null
-            ? ajan.spesifik20! + ajan.spesifK2! * tVal2
-            : ajan.spesifik20! * (273.15 + tVal2) / 293.15;
-        qM3s = (miktar / tSure) * sT;
+        // Sıvı halokarbon: kütle debisi / sıvı yoğunluğu
+        final rhoLiq = ajan.rhoLiquid ?? 1400.0; // kg/m³
+        qM3s = massFlowKgs / rhoLiq; // m³/s sıvı
+        vRef = 6.0; // m/s — sıvı faz için tipik üst sınır
       }
-      // Q/A ? vRef => A ? Q/vRef => d ? sqrt(4Q/(?·vRef))
+
       final aMin = qM3s / vRef;
       final dMinMm = math.sqrt(4 * aMin / math.pi) * 1000;
       int? dn;
@@ -5585,11 +7122,10 @@ class _GazliSondurmeState extends State<GazliSondurme> {
         _boruAkisHizi = gercekHiz;
         _boruDN = dn;
         _akisDebiM3s = qM3s;
+        _akisKgs = massFlowKgs;
       });
 
-      // ── Nozul sayısı (ISO 14520 / NFPA 2001 üretici bazlı kural) ────────
-      // Konvansiyonel: maks. 50 m² tavan alanı / nozul (h ≤ 4 m için)
-      // Yüksek tavanda maks. kapsama hacmi: 300 m³ / nozul
+      // ── Nozul sayısı ──────────────────────────────────────────────────────
       double? odaAlani; // m²
       double? odaYukseklik;
       if (_olcuModu) {
@@ -5602,16 +7138,18 @@ class _GazliSondurmeState extends State<GazliSondurme> {
         }
       }
       final int nozulSayisi;
-      if (odaAlani != null && odaYukseklik != null) {
-        // h ≤ 4 m: alan bazlı (50 m²/nozul), h > 4 m: hacim bazlı (300 m³/nozul)
-        if (odaYukseklik <= 4.0) {
-          nozulSayisi = math.max(1, (odaAlani / 50.0).ceil());
-        } else {
-          nozulSayisi = math.max(1, (v / 300.0).ceil());
-        }
+      double? nozulAkisKgs;
+      if (_nozulBoreIdx != null) {
+        // Kullanıcı nozul çapı seçmiş: max akış bazlı hesap
+        final nozul = _nozulTablosu[_nozulBoreIdx!];
+        nozulSayisi = math.max(1, (massFlowKgs / nozul.$3).ceil());
+        nozulAkisKgs = massFlowKgs / nozulSayisi;
+      } else if (odaAlani != null) {
+        // Alan her zaman basşvuru — yükseklikten bağımsız 50 m²/nozul
+        nozulSayisi = math.max(1, (odaAlani / 50.0).ceil());
       } else {
-        // Sadece hacim biliniyorsa: 300 m³/nozul tahmini
-        nozulSayisi = math.max(1, (v / 300.0).ceil());
+        // Yalnızca hacim biliniyorsa: 150 m³/nozul (tutucu tahmini — üretici listesi ile doğrula)
+        nozulSayisi = math.max(1, (v / 150.0).ceil());
       }
 
       // ── Şube (dağıtım) boru çapı — nozul başına debi ──────────────────
@@ -5647,16 +7185,83 @@ class _GazliSondurmeState extends State<GazliSondurme> {
 
       setState(() {
         _nozulSayisi = nozulSayisi;
+        _nozulAkisKgs = nozulAkisKgs;
         _dalBoruDN = dalDN;
         _dalBoruHizi = dalHiz;
         _dalBoruCapMin = dDalMm;
         _tahminiBoruMetraj = tahminiMetraj;
       });
     }
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'olcuModu': _olcuModu.toString(),
+        'w': _wCtrl.text,
+        'l': _lCtrl.text,
+        'h': _hCtrl.text,
+        'v': _vCtrl.text,
+        't': _tCtrl.text,
+        'rakim': _rakimCtrl.text,
+        'rakimGoster': _rakimGoster.toString(),
+        'guvenlikPayi': _guvenlikPayi.toString(),
+        'yanginSinifi': _yanginSinifi,
+        'ajanIdx': _ajanIdx.toString(),
+        'desarj': _desarjCtrl.text,
+        'konsan': _konsanCtrl.text,
+      },
+      'r':
+          '## Gazlı Söndürme Sistemi\n'
+          'Ajan: ${_ajanlar[_ajanIdx].ad}  |  Yangın Sınıfı: $_yanginSinifi  |  Konsantrasyon: ${_konsanCtrl.text}%\n'
+          'Net Hacim: ${_netHacim?.toStringAsFixed(1) ?? "-"} m³  |  Ajan Miktarı: ${_ajanMiktar?.toStringAsFixed(1) ?? "-"} kg  |  Güvenlik Payı: ${_guvenlikPayi ? "%10" : "yok"}\n'
+          '## Hesap Sonuçları\n'
+          'Silindir Sayısı: ${_silindirSayisi?.toStringAsFixed(0) ?? "-"} adet  |  Desarş Süresi: ${_desarjCtrl.text} s\n'
+          'Boru DN: ${_boruDN?.toString() ?? "-"}  |  Nozul Sayısı: ${_nozulSayisi?.toString() ?? "-"} adet',
+    });
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      final sekme = g['sekme'] ?? 'toplam';
+      if (sekme == 'baski') {
+        // Baskı Makinesi sekmesine geçiş ve geri yükleme BaskiMakinesiSondurmeState tarafından yapılır
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _tabCtrl.animateTo(1);
+        });
+        return;
+      }
+      if (sekme == 'pano') {
+        // Pano İçi sekmesine geçiş ve geri yükleme _PanoIciSondurmeState tarafından yapılır
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _tabCtrl.animateTo(2);
+        });
+        return;
+      }
+      _olcuModu = g['olcuModu'] == 'true';
+      _wCtrl.text = g['w'] ?? '';
+      _lCtrl.text = g['l'] ?? '';
+      _hCtrl.text = g['h'] ?? '';
+      _vCtrl.text = g['v'] ?? '';
+      _tCtrl.text = g['t'] ?? '20';
+      _rakimCtrl.text = g['rakim'] ?? '';
+      _rakimGoster = g['rakimGoster'] == 'true';
+      _guvenlikPayi = g['guvenlikPayi'] != 'false';
+      _yanginSinifi = g['yanginSinifi'] ?? 'A';
+      _ajanIdx = int.tryParse(g['ajanIdx'] ?? '0') ?? 0;
+      _desarjCtrl.text = g['desarj'] ?? '60';
+      _konsanCtrl.text = g['konsan'] ?? '';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hesapla();
+      });
+    }
   }
 
   @override
   void dispose() {
+    _tabCtrl.dispose();
     _wCtrl.dispose();
     _lCtrl.dispose();
     _hCtrl.dispose();
@@ -5671,1064 +7276,1316 @@ class _GazliSondurmeState extends State<GazliSondurme> {
   @override
   Widget build(BuildContext context) {
     final ajan = _ajanlar[_ajanIdx];
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Bilgi kutusu
-          _InfoBox(
-            color: const Color(0xFFECFEFF),
-            border: _kGaz,
-            child: const Text(
-              'ISO 14520 · NFPA 2001 · TS EN 15004-1\n'
-              'Toplam taşkın gazlı söndürme sistemi ajan miktarı ön hesap aracı.',
-              style: TextStyle(
-                fontSize: 11,
-                height: 1.5,
-                color: Color(0xFF0E7490),
-              ),
+    return Column(
+      children: [
+        TabBar(
+          controller: _tabCtrl,
+          labelColor: _kGaz,
+          indicatorColor: _kGaz,
+          unselectedLabelColor: Colors.black54,
+          tabs: const [
+            Tab(icon: Icon(Icons.cloud_rounded, size: 18), text: 'Mahal'),
+            Tab(
+              icon: Icon(Icons.print_rounded, size: 18),
+              text: 'Baskı Makinesi',
             ),
-          ),
-          const SizedBox(height: 14),
-
-          // Hacim giriş modu
-          SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(
-                value: true,
-                label: Text('Oda Ölçüsü'),
-                icon: Icon(Icons.straighten_rounded),
-              ),
-              ButtonSegment(
-                value: false,
-                label: Text('Doğrudan Hacim'),
-                icon: Icon(Icons.view_in_ar_rounded),
-              ),
-            ],
-            selected: {_olcuModu},
-            onSelectionChanged: (s) => setState(() => _olcuModu = s.first),
-            style: ButtonStyle(
-              foregroundColor: WidgetStateProperty.resolveWith(
-                (st) =>
-                    st.contains(WidgetState.selected) ? Colors.white : _kGaz,
-              ),
-              backgroundColor: WidgetStateProperty.resolveWith(
-                (st) => st.contains(WidgetState.selected) ? _kGaz : null,
-              ),
+            Tab(
+              icon: Icon(Icons.electrical_services_rounded, size: 18),
+              text: 'Pano İçi',
             ),
-          ),
-          const SizedBox(height: 12),
-
-          if (_olcuModu) ...[
-            Row(
-              children: [
-                Expanded(child: _gazField('Genişlik', _wCtrl, 'm')),
-                const SizedBox(width: 8),
-                Expanded(child: _gazField('Uzunluk', _lCtrl, 'm')),
-                const SizedBox(width: 8),
-                Expanded(child: _gazField('Yükseklik', _hCtrl, 'm')),
-              ],
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Net koruma hacmi — sabit mobilya/ekipman varsa brüt hacimden çıkarınız.',
-              style: TextStyle(fontSize: 10, color: Colors.black45),
-            ),
-          ] else ...[
-            _gazField('Net Koruma Hacmi', _vCtrl, 'm³'),
           ],
-          const SizedBox(height: 12),
-
-          _gazField('Min. Tasarım Sıcaklığı', _tCtrl, '°C'),
-          const SizedBox(height: 4),
-          const Text(
-            'Hacimdeki minimum hava sıcaklığı — ISO 14520-1 §A.1  (varsayılan: 20 °C)',
-            style: TextStyle(fontSize: 10, color: Colors.black45),
-          ),
-          const SizedBox(height: 8),
-
-          Row(
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabCtrl,
             children: [
-              Checkbox(
-                value: _rakimGoster,
-                activeColor: _kGaz,
-                onChanged: (v) => setState(() => _rakimGoster = v ?? false),
-              ),
-              const Expanded(
-                child: Text(
-                  'Rakım düzeltmesi (ISO 14520-1 Ek A)',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-          if (_rakimGoster) ...[
-            _gazField('Rakım', _rakimCtrl, 'm'),
-            const SizedBox(height: 8),
-          ],
-
-          Row(
-            children: [
-              Checkbox(
-                value: _guvenlikPayi,
-                activeColor: _kGaz,
-                onChanged: (v) => setState(() => _guvenlikPayi = v ?? true),
-              ),
-              const Expanded(
-                child: Text(
-                  '%10 Güvenlik Payı (ISO 14520-1 §5.5)',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-
-          // Yangın sınıfı
-          const Text(
-            'Yangın Sınıfı',
-            style: TextStyle(fontSize: 12, color: Colors.black54),
-          ),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final (val, icon, lbl) in [
-                ('A', Icons.home_rounded, 'Sınıf A\n(Yüzey)'),
-                ('AD', Icons.layers_rounded, 'Sınıf A\n(Derin)'),
-                ('B', Icons.local_gas_station_rounded, 'Sınıf B'),
-                ('C', Icons.electrical_services_rounded, 'Sınıf C'),
-              ])
-                ChoiceChip(
-                  avatar: Icon(
-                    icon,
-                    size: 14,
-                    color: _yanginSinifi == val ? Colors.white : _kGaz,
-                  ),
-                  label: Text(
-                    lbl,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: _yanginSinifi == val ? Colors.white : _kGaz,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  selected: _yanginSinifi == val,
-                  selectedColor: _kGaz,
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(color: _kGaz),
-                  ),
-                  showCheckmark: false,
-                  onSelected: (_) => setState(() {
-                    _yanginSinifi = val;
-                    _ajanMiktar = null;
-                    _hata = null;
-                    _konsanGuncelle();
-                  }),
-                ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _yanginSinifi == 'A'
-                ? 'Sınıf A (Yüzey): Alevli, yüzeysel yanma — ahşap, kâğıt yüzeyi, tekstil — ISO 3941'
-                : _yanginSinifi == 'AD'
-                ? 'Sınıf A (Derin): Köz / sızmalı yanma — balya, talaş, kömür, arşiv yığınları — ISO 14520-2'
-                : _yanginSinifi == 'B'
-                ? 'Sınıf B: Sıvı ve eriyebilir katı madde yangınları (benzin, solvent) — ISO 3941'
-                : 'Sınıf C: Elektrik ve elektronik teçhizat yangınları — ISO 3941 / NFPA',
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.black54,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Ajan seçimi
-          DropdownButtonFormField<int>(
-            value: _ajanIdx,
-            isExpanded: true,
-            decoration: _gazDecor('Söndürme Gazı', Icons.cloud_rounded),
-            items: List.generate(
-              _ajanlar.length,
-              (i) => DropdownMenuItem(
-                value: i,
-                child: Text(
-                  _ajanlar[i].ad,
-                  style: const TextStyle(fontSize: 13),
-                ),
-              ),
-            ),
-            onChanged: (v) => setState(() {
-              _ajanIdx = v ?? 0;
-              _konsanGuncelle();
-            }),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${_ajanlar[_ajanIdx].standart}  ·  ${_ajanlar[_ajanIdx].aciklama}',
-            style: const TextStyle(fontSize: 11, color: Colors.black54),
-          ),
-          const SizedBox(height: 6),
-          _InfoBox(
-            color: const Color(0xFFECFEFF),
-            border: const Color(0xFF67E8F9),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.info_outline_rounded,
-                  size: 14,
-                  color: Color(0xFF0E7490),
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    'Standart varsayılan — Sınıf ${_yanginSinifi == 'AD'
-                        ? 'A (Derin)'
-                        : _yanginSinifi == 'A'
-                        ? 'A (Yüzey)'
-                        : _yanginSinifi}: '
-                    '${(() {
-                      final a = _ajanlar[_ajanIdx];
-                      return _yanginSinifi == "A"
-                          ? a.konsanA
-                          : _yanginSinifi == "AD"
-                          ? a.konsanADerin
-                          : _yanginSinifi == "B"
-                          ? a.konsanB
-                          : a.konsanC;
-                    })().toStringAsFixed(1)}%'
-                    '  ·  Silindir: ${_ajanlar[_ajanIdx].silindirKapasite} ${_ajanlar[_ajanIdx].silindirBirim}',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF0E7490),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          // Tasarım konsantrasyonu (düzenlenebilir)
-          _gazField('Tasarım Konsantrasyonu', _konsanCtrl, '%'),
-          const SizedBox(height: 4),
-          const Text(
-            'ISO 14520 kapsamı dışı değer kullanıyorsanız düzenleyebilirsiniz. '
-            'Standart değer için ajan/sınıf seçiminde otomatik güncellenir.',
-            style: TextStyle(fontSize: 10, color: Colors.black45),
-          ),
-          const SizedBox(height: 16),
-
-          // Deşarj süresi girişi
-          _gazField('Deşarj Süresi', _desarjCtrl, 's'),
-          const SizedBox(height: 4),
-          Text(
-            _yanginSinifi == 'B'
-                ? 'Sınıf B: maks. 10 s  (ISO 14520-1 §8.3)  —  boru çapı hesabı için gerekli'
-                : 'Sınıf A/A(Derin)/C: maks. 60 s  (ISO 14520-1 §8.3)  —  boru çapı hesabı için gerekli',
-            style: const TextStyle(fontSize: 10, color: Colors.black45),
-          ),
-          const SizedBox(height: 16),
-
-          if (_hata != null) ...[
-            _InfoBox(
-              color: const Color(0xFFFEE2E2),
-              border: const Color(0xFFFCA5A5),
-              child: Text(
-                _hata!,
-                style: const TextStyle(color: Color(0xFFDC2626), fontSize: 13),
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-
-          ElevatedButton.icon(
-            onPressed: _hesapla,
-            icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _kGaz,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-
-          // ¦¦ Sonuçlar
-          if (_ajanMiktar != null) ...[
-            const SizedBox(height: 18),
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _kGaz, width: 2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.cloud_done_rounded,
-                        color: Color(0xFF0891B2),
-                        size: 20,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'HESAPLAMA SONUCU',
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Bilgi kutusu
+                    _InfoBox(
+                      color: const Color(0xFFECFEFF),
+                      border: _kGaz,
+                      child: const Text(
+                        'TS EN 15004-1:2019 · NFPA 2001:2022\n'
+                        'Toplam taşkın gazlı söndürme sistemi ajan miktarı ön hesap aracı.',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: Color(0xFF0891B2),
-                          letterSpacing: 0.8,
+                          fontSize: 11,
+                          height: 1.5,
+                          color: Color(0xFF0E7490),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Hacim giriş modu
+                    SegmentedButton<bool>(
+                      segments: const [
+                        ButtonSegment(
+                          value: true,
+                          label: Text(
+                            'Oda Ölçüsü',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          icon: Icon(Icons.straighten_rounded),
+                        ),
+                        ButtonSegment(
+                          value: false,
+                          label: Text(
+                            'Doğrudan Hacim',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          icon: Icon(Icons.view_in_ar_rounded),
+                        ),
+                      ],
+                      selected: {_olcuModu},
+                      onSelectionChanged: (s) =>
+                          setState(() => _olcuModu = s.first),
+                      style: ButtonStyle(
+                        foregroundColor: WidgetStateProperty.resolveWith(
+                          (st) => st.contains(WidgetState.selected)
+                              ? Colors.white
+                              : _kGaz,
+                        ),
+                        backgroundColor: WidgetStateProperty.resolveWith(
+                          (st) =>
+                              st.contains(WidgetState.selected) ? _kGaz : null,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    if (_olcuModu) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _gazField(
+                              'Genişlik',
+                              _wCtrl,
+                              'm',
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _gazField(
+                              'Uzunluk',
+                              _lCtrl,
+                              'm',
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _gazField(
+                              'Yükseklik',
+                              _hCtrl,
+                              'm',
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Net koruma hacmi — sabit mobilya/ekipman varsa brüt hacimden çıkarınız.',
+                        style: TextStyle(fontSize: 10, color: Colors.black45),
+                      ),
+                    ] else ...[
+                      _gazField(
+                        'Net Koruma Hacmi',
+                        _vCtrl,
+                        'm³',
+                        labelStyle: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+
+                    _gazField(
+                      'Min. Tasarım Sıcaklığı',
+                      _tCtrl,
+                      '°C',
+                      labelStyle: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Hacimdeki minimum hava sıcaklığı — TS EN 15004-1 §A.2  (varsayılan: 20 °C)',
+                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    ),
+                    const SizedBox(height: 8),
+
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rakimGoster,
+                          activeColor: _kGaz,
+                          onChanged: (v) =>
+                              setState(() => _rakimGoster = v ?? false),
+                        ),
+                        const Expanded(
+                          child: Text(
+                            'Rakım düzeltmesi (TS EN 15004-1 Ek A)',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_rakimGoster) ...[
+                      _gazField('Rakım', _rakimCtrl, 'm'),
+                      const SizedBox(height: 8),
+                    ],
+
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _guvenlikPayi,
+                          activeColor: _kGaz,
+                          onChanged: (v) =>
+                              setState(() => _guvenlikPayi = v ?? true),
+                        ),
+                        const Expanded(
+                          child: Text(
+                            '%10 Güvenlik Payı (TS EN 15004-1 §5.5)',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Yangın sınıfı
+                    const Text(
+                      'Yangın Sınıfı',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 6),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        for (final (val, icon, lbl) in [
+                          ('A', Icons.home_rounded, 'Sınıf A (Yüzey)'),
+                          ('AD', Icons.layers_rounded, 'Sınıf A (Derin)'),
+                          ('B', Icons.local_gas_station_rounded, 'Sınıf B'),
+                          ('C', Icons.electrical_services_rounded, 'Sınıf C'),
+                        ])
+                          ChoiceChip(
+                            avatar: Icon(
+                              icon,
+                              size: 14,
+                              color: _yanginSinifi == val
+                                  ? Colors.white
+                                  : _kGaz,
+                            ),
+                            label: Text(
+                              lbl,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: _yanginSinifi == val
+                                    ? Colors.white
+                                    : _kGaz,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            selected: _yanginSinifi == val,
+                            selectedColor: _kGaz,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: _kGaz),
+                            ),
+                            showCheckmark: false,
+                            onSelected: (_) => setState(() {
+                              _yanginSinifi = val;
+                              _ajanMiktar = null;
+                              _hata = null;
+                              _konsanGuncelle();
+                            }),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    if (_yanginSinifi == 'A') ...[
+                      _GazSinifAciklama(
+                        baslik: 'Surface Class A  —  Yüzey Yangınları',
+                        maddeler: const [
+                          'PMMA (polimetilmetakrilat / pleksiglas) ',
+                          'PP (polipropilen)',
+                          'ABS (akrilonitril bütadien stiren) ',
+                          'Ahşap, mobilya ve döşeme malzemeleri',
+                          'Kağıt ve karton',
+                          'Tekstil / kumaş',
+                          'Kauçuk (lastik)',
+                          'Diğer termoplastikler (PE, PS, PVC vb.)',
+                        ],
+                        kaynak:
+                            'TS EN 15004-1:2019 Ek C.6.3.2 (polimerik test yakıtı levha dizisi) '
+                            '· ISO 14520-1 Sınıf A tanımı (genel örnekler)',
+                      ),
+                    ] else if (_yanginSinifi == 'AD') ...[
+                      _GazSinifAciklama(
+                        baslik:
+                            'Higher Hazard Class A  —  Yüksek Tehlikeli Yangınlar',
+                        maddeler: const [
+                          'Yığın/istifli plastik depolama (raf/palet, derin yerleşik — yüzey Sınıf A\'daki tekil/açık plastik parçalardan farklıdır)',
+                          'Yoğun kablo demetleri > 100 mm',
+                          'Kablo tavası doluluk > %20',
+                          'Kablo tavaları arası < 250 mm',
+                          'Söndürme sırasında enerjili ekipman > 5 kW',
+                          'Telekomünikasyon',
+                          'Kontrol odaları',
+                          'Elektrik/elektronik ekipman yoğun alanlar',
+                        ],
+                        kaynak: 'TS EN 15004-1:2019 Tablo 4',
+                      ),
+                    ] else if (_yanginSinifi == 'B') ...[
+                      _GazSinifAciklama(
+                        baslik:
+                            'Class B  —  Sıvı ve Eriyebilir Katı Madde Yangınları',
+                        maddeler: const [
+                          'Benzin, dizel, fuel-oil',
+                          'Solvent, alkol, aseton',
+                          'Yağlı trafo',
+                          'Boya, vernik, reçine',
+                          'Mum, parafin gibi eriyebilir katılar',
+                        ],
+                        kaynak: 'ISO 3941 / TS EN 15004-1:2019 / NFPA 2001',
+                      ),
+                    ] else ...[
+                      _GazSinifAciklama(
+                        baslik: 'Class C  —  Enerjili Elektriksel Yangınlar',
+                        maddeler: const [
+                          'Elektrik panoları (lokal)',
+                          'Motor kontrol üniteleri',
+                          'UPS ve akü sistemleri',
+                          'Aydınlatma ve güç dağıtım ekipmanı',
+                        ],
+                        kaynak:
+                            'Telekomünikasyon / kontrol odaları / yoğun kablo için → Sınıf A (Derin)\n'
+                            'ISO 3941 / NFPA 2001',
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+
+                    // Ajan seçimi
+                    DropdownButtonFormField<int>(
+                      value: _ajanIdx,
+                      isExpanded: true,
+                      decoration: _gazDecor(
+                        'Söndürme Gazı',
+                        Icons.cloud_rounded,
+                      ),
+                      items: List.generate(
+                        _ajanlar.length,
+                        (i) => DropdownMenuItem(
+                          value: i,
+                          child: Text(
+                            _ajanlar[i].ad,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ),
+                      onChanged: (v) => setState(() {
+                        _ajanIdx = v ?? 0;
+                        _konsanGuncelle();
+                      }),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${_ajanlar[_ajanIdx].standart}  ·  ${_ajanlar[_ajanIdx].aciklama}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    _InfoBox(
+                      color: const Color(0xFFECFEFF),
+                      border: const Color(0xFF67E8F9),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            size: 14,
+                            color: Color(0xFF0E7490),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              'Standart varsayılan — Sınıf ${_yanginSinifi == 'AD'
+                                  ? 'A (Derin)'
+                                  : _yanginSinifi == 'A'
+                                  ? 'A (Yüzey)'
+                                  : _yanginSinifi}: '
+                              '${(() {
+                                final a = _ajanlar[_ajanIdx];
+                                return _yanginSinifi == "A"
+                                    ? a.konsanA
+                                    : _yanginSinifi == "AD"
+                                    ? a.konsanADerin
+                                    : _yanginSinifi == "B"
+                                    ? a.konsanB
+                                    : a.konsanC;
+                              })().toStringAsFixed(1)}%'
+                              '  ·  Silindir: ${_ajanlar[_ajanIdx].silindirKapasite} ${_ajanlar[_ajanIdx].silindirBirim}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF0E7490),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Tasarım konsantrasyonu (düzenlenebilir)
+                    _gazField('Tasarım Konsantrasyonu', _konsanCtrl, '%'),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'TS EN 15004-1 kapsamı dışı değer kullanıyorsanız düzenleyebilirsiniz. '
+                      'Standart değer için ajan/sınıf seçiminde otomatik güncellenir.',
+                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Deşarj süresi girişi
+                    _gazField('Deşarj Süresi', _desarjCtrl, 's'),
+                    const SizedBox(height: 4),
+                    Text(
+                      _yanginSinifi == 'B'
+                          ? 'Sınıf B: maks. 10 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli'
+                          : 'Sınıf A/A(Derin)/C: maks. 60 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli',
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Nozul çapı seçimi
+                    Row(
+                      children: [
+                        const Text(
+                          'Nozul Çapı:',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: _kGaz,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DropdownButtonFormField<int?>(
+                            value: _nozulBoreIdx,
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                            ),
+                            items: [
+                              const DropdownMenuItem<int?>(
+                                value: null,
+                                child: Text(
+                                  'Otomatik (alan/hacim bazlı)',
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              ..._GazliSondurmeState._nozulTablosu
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => DropdownMenuItem<int?>(
+                                      value: e.key,
+                                      child: Text(
+                                        '${e.value.$1} mm  '
+                                        '(${e.value.$2}–${e.value.$3} kg/s)',
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                            ],
+                            onChanged: (val) =>
+                                setState(() => _nozulBoreIdx = val),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Nozul çapı seçilirse hesap kütle debisi bazlı yapılır; '
+                      'otomatik modda alan/hacim kuralı uygulanır.',
+                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    ),
+                    const SizedBox(height: 16),
+
+                    if (_hata != null) ...[
+                      _InfoBox(
+                        color: const Color(0xFFFEE2E2),
+                        border: const Color(0xFFFCA5A5),
+                        child: Text(
+                          _hata!,
+                          style: const TextStyle(
+                            color: Color(0xFFDC2626),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+
+                    ElevatedButton.icon(
+                      onPressed: _hesapla,
+                      icon: const Icon(Icons.calculate_rounded),
+                      label: const Text('Hesapla'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _kGaz,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+
+                    // ¦¦ Sonuçlar
+                    if (_ajanMiktar != null) ...[
+                      const SizedBox(height: 18),
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: _kGaz, width: 2),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.cloud_done_rounded,
+                                  color: Color(0xFF0891B2),
+                                  size: 20,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'HESAPLAMA SONUCU',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color(0xFF0891B2),
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(height: 16),
+                            _GazSonucSatir(
+                              etiket: 'Net Koruma Hacmi',
+                              deger: '${_netHacim!.toStringAsFixed(2)} m³',
+                            ),
+                            const SizedBox(height: 4),
+                            _GazSonucSatir(
+                              etiket: 'Tasarım Konsantrasyonu',
+                              deger: '${_konsantrasyon!.toStringAsFixed(1)} %',
+                            ),
+                            const SizedBox(height: 4),
+                            _GazSonucSatir(
+                              etiket: ajan.inert
+                                  ? 'Gerekli Ajan Hacmi'
+                                  : 'Gerekli Ajan Kütlesi',
+                              deger: ajan.inert
+                                  ? '${_ajanMiktar!.toStringAsFixed(1)} Nm³'
+                                        '${_guvenlikPayi ? '  (+%10 pay)' : ''}'
+                                  : '${_ajanMiktar!.toStringAsFixed(1)} kg'
+                                        '${_guvenlikPayi ? '  (+%10 pay)' : ''}',
+                            ),
+                            if (_guvenlikPayi) ...[
+                              const SizedBox(height: 4),
+                              _GazSonucSatir(
+                                etiket: 'Pay Hariç Hesap',
+                                deger: ajan.inert
+                                    ? '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} Nm³'
+                                    : '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} kg',
+                              ),
+                            ],
+                            const SizedBox(height: 4),
+                            _GazSonucSatir(
+                              etiket: 'Min. Silindir Sayısı',
+                              deger:
+                                  ' ${_silindirSayisi!.toInt()} adet'
+                                  '  (${ajan.silindirKapasite} ${ajan.silindirBirim}/silindir)',
+                            ),
+                            const SizedBox(height: 12),
+
+                            // Deşarj süresi
+                            _InfoBox(
+                              color: const Color(0xFFF0FDF4),
+                              border: const Color(0xFF86EFAC),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Deşarj Süresi Gereklilikleri — TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: Color(0xFF166534),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    ajan.inert
+                                        ? '• Maks. deşarj süresi: ≤ 60 s  (NFPA 2001:2022 §6.7.1)\n'
+                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
+                                              '• Boru akış hızı: Tam hidrolik hesap gereklidir (TS EN 15004-1 Ek E)\n'
+                                              '• Silindir dep. sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)'
+                                        : ajan.ad.contains('CO²')
+                                        ? '• Maks. deşarj süresi: ≤ 60 s  (TS EN 15004-2 §8.3 / NFPA 12 §5.4.1)\n'
+                                              '• Min. bekleme süresi (soak): ≥ 20 dakika\n'
+                                              '• YALNIZCA insan bulunmayan hacimler — tahliye zorunludur'
+                                        : ajan.ad.contains('FM-200') ||
+                                              ajan.ad.contains('227')
+                                        ? '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
+                                              '(EN 15004-5:2020 §8.3 / NFPA 2001:2022 §6.7.1)\n'
+                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
+                                              '• Silindir depolama sıcaklığı: −20 °C – +54 °C\n'
+                                              '• Özgül hacim: S = 0,1269 + 0,000513×T m³/kg  (EN 15004-5 §6.3 Tablo 3)'
+                                        : '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
+                                              '(TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1)\n'
+                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
+                                              '• Silindir depolama sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Color(0xFF166534),
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            // IG-01 silindir depolama özellikleri (TS EN 15004-7 §6.1)
+                            if (ajan.ad.contains('IG-01')) ...[
+                              _InfoBox(
+                                color: const Color(0xFFF0FAFE),
+                                border: const Color(0xFF7DD3FC),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.storage_rounded,
+                                          size: 14,
+                                          color: Color(0xFF0369A1),
+                                        ),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'IG-01 Silindir Özellikleri  —  TS EN 15004-7:2009 §6.1',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: Color(0xFF0369A1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Table(
+                                      columnWidths: const {
+                                        0: FlexColumnWidth(2.4),
+                                        1: FlexColumnWidth(1.0),
+                                        2: FlexColumnWidth(1.0),
+                                        3: FlexColumnWidth(1.0),
+                                      },
+                                      children: [
+                                        TableRow(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFBAE6FD),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 6,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                'Özellik',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF0C4A6E),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '160 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF0C4A6E),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '200 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF0C4A6E),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '300 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF0C4A6E),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        _gazPropRow(
+                                          'Doldurma basıncı @15°C (bar)',
+                                          '160',
+                                          '200',
+                                          '300',
+                                        ),
+                                        _gazPropRow(
+                                          'Maks. çalışma basıncı @50°C (bar)',
+                                          '188',
+                                          '235',
+                                          '362',
+                                        ),
+                                        _gazPropRow(
+                                          'Aşırı basınçlandırma',
+                                          'Uygulanmaz',
+                                          'Uygulanmaz',
+                                          'Uygulanmaz',
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    const Text(
+                                      'IG-01 tanklar aşırı basınçlandırılmaz (TS EN 15004-7 §6.2). '
+                                      'Tasarım sıcaklığında S = 0,56119 + 0,002055×T m³/kg formülü kullanılır.',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Color(0xFF0369A1),
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+
+                            // FM-200 silindir depolama özellikleri (EN 15004-5 §6.1)
+                            if (ajan.ad.contains('FM-200') ||
+                                ajan.ad.contains('227')) ...[
+                              _InfoBox(
+                                color: const Color(0xFFEFF6FF),
+                                border: const Color(0xFF93C5FD),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.propane_tank_rounded,
+                                          size: 14,
+                                          color: Color(0xFF1D4ED8),
+                                        ),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'HFC-227ea Silindir Özellikleri  —  EN 15004-5:2020 §6.1',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: Color(0xFF1D4ED8),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Table(
+                                      columnWidths: const {
+                                        0: FlexColumnWidth(2.2),
+                                        1: FlexColumnWidth(1.0),
+                                        2: FlexColumnWidth(1.0),
+                                        3: FlexColumnWidth(1.0),
+                                      },
+                                      children: [
+                                        TableRow(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFDBEAFE),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 6,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                'Özellik',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1E3A8A),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '25 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1E3A8A),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '42 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1E3A8A),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 3,
+                                              ),
+                                              child: Text(
+                                                '50 bar',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1E3A8A),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        _gazPropRow(
+                                          'Maks. dolum yoğunluğu (kg/m³)',
+                                          '1 150',
+                                          '1 150',
+                                          '1 150',
+                                        ),
+                                        _gazPropRow(
+                                          'Maks. çalışma basıncı @50°C (bar)',
+                                          '34',
+                                          '53',
+                                          '—',
+                                        ),
+                                        _gazPropRow(
+                                          'N₂ şişeleme basıncı @21°C (bar)',
+                                          '25',
+                                          '42',
+                                          '50',
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    const Text(
+                                      'Maks. dolum yoğunluğu aşılması durumunda küçük sıcaklık '
+                                      'artışlarında çok yüksek basınç oluşur; silindir bütünlüğü tehlikeye girer. '
+                                      '(EN 15004-5:2020 §6.1)',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Color(0xFF1D4ED8),
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+
+                            // NOAEL/LOAEL uyarısı
+                            _InfoBox(
+                              color: _noaelUyari!.startsWith('⚠')
+                                  ? const Color(0xFFFEF3C7)
+                                  : const Color(0xFFEFF6FF),
+                              border: _noaelUyari!.startsWith('⚠')
+                                  ? const Color(0xFFFCD34D)
+                                  : const Color(0xFF93C5FD),
+                              child: Text(
+                                _noaelUyari!,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  height: 1.4,
+                                  color: _noaelUyari!.startsWith('⚠')
+                                      ? const Color(0xFF92400E)
+                                      : const Color(0xFF1E40AF),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // ── NFPA 2001:2022 Zorunlu Gereklilikler ─────────────────
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFF7ED),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: const Color(0xFFFBD38D),
+                                  width: 1.2,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.checklist_rounded,
+                                        size: 15,
+                                        color: Color(0xFF92400E),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'NFPA 2001:2022 Zorunlu Gereklilikler',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: Color(0xFF92400E),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const _GazNfpaSatir(
+                                    '§6.6.1 — Ön Deşarj Alarmı: Dolu alanlarda ajan devreye '
+                                    'girmeden önce sesli/ışıklı uyarı verilmeli; tahliye için '
+                                    'yeterli süre tanınmalıdır.',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§6.6.6 — Abort Anahtarı: Dolu alanlarda el ile iptal (abort) '
+                                    'düğmesi zorunludur; sistemi en az 30 saniye geciktirir.',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§6.5.4 — Koruma Hacmi Bütünlüğü: Hacim, soak süresi boyunca '
+                                    'tasarım konsantrasyonunu koruyacak sızdırmazlığa sahip olmalıdır. '
+                                    'Kapı fan testi (door fan test) tavsiye edilir.',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§4.4.1 — Silindir Depolama: −20 °C ile +54 °C arasında '
+                                    'muhafaza; dolum basıncı üretici listesine uygun olmalıdır.',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§6.9 — Deşarj Sonrası Havalandırma: Ortama girişten önce '
+                                    'O₂ seviyesi ≥ %19,5\'e ulaşana dek zorlamalı havalandırma yapılmalıdır.',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§6.1.2 — Bağlantılı Sistemler: Deşarj anında HVAC ve tüm '
+                                    'hava sağlayan damperler otomatik kapanmalıdır.',
+                                  ),
+                                  _GazNfpaSatir(
+                                    '§5.4.1.3 — Güvenlik Payı: Min. %10 güvenlik payı zorunludur; '
+                                    'bu hesapta ${_guvenlikPayi ? "uygulandı." : "⚠ uygulanmadı!"}',
+                                  ),
+                                  const _GazNfpaSatir(
+                                    '§7.2.2 — Periyodik Muayene: Silindirler yılda bir ağırlık/'
+                                    'basınç ile kontrol edilmeli; halokarbon dolum miktarı '
+                                    'çiçek valf ölçümü ile doğrulanmalıdır.',
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Boru çapı sonucu
+                            if (_boruCapMin != null) ...[
+                              const SizedBox(height: 8),
+                              _InfoBox(
+                                color: const Color(0xFFFAF5FF),
+                                border: const Color(0xFFD8B4FE),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.plumbing_rounded,
+                                          size: 14,
+                                          color: Color(0xFF6D28D9),
+                                        ),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Boru Çapı — Ana Hat',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: Color(0xFF6D28D9),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Min. iç çap',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.black45,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${_boruCapMin!.toStringAsFixed(1)} mm',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF6D28D9),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 1,
+                                          height: 36,
+                                          color: const Color(0xFFD8B4FE),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Standart DN',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.black45,
+                                                ),
+                                              ),
+                                              Text(
+                                                _boruDN != null
+                                                    ? 'DN $_boruDN'
+                                                    : 'DN > 150',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF6D28D9),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    if (_akisDebiM3s != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 4,
+                                        ),
+                                        child: Text(
+                                          'Hacimsel debi (Q): ${(_akisDebiM3s! * 1000).toStringAsFixed(2)} L/s'
+                                          '  (${_akisDebiM3s!.toStringAsFixed(4)} m³/s)',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Color(0xFF6D28D9),
+                                          ),
+                                        ),
+                                      ),
+                                    if (_boruAkisHizi != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 4,
+                                        ),
+                                        child: Text(
+                                          'DN ${_boruDN ?? '>150'} için gerçek hız: '
+                                          '${_boruAkisHizi!.toStringAsFixed(1)} m/s'
+                                          '${_boruAkisHizi! > 30 ? '  ? 30 m/s üstünde' : ' ✓'}',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: _boruAkisHizi! > 30
+                                                ? const Color(0xFFDC2626)
+                                                : const Color(0xFF6D28D9),
+                                            fontWeight: _boruAkisHizi! > 30
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                    const Text(
+                                      'Ana hat ön boyutlandırmadır — Q = gaz miktarı ÷ boşalma süresi. '
+                                      'Dağıtım boruları ve nozul hatları ayrıca hesaplanmalıdır. '
+                                      'Kesin tasarım için TS EN 15004-1 Ek E akış hesabı yapınız.',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black45,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+
+                            // ── Nozul & Dağıtım Borusu ──────────────────────────
+                            if (_nozulSayisi != null) ...[
+                              const SizedBox(height: 8),
+                              _InfoBox(
+                                color: const Color(0xFFF0FDF4),
+                                border: const Color(0xFF6EE7B7),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.scatter_plot_rounded,
+                                          size: 14,
+                                          color: Color(0xFF065F46),
+                                        ),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Nozul & Dağıtım Borusu',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: Color(0xFF065F46),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    // Nozul sayısı + şube boru yan yana
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: _GazBilgiKutu(
+                                            etiket: 'Nozul Sayısı',
+                                            deger: '${_nozulSayisi!} adet',
+                                            alt: _nozulBoreIdx != null
+                                                ? '${_GazliSondurmeState._nozulTablosu[_nozulBoreIdx!].$1} mm nozul\n(kütle debisi bazlı)'
+                                                : _olcuModu
+                                                ? 'maks. 50 m²/nozul\n(alan bazlı)'
+                                                : 'maks. 150 m³/nozul\n(hacim bazlı — tahmini)',
+                                            renk: const Color(0xFF065F46),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _GazBilgiKutu(
+                                            etiket: 'Şube Boru',
+                                            deger: _dalBoruDN != null
+                                                ? 'DN $_dalBoruDN'
+                                                : 'DN > 150',
+                                            alt: _dalBoruCapMin != null
+                                                ? 'min. iç çap:\n'
+                                                      '${_dalBoruCapMin!.toStringAsFixed(1)} mm'
+                                                : '',
+                                            renk: const Color(0xFF047857),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Nozul başına akış oranı ve aralık kontrolü
+                                    if (_nozulAkisKgs != null &&
+                                        _nozulBoreIdx != null) ...[
+                                      const SizedBox(height: 6),
+                                      Builder(
+                                        builder: (ctx) {
+                                          final nozul = _GazliSondurmeState
+                                              ._nozulTablosu[_nozulBoreIdx!];
+                                          final ok =
+                                              _nozulAkisKgs! >= nozul.$2 &&
+                                              _nozulAkisKgs! <= nozul.$3;
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 5,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: ok
+                                                  ? const Color(0xFFD1FAE5)
+                                                  : const Color(0xFFFEE2E2),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Text(
+                                              'Nozul başına: '
+                                              '${_nozulAkisKgs!.toStringAsFixed(3)} kg/s  '
+                                              '(izin verilen: ${nozul.$2}–${nozul.$3} kg/s)  '
+                                              '${ok ? "✓" : "⚠ Aralık dışı — farklı çap seçin"}',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                                color: ok
+                                                    ? const Color(0xFF065F46)
+                                                    : const Color(0xFFDC2626),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                    if (_dalBoruHizi != null) ...[
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        'Şube hız: ${_dalBoruHizi!.toStringAsFixed(1)} m/s'
+                                        '  (nozul başına Q: '
+                                        '${(_akisDebiM3s! / _nozulSayisi! * 1000).toStringAsFixed(2)} L/s)'
+                                        '${_dalBoruHizi! > 30 ? '  ⚠ 30 m/s üstünde!' : '  ✓'}',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: _dalBoruHizi! > 30
+                                              ? const Color(0xFFDC2626)
+                                              : const Color(0xFF065F46),
+                                          fontWeight: _dalBoruHizi! > 30
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                    if (_tahminiBoruMetraj != null) ...[
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFD1FAE5),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.straighten_rounded,
+                                              size: 13,
+                                              color: Color(0xFF065F46),
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Text(
+                                              'Tahmini boru metrajı: '
+                                              '≈ ${_tahminiBoruMetraj!.toStringAsFixed(0)} m '
+                                              '(ana hat + dağıtım + nozul düşeyleri)',
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Color(0xFF065F46),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 6),
+                                    const Text(
+                                      'Nozul yerleşimi: TS EN 15004-1 / NFPA 2001 üretici listesi şartlarına uygun '
+                                      'olarak tavan düzeyine, eşit aralıklı konumlandırılmalıdır.\n'
+                                      'Boru metrajı tahminidir — gerçek proje metrajı mekan planına göre değişir.',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black45,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ],
-                  ),
-                  const Divider(height: 16),
-                  _GazSonucSatir(
-                    etiket: 'Net Koruma Hacmi',
-                    deger: '${_netHacim!.toStringAsFixed(2)} m³',
-                  ),
-                  const SizedBox(height: 4),
-                  _GazSonucSatir(
-                    etiket: 'Tasarım Konsantrasyonu',
-                    deger: '${_konsantrasyon!.toStringAsFixed(1)} %',
-                  ),
-                  const SizedBox(height: 4),
-                  _GazSonucSatir(
-                    etiket: ajan.inert
-                        ? 'Gerekli Ajan Hacmi'
-                        : 'Gerekli Ajan Kütlesi',
-                    deger: ajan.inert
-                        ? '${_ajanMiktar!.toStringAsFixed(1)} Nm³'
-                              '${_guvenlikPayi ? '  (+%10 pay)' : ''}'
-                        : '${_ajanMiktar!.toStringAsFixed(1)} kg'
-                              '${_guvenlikPayi ? '  (+%10 pay)' : ''}',
-                  ),
-                  if (_guvenlikPayi) ...[
-                    const SizedBox(height: 4),
-                    _GazSonucSatir(
-                      etiket: 'Pay Hariç Hesap',
-                      deger: ajan.inert
-                          ? '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} Nm³'
-                          : '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} kg',
+
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Kaynak: TS EN 15004-1:2019 · NFPA 2001:2022 · NFPA 12:2022',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10, color: Colors.black38),
                     ),
                   ],
-                  const SizedBox(height: 4),
-                  _GazSonucSatir(
-                    etiket: 'Min. Silindir Sayısı',
-                    deger:
-                        '? ${_silindirSayisi!.toInt()} adet'
-                        '  (${ajan.silindirKapasite} ${ajan.silindirBirim}/silindir)',
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Deşarj süresi
-                  _InfoBox(
-                    color: const Color(0xFFF0FDF4),
-                    border: const Color(0xFF86EFAC),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Deşarj Süresi Gereklilikleri — NFPA 2001:2022 §6.7.1 / ISO 14520-1 §8.3',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                            color: Color(0xFF166534),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          ajan.inert
-                              ? '• Maks. deşarj süresi: ≤ 60 s  (NFPA 2001:2022 §6.7.1)\n'
-                                    '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                    '• Boru akış hızı: Tam hidrolik hesap gereklidir (ISO 14520-1 Ek E)\n'
-                                    '• Silindir dep. sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)'
-                              : ajan.ad.contains('CO²')
-                              ? '• Maks. deşarj süresi: ≤ 60 s  (ISO 14520-2 §8.3 / NFPA 12 §5.4.1)\n'
-                                    '• Min. bekleme süresi (soak): ≥ 20 dakika\n'
-                                    '• YALNIZCA insan bulunmayan hacimler — tahliye zorunludur'
-                              : ajan.ad.contains('FM-200') ||
-                                    ajan.ad.contains('227')
-                              ? '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
-                                    '(EN 15004-5:2020 §8.3 / NFPA 2001:2022 §6.7.1)\n'
-                                    '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                    '• Silindir depolama sıcaklığı: −20 °C – +54 °C\n'
-                                    '• Özgül hacim: S = 0,1269 + 0,000513×T m³/kg  (EN 15004-5 §6.3 Tablo 3)'
-                              : '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
-                                    '(NFPA 2001:2022 §6.7.1 / ISO 14520-1 §8.3)\n'
-                                    '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                    '• Silindir depolama sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF166534),
-                            height: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // IG-01 silindir depolama özellikleri (TS EN 15004-7 §6.1)
-                  if (ajan.ad.contains('IG-01')) ...[
-                    _InfoBox(
-                      color: const Color(0xFFF0FAFE),
-                      border: const Color(0xFF7DD3FC),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.storage_rounded,
-                                size: 14,
-                                color: Color(0xFF0369A1),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'IG-01 Silindir Özellikleri  —  TS EN 15004-7:2009 §6.1',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                  color: Color(0xFF0369A1),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Table(
-                            columnWidths: const {
-                              0: FlexColumnWidth(2.4),
-                              1: FlexColumnWidth(1.0),
-                              2: FlexColumnWidth(1.0),
-                              3: FlexColumnWidth(1.0),
-                            },
-                            children: [
-                              TableRow(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFBAE6FD),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      'Özellik',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0C4A6E),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '160 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0C4A6E),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '200 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0C4A6E),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '300 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0C4A6E),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              _gazPropRow(
-                                'Doldurma basıncı @15°C (bar)',
-                                '160',
-                                '200',
-                                '300',
-                              ),
-                              _gazPropRow(
-                                'Maks. çalışma basıncı @50°C (bar)',
-                                '188',
-                                '235',
-                                '362',
-                              ),
-                              _gazPropRow(
-                                'Aşırı basınçlandırma',
-                                'Uygulanmaz',
-                                'Uygulanmaz',
-                                'Uygulanmaz',
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'IG-01 tanklar aşırı basınçlandırılmaz (TS EN 15004-7 §6.2). '
-                            'Tasarım sıcaklığında S = 0,56119 + 0,002055×T m³/kg formülü kullanılır.',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Color(0xFF0369A1),
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-
-                  // FM-200 silindir depolama özellikleri (EN 15004-5 §6.1)
-                  if (ajan.ad.contains('FM-200') ||
-                      ajan.ad.contains('227')) ...[
-                    _InfoBox(
-                      color: const Color(0xFFEFF6FF),
-                      border: const Color(0xFF93C5FD),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.propane_tank_rounded,
-                                size: 14,
-                                color: Color(0xFF1D4ED8),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'HFC-227ea Silindir Özellikleri  —  EN 15004-5:2020 §6.1',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                  color: Color(0xFF1D4ED8),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Table(
-                            columnWidths: const {
-                              0: FlexColumnWidth(2.2),
-                              1: FlexColumnWidth(1.0),
-                              2: FlexColumnWidth(1.0),
-                              3: FlexColumnWidth(1.0),
-                            },
-                            children: [
-                              TableRow(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFDBEAFE),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      'Özellik',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E3A8A),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '25 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E3A8A),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '42 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E3A8A),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 3,
-                                    ),
-                                    child: Text(
-                                      '50 bar',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E3A8A),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              _gazPropRow(
-                                'Maks. dolum yoğunluğu (kg/m³)',
-                                '1 150',
-                                '1 150',
-                                '1 150',
-                              ),
-                              _gazPropRow(
-                                'Maks. çalışma basıncı @50°C (bar)',
-                                '34',
-                                '53',
-                                '—',
-                              ),
-                              _gazPropRow(
-                                'N₂ şişeleme basıncı @21°C (bar)',
-                                '25',
-                                '42',
-                                '50',
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Maks. dolum yoğunluğu aşılması durumunda küçük sıcaklık '
-                            'artışlarında çok yüksek basınç oluşur; silindir bütünlüğü tehlikeye girer. '
-                            '(EN 15004-5:2020 §6.1)',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Color(0xFF1D4ED8),
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-
-                  // NOAEL/LOAEL uyarısı
-                  _InfoBox(
-                    color: _noaelUyari!.startsWith('⚠')
-                        ? const Color(0xFFFEF3C7)
-                        : const Color(0xFFEFF6FF),
-                    border: _noaelUyari!.startsWith('⚠')
-                        ? const Color(0xFFFCD34D)
-                        : const Color(0xFF93C5FD),
-                    child: Text(
-                      _noaelUyari!,
-                      style: TextStyle(
-                        fontSize: 11,
-                        height: 1.4,
-                        color: _noaelUyari!.startsWith('⚠')
-                            ? const Color(0xFF92400E)
-                            : const Color(0xFF1E40AF),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // ── NFPA 2001:2022 Zorunlu Gereklilikler ─────────────────
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF7ED),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: const Color(0xFFFBD38D),
-                        width: 1.2,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.checklist_rounded,
-                              size: 15,
-                              color: Color(0xFF92400E),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              'NFPA 2001:2022 Zorunlu Gereklilikler',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                color: Color(0xFF92400E),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        const _GazNfpaSatir(
-                          '§6.6.1 — Ön Deşarj Alarmı: Dolu alanlarda ajan devreye '
-                          'girmeden önce sesli/ışıklı uyarı verilmeli; tahliye için '
-                          'yeterli süre tanınmalıdır.',
-                        ),
-                        const _GazNfpaSatir(
-                          '§6.6.6 — Abort Anahtarı: Dolu alanlarda el ile iptal (abort) '
-                          'düğmesi zorunludur; sistemi en az 30 saniye geciktirir.',
-                        ),
-                        const _GazNfpaSatir(
-                          '§6.5.4 — Koruma Hacmi Bütünlüğü: Hacim, soak süresi boyunca '
-                          'tasarım konsantrasyonunu koruyacak sızdırmazlığa sahip olmalıdır. '
-                          'Kapı fan testi (door fan test) tavsiye edilir.',
-                        ),
-                        const _GazNfpaSatir(
-                          '§4.4.1 — Silindir Depolama: −20 °C ile +54 °C arasında '
-                          'muhafaza; dolum basıncı üretici listesine uygun olmalıdır.',
-                        ),
-                        const _GazNfpaSatir(
-                          '§6.9 — Deşarj Sonrası Havalandırma: Ortama girişten önce '
-                          'O₂ seviyesi ≥ %19,5\'e ulaşana dek zorlamalı havalandırma yapılmalıdır.',
-                        ),
-                        const _GazNfpaSatir(
-                          '§6.1.2 — Bağlantılı Sistemler: Deşarj anında HVAC ve tüm '
-                          'hava sağlayan damperler otomatik kapanmalıdır.',
-                        ),
-                        _GazNfpaSatir(
-                          '§5.4.1.3 — Güvenlik Payı: Min. %10 güvenlik payı zorunludur; '
-                          'bu hesapta ${_guvenlikPayi ? "uygulandı." : "⚠ uygulanmadı!"}',
-                        ),
-                        const _GazNfpaSatir(
-                          '§7.2.2 — Periyodik Muayene: Silindirler yılda bir ağırlık/'
-                          'basınç ile kontrol edilmeli; halokarbon dolum miktarı '
-                          'çiçek valf ölçümü ile doğrulanmalıdır.',
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Boru çapı sonucu
-                  if (_boruCapMin != null) ...[
-                    const SizedBox(height: 8),
-                    _InfoBox(
-                      color: const Color(0xFFFAF5FF),
-                      border: const Color(0xFFD8B4FE),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.plumbing_rounded,
-                                size: 14,
-                                color: Color(0xFF6D28D9),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Boru Çapı — Ana Hat',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                  color: Color(0xFF6D28D9),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Min. iç çap',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${_boruCapMin!.toStringAsFixed(1)} mm',
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF6D28D9),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 1,
-                                height: 36,
-                                color: const Color(0xFFD8B4FE),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Standart DN',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                    Text(
-                                      _boruDN != null
-                                          ? 'DN $_boruDN'
-                                          : 'DN > 150',
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF6D28D9),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          if (_akisDebiM3s != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text(
-                                'Hacimsel debi (Q): ${(_akisDebiM3s! * 1000).toStringAsFixed(2)} L/s'
-                                '  (${_akisDebiM3s!.toStringAsFixed(4)} m³/s)',
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: Color(0xFF6D28D9),
-                                ),
-                              ),
-                            ),
-                          if (_boruAkisHizi != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text(
-                                'DN ${_boruDN ?? '>150'} için gerçek hız: '
-                                '${_boruAkisHizi!.toStringAsFixed(1)} m/s'
-                                '${_boruAkisHizi! > 30 ? '  ? 30 m/s üstünde' : '  ?'}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: _boruAkisHizi! > 30
-                                      ? const Color(0xFFDC2626)
-                                      : const Color(0xFF6D28D9),
-                                  fontWeight: _boruAkisHizi! > 30
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          const Text(
-                            'Ana hat ön boyutlandırmadır — Q = gaz miktarı ÷ boşalma süresi. '
-                            'Dağıtım boruları ve nozul hatları ayrıca hesaplanmalıdır. '
-                            'Kesin tasarım için ISO 14520-1 Ek E akış hesabı yapınız.',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black45,
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-
-                  // ── Nozul & Dağıtım Borusu ──────────────────────────
-                  if (_nozulSayisi != null) ...[
-                    const SizedBox(height: 8),
-                    _InfoBox(
-                      color: const Color(0xFFF0FDF4),
-                      border: const Color(0xFF6EE7B7),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.scatter_plot_rounded,
-                                size: 14,
-                                color: Color(0xFF065F46),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Nozul & Dağıtım Borusu',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                  color: Color(0xFF065F46),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          // Nozul sayısı + şube boru yan yana
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _GazBilgiKutu(
-                                  etiket: 'Tahmini Nozul',
-                                  deger: '${_nozulSayisi!} adet',
-                                  alt: _olcuModu
-                                      ? 'maks. 50 m²/nozul\n(tavan ≤ 4 m)'
-                                      : 'maks. 300 m³/nozul\n(hacim bazlı)',
-                                  renk: const Color(0xFF065F46),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: _GazBilgiKutu(
-                                  etiket: 'Şube Boru',
-                                  deger: _dalBoruDN != null
-                                      ? 'DN $_dalBoruDN'
-                                      : 'DN > 150',
-                                  alt: _dalBoruCapMin != null
-                                      ? 'min. iç çap:\n'
-                                            '${_dalBoruCapMin!.toStringAsFixed(1)} mm'
-                                      : '',
-                                  renk: const Color(0xFF047857),
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (_dalBoruHizi != null) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              'Şube hız: ${_dalBoruHizi!.toStringAsFixed(1)} m/s'
-                              '  (nozul başına Q: '
-                              '${(_akisDebiM3s! / _nozulSayisi! * 1000).toStringAsFixed(2)} L/s)'
-                              '${_dalBoruHizi! > 30 ? '  ⚠ 30 m/s üstünde!' : '  ✓'}',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: _dalBoruHizi! > 30
-                                    ? const Color(0xFFDC2626)
-                                    : const Color(0xFF065F46),
-                                fontWeight: _dalBoruHizi! > 30
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                          if (_tahminiBoruMetraj != null) ...[
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFD1FAE5),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.straighten_rounded,
-                                    size: 13,
-                                    color: Color(0xFF065F46),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'Tahmini boru metrajı: '
-                                    '≈ ${_tahminiBoruMetraj!.toStringAsFixed(0)} m '
-                                    '(ana hat + dağıtım + nozul düşeyleri)',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Color(0xFF065F46),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Nozul yerleşimi: ISO 14520-1 / NFPA 2001 üretici listesi şartlarına uygun '
-                            'olarak tavan düzeyine, eşit aralıklı konumlandırılmalıdır.\n'
-                            'Boru metrajı tahminidir — gerçek proje metrajı mekan planına göre değişir.',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black45,
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
+                ),
               ),
-            ),
-          ],
-
-          const SizedBox(height: 20),
-          const Text(
-            'Kaynak: ISO 14520-1:2015 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, color: Colors.black38),
+              const BaskiMakinesiSondurme(),
+              const PanoIciSondurme(),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _gazField(String lbl, TextEditingController ctrl, String suffix) =>
-      TextField(
-        controller: ctrl,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(
-          labelText: lbl,
-          suffixText: suffix,
-          border: const OutlineInputBorder(),
-          isDense: true,
-          labelStyle: const TextStyle(color: _kGaz),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: _kGaz, width: 2),
-          ),
-        ),
-      );
+  Widget _gazField(
+    String lbl,
+    TextEditingController ctrl,
+    String suffix, {
+    TextStyle? labelStyle,
+  }) => TextField(
+    controller: ctrl,
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+    decoration: InputDecoration(
+      labelText: lbl,
+      suffixText: suffix,
+      border: const OutlineInputBorder(),
+      isDense: true,
+      labelStyle: (labelStyle ?? const TextStyle()).copyWith(color: _kGaz),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: _kGaz, width: 2),
+      ),
+    ),
+  );
 
   InputDecoration _gazDecor(String lbl, IconData ico) => InputDecoration(
     labelText: lbl,
@@ -6782,6 +8639,3160 @@ class _GazliSondurmeState extends State<GazliSondurme> {
 }
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// BASKI MAKİNESİ SÖNDÜRME — NFPA 2001 / TS EN 15004 / NFPA 12A
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class BaskiMakinesiSondurme extends StatefulWidget {
+  const BaskiMakinesiSondurme({super.key});
+  @override
+  State<BaskiMakinesiSondurme> createState() => _BaskiMakinesiSondurmeState();
+}
+
+class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
+  static const Color _kBaski = Color(0xFF0891B2);
+
+  // Makine tipleri: (ad, açıklama, yangın sınıfı önerisi)
+  static const List<(String, String, String)> _makineIipleri = [
+    ('Ofset Baskı', 'Islak ofset — IPA/alkol bazlı çözücü', 'B'),
+    ('Flexo Baskı', 'Solvent veya su bazlı mürekkep', 'B'),
+    (
+      'Gravür / Rotogravür',
+      'Toluen/etil asetat bazlı — yüksek solvent riski',
+      'B',
+    ),
+    ('UV Ofset / UV Flex', 'UV kürleme — fotoinitiator bazlı', 'A'),
+    ('Dijital (Inkjet/Toner)', 'Sıvı mürekkep veya toner — düşük solvent', 'A'),
+    ('Şilte / Tampon Baskı', 'Solvent bazlı mürekkep — kapalı kap', 'B'),
+  ];
+
+  // Koruyucu gazlar (GazliSondurme ile aynı ajanlar)
+  static const List<_GazAjanData> _ajanlar = _GazliSondurmeState._ajanlar;
+
+  // Mürekkep/çözücü tipleri: (ad, tutuşma noktası °C, açıklama)
+  static const List<(String, double, String)> _cozucuTipleri = [
+    (
+      'IPA (İzopropil Alkol)',
+      12.0,
+      'Ofset baskı çeşme solüsyonu — patlama riski',
+    ),
+    ('Toluen', 4.0, 'Gravür baskı — yüksek risk, GWP 0'),
+    ('Etil Asetat', -4.0, 'Flexo/gravür — düşük tutuşma noktası'),
+    ('Metanol', 11.0, 'Ağaç işleme ve özel uygulamalar'),
+    ('n-Propil Alkol', 23.0, 'UV ofset ek solvent'),
+    (
+      'Solvent Karışımı (genel)',
+      10.0,
+      'Üretici veri sayfasına göre belirleyin',
+    ),
+    ('Su Bazlı Mürekkep', 80.0, 'Yanıcı solvent yok — Sınıf A uygulaması'),
+  ];
+
+  int _makineTipiIdx = 0;
+  int _ajanIdx = 0;
+  int _cozucuIdx = 0;
+  final _unitSayisiCtrl = TextEditingController(text: '1');
+  bool _olcuModu = true; // true = ölçü, false = doğrudan hacim
+  final _wCtrl = TextEditingController();
+  final _lCtrl = TextEditingController();
+  final _hCtrl = TextEditingController();
+  final _vCtrl = TextEditingController();
+  final _tCtrl = TextEditingController(text: '20');
+  bool _guvenlikPayi = true;
+  bool _lokalUygulama = false; // yerel/lokal uygulama (local application) mı?
+  bool _esZamanli =
+      true; // true = eşzamanlı tahliye (toplam), false = seçici vana (bağımsız, en büyük ünite esas)
+  bool _yedekBesleme = false; // %100 yedek besleme grubu
+  late final _konsanCtrl = TextEditingController(
+    text: _ajanlar[0].konsanB.toStringAsFixed(1),
+  );
+  final _desarjCtrl = TextEditingController(text: '10');
+
+  void _konsanGuncelle() {
+    final sinif = _makineIipleri[_makineTipiIdx].$3;
+    final ajan = _ajanlar[_ajanIdx];
+    final def = sinif == 'B' ? ajan.konsanB : ajan.konsanA;
+    _konsanCtrl.text = def.toStringAsFixed(1);
+  }
+
+  String? _hata;
+  double? _unitHacim, _konsantrasyon, _ajanBirimMiktar, _ajanToplamMiktar;
+  double? _anaBeslemeMiktar;
+  int? _silindirSayisi, _silindirYedekSayisi;
+
+  void _hesapla() {
+    setState(() {
+      _hata = null;
+      _unitHacim = null;
+      _ajanBirimMiktar = null;
+    });
+
+    final unitSayisi = int.tryParse(_unitSayisiCtrl.text.trim()) ?? 0;
+    if (unitSayisi <= 0 || unitSayisi > 50) {
+      setState(() => _hata = 'Geçerli ünite sayısı giriniz (1–50).');
+      return;
+    }
+
+    double v;
+    if (_olcuModu) {
+      final w = double.tryParse(_wCtrl.text.replaceAll(',', '.'));
+      final l = double.tryParse(_lCtrl.text.replaceAll(',', '.'));
+      final h = double.tryParse(_hCtrl.text.replaceAll(',', '.'));
+      if (w == null || l == null || h == null || w <= 0 || l <= 0 || h <= 0) {
+        setState(
+          () => _hata = 'Makine kabini ölçülerini eksiksiz giriniz (m).',
+        );
+        return;
+      }
+      v = w * l * h;
+    } else {
+      final vv = double.tryParse(_vCtrl.text.replaceAll(',', '.'));
+      if (vv == null || vv <= 0) {
+        setState(() => _hata = 'Ünite kabini hacmini giriniz (m³).');
+        return;
+      }
+      v = vv;
+    }
+
+    final tVal = double.tryParse(_tCtrl.text.replaceAll(',', '.')) ?? 20.0;
+    final cParsed = double.tryParse(_konsanCtrl.text.replaceAll(',', '.'));
+    if (cParsed == null || cParsed <= 0 || cParsed >= 100) {
+      setState(() => _hata = 'Geçerli konsantrasyon değeri giriniz (0–100%).');
+      return;
+    }
+
+    final ajan = _ajanlar[_ajanIdx];
+    final c = cParsed;
+
+    double ajanBirim;
+    if (ajan.inert) {
+      // İnert gaz: hacimsel hesap (Nm³)
+      final vf = v * (c / (100.0 - c));
+      ajanBirim = vf;
+    } else {
+      // Halokarbon: kütle hesabı (EN 15004-1 §6.5)
+      final s = ajan.spesifK2 != null
+          ? ajan.spesifik20! + ajan.spesifK2! * tVal
+          : ajan.spesifik20! * (273.15 + tVal) / 293.15;
+      ajanBirim = v * (c / (s * (100.0 - c)));
+    }
+
+    // Lokal uygulama için NFPA 2001 §6.4: %30 artış faktörü
+    if (_lokalUygulama && !ajan.inert) ajanBirim *= 1.30;
+
+    if (_guvenlikPayi) ajanBirim *= 1.10;
+
+    final ajanToplam = ajanBirim * unitSayisi;
+    final silindirKap = ajan.silindirKapasite;
+    // Eşzamanlı tahliye: tüm üniteler aynı anda boşalır → ana besleme = toplam envanter.
+    // Seçici vana: yangın tek ünitede algılanır, sadece o ünite tahliye olur (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2)
+    // → ana besleme en büyük (burada tek tip) ünitenin ihtiyacına göre boyutlandırılır.
+    final anaBesleme = _esZamanli ? ajanToplam : ajanBirim;
+    final silindirAna = (anaBesleme / silindirKap).ceil();
+    final silindirYedek = _yedekBesleme ? silindirAna : 0;
+
+    setState(() {
+      _unitHacim = v;
+      _konsantrasyon = c;
+      _ajanBirimMiktar = ajanBirim;
+      _ajanToplamMiktar = ajanToplam;
+      _anaBeslemeMiktar = anaBesleme;
+      _silindirSayisi = silindirAna;
+      _silindirYedekSayisi = silindirYedek;
+    });
+
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'sekme': 'baski',
+        'makineTipiIdx': _makineTipiIdx.toString(),
+        'cozucuIdx': _cozucuIdx.toString(),
+        'ajanIdx': _ajanIdx.toString(),
+        'unitSayisi': _unitSayisiCtrl.text,
+        'olcuModu': _olcuModu.toString(),
+        'w': _wCtrl.text,
+        'l': _lCtrl.text,
+        'h': _hCtrl.text,
+        'v': _vCtrl.text,
+        't': _tCtrl.text,
+        'guvenlikPayi': _guvenlikPayi.toString(),
+        'lokalUygulama': _lokalUygulama.toString(),
+        'esZamanli': _esZamanli.toString(),
+        'yedekBesleme': _yedekBesleme.toString(),
+        'konsan': _konsanCtrl.text,
+        'desarj': _desarjCtrl.text,
+      },
+      'r':
+          '## Baskı Makinesi Söndürme\n'
+          'Makine: ${_makineIipleri[_makineTipiIdx].$1}  |  Ajan: ${_ajanlar[_ajanIdx].ad}  |  '
+          'Konsantrasyon: ${_konsanCtrl.text}%\n'
+          'Ünite Hacmi: ${_unitHacim!.toStringAsFixed(3)} m³  |  Ünite Sayısı: ${_unitSayisiCtrl.text} adet  |  '
+          'Tahliye Şekli: ${_esZamanli ? "Eşzamanlı (Toplam)" : "Seçici Vana (Bağımsız)"}\n'
+          '## Hesap Sonuçları\n'
+          'Ünite Başına: ${_ajanBirimMiktar!.toStringAsFixed(2)} ${_ajanlar[_ajanIdx].inert ? "Nm³" : "kg"}  |  '
+          'Toplam: ${_ajanToplamMiktar!.toStringAsFixed(2)} ${_ajanlar[_ajanIdx].inert ? "Nm³" : "kg"}  |  '
+          'Ana Besleme Silindir: $_silindirSayisi adet'
+          '${_yedekBesleme ? "  |  Yedek: $_silindirYedekSayisi adet  |  Toplam: ${_silindirSayisi! + _silindirYedekSayisi!} adet" : ""}',
+    });
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _unitSayisiCtrl.addListener(() => setState(() {}));
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null && g['sekme'] == 'baski') {
+      ProjeServisi.kayitliGirdiler = null;
+      _makineTipiIdx = int.tryParse(g['makineTipiIdx'] ?? '0') ?? 0;
+      _cozucuIdx = int.tryParse(g['cozucuIdx'] ?? '0') ?? 0;
+      _ajanIdx = int.tryParse(g['ajanIdx'] ?? '0') ?? 0;
+      _unitSayisiCtrl.text = g['unitSayisi'] ?? '1';
+      _olcuModu = g['olcuModu'] == 'true';
+      _wCtrl.text = g['w'] ?? '';
+      _lCtrl.text = g['l'] ?? '';
+      _hCtrl.text = g['h'] ?? '';
+      _vCtrl.text = g['v'] ?? '';
+      _tCtrl.text = g['t'] ?? '20';
+      _guvenlikPayi = g['guvenlikPayi'] != 'false';
+      _lokalUygulama = g['lokalUygulama'] == 'true';
+      _esZamanli = g['esZamanli'] != 'false';
+      _yedekBesleme = g['yedekBesleme'] == 'true';
+      _konsanCtrl.text = g['konsan'] ?? '';
+      _desarjCtrl.text = g['desarj'] ?? '10';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hesapla();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _unitSayisiCtrl.dispose();
+    _wCtrl.dispose();
+    _lCtrl.dispose();
+    _hCtrl.dispose();
+    _vCtrl.dispose();
+    _tCtrl.dispose();
+    _konsanCtrl.dispose();
+    _desarjCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ajan = _ajanlar[_ajanIdx];
+    final makine = _makineIipleri[_makineTipiIdx];
+    final cozucu = _cozucuTipleri[_cozucuIdx];
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _InfoBox(
+            color: const Color(0xFFECFEFF),
+            border: _kBaski,
+            child: const Text(
+              'NFPA 34:2024 §10.6 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019\n'
+              'Matbaa / baskı makinesi kabini gazlı söndürme ön hesap aracı.',
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.5,
+                color: Color(0xFF0E7490),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Makine tipi
+          DropdownButtonFormField<int>(
+            value: _makineTipiIdx,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: 'Makine Tipi',
+              prefixIcon: const Icon(Icons.print_rounded),
+              border: const OutlineInputBorder(),
+              isDense: true,
+              labelStyle: const TextStyle(color: _kBaski),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: _kBaski, width: 2),
+              ),
+            ),
+            items: List.generate(
+              _makineIipleri.length,
+              (i) => DropdownMenuItem(
+                value: i,
+                child: Text(
+                  _makineIipleri[i].$1,
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+            ),
+            onChanged: (v) => setState(() {
+              _makineTipiIdx = v ?? 0;
+              _konsanGuncelle();
+            }),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            makine.$2,
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
+          const SizedBox(height: 10),
+
+          // Mürekkep/Çözücü tipi
+          DropdownButtonFormField<int>(
+            value: _cozucuIdx,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: 'Mürekkep / Çözücü Tipi',
+              prefixIcon: const Icon(Icons.water_drop_rounded),
+              border: const OutlineInputBorder(),
+              isDense: true,
+              labelStyle: const TextStyle(color: _kBaski),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: _kBaski, width: 2),
+              ),
+            ),
+            items: List.generate(
+              _cozucuTipleri.length,
+              (i) => DropdownMenuItem(
+                value: i,
+                child: Text(
+                  _cozucuTipleri[i].$1,
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+            ),
+            onChanged: (v) => setState(() => _cozucuIdx = v ?? 0),
+          ),
+          const SizedBox(height: 4),
+          _InfoBox(
+            color: cozucu.$2 < 15.0
+                ? const Color(0xFFFEE2E2)
+                : const Color(0xFFFFF7ED),
+            border: cozucu.$2 < 15.0
+                ? const Color(0xFFFCA5A5)
+                : const Color(0xFFFBBF24),
+            child: Text(
+              'Tutuşma noktası: ${cozucu.$2.toStringAsFixed(0)} °C  ·  ${cozucu.$3}',
+              style: TextStyle(
+                fontSize: 11,
+                color: cozucu.$2 < 15.0
+                    ? const Color(0xFFDC2626)
+                    : const Color(0xFF92400E),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Ünite sayısı
+          _baskiField(
+            'Baskı Ünitesi Sayısı',
+            _unitSayisiCtrl,
+            'adet',
+            tip: TextInputType.number,
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Aynı hacimdeki her ünite için ayrı silindir hesaplanır. '
+            'Farklı hacimliyse birden fazla hesap yapınız.',
+            style: TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 12),
+
+          // Hacim giriş modu
+          SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(
+                value: true,
+                label: Text('Kabini Ölç', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.straighten_rounded),
+              ),
+              ButtonSegment(
+                value: false,
+                label: Text('Doğrudan Hacim', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.view_in_ar_rounded),
+              ),
+            ],
+            selected: {_olcuModu},
+            onSelectionChanged: (s) => setState(() => _olcuModu = s.first),
+            style: ButtonStyle(
+              foregroundColor: WidgetStateProperty.resolveWith(
+                (st) =>
+                    st.contains(WidgetState.selected) ? Colors.white : _kBaski,
+              ),
+              backgroundColor: WidgetStateProperty.resolveWith(
+                (st) => st.contains(WidgetState.selected) ? _kBaski : null,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          if (_olcuModu) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: _baskiField(
+                    'Genişlik',
+                    _wCtrl,
+                    'm',
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _baskiField(
+                    'Uzunluk / Derinlik',
+                    _lCtrl,
+                    'm',
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _baskiField(
+                    'Yükseklik',
+                    _hCtrl,
+                    'm',
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Bir ünite kabininin iç boyutları — brüt değil, net iç hacim.',
+              style: TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+          ] else ...[
+            _baskiField(
+              'Ünite Kabini Net Hacmi',
+              _vCtrl,
+              'm³',
+              labelStyle: TextStyle(fontSize: 12),
+            ),
+          ],
+          const SizedBox(height: 12),
+
+          _baskiField(
+            'Min. Tasarım Sıcaklığı',
+            _tCtrl,
+            '°C',
+            labelStyle: TextStyle(fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Makine kabin içi minimum sıcaklık — TS EN 15004-1 §A.2 (varsayılan: 20 °C)',
+            style: TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 10),
+
+          Row(
+            children: [
+              Checkbox(
+                value: _guvenlikPayi,
+                activeColor: _kBaski,
+                onChanged: (v) => setState(() => _guvenlikPayi = v ?? true),
+              ),
+              const Expanded(
+                child: Text(
+                  '%10 Güvenlik Payı (TS EN 15004-1 §5.5)',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: _lokalUygulama,
+                activeColor: _kBaski,
+                onChanged: (v) => setState(() => _lokalUygulama = v ?? false),
+              ),
+              const Expanded(
+                child: Text(
+                  'Lokal Uygulama +%30 (NFPA 2001 §6.4) — Açık makine kabinleri için',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Silindir tasarım yaklaşımı — birden fazla ünite varsa kritik karar
+          if (int.tryParse(_unitSayisiCtrl.text.trim()) != null &&
+              (int.tryParse(_unitSayisiCtrl.text.trim()) ?? 1) > 1) ...[
+            const Text(
+              'Tahliye Şekli (Birden Fazla Ünite)',
+              style: TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            const SizedBox(height: 6),
+            SegmentedButton<bool>(
+              segments: const [
+                ButtonSegment(
+                  value: true,
+                  label: Text(
+                    'Eşzamanlı (Toplam)',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  icon: Icon(Icons.dynamic_feed_rounded, size: 14),
+                ),
+                ButtonSegment(
+                  value: false,
+                  label: Text(
+                    'Seçici Vana (Bağımsız)',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  icon: Icon(Icons.call_split_rounded, size: 14),
+                ),
+              ],
+              selected: {_esZamanli},
+              onSelectionChanged: (s) => setState(() => _esZamanli = s.first),
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.resolveWith(
+                  (st) => st.contains(WidgetState.selected)
+                      ? Colors.white
+                      : _kBaski,
+                ),
+                backgroundColor: WidgetStateProperty.resolveWith(
+                  (st) => st.contains(WidgetState.selected) ? _kBaski : null,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _esZamanli
+                  ? 'Tüm üniteler ortak alanda ve tek seferde tahliye olacaksa seçin — ana besleme = tüm ünitelerin toplam ihtiyacı.'
+                  : 'Her ünite bağımsız algılama + seçici vana ile korunuyorsa seçin — ana besleme yalnızca tek ünite ihtiyacına göre boyutlandırılır (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).',
+              style: const TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+            const SizedBox(height: 10),
+          ],
+
+          Row(
+            children: [
+              Checkbox(
+                value: _yedekBesleme,
+                activeColor: _kBaski,
+                onChanged: (v) => setState(() => _yedekBesleme = v ?? false),
+              ),
+              const Expanded(
+                child: Text(
+                  'Yedek (%100) Besleme Grubu (NFPA 12 §4.5.3) — normal işgal edilen alanlar için önerilir',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Ajan seçimi
+          DropdownButtonFormField<int>(
+            value: _ajanIdx,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: 'Söndürme Gazı',
+              prefixIcon: const Icon(Icons.cloud_rounded),
+              border: const OutlineInputBorder(),
+              isDense: true,
+              labelStyle: const TextStyle(color: _kBaski),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: _kBaski, width: 2),
+              ),
+            ),
+            items: List.generate(
+              _ajanlar.length,
+              (i) => DropdownMenuItem(
+                value: i,
+                child: Text(
+                  _ajanlar[i].ad,
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+            ),
+            onChanged: (v) => setState(() {
+              _ajanIdx = v ?? 0;
+              _konsanGuncelle();
+            }),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${ajan.standart}  ·  ${ajan.aciklama}',
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
+          const SizedBox(height: 10),
+
+          _baskiField('Tasarım Konsantrasyonu', _konsanCtrl, '%'),
+          const SizedBox(height: 4),
+          Text(
+            'Yangın sınıfı: ${makine.$3 == "B" ? "Sınıf B" : "Sınıf A"}  ·  '
+            'Standart min.: ${makine.$3 == "B" ? ajan.konsanB.toStringAsFixed(1) : ajan.konsanA.toStringAsFixed(1)} %  ·  '
+            'NOAEL: ${ajan.noael >= 0 ? "${ajan.noael.toStringAsFixed(1)} %" : "—"}',
+            style: const TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 10),
+
+          _baskiField('Deşarj Süresi', _desarjCtrl, 's'),
+          const SizedBox(height: 4),
+          const Text(
+            'Sınıf B makineler: maks. 10 s  ·  Sınıf A makineler: maks. 60 s  (TS EN 15004-1 §8.3)',
+            style: TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 16),
+
+          if (_hata != null) ...[
+            _InfoBox(
+              color: const Color(0xFFFEE2E2),
+              border: const Color(0xFFFCA5A5),
+              child: Text(
+                _hata!,
+                style: const TextStyle(color: Color(0xFFDC2626), fontSize: 13),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
+          ElevatedButton.icon(
+            onPressed: _hesapla,
+            icon: const Icon(Icons.calculate_rounded),
+            label: const Text('Hesapla'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _kBaski,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+
+          if (_ajanBirimMiktar != null) ...[
+            const SizedBox(height: 18),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: _kBaski, width: 2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.print_rounded,
+                        color: Color(0xFF0891B2),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'HESAPLAMA SONUCU',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Color(0xFF0891B2),
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 16),
+                  _GazSonucSatir(etiket: 'Makine Tipi', deger: makine.$1),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: 'Ünite Kabini Hacmi',
+                    deger: '${_unitHacim!.toStringAsFixed(1)} m³',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: 'Baskı Ünitesi Sayısı',
+                    deger: '${_unitSayisiCtrl.text} adet',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: 'Tasarım Konsantrasyonu',
+                    deger: '${_konsantrasyon!.toStringAsFixed(1)} %',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: 'Ünite Başına Ajan',
+                    deger: ajan.inert
+                        ? '${_ajanBirimMiktar!.toStringAsFixed(2)} Nm³${_guvenlikPayi ? "  (+%10)" : ""}'
+                        : '${_ajanBirimMiktar!.toStringAsFixed(2)} kg${_guvenlikPayi ? "  (+%10)" : ""}',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: 'Toplam Ajan (${_unitSayisiCtrl.text} ünite)',
+                    deger: ajan.inert
+                        ? '${_ajanToplamMiktar!.toStringAsFixed(2)} Nm³'
+                        : '${_ajanToplamMiktar!.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket: _esZamanli
+                        ? 'Ana Besleme İhtiyacı (eşzamanlı — toplam)'
+                        : 'Ana Besleme İhtiyacı (seçici vana — tek ünite)',
+                    deger: ajan.inert
+                        ? '${_anaBeslemeMiktar!.toStringAsFixed(2)} Nm³'
+                        : '${_anaBeslemeMiktar!.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: 4),
+                  _GazSonucSatir(
+                    etiket:
+                        'Ana Besleme Silindir Sayısı (${ajan.silindirKapasite} ${ajan.silindirBirim}/silindir)',
+                    deger: '$_silindirSayisi adet',
+                  ),
+                  if (_yedekBesleme) ...[
+                    const SizedBox(height: 4),
+                    _GazSonucSatir(
+                      etiket: 'Yedek Besleme Silindir Sayısı',
+                      deger: '$_silindirYedekSayisi adet',
+                    ),
+                    const SizedBox(height: 4),
+                    _GazSonucSatir(
+                      etiket: 'Toplam Silindir (Ana + Yedek)',
+                      deger: '${_silindirSayisi! + _silindirYedekSayisi!} adet',
+                    ),
+                  ],
+                  if (!_esZamanli) ...[
+                    const SizedBox(height: 8),
+                    _InfoBox(
+                      color: const Color(0xFFECFEFF),
+                      border: const Color(0xFF67E8F9),
+                      child: const Text(
+                        'Seçici vana tasarımı: her ünite kabini bağımsız algılama devresine sahip olmalı; '
+                        'yalnızca yangın algılanan ünitenin vanası açılır. Ana besleme tek ünite ihtiyacına göre '
+                        'boyutlandırılmıştır — birden fazla ünitede eşzamanlı yangın riski varsa "Eşzamanlı" seçilmelidir '
+                        '(NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF0E7490),
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (_lokalUygulama) ...[
+                    const SizedBox(height: 8),
+                    _InfoBox(
+                      color: const Color(0xFFFFF7ED),
+                      border: const Color(0xFFFBBF24),
+                      child: const Text(
+                        'Lokal uygulama +%30 faktörü uygulandı (NFPA 2001 §6.4).\n'
+                        'Açık makinelerde veya tam kapalı olmayan kabinlerde uygulanır.',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF92400E),
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Uygulama Notları',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Color(0xFF0891B2),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _InfoBox(
+                    color: const Color(0xFFECFEFF),
+                    border: const Color(0xFF67E8F9),
+                    child: Text(
+                      '• Her baskı ünitesi kabini ayrı ayrı korunmalıdır.\n'
+                      '• Makine içi nozul yerleşimi üretici onayına tabidir.\n'
+                      '• Deşarj öncesi mürekkep/solvent kaynağı otomatik kesilmelidir.\n'
+                      '• ${cozucu.$2 < 23.0 ? "Tutuşma noktası < 23 °C — ATEX bölgesi değerlendirmesi zorunludur." : "Solvent tipi için patlama riski analizi yapılmalıdır."}\n'
+                      '• Silindir sayısı, seçilen tahliye şekli (eşzamanlı/seçici vana) ve yedek besleme kararına göre değişir — üretici tipine göre kesinleştirilmelidir.',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF0E7490),
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 20),
+          const Text(
+            'Kaynak: NFPA 34:2024 §10 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019 · EN 1010-2',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 10, color: Colors.black38),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _baskiField(
+    String lbl,
+    TextEditingController ctrl,
+    String suffix, {
+    TextInputType tip = const TextInputType.numberWithOptions(decimal: true),
+    TextStyle? labelStyle,
+  }) => TextField(
+    controller: ctrl,
+    keyboardType: tip,
+    decoration: InputDecoration(
+      labelText: lbl,
+      suffixText: suffix,
+      border: const OutlineInputBorder(),
+      isDense: true,
+      labelStyle: (labelStyle ?? const TextStyle()).copyWith(color: _kBaski),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: _kBaski, width: 2),
+      ),
+    ),
+  );
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// PANO İÇİ SÖNDÜRME (DLP/ILP/DHP/IHP) — LPS 1666 / UL 2166 / FM 5600 / VdS 2093
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+// Pano içi (pre-engineered) pnömatik tubing sistemi tipi
+class _PanoSistemTipi {
+  final String kod, ad, standart, sertifika;
+  final double maxHacimM3, maxTubingM;
+  final String desarjNotu, aciklama;
+  // TÜYAK Dergi 33 sistem seçim tablosu: ILP tam sızdırmazlık zorunlu, diğerlerinde gerekmez.
+  final bool sizdirmazlikZorunlu;
+  const _PanoSistemTipi({
+    required this.kod,
+    required this.ad,
+    required this.standart,
+    required this.sertifika,
+    required this.maxHacimM3,
+    required this.maxTubingM,
+    required this.desarjNotu,
+    required this.aciklama,
+    this.sizdirmazlikZorunlu = false,
+  });
+}
+
+class PanoIciSondurme extends StatefulWidget {
+  const PanoIciSondurme({super.key});
+  @override
+  State<PanoIciSondurme> createState() => _PanoIciSondurmeState();
+}
+
+class _PanoIciSondurmeState extends State<PanoIciSondurme> {
+  static const Color _kPano = Color(0xFF0891B2);
+
+  // Ajan grubu: 0 = Temiz Gaz (FK-5-1-12/HFC-227ea) tubing sistemi, 1 = CO₂ tubing sistemi
+  static const List<String> _ajanGruplari = [
+    'Temiz Gaz (FK-5-1-12(Novec 1230)/HFC-227ea)',
+    'CO₂ (Karbondioksit)',
+  ];
+
+  // Temiz gaz alt tipi: 0 = FK-5-1-12 (Novec 1230), 1 = HFC-227ea (FM-200)
+  static const List<String> _temizAjanlar = [
+    'FK-5-1-12 (Novec 1230)',
+    'HFC-227ea',
+  ];
+
+  // NFPA 2001 tipi ajan miktarı formülü: W = V/s x C/(100-C), s = k1 + k2*T (20°C baz alınır).
+  // Değerler üretici onaylı pre-engineered silindir tablosu ile teyit edilmeden kesin kabul edilmemelidir.
+  static const double _fk512K1 = 0.0664, _fk512K2 = 0.0002741; // m3/kg
+  static const double _hfc227K1 = 0.1269, _hfc227K2 = 0.0005; // m3/kg
+  static const double _co2K1 = 0.507, _co2K2 = 0.0016; // m3/kg
+  static const double _fk512TasarimYuzde = 5.9;
+  static const double _hfc227TasarimYuzde = 7.2;
+  static const double _co2TasarimYuzde = 50.0;
+
+  double _ajanMiktariKg(double hacimM3) {
+    late final double k1, k2, c;
+    if (_ajanGrubuIdx == 1) {
+      k1 = _co2K1;
+      k2 = _co2K2;
+      c = _co2TasarimYuzde;
+    } else if (_temizAjanIdx == 0) {
+      k1 = _fk512K1;
+      k2 = _fk512K2;
+      c = _fk512TasarimYuzde;
+    } else {
+      k1 = _hfc227K1;
+      k2 = _hfc227K2;
+      c = _hfc227TasarimYuzde;
+    }
+    final s = k1 + k2 * 20; // 20°C referans sıcaklık
+    return hacimM3 / s * (c / (100 - c));
+  }
+
+  static const _dlp = _PanoSistemTipi(
+    kod: 'DLP',
+    ad: 'DLP — Doğrudan Düşük Basınç',
+    standart: 'LPS 1666',
+    sertifika: 'LPCB',
+    maxHacimM3: 2.0,
+    maxTubingM: 10.0,
+    desarjNotu:
+        'Tubing hattı hem algılama hem doğrudan boşaltma görevi görür — hesap gerektirmez.',
+    aciklama:
+        'En yaygın kullanılan pano içi söndürme tipidir. Kırmızı algılama tubingi doğrudan söndürme hattı '
+        'olarak işlev görür; ek boru hattına ve nozula gerek yoktur. Tubing yangın noktasında patladığında ajan '
+        'o noktadan boşalır. Hidrolik akış hesabı gerektirmeyen pre-engineered bir sistemdir.',
+  );
+  static const _ilp = _PanoSistemTipi(
+    kod: 'ILP',
+    ad: 'ILP — Dolaylı Düşük Basınç',
+    standart: 'UL 2166 / FM 5600',
+    sertifika: 'UL / FM',
+    maxHacimM3: 10.0,
+    maxTubingM: 35.0,
+    desarjNotu:
+        'Tubing algılama yapar; boşaltma ayrı nozul(lar) üzerinden gerçekleşir.',
+    aciklama:
+        'Algılama tubingi yalnızca tetikleyici işlev görür; söndürücü ajan paslanmaz çelik boru hattı ve '
+        'nozullar aracılığıyla panoya boşaltılır. Çok bölmeli ve büyük hacimli panolarda nozullar stratejik '
+        'noktalara yerleştirilerek homojen söndürme konsantrasyonu sağlanır. Manuel boşaltma butonu bulunur; '
+        'panonun tam sızdırmaz olması zorunludur.',
+    sizdirmazlikZorunlu: true,
+  );
+  static const _dhp = _PanoSistemTipi(
+    kod: 'DHP',
+    ad: 'DHP — Doğrudan Yüksek Basınç (CO₂)',
+    standart: 'VdS 2093',
+    sertifika: 'VdS / CNPP',
+    maxHacimM3: 3.0,
+    maxTubingM: 25.0,
+    desarjNotu:
+        'Sabit deşarj süresi ≈ 60 sn @ 60 bar — kullanıcı girdisi gerekmez.',
+    aciklama:
+        'CO₂ ajanı kullanan ve algılama tubinginin hem dedektör hem de boşaltma hattı olarak işlev gördüğü '
+        'sistemdir. CO₂ yüksek basınçta depolandığından tubing uzunluğu ve maksimum hacim açısından DLP\'ye göre '
+        'avantajlıdır. Nozul deliği açılması istenmeyen ve DLP\'ye göre daha büyük havalandırma açıklığına sahip '
+        'panolarda tercih edilir.',
+  );
+  static const _ihp = _PanoSistemTipi(
+    kod: 'IHP',
+    ad: 'IHP — Dolaylı Yüksek Basınç (CO₂)',
+    standart: 'VdS 2093',
+    sertifika: 'VdS / CNPP',
+    maxHacimM3: 40.0,
+    maxTubingM: 100.0,
+    desarjNotu:
+        'Deşarj süresi standarda göre sabittir; üretici onaylı tabloya bakınız.',
+    aciklama:
+        'CO₂ kullanılan en kapsamlı pano içi söndürme çözümüdür. Büyük hacimli, birden fazla bölmesi olan ve '
+        'bölmeler arası geçişlerin bulunduğu panolarda tercih edilir. Paslanmaz çelik boru hattı, esnek bağlantı '
+        'hortumları ve nozullardan oluşan dağıtım sistemi ile geniş alanlarda homojen söndürme sağlanır.',
+  );
+
+  int _ajanGrubuIdx = 0;
+  int _temizAjanIdx =
+      0; // 0 = FK-5-1-12, 1 = HFC-227ea (yalnızca temiz gaz grubunda kullanılır)
+  bool _olcuModu = true;
+  final _wCtrl = TextEditingController();
+  final _lCtrl = TextEditingController();
+  final _hCtrl = TextEditingController();
+  final _vCtrl = TextEditingController();
+  bool _sizdirmazMi = true; // kapatılamayan açıklık YOK
+  final _tubingCtrl = TextEditingController();
+
+  String? _hata;
+  double? _hacim;
+  _PanoSistemTipi? _sistem;
+  bool _hacimAsimi = false;
+  bool _tubingAsimi = false;
+  bool _sizdirmazlikUyari = false;
+  double? _ajanKg;
+
+  void _hesapla() {
+    setState(() {
+      _hata = null;
+      _sistem = null;
+      _hacimAsimi = false;
+      _tubingAsimi = false;
+      _sizdirmazlikUyari = false;
+      _ajanKg = null;
+    });
+
+    double v;
+    if (_olcuModu) {
+      final w = double.tryParse(_wCtrl.text.replaceAll(',', '.'));
+      final l = double.tryParse(_lCtrl.text.replaceAll(',', '.'));
+      final h = double.tryParse(_hCtrl.text.replaceAll(',', '.'));
+      if (w == null || l == null || h == null || w <= 0 || l <= 0 || h <= 0) {
+        setState(() => _hata = 'Pano/kabin ölçülerini eksiksiz giriniz (m).');
+        return;
+      }
+      v = w * l * h;
+    } else {
+      final vv = double.tryParse(_vCtrl.text.replaceAll(',', '.'));
+      if (vv == null || vv <= 0) {
+        setState(() => _hata = 'Pano/kabin hacmini giriniz (m³).');
+        return;
+      }
+      v = vv;
+    }
+
+    final temizGaz = _ajanGrubuIdx == 0;
+    _PanoSistemTipi? sistem;
+    bool hacimAsimi = false;
+    if (temizGaz) {
+      if (v <= _dlp.maxHacimM3) {
+        sistem = _dlp;
+      } else if (v <= _ilp.maxHacimM3) {
+        sistem = _ilp;
+      } else {
+        hacimAsimi = true;
+      }
+    } else {
+      if (v <= _dhp.maxHacimM3) {
+        sistem = _dhp;
+      } else if (v <= _ihp.maxHacimM3) {
+        sistem = _ihp;
+      } else {
+        hacimAsimi = true;
+      }
+    }
+
+    final tubing = double.tryParse(_tubingCtrl.text.replaceAll(',', '.'));
+    final tubingAsimi =
+        sistem != null && tubing != null && tubing > sistem.maxTubingM;
+    // ILP tam sızdırmazlık ister (TÜYAK Dergi 33); açıklık varsa CO₂ grubuna geçilmeli.
+    final sizdirmazlikUyari =
+        sistem != null && sistem.sizdirmazlikZorunlu && !_sizdirmazMi;
+    final ajanKg = sistem != null && !hacimAsimi ? _ajanMiktariKg(v) : null;
+
+    setState(() {
+      _hacim = v;
+      _sistem = sistem;
+      _hacimAsimi = hacimAsimi;
+      _tubingAsimi = tubingAsimi;
+      _sizdirmazlikUyari = sizdirmazlikUyari;
+      _ajanKg = ajanKg;
+    });
+
+    final ajanAdi = _ajanGrubuIdx == 1 ? 'CO₂' : _temizAjanlar[_temizAjanIdx];
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'sekme': 'pano',
+        'ajanGrubuIdx': _ajanGrubuIdx.toString(),
+        'temizAjanIdx': _temizAjanIdx.toString(),
+        'olcuModu': _olcuModu.toString(),
+        'w': _wCtrl.text,
+        'l': _lCtrl.text,
+        'h': _hCtrl.text,
+        'v': _vCtrl.text,
+        'sizdirmazMi': _sizdirmazMi.toString(),
+        'tubing': _tubingCtrl.text,
+      },
+      'r':
+          '## Pano İçi Söndürme Sistemi\n'
+          'Ajan Grubu: ${_ajanGruplari[_ajanGrubuIdx]}  |  Hacim: ${v.toStringAsFixed(2)} m³\n'
+          '## Hesap Sonuçları\n'
+          '${sistem != null ? "Önerilen Sistem: ${sistem.ad} (${sistem.standart}, ${sistem.sertifika})  |  Maks. Tubing: ${sistem.maxTubingM.toStringAsFixed(0)} m" : "Hacim, pre-engineered pano içi sistem sınırlarını aşıyor — mühendislik hesaplı sistem (Mahal sekmesi) gereklidir."}'
+          '${ajanKg != null ? "\nTahmini Ajan Miktarı: ${ajanKg.toStringAsFixed(2)} kg $ajanAdi (üretici onaylı silindir tablosuyla teyit edilmelidir)" : ""}'
+          '${sizdirmazlikUyari ? "\nUYARI: ILP tam sızdırmazlık gerektirir; pano kapatılamayan açıklık içeriyor — CO₂ grubuna (DHP/IHP) geçilmeli veya pano sızdırmaz hâle getirilmelidir." : ""}',
+    });
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null && g['sekme'] == 'pano') {
+      ProjeServisi.kayitliGirdiler = null;
+      _ajanGrubuIdx = int.tryParse(g['ajanGrubuIdx'] ?? '0') ?? 0;
+      _temizAjanIdx = int.tryParse(g['temizAjanIdx'] ?? '0') ?? 0;
+      _olcuModu = g['olcuModu'] == 'true';
+      _wCtrl.text = g['w'] ?? '';
+      _lCtrl.text = g['l'] ?? '';
+      _hCtrl.text = g['h'] ?? '';
+      _vCtrl.text = g['v'] ?? '';
+      _sizdirmazMi = g['sizdirmazMi'] != 'false';
+      _tubingCtrl.text = g['tubing'] ?? '';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hesapla();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _wCtrl.dispose();
+    _lCtrl.dispose();
+    _hCtrl.dispose();
+    _vCtrl.dispose();
+    _tubingCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _InfoBox(
+            color: const Color(0xFFECFEFF),
+            border: _kPano,
+            child: const Text(
+              'LPS 1666 · UL 2166 / FM 5600 · VdS 2093\n'
+              'Elektrik/telekom pano ve kabinleri için önceden mühendislik hesabı yapılmış (pre-engineered) '
+              'pnömatik tubing söndürme sistemi tipi öneri aracı — hidrolik hesap değildir.',
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.5,
+                color: Color(0xFF0E7490),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Ajan grubu
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(
+                value: 0,
+                label: Text('Temiz Gaz', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.eco_rounded),
+              ),
+              ButtonSegment(
+                value: 1,
+                label: Text('CO₂', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.cloud_rounded),
+              ),
+            ],
+            selected: {_ajanGrubuIdx},
+            onSelectionChanged: (s) => setState(() => _ajanGrubuIdx = s.first),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _ajanGruplari[_ajanGrubuIdx],
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
+          if (_ajanGrubuIdx == 0) ...[
+            const SizedBox(height: 10),
+            SegmentedButton<int>(
+              segments: const [
+                ButtonSegment(
+                  value: 0,
+                  label: Text(
+                    'FK-5-1-12 (NOVEC1230)',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                ButtonSegment(
+                  value: 1,
+                  label: Text('HFC-227ea', style: TextStyle(fontSize: 12)),
+                ),
+              ],
+              selected: {_temizAjanIdx},
+              onSelectionChanged: (s) =>
+                  setState(() => _temizAjanIdx = s.first),
+            ),
+          ],
+          const SizedBox(height: 12),
+
+          // Hacim giriş modu
+          SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(
+                value: true,
+                label: Text('Pano Ölçüsü', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.straighten_rounded),
+              ),
+              ButtonSegment(
+                value: false,
+                label: Text('Doğrudan Hacim', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.view_in_ar_rounded),
+              ),
+            ],
+            selected: {_olcuModu},
+            onSelectionChanged: (s) => setState(() => _olcuModu = s.first),
+          ),
+          const SizedBox(height: 10),
+
+          if (_olcuModu) ...[
+            Row(
+              children: [
+                Expanded(child: _panoField('Genişlik', _wCtrl, 'm')),
+                const SizedBox(width: 8),
+                Expanded(child: _panoField('Uzunluk', _lCtrl, 'm')),
+                const SizedBox(width: 8),
+                Expanded(child: _panoField('Yükseklik', _hCtrl, 'm')),
+              ],
+            ),
+          ] else
+            _panoField('Pano/Kabin Hacmi', _vCtrl, 'm³'),
+          const SizedBox(height: 12),
+
+          CheckboxListTile(
+            value: _sizdirmazMi,
+            onChanged: (v) => setState(() => _sizdirmazMi = v ?? true),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            activeColor: _kPano,
+            title: const Text(
+              'Kapatılamayan açıklık yok (kablo geçişi, havalandırma vb. sızdırmaz)',
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
+          if (!_sizdirmazMi) ...[
+            const SizedBox(height: 4),
+            _InfoBox(
+              color: const Color(0xFFFEE2E2),
+              border: const Color(0xFFFCA5A5),
+              child: const Text(
+                'Kapatılamayan açıklık varsa ajan tutulamaz ve sistem etkisiz kalabilir. '
+                'Açıklıklar kapatılmalı veya devreye girişte havalandırma/damper otomatik olarak kesilmelidir.',
+                style: TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+
+          _panoField(
+            'İhtiyaç Duyulan Tubing Uzunluğu (opsiyonel)',
+            _tubingCtrl,
+            'm',
+          ),
+          const SizedBox(height: 16),
+
+          if (_hata != null) ...[
+            _InfoBox(
+              color: const Color(0xFFFEE2E2),
+              border: const Color(0xFFFCA5A5),
+              child: Text(
+                _hata!,
+                style: const TextStyle(color: Color(0xFFDC2626), fontSize: 13),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
+          ElevatedButton.icon(
+            onPressed: _hesapla,
+            icon: const Icon(Icons.calculate_rounded),
+            label: const Text('Hesapla'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _kPano,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+
+          if (_hacim != null) ...[
+            const SizedBox(height: 18),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: _kPano, width: 2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.electrical_services_rounded,
+                        color: Color(0xFF0891B2),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'ÖNERİLEN SİSTEM',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Color(0xFF0891B2),
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 16),
+                  _GazSonucSatir(
+                    etiket: 'Pano/Kabin Hacmi',
+                    deger: '${_hacim!.toStringAsFixed(2)} m³',
+                  ),
+                  if (_hacimAsimi) ...[
+                    const SizedBox(height: 8),
+                    _InfoBox(
+                      color: const Color(0xFFFEE2E2),
+                      border: const Color(0xFFFCA5A5),
+                      child: Text(
+                        'Hacim, pre-engineered pano içi sistem sınırlarını aşıyor '
+                        '(${_ajanGrubuIdx == 0 ? "ILP maks. ${_ilp.maxHacimM3.toStringAsFixed(0)} m³" : "IHP maks. ${_ihp.maxHacimM3.toStringAsFixed(0)} m³"}). '
+                        'Bu hacim için mühendislik hesaplı toplam taşkın sistemi gereklidir — "Mahal" sekmesini kullanınız.',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFFDC2626),
+                        ),
+                      ),
+                    ),
+                  ] else if (_sistem != null) ...[
+                    const SizedBox(height: 4),
+                    _GazSonucSatir(etiket: 'Sistem Tipi', deger: _sistem!.kod),
+                    const SizedBox(height: 8),
+                    _InfoBox(
+                      color: const Color(0xFFF8FAFC),
+                      border: const Color(0xFFCBD5E1),
+                      child: Text(
+                        _sistem!.aciklama,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          height: 1.5,
+                          color: Color(0xFF334155),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _GazSonucSatir(
+                      etiket: 'Standart',
+                      deger: _sistem!.standart,
+                    ),
+                    const SizedBox(height: 4),
+                    _GazSonucSatir(
+                      etiket: 'Sertifikasyon',
+                      deger: _sistem!.sertifika,
+                    ),
+                    const SizedBox(height: 4),
+                    _GazSonucSatir(
+                      etiket: 'Maks. Tubing Uzunluğu',
+                      deger: '${_sistem!.maxTubingM.toStringAsFixed(0)} m',
+                    ),
+                    if (_ajanKg != null) ...[
+                      const SizedBox(height: 4),
+                      _GazSonucSatir(
+                        etiket: 'Tahmini Ajan Miktarı',
+                        deger:
+                            '${_ajanKg!.toStringAsFixed(2)} kg '
+                            '${_ajanGrubuIdx == 1 ? 'CO₂' : _temizAjanlar[_temizAjanIdx]}',
+                      ),
+                      const SizedBox(height: 8),
+                      _InfoBox(
+                        color: const Color(0xFFECFEFF),
+                        border: const Color(0xFF67E8F9),
+                        child: Text(
+                          'Bu miktar, %${_ajanGrubuIdx == 1 ? _co2TasarimYuzde.toStringAsFixed(0) : (_temizAjanIdx == 0 ? _fk512TasarimYuzde : _hfc227TasarimYuzde).toStringAsFixed(1)} '
+                          'tasarım konsantrasyonu ve 20°C referans alınarak yapılan bir yaklaşık hesaptır. '
+                          'Kesin silindir dolum miktarı üretici onaylı pre-engineered sistem tablosundan seçilmelidir.',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF0E7490),
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (_tubingAsimi) ...[
+                      const SizedBox(height: 8),
+                      _InfoBox(
+                        color: const Color(0xFFFEE2E2),
+                        border: const Color(0xFFFCA5A5),
+                        child: Text(
+                          'Girilen tubing uzunluğu (${_tubingCtrl.text} m), ${_sistem!.kod} sisteminin '
+                          '${_sistem!.maxTubingM.toStringAsFixed(0)} m sınırını aşıyor. Bir üst sistem tipine geçilmeli '
+                          'veya birden fazla bağımsız sistem kullanılmalıdır.',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFFDC2626),
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (_sizdirmazlikUyari) ...[
+                      const SizedBox(height: 8),
+                      _InfoBox(
+                        color: const Color(0xFFFEE2E2),
+                        border: const Color(0xFFFCA5A5),
+                        child: const Text(
+                          'ILP sistemi tam sızdırmaz kabin gerektirir (UL/FM test şartı). İşaretli kapatılamayan '
+                          'açıklık nedeniyle bu sistem güvenilir değildir — panoyu sızdırmaz hâle getiriniz ya da '
+                          'CO₂ ajan grubuna (DHP/IHP, sızdırmazlık gerekmez) geçiniz.',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFFDC2626),
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    _InfoBox(
+                      color: const Color(0xFFECFEFF),
+                      border: const Color(0xFF67E8F9),
+                      child: Text(
+                        _sistem!.desarjNotu,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF0E7490),
+                        ),
+                      ),
+                    ),
+                    if (_ajanGrubuIdx == 1) ...[
+                      const SizedBox(height: 8),
+                      _InfoBox(
+                        color: const Color(0xFFFFF7ED),
+                        border: const Color(0xFFFBBF24),
+                        child: const Text(
+                          'CO₂ toksiktir: pano çevresinde sürekli insan bulunmamalıdır. Komşu/bitişik alanlara sızıntı '
+                          'riski varsa %5 LOAEL sınırı gözetilmeli, gerekirse tahliye ve havalandırma planlanmalıdır.',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF92400E),
+                          ),
+                        ),
+                      ),
+                      if (!_sizdirmazMi) ...[
+                        const SizedBox(height: 8),
+                        _InfoBox(
+                          color: const Color(0xFFFFF7ED),
+                          border: const Color(0xFFFBBF24),
+                          child: const Text(
+                            'Sızdırmazlık şart değildir ancak kapatılamayan açıklık miktarı üreticiye bildirilmeli; '
+                            'VdS 2093 hesabında ek ajan miktarı olarak dikkate alınmalıdır.',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF92400E),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                    const SizedBox(height: 10),
+                    const Divider(),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Tasarım Gereklilikleri',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Color(0xFF0891B2),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    _InfoBox(
+                      color: const Color(0xFFECFEFF),
+                      border: const Color(0xFF67E8F9),
+                      child: Text(
+                        '${_sistem!.kod == 'ILP' || _sistem!.kod == 'IHP' ? '• Manuel boşaltma butonu: ${_sistem!.kod} sistemlerinde tubing hattı ayrı olduğundan, otomatik '
+                                  'tetiklemeye ek olarak acil manuel boşaltma butonu bulunmalıdır.\n' : ''}'
+                        '• Alarm entegrasyonu: sistem aktivasyonunda sesli/ışıklı ön deşarj alarmı ve bina yangın alarm '
+                        'paneline sinyal aktarımı sağlanmalıdır.\n'
+                        '• Silindir seti CE/TPED (Taşınabilir Basınçlı Ekipman Yönetmeliği) uygunluğuna sahip olmalıdır.\n'
+                        '• Satın alma öncesi bağımsız sistem sertifikası (LPCB/UL/FM/VdS) aranmalı; sadece bileşen '
+                        '(silindir, nozul) sertifikası yeterli değildir. Kurulum yetkili/onaylı partner tarafından yapılmalıdır.',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF0E7490),
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Bakım Takvimi',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Color(0xFF0891B2),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _InfoBox(
+                    color: const Color(0xFFECFEFF),
+                    border: const Color(0xFF67E8F9),
+                    child: const Text(
+                      '• Aylık: görsel kontrol (basınç göstergesi, tubing hasarı/korozyonu).\n'
+                      '• 6 ayda bir: basınç anahtarı, conta ve bağlantı kontrolü.\n'
+                      '• 5 yılda bir: silindir hidrostatik testi.\n'
+                      '• 10 yılda bir: sistem revizyonu / bileşen ömür sonu değerlendirmesi.\n'
+                      '• Her dolumda üretici dolum sertifikası alınmalı; sistem devre dışıysa (impaired) '
+                      'en kısa sürede (üretici/otorite talimatına göre azami 48 saat) devreye alınmalı veya yangın gözcüsü tahsis edilmelidir.',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF0E7490),
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 20),
+          const Text(
+            'Kaynak: LPS 1666 · UL 2166 · FM 5600 · VdS 2093',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 10, color: Colors.black38),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _panoField(String lbl, TextEditingController ctrl, String suffix) =>
+      TextField(
+        controller: ctrl,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: InputDecoration(
+          labelText: lbl,
+          suffixText: suffix,
+          border: const OutlineInputBorder(),
+          isDense: true,
+          labelStyle: const TextStyle(color: _kPano),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: _kPano, width: 2),
+          ),
+        ),
+      );
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// DUMAN ALGILAMA — TS EN 54-7 / EN 54-14
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class _OdaModel {
+  final String uid;
+  String ad;
+  int odaTipiIdx;
+  double w, l, h;
+  int? detSayisi;
+  double? aralikX, aralikY, duvarX, duvarY, snKullan;
+  bool yuksekTavan = false;
+  bool isinOneri = false;
+
+  _OdaModel({
+    required this.uid,
+    required this.ad,
+    required this.odaTipiIdx,
+    required this.w,
+    required this.l,
+    required this.h,
+  });
+
+  _OdaModel kopyala(String yeniUid) {
+    final k = _OdaModel(
+      uid: yeniUid,
+      ad: '$ad (kopya)',
+      odaTipiIdx: odaTipiIdx,
+      w: w,
+      l: l,
+      h: h,
+    );
+    k.detSayisi = detSayisi;
+    k.aralikX = aralikX;
+    k.aralikY = aralikY;
+    k.duvarX = duvarX;
+    k.duvarY = duvarY;
+    k.snKullan = snKullan;
+    k.yuksekTavan = yuksekTavan;
+    k.isinOneri = isinOneri;
+    return k;
+  }
+}
+
+class _KatModel {
+  final String uid;
+  String ad;
+  final List<_OdaModel> odalar = [];
+  bool genisletildi = true;
+
+  _KatModel({required this.uid, required this.ad});
+
+  int get toplamDet => odalar.fold(0, (s, o) => s + (o.detSayisi ?? 0));
+}
+
+class DumanAlgilama extends StatefulWidget {
+  const DumanAlgilama({super.key});
+  @override
+  State<DumanAlgilama> createState() => _DumanAlgilamaState();
+}
+
+class _DumanAlgilamaState extends State<DumanAlgilama> {
+  static const Color _kA = Color(0xFF7C2D12);
+
+  static const List<(String, double)> _yapiTipleri = [
+    ('Ofis / İdari', 2.8),
+    ('Konut / Otel', 2.6),
+    ('Hastane', 3.0),
+    ('Ticari / AVM', 4.5),
+    ('Depo (normal ≤ 6 m)', 6.0),
+    ('Depo (yüksek > 6 m)', 9.0),
+    ('Endüstriyel', 7.0),
+  ];
+
+  static const List<(String, String, bool)> _odaTipleri = [
+    ('Standart Oda', 'Düz tavan, engelsiz', false),
+    ('Açık Ofis', 'Geniş, düz tavan', false),
+    ('Teknik / Tesisat', 'Ekipman yoğun — S_n × 0.75', false),
+    ('Mutfak / Pişirme', 'Hassas — S_n × 0.50', false),
+    ('Koridor (G ≤ 3 m)', 'Tek sıra yerleşim', true),
+    ('Üretim / Montaj', 'Engel olabilir — S_n × 0.75', false),
+    ('Depo Rafı', 'Raf arası — S_n × 0.75', false),
+  ];
+
+  int _yapiIdx = 0;
+  final List<_KatModel> _katlar = [];
+  int _uidSayac = 0;
+
+  String _uid() => '${++_uidSayac}';
+
+  double get _varsayilanH => _yapiTipleri[_yapiIdx].$2;
+
+  void _hesaplaOda(_OdaModel o) {
+    final h = o.h;
+    o.yuksekTavan = h > 12.0;
+    o.isinOneri = h > 8.0 && h <= 12.0;
+
+    if (h > 12.0) {
+      o.detSayisi = null;
+      return;
+    }
+
+    final double sn = h <= 6.0
+        ? 80.0
+        : h <= 8.0
+        ? 60.0
+        : 40.0;
+    final double snOda = switch (o.odaTipiIdx) {
+      2 || 5 || 6 => sn * 0.75,
+      3 => sn * 0.50,
+      _ => sn,
+    };
+
+    final bool koridor = _odaTipleri[o.odaTipiIdx].$3 || o.w <= 3.0;
+    if (koridor) {
+      final d = h <= 6.0 ? 11.0 : 8.0;
+      final n = (o.l / d).ceil();
+      o.detSayisi = n;
+      o.aralikX = o.l / n;
+      o.aralikY = null;
+      o.duvarX = (o.l / n) / 2;
+      o.duvarY = o.w / 2;
+    } else {
+      final d = math.sqrt(snOda);
+      final nX = (o.w / d).ceil();
+      final nY = (o.l / d).ceil();
+      o.detSayisi = nX * nY;
+      o.aralikX = o.w / nX;
+      o.aralikY = o.l / nY;
+      o.duvarX = (o.w / nX) / 2;
+      o.duvarY = (o.l / nY) / 2;
+    }
+    o.snKullan = snOda;
+    ProjeServisi.hesapVeri =
+        'Yap\u0131: ${_yapiTipleri[_yapiIdx].$1}\n'
+        'Oda: ${o.ad}  |  ${o.w}\u00d7${o.l} m  |  H=${o.h} m  |  Detekt\u00f6r: ${o.detSayisi ?? "-"} adet';
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  Future<void> _odaDialog({required String katUid, _OdaModel? duzelt}) async {
+    final kat = _katlar.firstWhere((k) => k.uid == katUid);
+    int odaTipiIdx = duzelt?.odaTipiIdx ?? 0;
+    final adCtrl = TextEditingController(text: duzelt?.ad ?? _odaTipleri[0].$1);
+    final wCtrl = TextEditingController(
+      text: duzelt != null ? duzelt.w.toString() : '',
+    );
+    final lCtrl = TextEditingController(
+      text: duzelt != null ? duzelt.l.toString() : '',
+    );
+    final hCtrl = TextEditingController(
+      text: (duzelt?.h ?? _varsayilanH).toString(),
+    );
+    String? hata;
+
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setS) => AlertDialog(
+          title: Text(
+            duzelt == null ? 'Oda / Alan Ekle' : 'Oda Düzenle',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF7C2D12),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: adCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Oda / Alan Adı',
+                    hintText: 'örn. Yemekhane, Server Odası…',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Alan Tipi',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: List.generate(_odaTipleri.length, (i) {
+                    final sel = odaTipiIdx == i;
+                    return GestureDetector(
+                      onTap: () => setS(() {
+                        final prevAd = _odaTipleri[odaTipiIdx].$1;
+                        odaTipiIdx = i;
+                        if (adCtrl.text.isEmpty || adCtrl.text == prevAd) {
+                          adCtrl.text = _odaTipleri[i].$1;
+                        }
+                      }),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: sel ? const Color(0xFF7C2D12) : Colors.white,
+                          border: Border.all(color: const Color(0xFF7C2D12)),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          _odaTipleri[i].$1,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: sel ? Colors.white : const Color(0xFF7C2D12),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: wCtrl,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'G (m)',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: TextField(
+                        controller: lCtrl,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'U (m)',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: TextField(
+                        controller: hCtrl,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'H (m)',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (hata != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    hata!,
+                    style: const TextStyle(
+                      color: Color(0xFFDC2626),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('İptal'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7C2D12),
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                final w = double.tryParse(wCtrl.text.replaceAll(',', '.'));
+                final l = double.tryParse(lCtrl.text.replaceAll(',', '.'));
+                final h = double.tryParse(hCtrl.text.replaceAll(',', '.'));
+                if (w == null ||
+                    l == null ||
+                    h == null ||
+                    w <= 0 ||
+                    l <= 0 ||
+                    h <= 0) {
+                  setS(() => hata = 'Geçerli ölçüler giriniz.');
+                  return;
+                }
+                if (adCtrl.text.trim().isEmpty) {
+                  setS(() => hata = 'Oda adı boş bırakılamaz.');
+                  return;
+                }
+                setState(() {
+                  if (duzelt != null) {
+                    duzelt.ad = adCtrl.text.trim();
+                    duzelt.odaTipiIdx = odaTipiIdx;
+                    duzelt.w = w;
+                    duzelt.l = l;
+                    duzelt.h = h;
+                    _hesaplaOda(duzelt);
+                  } else {
+                    final oda = _OdaModel(
+                      uid: _uid(),
+                      ad: adCtrl.text.trim(),
+                      odaTipiIdx: odaTipiIdx,
+                      w: w,
+                      l: l,
+                      h: h,
+                    );
+                    _hesaplaOda(oda);
+                    kat.odalar.add(oda);
+                  }
+                });
+                Navigator.pop(ctx);
+              },
+              child: Text(duzelt == null ? 'Ekle' : 'Kaydet'),
+            ),
+          ],
+        ),
+      ),
+    );
+    adCtrl.dispose();
+    wCtrl.dispose();
+    lCtrl.dispose();
+    hCtrl.dispose();
+  }
+
+  Future<void> _katAdDialog(_KatModel kat) async {
+    final ctrl = TextEditingController(text: kat.ad);
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Kat / Bölge Adı'),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('İptal'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7C2D12),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              if (ctrl.text.trim().isNotEmpty) {
+                setState(() => kat.ad = ctrl.text.trim());
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text('Tamam'),
+          ),
+        ],
+      ),
+    );
+    ctrl.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final toplamDet = _katlar.fold(0, (s, k) => s + k.toplamDet);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Duman Algılama',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: _kA,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Standart referansı
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF7ED),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFED7AA)),
+              ),
+              child: const Text(
+                'TS EN 54-7:2006 / EN 54-14:2004  —  Nokta Tipi Duman Dedektörü Yerleşimi\n'
+                'Ön boyutlandırma — kesin tasarım için sistem mühendisi onayı gereklidir.',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF92400E),
+                  height: 1.4,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+
+            // Yapı tipi
+            const Text(
+              'Yapı Tipi',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: List.generate(_yapiTipleri.length, (i) {
+                final sec = _yapiIdx == i;
+                return ChoiceChip(
+                  label: Text(
+                    _yapiTipleri[i].$1,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: sec ? Colors.white : _kA,
+                    ),
+                  ),
+                  selected: sec,
+                  selectedColor: _kA,
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: _kA),
+                  ),
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _yapiIdx = i),
+                );
+              }),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Varsayılan tavan yüksekliği: ${_varsayilanH.toStringAsFixed(1)} m  '
+              '(her odada ayrıca düzenlenebilir)',
+              style: const TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+            const SizedBox(height: 16),
+
+            // Kat / Bölge listesi
+            ..._katlar.map(
+              (kat) => _KatKarti(
+                kat: kat,
+                kA: _kA,
+                odaTipleri: _odaTipleri,
+                onOdaEkle: () => _odaDialog(katUid: kat.uid),
+                onOdaDuzenle: (o) => _odaDialog(katUid: kat.uid, duzelt: o),
+                onOdaSil: (o) => setState(() => kat.odalar.remove(o)),
+                onOdaKopyala: (o) => setState(() {
+                  final idx = kat.odalar.indexOf(o);
+                  kat.odalar.insert(
+                    idx + 1,
+                    o.kopyala(DateTime.now().microsecondsSinceEpoch.toString()),
+                  );
+                }),
+                onKatAdDuzenle: () => _katAdDialog(kat),
+                onKatSil: () => setState(() => _katlar.remove(kat)),
+                onGenislet: () =>
+                    setState(() => kat.genisletildi = !kat.genisletildi),
+              ),
+            ),
+
+            // + Kat / Bölge Ekle
+            OutlinedButton.icon(
+              onPressed: () {
+                final idx = _katlar.length + 1;
+                setState(
+                  () => _katlar.add(
+                    _KatModel(uid: _uid(), ad: 'Kat / Bölge $idx'),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Kat / Bölge Ekle'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _kA,
+                side: BorderSide(color: _kA),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+
+            // Genel Toplam
+            if (_katlar.isNotEmpty && toplamDet > 0) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: _kA,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.sensors_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Toplam Dedektör',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '$toplamDet adet',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 20),
+            const Text(
+              'Kaynak: TS EN 54-7:2006 · EN 54-14:2004',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 10, color: Colors.black38),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _KatKarti extends StatelessWidget {
+  final _KatModel kat;
+  final Color kA;
+  final List<(String, String, bool)> odaTipleri;
+  final VoidCallback onOdaEkle, onKatAdDuzenle, onKatSil, onGenislet;
+  final void Function(_OdaModel) onOdaDuzenle, onOdaSil, onOdaKopyala;
+
+  const _KatKarti({
+    required this.kat,
+    required this.kA,
+    required this.odaTipleri,
+    required this.onOdaEkle,
+    required this.onOdaDuzenle,
+    required this.onOdaSil,
+    required this.onOdaKopyala,
+    required this.onKatAdDuzenle,
+    required this.onKatSil,
+    required this.onGenislet,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFFFED7AA), width: 1.5),
+          boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 4)],
+        ),
+        child: Column(
+          children: [
+            // Kat başlığı
+            InkWell(
+              onTap: onGenislet,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7ED),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(10),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      kat.genisletildi
+                          ? Icons.expand_less_rounded
+                          : Icons.expand_more_rounded,
+                      color: kA,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        kat.ad,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: kA,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${kat.odalar.length} alan · ${kat.toplamDet} det.',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    IconButton(
+                      icon: const Icon(Icons.edit_rounded, size: 16),
+                      color: kA,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: onKatAdDuzenle,
+                    ),
+                    const SizedBox(width: 4),
+                    IconButton(
+                      icon: const Icon(Icons.delete_rounded, size: 16),
+                      color: Colors.red,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: onKatSil,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            if (kat.genisletildi) ...[
+              // Oda listesi
+              ...kat.odalar.map(
+                (o) => _OdaSatiri(
+                  oda: o,
+                  kA: kA,
+                  odaTipleri: odaTipleri,
+                  onDuzenle: () => onOdaDuzenle(o),
+                  onSil: () => onOdaSil(o),
+                  onKopyala: () => onOdaKopyala(o),
+                ),
+              ),
+
+              // + Oda Ekle butonu
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                child: OutlinedButton.icon(
+                  onPressed: onOdaEkle,
+                  icon: const Icon(Icons.add_rounded, size: 16),
+                  label: const Text(
+                    'Oda / Alan Ekle',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: kA,
+                    side: BorderSide(color: kA),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OdaSatiri extends StatefulWidget {
+  final _OdaModel oda;
+  final Color kA;
+  final List<(String, String, bool)> odaTipleri;
+  final VoidCallback onDuzenle, onSil, onKopyala;
+
+  const _OdaSatiri({
+    required this.oda,
+    required this.kA,
+    required this.odaTipleri,
+    required this.onDuzenle,
+    required this.onSil,
+    required this.onKopyala,
+  });
+
+  @override
+  State<_OdaSatiri> createState() => _OdaSatiriState();
+}
+
+class _OdaSatiriState extends State<_OdaSatiri> {
+  bool _acik = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final o = widget.oda;
+    final tip = widget.odaTipleri[o.odaTipiIdx].$1;
+    return Column(
+      children: [
+        const Divider(height: 1, indent: 12, endIndent: 12),
+        InkWell(
+          onTap: () => setState(() => _acik = !_acik),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                Icon(Icons.meeting_room_rounded, size: 15, color: widget.kA),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        o.ad,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        '$tip  ·  ${o.w}×${o.l} m  ·  H=${o.h} m',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (o.yuksekTavan)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 4),
+                    child: Text('⚠', style: TextStyle(fontSize: 14)),
+                  )
+                else if (o.detSayisi != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF7C2D12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${o.detSayisi} det.',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 6),
+                IconButton(
+                  icon: const Icon(Icons.copy_rounded, size: 15),
+                  color: Colors.grey,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  tooltip: 'Kopyala',
+                  onPressed: widget.onKopyala,
+                ),
+                const SizedBox(width: 2),
+                IconButton(
+                  icon: const Icon(Icons.edit_rounded, size: 15),
+                  color: widget.kA,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: widget.onDuzenle,
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  icon: const Icon(Icons.delete_rounded, size: 15),
+                  color: Colors.red,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: widget.onSil,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_acik)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 0, 12, 8),
+            child: o.yuksekTavan
+                ? const Text(
+                    '⚠ H > 12 m — Işın tipi / ASD dedektör gereklidir (EN 54-12 / EN 54-20)',
+                    style: TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (o.isinOneri)
+                        const Text(
+                          'ℹ H = 8–12 m — Işın dedektör de değerlendirilebilir',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF92400E),
+                          ),
+                        ),
+                      if (o.aralikY != null) ...[
+                        Text(
+                          'Genişlik aralığı: ${o.aralikX!.toStringAsFixed(2)} m  |  '
+                          'Uzunluk aralığı: ${o.aralikY!.toStringAsFixed(2)} m',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        Text(
+                          'Duvar mesafesi W: ${o.duvarX!.toStringAsFixed(2)} m  |  '
+                          'Duvar mesafesi L: ${o.duvarY!.toStringAsFixed(2)} m',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ] else if (o.aralikX != null) ...[
+                        Text(
+                          'Koridor aralığı: ${o.aralikX!.toStringAsFixed(2)} m  |  '
+                          'Duvar mesafesi: ${o.duvarY!.toStringAsFixed(2)} m',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                      if (o.snKullan != null)
+                        Text(
+                          'S_n = ${o.snKullan!.toStringAsFixed(0)} m²/adet.',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.black38,
+                          ),
+                        ),
+                    ],
+                  ),
+          ),
+      ],
+    );
+  }
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// DUMAN KONTROLÜ — EN 12101-2 / EN 12101-3 / EN 12101-6
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class DumanKontrol extends StatefulWidget {
+  const DumanKontrol({super.key});
+  @override
+  State<DumanKontrol> createState() => _DumanKontrolState();
+}
+
+class _DumanKontrolState extends State<DumanKontrol> {
+  static const Color _kD = Color(0xFF374151);
+
+  int _mod = 0; // 0=Doğal, 1=Mekanik, 2=Basınçlandırma
+
+  final _alanCtrl = TextEditingController();
+  final _yukseklikCtrl = TextEditingController();
+  final _qCtrl = TextEditingController();
+  final _zCtrl = TextEditingController();
+  final _tambiCtrl = TextEditingController(text: '20');
+  final _havaDeCtrl = TextEditingController(
+    text: '10',
+  ); // sabit EN 12101-3 min.
+  final _katCtrl = TextEditingController(text: '5');
+  final _kapiGenCtrl = TextEditingController(text: '0.9');
+  final _kapiYukCtrl = TextEditingController(text: '2.0');
+  final _mGenCtrl = TextEditingController(text: '2.0');
+  final _mDepCtrl = TextEditingController(text: '2.0');
+  final _katYukCtrl = TextEditingController(text: '3.0');
+
+  // EN 12101-6 Ek F Tablo F.1: duvar malzemesi → sızıntı katsayısı (m²/m²)
+  static const _duvarMalzemeler = [
+    ('Beton / Kagir', 1.3e-4),
+    ('Hafif Beton Blok', 2.0e-4),
+    ('Alçıpan (Çift)', 3.0e-4),
+  ];
+  int _duvarMalzemeIdx = 0;
+
+  String? _hata;
+  double? _mp, _Ts, _dT, _AvEff, _Ai;
+  double? _vDot, _havaD, _fanM3h;
+  bool _minHDYonetir = false; // true = min. hava değişimi kriterini yönetir
+  double? _qKapi, _qSizinti, _qDuvar, _qToplam;
+
+  @override
+  void initState() {
+    super.initState();
+    _yukseklikCtrl.addListener(() {
+      final H = double.tryParse(_yukseklikCtrl.text.replaceAll(',', '.'));
+      if (H != null && H > 0) {
+        final zOto = double.parse((math.max(2.5, H * 0.7)).toStringAsFixed(1));
+        _zCtrl.text = zOto.toString();
+        _zCtrl.selection = TextSelection.collapsed(offset: _zCtrl.text.length);
+      }
+      setState(() {});
+    });
+    _zCtrl.addListener(() => setState(() {}));
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _mod = int.tryParse(g['mod'] ?? '0') ?? 0;
+          _duvarMalzemeIdx = int.tryParse(g['duvarIdx'] ?? '0') ?? 0;
+        });
+        _alanCtrl.text = g['alan'] ?? '';
+        _yukseklikCtrl.text = g['yuks'] ?? '';
+        _zCtrl.text = g['z'] ?? '';
+        _qCtrl.text = g['q'] ?? '';
+        _tambiCtrl.text = g['tambi'] ?? '20';
+        _havaDeCtrl.text = g['havaDe'] ?? '10';
+        _katCtrl.text = g['kat'] ?? '5';
+        _kapiGenCtrl.text = g['kapiGen'] ?? '0.9';
+        _kapiYukCtrl.text = g['kapiYuk'] ?? '2.0';
+        _mGenCtrl.text = g['mGen'] ?? '2.0';
+        _mDepCtrl.text = g['mDep'] ?? '2.0';
+        _katYukCtrl.text = g['katYuk'] ?? '3.0';
+        _hesapla();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final c in [
+      _alanCtrl,
+      _yukseklikCtrl,
+      _qCtrl,
+      _zCtrl,
+      _tambiCtrl,
+      _havaDeCtrl,
+      _katCtrl,
+      _kapiGenCtrl,
+      _kapiYukCtrl,
+      _mGenCtrl,
+      _mDepCtrl,
+      _katYukCtrl,
+    ]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  void _hesapla() {
+    final alan = double.tryParse(_alanCtrl.text.replaceAll(',', '.'));
+    final H = double.tryParse(_yukseklikCtrl.text.replaceAll(',', '.'));
+    final Q = double.tryParse(_qCtrl.text.replaceAll(',', '.'));
+    final T0 =
+        (double.tryParse(_tambiCtrl.text.replaceAll(',', '.')) ?? 20) + 273.15;
+
+    if (_mod < 2) {
+      if (alan == null || alan <= 0) {
+        setState(() => _hata = 'Oda alanı giriniz (m²).');
+        return;
+      }
+      if (H == null || H <= 0) {
+        setState(() => _hata = 'Tavan yüksekliği giriniz (m).');
+        return;
+      }
+      if (Q == null || Q <= 0) {
+        setState(() => _hata = 'Tasarım HRR giriniz (kW).');
+        return;
+      }
+      final z = double.tryParse(_zCtrl.text.replaceAll(',', '.'));
+      if (z == null || z <= 0 || z >= H) {
+        setState(() => _hata = 'Duman katmanı taban yüksekliği: 0 < z < H');
+        return;
+      }
+
+      const Cp = 1.0;
+      const rho0 = 1.2;
+      const g = 9.81;
+      final Qc = 0.7 * Q;
+      // Thomas plume (EN 12101-2 Ek B)
+      final mp =
+          0.071 * math.pow(Qc, 1 / 3.0) * math.pow(z, 5 / 3.0) + 0.0018 * Qc;
+      final Ts = T0 + Qc / (mp * Cp);
+      final dT = Ts - T0;
+
+      setState(() {
+        _hata = null;
+        _mp = mp;
+        _Ts = Ts;
+        _dT = dT;
+        _qKapi = null;
+        _qSizinti = null;
+        _qToplam = null;
+      });
+
+      if (_mod == 0) {
+        // Doğal tahliye — EN 12101-2
+        const Cd = 0.5;
+        final d = H - z;
+        final AvEff = mp / (Cd * math.sqrt(2 * rho0 * g * d * dT / Ts));
+        setState(() {
+          _AvEff = AvEff;
+          _Ai = 1.1 * AvEff;
+          _vDot = null;
+          _havaD = null;
+          _fanM3h = null;
+        });
+      } else {
+        // Mekanik tahliye — EN 12101-3
+        final minHD =
+            double.tryParse(_havaDeCtrl.text.replaceAll(',', '.')) ?? 10;
+        final rhoS = rho0 * T0 / Ts;
+        final vDot = mp / rhoS;
+        final V = alan * H;
+        final havaD = vDot * 3600 / V;
+        final fanM3h = math.max(vDot, minHD / 3600 * V) * 3600;
+        final minHDYonetir = (minHD / 3600 * V) > vDot;
+        setState(() {
+          _vDot = vDot;
+          _havaD = havaD;
+          _fanM3h = fanM3h;
+          _minHDYonetir = minHDYonetir;
+          _AvEff = null;
+          _Ai = null;
+        });
+      }
+    } else {
+      // Basınçlandırma — EN 12101-6
+      final katSayi = int.tryParse(_katCtrl.text) ?? 5;
+      final kG = double.tryParse(_kapiGenCtrl.text.replaceAll(',', '.')) ?? 0.9;
+      final kY = double.tryParse(_kapiYukCtrl.text.replaceAll(',', '.')) ?? 2.0;
+      final mGen = double.tryParse(_mGenCtrl.text.replaceAll(',', '.')) ?? 2.0;
+      final mDep = double.tryParse(_mDepCtrl.text.replaceAll(',', '.')) ?? 2.0;
+      final katYuk =
+          double.tryParse(_katYukCtrl.text.replaceAll(',', '.')) ?? 3.0;
+      const dP = 50.0;
+      const rho0 = 1.2;
+      const Cd = 0.83;
+      final aSizinti = 2 * (kG + kY) * 0.01; // 10 mm kapı aralığı
+      final qKapi = kG * kY * math.sqrt(2 * dP / rho0) * 3600;
+      final qSizinti = Cd * aSizinti * math.sqrt(2 * dP / rho0) * 3600;
+      // Duvar sızıntısı — EN 12101-6 Ek F Tablo F.1
+      final sizKat = _duvarMalzemeler[_duvarMalzemeIdx].$2;
+      final duvarAlani = 2 * (mGen + mDep) * katYuk * katSayi;
+      final aDuvar = duvarAlani * sizKat;
+      final qDuvar = aDuvar * math.sqrt(2 * dP / rho0) * 3600;
+      final qToplam = qKapi + qSizinti * katSayi + qDuvar;
+      setState(() {
+        _hata = null;
+        _qKapi = qKapi;
+        _qSizinti = qSizinti;
+        _qDuvar = qDuvar;
+        _qToplam = qToplam;
+        _mp = null;
+        _Ts = null;
+        _dT = null;
+        _AvEff = null;
+        _Ai = null;
+        _vDot = null;
+        _havaD = null;
+        _fanM3h = null;
+      });
+    }
+    final _modAdi = [
+      'Do\u011fal Tahliye',
+      'Mekanik Tahliye',
+      'Bas\u0131n\u00e7land\u0131rma',
+    ][_mod];
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'mod': _mod.toString(),
+        'alan': _alanCtrl.text,
+        'yuks': _yukseklikCtrl.text,
+        'q': _qCtrl.text,
+        'z': _zCtrl.text,
+        'tambi': _tambiCtrl.text,
+        'havaDe': _havaDeCtrl.text,
+        'kat': _katCtrl.text,
+        'kapiGen': _kapiGenCtrl.text,
+        'kapiYuk': _kapiYukCtrl.text,
+        'mGen': _mGenCtrl.text,
+        'mDep': _mDepCtrl.text,
+        'katYuk': _katYukCtrl.text,
+        'duvarIdx': _duvarMalzemeIdx.toString(),
+      },
+      'r': _mod == 0
+          ? '## Duman Kontrol - Do\u011fal Tahliye\n'
+                'Sistem: $_modAdi\n'
+                'Alan: ${_alanCtrl.text} m\u00b2  |  H: ${_yukseklikCtrl.text} m  |  Q: ${_qCtrl.text} kW  |  z: ${_zCtrl.text} m\n'
+                '## Hesap Sonu\u00e7lar\u0131\n'
+                'Duman Ak\u0131\u015f\u0131: ${_mp?.toStringAsFixed(3) ?? "-"} kg/s  |  Duman S\u0131c.: ${_Ts != null ? (_Ts! - 273.15).toStringAsFixed(0) : "-"} \u00b0C  |  dT: ${_dT?.toStringAsFixed(0) ?? "-"} K\n'
+                'Av_eff: ${_AvEff?.toStringAsFixed(4) ?? "-"} m\u00b2  |  Giri\u015f Alan\u0131: ${_Ai?.toStringAsFixed(4) ?? "-"} m\u00b2'
+          : _mod == 1
+          ? '## Duman Kontrol - Mekanik Tahliye\n'
+                'Sistem: $_modAdi\n'
+                'Alan: ${_alanCtrl.text} m\u00b2  |  H: ${_yukseklikCtrl.text} m  |  Q: ${_qCtrl.text} kW\n'
+                '## Hesap Sonu\u00e7lar\u0131\n'
+                'Fan Debisi: ${_fanM3h?.toStringAsFixed(0) ?? "-"} m\u00b3/h  |  Hava De\u011fi\u015fimi: ${_havaD?.toStringAsFixed(2) ?? "-"} /h'
+          : '## Duman Kontrol - Bas\u0131n\u00e7land\u0131rma\n'
+                'Sistem: $_modAdi\n'
+                'Kat Say\u0131s\u0131: ${_katCtrl.text}  |  Kap\u0131 Gen: ${_kapiGenCtrl.text} m  |  Kap\u0131 Y\u00fck: ${_kapiYukCtrl.text} m\n'
+                '## Hesap Sonu\u00e7lar\u0131\n'
+                'Q Toplam: ${_qToplam?.toStringAsFixed(0) ?? "-"} m\u00b3/h  |  Q Kap\u0131: ${_qKapi?.toStringAsFixed(0) ?? "-"} m\u00b3/h  |  Q S\u0131z\u0131nt\u0131: ${_qSizinti?.toStringAsFixed(0) ?? "-"} m\u00b3/h',
+    });
+    ProjeServisi.hesapSinyali.value = true;
+  }
+
+  InputDecoration _dec(String lbl, String sfx) => InputDecoration(
+    labelText: lbl,
+    suffixText: sfx,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    isDense: true,
+  );
+
+  Widget _field(String lbl, TextEditingController c, String sfx) => TextField(
+    controller: c,
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+    decoration: _dec(lbl, sfx),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: _kD.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: _kD.withOpacity(0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.air_rounded, color: _kD, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Duman Kontrol Sistemi',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: _kD,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'EN 12101-2 Doğal · EN 12101-3 Mekanik · EN 12101-6 Basınçlandırma',
+                  style: TextStyle(fontSize: 11, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          const Text(
+            'Sistem Türü',
+            style: TextStyle(fontSize: 12, color: Colors.black54),
+          ),
+          const SizedBox(height: 6),
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(
+                value: 0,
+                label: Text(
+                  'Doğal\nTahliye',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11),
+                ),
+                icon: Icon(Icons.open_in_new_rounded, size: 16),
+              ),
+              ButtonSegment(
+                value: 1,
+                label: Text(
+                  'Mekanik\nTahliye',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11),
+                ),
+                icon: Icon(Icons.cyclone_rounded, size: 16),
+              ),
+              ButtonSegment(
+                value: 2,
+                label: Text(
+                  'Basınçlan-\ndırma',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11),
+                ),
+                icon: Icon(Icons.compress_rounded, size: 16),
+              ),
+            ],
+            selected: {_mod},
+            onSelectionChanged: (s) => setState(() {
+              _mod = s.first;
+              _hata = null;
+            }),
+            style: ButtonStyle(
+              foregroundColor: WidgetStateProperty.resolveWith(
+                (st) => st.contains(WidgetState.selected) ? Colors.white : _kD,
+              ),
+              backgroundColor: WidgetStateProperty.resolveWith(
+                (st) => st.contains(WidgetState.selected) ? _kD : null,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          if (_mod < 2) ...[
+            Row(
+              children: [
+                Expanded(child: _field('Oda Alanı', _alanCtrl, 'm²')),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _field('Tavan Yüksekliği', _yukseklikCtrl, 'm'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _field('Tasarım HRR (Yangın Gücü)', _qCtrl, 'kW'),
+            const SizedBox(height: 4),
+            const Text(
+              'Tasarım yangın gücü — EN 1991-1-2 Ek E. Örn: orta tehlike ofis ≈ 500 kW',
+              style: TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+            const SizedBox(height: 6),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: const Color(0xFFB91C1C),
+                      foregroundColor: Colors.white,
+                      title: const Text(
+                        'Yangın Yükü & Söndürme',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    body: const YanginYukuSayfasi(),
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.calculate_outlined, size: 16),
+              label: const Text(
+                'HRR değerini bilmiyorum — Yangın yükü hesabı yap',
+                style: TextStyle(fontSize: 12),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _kD,
+                side: BorderSide(color: _kD.withOpacity(0.4)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            _field('Duman Katmanı Taban Yüksekliği  z', _zCtrl, 'm'),
+            const SizedBox(height: 4),
+            const Text(
+              'Temiz hava katmanı üst sınırı (zeminden ölçülür). z < H olmak zorunda. Hedef z ≥ 2.5 m',
+              style: TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+            Builder(
+              builder: (_) {
+                final H = double.tryParse(
+                  _yukseklikCtrl.text.replaceAll(',', '.'),
+                );
+                final z = double.tryParse(_zCtrl.text.replaceAll(',', '.'));
+                if (H == null || z == null || H <= 0)
+                  return const SizedBox.shrink();
+                final d = H - z;
+                final warn = d > 0 && z < 2.5 && z < H;
+                Color bg;
+                Color fg;
+                String msg;
+                if (d <= 0 || z >= H) {
+                  bg = const Color(0xFFFEE2E2);
+                  fg = const Color(0xFFDC2626);
+                  msg =
+                      'Hata: z ≥ H — duman katmanı oluşamaz. z < ${H.toStringAsFixed(1)} m olmalı.';
+                } else if (warn) {
+                  bg = const Color(0xFFFFFBEB);
+                  fg = const Color(0xFFB45309);
+                  msg =
+                      'Uyarı: z = ${z.toStringAsFixed(1)} m < 2.5 m — tahliye güvenliği yetersiz.  '
+                      'd (duman derinliği) = ${d.toStringAsFixed(1)} m';
+                } else {
+                  bg = const Color(0xFFF0FDF4);
+                  fg = const Color(0xFF166534);
+                  msg =
+                      'z = ${z.toStringAsFixed(1)} m  →  d (duman derinliği) = ${d.toStringAsFixed(1)} m  '
+                      '(H − z = ${H.toStringAsFixed(1)} − ${z.toStringAsFixed(1)})';
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: bg,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(msg, style: TextStyle(fontSize: 11, color: fg)),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(child: _field('Ortam Sıcaklığı', _tambiCtrl, '°C')),
+              ],
+            ),
+          ],
+
+          if (_mod == 2) ...[
+            Row(
+              children: [
+                Expanded(child: _field('Kapı Genişliği', _kapiGenCtrl, 'm')),
+                const SizedBox(width: 8),
+                Expanded(child: _field('Kapı Yüksekliği', _kapiYukCtrl, 'm')),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _field('Merdiven Şaft Genişliği', _mGenCtrl, 'm'),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _field('Merdiven Şaft Derinliği', _mDepCtrl, 'm'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(child: _field('Kat Yüksekliği', _katYukCtrl, 'm')),
+                const SizedBox(width: 8),
+                Expanded(child: _field('Kat Sayısı', _katCtrl, 'kat')),
+              ],
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              value: _duvarMalzemeIdx,
+              decoration: InputDecoration(
+                labelText: 'Şaft Duvarı Malzemesi',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                isDense: true,
+              ),
+              items: List.generate(
+                _duvarMalzemeler.length,
+                (i) => DropdownMenuItem(
+                  value: i,
+                  child: Text(
+                    '${_duvarMalzemeler[i].$1}  —  ${(_duvarMalzemeler[i].$2 * 1e4).toStringAsFixed(1)}×10⁻⁴ m²/m²',
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                ),
+              ),
+              onChanged: (v) => setState(() => _duvarMalzemeIdx = v ?? 0),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Hedef ΔP = 50 Pa, kapı aralığı 10 mm  (EN 12101-6 §7.3.3 / Ek F Tablo F.1)',
+              style: TextStyle(fontSize: 10, color: Colors.black45),
+            ),
+          ],
+          const SizedBox(height: 14),
+
+          if (_hata != null) ...[
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEE2E2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFCA5A5)),
+              ),
+              child: Text(
+                _hata!,
+                style: const TextStyle(color: Color(0xFFDC2626), fontSize: 13),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
+          ElevatedButton.icon(
+            onPressed: _hesapla,
+            icon: const Icon(Icons.calculate_rounded),
+            label: const Text('Hesapla'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _kD,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              minimumSize: const Size(double.infinity, 0),
+            ),
+          ),
+
+          // Doğal tahliye sonuçları
+          if (_AvEff != null) ...[
+            const SizedBox(height: 16),
+            _DumanSonucKutu(
+              renk: _kD,
+              baslik: 'Doğal Tahliye Sonuçları  (EN 12101-2)',
+              satirlar: [
+                ('Plume kütle debisi  ṁₚ', '${_mp!.toStringAsFixed(3)} kg/s'),
+                (
+                  'Duman sıcaklığı  Tₛ',
+                  '${(_Ts! - 273.15).toStringAsFixed(1)} °C',
+                ),
+                ('Sıcaklık artışı  ΔT', '${_dT!.toStringAsFixed(1)} °C'),
+                (
+                  'Gerekli efektif açıklık  Av',
+                  '${_AvEff!.toStringAsFixed(2)} m²',
+                ),
+                (
+                  'Min. taze hava girişi  Ai ≥ 1.1 Av',
+                  '${_Ai!.toStringAsFixed(2)} m²',
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _dumanNot([
+              'Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Kütle debisi (Thomas formülü, EN 12101-2 Ek B): ṁₚ = 0.071×Qc¹³×z⁵³ + 0.0018×Qc',
+              'Cd = 0.5 (çatı menfezi, EN 12101-2 §6.4)',
+              'Taze hava girişi alt bölgeden; açıklıklar eşit dağıtılmalı',
+              'Hesap minimum alandır; sektörleme ve güvenlik payı ayrıca eklenmeli',
+              'Sorumluluk: Bu hesap gerçekleştirilen ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+            ]),
+          ],
+
+          // Mekanik tahliye sonuçları
+          if (_fanM3h != null) ...[
+            const SizedBox(height: 16),
+            _DumanSonucKutu(
+              renk: _kD,
+              baslik: 'Mekanik Tahliye Sonuçları  (EN 12101-3)',
+              satirlar: [
+                ('Plume kütle debisi  ṁₚ', '${_mp!.toStringAsFixed(3)} kg/s'),
+                (
+                  'Duman sıcaklığı  Tₛ',
+                  '${(_Ts! - 273.15).toStringAsFixed(1)} °C',
+                ),
+                ('Sıcaklık artışı  ΔT', '${_dT!.toStringAsFixed(1)} °C'),
+                (
+                  'Hacimsel duman debisi  V̇',
+                  '${_vDot!.toStringAsFixed(3)} m³/s  (${(_vDot! * 3600).toStringAsFixed(0)} m³/h)',
+                ),
+                (
+                  'Hesaplanan hava değişimi',
+                  '${_havaD!.toStringAsFixed(1)} 1/h',
+                ),
+                (
+                  'Fan tasarım debisi',
+                  '${_fanM3h!.toStringAsFixed(0)} m³/h  →  ${_minHDYonetir ? 'min. hava değişimi kriteri' : 'plume debisi kriteri'}',
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _dumanNot([
+              'Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Fan kapasitesi plume debisini karşılayacak büyüklükte seçilir.',
+              'Min. hava değişimi ≥ 10/h (EN 12101-3 §5.2)',
+              'Fan sıcaklık dayanımı ≥ 400 °C / 120 dk (F400) — EN 12101-3',
+              "Taze hava girişi duman tahliye debisinin en az %70'i olmalı",
+              'Sorumluluk: Bu hesap ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+            ]),
+          ],
+
+          // Basınçlandırma sonuçları
+          if (_qToplam != null) ...[
+            const SizedBox(height: 16),
+            _DumanSonucKutu(
+              renk: _kD,
+              baslik: 'Basınçlandırma Sonuçları  (EN 12101-6)',
+              satirlar: [
+                ('Hedef basınç farkı  ΔP', '50 Pa'),
+                (
+                  'Açık kapı geçiş debisi',
+                  '${_qKapi!.toStringAsFixed(0)} m³/h',
+                ),
+                (
+                  'Kapalı kapı sızıntısı / kat',
+                  '${_qSizinti!.toStringAsFixed(0)} m³/h',
+                ),
+                (
+                  'Duvar sızıntısı (tüm katlar)',
+                  '${_qDuvar!.toStringAsFixed(0)} m³/h',
+                ),
+                ('Toplam fan debisi', '${_qToplam!.toStringAsFixed(0)} m³/h'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _dumanNot([
+              'Açık kapı geçiş debisi: tahliye sırasında 1 kat kapısı açıkken merdivenden akan hava — fanın karşılaması gereken en büyük ani yük',
+              'Hesap: Q = A_kapı × √(2ΔP/ρ)  — kapı tam açık, tam ΔP geçerli kabulü (güvenli taraf)',
+              'Duvar sızıntısı: beton/kagir şaft için 1.3×10⁻⁴ m²/m²  (EN 12101-6 Ek F Tablo F.1)',
+              'Kapı aralık genişliği 10 mm, Cd = 0.83  (EN 12101-6 Ek F)',
+              'Açık kapı koşulunda kapı itme kuvveti ≤ 100 N kontrol edilmeli',
+              'ΔP sınır: ≥ 50 Pa (yangın katında) / ≤ 60 Pa (diğer katlar)',
+              'Sorumluluk: Bu hesap ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+            ]),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _dumanNot(List<String> maddeler) => Container(
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF0FDF4),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: const Color(0xFF86EFAC)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: maddeler
+          .map(
+            (m) => Text(
+              '• $m',
+              style: const TextStyle(fontSize: 11, color: Color(0xFF166534)),
+            ),
+          )
+          .toList(),
+    ),
+  );
+}
+
+class _DumanSonucKutu extends StatelessWidget {
+  final Color renk;
+  final String baslik;
+  final List<(String, String)> satirlar;
+  const _DumanSonucKutu({
+    required this.renk,
+    required this.baslik,
+    required this.satirlar,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        border: Border.all(color: renk, width: 2),
+        borderRadius: BorderRadius.circular(10),
+        color: renk.withOpacity(0.04),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            baslik,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: renk,
+            ),
+          ),
+          const Divider(height: 12),
+          for (final (lbl, val) in satirlar)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(lbl, style: const TextStyle(fontSize: 13)),
+                  ),
+                  Text(
+                    val,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // LİTYUM PİL YANGINI — ISO 3941:2026 / NFPA 855:2023 / FM Global DS 5-33
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 
@@ -6814,6 +11825,32 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
   String? _evHata;
   double? _evIsi, _evDebiArac, _evDebiToplam, _evHacim, _evDaldirma;
   double? _evHrrTepe, _evTbuyume, _evAlfa;
+
+  @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      _kapasiteCtrl.text = g['kapasite'] ?? '';
+      _alanCtrl.text = g['alan'] ?? '';
+      _sureCtrl.text = g['sure'] ?? '30';
+      _kimya = g['kimya'] ?? 'NMC';
+      _mod = g['mod'] ?? 'ess';
+      _aracTipi = g['aracTipi'] ?? 'binek';
+      _aracSayisiCtrl.text = g['aracSayisi'] ?? '1';
+      _evSureCtrl.text = g['evSure'] ?? '60';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+          if (_mod == 'ess')
+            _hesapla();
+          else
+            _hesaplaEv();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -6893,6 +11930,11 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       _essTbuyume = tBuyume;
       _kategori = kat;
     });
+    ProjeServisi.hesapVeri =
+        'Kimya: $_kimya  |  Kapasite: ${_kapasiteCtrl.text} kWh  |  Alan: ${_alanCtrl.text} m\u00b2\n'
+        'Tehlike Kategorisi: ${_kategori ?? "-"}  |  S\u00fcre: ${_sureCtrl.text} dak\n'
+        'Is\u0131 Enerjisi: ${_isi?.toStringAsFixed(0) ?? "-"} MJ  |  Debi: ${_debi?.toStringAsFixed(0) ?? "-"} L/min  |  Toplam Hacim: ${_hacim?.toStringAsFixed(0) ?? "-"} L';
+    ProjeServisi.hesapSinyali.value = true;
   }
 
   void _hesaplaEv() {
@@ -6967,6 +12009,23 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       _evTbuyume = tBuyume;
       _evAlfa = alfa;
     });
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'kapasite': _kapasiteCtrl.text,
+        'aracSayisi': _aracSayisiCtrl.text,
+        'evSure': _evSureCtrl.text,
+        'kimya': _kimya,
+        'mod': _mod,
+        'aracTipi': _aracTipi,
+      },
+      'r':
+          '## Lityum Pil Yang\u0131n\u0131 - Elektrikli Ara\u00e7\n'
+          'Ara\u00e7 Tipi: $_aracTipi  |  Kimya: $_kimya  |  Kapasite: ${_kapasiteCtrl.text} kWh  |  Ara\u00e7 Say\u0131s\u0131: ${_aracSayisiCtrl.text}\n'
+          '## Hesap Sonu\u00e7lar\u0131\n'
+          'E\u015f Zamanl\u0131 Yang\u0131n: ${_aracSayisiCtrl.text.isNotEmpty && (int.tryParse(_aracSayisiCtrl.text) ?? 1) > 1 ? 2 : 1} ara\u00e7  |  Debi/Ara\u00e7: ${_evDebiArac?.toStringAsFixed(0) ?? "-"} L/min\n'
+          'Toplam Debi: ${_evDebiToplam?.toStringAsFixed(0) ?? "-"} L/min  |  Su Hacmi: ${_evHacim?.toStringAsFixed(0) ?? "-"} L  |  Is\u0131 Enerjisi: ${_evIsi?.toStringAsFixed(0) ?? "-"} MJ',
+    });
+    ProjeServisi.hesapSinyali.value = true;
   }
 
   Widget _field(String lbl, TextEditingController ctrl, String suffix) =>
@@ -7623,6 +12682,21 @@ class _StandartAramaState extends State<StandartArama> {
   final _aramaCtrl = TextEditingController();
   String? _secilenKategori;
 
+  // JSON kategori adı → uygulama modül adı (yangın dışı kategoriler dahil değil)
+  static const Map<String, String> _kategoriDonusum = {
+    'Yangın': 'Yangın Yükü & Söndürme',
+    'Yangın Yükü': 'Yangın Yükü & Söndürme',
+    'Yapısal Yangına Direniç': 'Yangın Yükü & Söndürme',
+    'Mutfak Söndürme': 'Davlumbaz Söndürme',
+    'Gazlı Söndürme': 'Gazlı Söndürme Sistemi',
+    'Baskı Makinesi Söndürme': 'Baskı Makinesi Söndürme',
+    'Su Bazlı Söndürme': 'Sprinkler Sistemi',
+    'Köpüklü Söndürme': 'Sprinkler Sistemi',
+    'Yangın Alarm': 'Yangın Alarm & Algılama',
+    'Yangın Söndürücüler': 'Yangın Söndürücüler',
+    'Duman Kontrolü': 'Duman Kontrolü & Tahliye',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -7635,6 +12709,15 @@ class _StandartAramaState extends State<StandartArama> {
     setState(() {
       _tumListe = liste
           .map((e) => _Standart.fromJson(e as Map<String, dynamic>))
+          .where((s) => _kategoriDonusum.containsKey(s.kategori))
+          .map(
+            (s) => _Standart(
+              numara: s.numara,
+              ad: s.ad,
+              kategori: _kategoriDonusum[s.kategori]!,
+              aciklama: s.aciklama,
+            ),
+          )
           .toList();
       _sonuclar = List.from(_tumListe);
       _yukleniyor = false;
@@ -7868,7 +12951,7 @@ class _StandartAramaState extends State<StandartArama> {
                         ),
                         onPressed: () async {
                           Navigator.pop(dlgCtx);
-                          final apiKey = await _groqApiAl(ctx);
+                          final apiKey = await _geminiApiAl(ctx);
                           if (apiKey == null || !ctx.mounted) return;
                           Navigator.push(
                             ctx,
@@ -7998,10 +13081,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
             });
             try {
               final prefs = await SharedPreferences.getInstance();
-              String? apiKey = prefs.getString('groq_api_key') ?? '';
+              String? apiKey = prefs.getString('gemini_api_key') ?? '';
               if (apiKey.isEmpty) {
                 if (!ctx.mounted) return;
-                apiKey = await _groqApiDiyaloguGoster(ctx, prefs);
+                apiKey = await _geminiApiDiyaloguGoster(ctx, prefs);
               }
               if (apiKey == null || apiKey.isEmpty) {
                 setLocal(() {
@@ -8010,7 +13093,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                 });
                 return;
               }
-              final cevap = await groqChat(
+              final cevap = await geminiChat(
                 apiKey: apiKey,
                 mesajlar: [
                   {
@@ -8081,10 +13164,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
             });
             try {
               final prefs = await SharedPreferences.getInstance();
-              String? apiKey = prefs.getString('groq_api_key') ?? '';
+              String? apiKey = prefs.getString('gemini_api_key') ?? '';
               if (apiKey.isEmpty) {
                 if (!ctx.mounted) return;
-                apiKey = await _groqApiDiyaloguGoster(ctx, prefs);
+                apiKey = await _geminiApiDiyaloguGoster(ctx, prefs);
               }
               if (apiKey == null || apiKey.isEmpty) {
                 setLocal(() {
@@ -8093,7 +13176,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                 });
                 return;
               }
-              final cevap = await groqChat(
+              final cevap = await geminiChat(
                 apiKey: apiKey,
                 mesajlar: [
                   {
@@ -8709,6 +13792,57 @@ class _StandartRehberiState extends State<StandartRehberi> {
         (
           'VdS 2380:2017',
           'Almanya — Gazlı söndürme sistemleri tasarım ve kurulum yönergeleri.',
+        ),
+      ],
+    ),
+    _RehberKategori(
+      baslik: 'Baskı Makinesi Söndürme',
+      ikon: Icons.print_rounded,
+      renk: Color(0xFF0369A1),
+      standartlar: [
+        (
+          'NFPA 34:2024',
+          'Yanıcı/tutuşabilir sıvı kullanan daldırma, kaplama ve baskı prosesleri — temel güvenlik standardı.',
+        ),
+        (
+          'NFPA 34:2024 §10',
+          'Printing Operations: baskı alanı yapısı, havalandırma, elektrik sınıflandırması ve yangın koruma.',
+        ),
+        (
+          'NFPA 34:2024 §10.6',
+          'Otomatik yangın söndürme zorunluluğu — Sınıf I sıvı için sprinkler; kurutucu bölmeler için yerel CO₂/temiz ajan.',
+        ),
+        (
+          'NFPA 12:2022',
+          'CO₂ söndürme — baskı makinesi ve kurutucu bölme yerel uygulama sistemleri.',
+        ),
+        (
+          'NFPA 2001:2022',
+          'Temiz ajan söndürme — baskı makinesi kabin koruma, insan varlığında tercih edilir.',
+        ),
+        (
+          'NFPA 30:2024',
+          'Yanıcı ve tutuşabilir sıvılar kodu — baskı tesisinde solvent depolama ve kullanım.',
+        ),
+        (
+          'NFPA 70 (NEC) Madde 516',
+          'Baskı alanı ATEX/NEC patlayıcı atmosfer sınıflandırması ve elektrik ekipmanı.',
+        ),
+        (
+          'EN 1010-1:2004+A1:2010',
+          'Baskı makinelerinin güvenliği — Genel gereksinimler.',
+        ),
+        (
+          'EN 1010-2:2006+A1:2010',
+          'Baskı makinelerinin güvenliği — Baskı ve baskı lakı uygulama makineleri (ofset, flexo, gravür).',
+        ),
+        (
+          'EN 13463-1:2009',
+          'ATEX ekipmanlar — Potansiyel patlayıcı ortamda kullanılacak ekipmanlar için güvenlik kriterleri.',
+        ),
+        (
+          'TS EN 15004-1:2019',
+          'Gazlı söndürme sistemleri — Genel şartlar (baskı kabini için temiz ajan hesabı).',
         ),
       ],
     ),
@@ -9503,8 +14637,8 @@ class _GrokButon extends StatefulWidget {
 }
 
 class _GrokButonState extends State<_GrokButon> {
-  Future<void> _groqSor() async {
-    final apiKey = await _groqApiAl(context);
+  Future<void> _geminiSor() async {
+    final apiKey = await _geminiApiAl(context);
     if (apiKey == null) return;
     if (!mounted) return;
     Navigator.push(
@@ -9524,7 +14658,7 @@ class _GrokButonState extends State<_GrokButon> {
     const renk = Color(0xFF7C3AED);
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: _groqSor,
+      onTap: _geminiSor,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
@@ -9576,13 +14710,13 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
 
   Future<void> _yukle() async {
     final prefs = await SharedPreferences.getInstance();
-    final val = prefs.getString('groq_api_key') ?? '';
+    final val = prefs.getString('gemini_api_key') ?? '';
     setState(() => _ctrl.text = val);
   }
 
   Future<void> _kaydet() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('groq_api_key', _ctrl.text.trim());
+    await prefs.setString('gemini_api_key', _ctrl.text.trim());
     setState(() => _kaydedildi = true);
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) setState(() => _kaydedildi = false);
@@ -9616,12 +14750,12 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Groq API Anahtarı',
+              'Gemini API Anahtarı (AI)',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             const SizedBox(height: 6),
             const Text(
-              'console.groq.com/keys adresinden ücretsiz API anahtarı alabilirsiniz.',
+              'aistudio.google.com/apikey adresinden ücretsiz API anahtarı alabilirsiniz.',
               style: TextStyle(fontSize: 12, color: Colors.black54),
             ),
             const SizedBox(height: 14),
@@ -9629,7 +14763,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
               controller: _ctrl,
               obscureText: _gizle,
               decoration: InputDecoration(
-                hintText: 'gsk_...',
+                hintText: 'AIza...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -9666,13 +14800,13 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
             const SizedBox(height: 20),
             InkWell(
               onTap: () async {
-                final uri = Uri.parse('https://console.groq.com/keys');
+                final uri = Uri.parse('https://aistudio.google.com/apikey');
                 if (await canLaunchUrl(uri)) {
                   await launchUrl(uri, mode: LaunchMode.externalApplication);
                 }
               },
               child: const Text(
-                'console.groq.com/keys › API Anahtarı al',
+                'aistudio.google.com/apikey › API Anahtarı al',
                 style: TextStyle(
                   color: Color(0xFF0369A1),
                   decoration: TextDecoration.underline,
@@ -9755,7 +14889,7 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
             },
           )
           .toList();
-      final yanit = await groqChat(
+      final yanit = await geminiChat(
         apiKey: widget.apiKey,
         mesajlar: [
           {'role': 'system', 'content': sistem},
@@ -9795,7 +14929,7 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
   Future<void> _apiGuncelle() async {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) return;
-    final yeni = await _groqApiDiyaloguGoster(context, prefs);
+    final yeni = await _geminiApiDiyaloguGoster(context, prefs);
     if (yeni != null && mounted) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -10622,44 +15756,51 @@ const List<(int, double)> _spBorular = [
   (50, 52.5),
   (65, 62.7),
   (80, 77.9),
+  (90, 90.1),
   (100, 102.3),
   (125, 128.2),
   (150, 154.1),
+  (200, 202.7),
 ];
 
-/// EN 12845:2015 Tablo 14 — Ağaç sistemi boru çapı secimi
+/// EN 12845:2015 Tablo 14 — Ağaç sistemi boru çapı secimi (schedule/tarifeli boyutlandırma)
 /// LH ve OH sınıfları için maksimum sprinkler sayısına göre DN seçilir.
 /// HH sınıflarında standart tam hidrolik hesap gerektirir;
 /// bu fonksiyon HH için hız ? 5 m/s olarak ön hesap yapar.
 ///
-/// Tablo 14 — Çelik boru, ağaç sistemler:
-/// DN  | LH (max)  | OH (max)
-///  25 |     2     |    1
-///  32 |     4     |    3
-///  40 |     6     |    4
-///  50 |    12     |    8
-///  65 |    24     |   18
-///  80 |    48     |   36
-/// 100 |    96     |   72
-/// 125 |     —     |  144
+/// Tablo 14 — Çelik boru, ağaç sistemler (DN ? NPS inç karşılığı):
+/// DN (NPS)   | LH (max)              | OH (max)
+///  25 (1")   |     2                 |    2
+///  32 (1¼")  |     3                 |    3
+///  40 (1½")  |     5                 |    5
+///  50 (2")   |    10                 |   10
+///  65 (2½")  |    30                 |   20
+///  80 (3")   |    60                 |   40
+///  90 (3½")  |   100                 |   65
+/// 100 (4")   |  alan sınırlaması     |  100
+/// 125 (5")   |  gereksiz (LH için)   |  160
+/// 150 (6")   |  gereksiz (LH için)   |  275
+/// 200 (8")   |  gereksiz (LH için)   |  alan sınırlaması
 const _spTablo14LH = [
   (25, 2),
-  (32, 4),
-  (40, 6),
-  (50, 12),
-  (65, 24),
-  (80, 48),
-  (100, 96),
+  (32, 3),
+  (40, 5),
+  (50, 10),
+  (65, 30),
+  (80, 60),
+  (90, 100),
 ];
 const _spTablo14OH = [
-  (25, 1),
+  (25, 2),
   (32, 3),
-  (40, 4),
-  (50, 8),
-  (65, 18),
-  (80, 36),
-  (100, 72),
-  (125, 144),
+  (40, 5),
+  (50, 10),
+  (65, 20),
+  (80, 40),
+  (90, 65),
+  (100, 100),
+  (125, 160),
+  (150, 275),
 ];
 
 int _spSecBoruEN12845(int nSprinkler, String sinifKod) {
@@ -10670,7 +15811,8 @@ int _spSecBoruEN12845(int nSprinkler, String sinifKod) {
     for (final (dn, maxN) in tablo) {
       if (nSprinkler <= maxN) return dn;
     }
-    return isLH ? 100 : 125;
+    // Tablo sınırının ötesinde: sabit sayı değil, koruma alanı sınırlaması geçerlidir
+    return isLH ? 100 : 200;
   }
   // HH: hız ? 5 m/s ön hesap yöntemi
   for (final (dn, id) in _spBorular) {
@@ -10679,7 +15821,7 @@ int _spSecBoruEN12845(int nSprinkler, String sinifKod) {
     final v = (q / 60.0 / 1000.0) / (math.pi * r * r);
     if (v <= 5.0) return dn;
   }
-  return 150;
+  return 200;
 }
 
 /// Hız bazlı yardımcı (HH ve ?P hesabı için iç kullanım)
@@ -10689,16 +15831,15 @@ int _spSecBoruHiz(double qLpm, {double vMax = 5.0}) {
     final v = (qLpm / 60.0 / 1000.0) / (math.pi * r * r);
     if (v <= vMax) return dn;
   }
-  return 150;
+  return 200;
 }
 
 /// Hazen–Williams sürtünme kaybı (bar)
 /// ?P/m (bar/m) = 6.05×105 × Q^1.85 / (C^1.85 × d^4.87)
-/// Q: L/min  d: mm  C=120 (çelik)
-double _spHW(double qLpm, int dn, double uzunlukM) {
+/// Q: L/min  d: mm  C: boru malzemesine göre (varsayılan 120 — galvanizli çelik)
+double _spHW(double qLpm, int dn, double uzunlukM, {double c = 120.0}) {
   if (qLpm <= 0 || uzunlukM <= 0) return 0;
   final id = _spBorular.firstWhere((b) => b.$1 == dn).$2;
-  const c = 120.0;
   final dpPerM =
       (6.05e5 * math.pow(qLpm, 1.85)) /
       (math.pow(c, 1.85) * math.pow(id, 4.87));
@@ -10757,6 +15898,128 @@ double _spT6MinBasinc(String kod) => switch (kod) {
   'OH4' => 2.0,
   _ => 0.0,
 };
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// BORU MALZEMESİ  ·  Hazen-Williams C katsayısı (üretici/malzeme tablosu)
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+/// (ad, Hazen-Williams C katsayısı) — EN 12845 §13.3 varsayılanı C=120 (galvanizli çelik)
+const List<(String, double)> _spBoruMalzemeleri = [
+  ('Galvanizli Çelik (Sch.40)', 120.0),
+  ('Siyah Karbon Çelik — kaynaklı', 100.0),
+  ('Bakır Boru', 140.0),
+  ('Paslanmaz Çelik', 140.0),
+  ('CPVC Plastik Boru', 150.0),
+];
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// SPRİNKLER TİPİ  ·  K-Faktör seçenekleri (EN 12845 + üretici onaylı özel tipler)
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class _SpSprinklerTipi {
+  final String ad;
+  final double? kFactor; // null → sınıfa göre otomatik (LH/OH=80, HH=115)
+  final String aciklama;
+  const _SpSprinklerTipi({
+    required this.ad,
+    this.kFactor,
+    required this.aciklama,
+  });
+}
+
+const List<_SpSprinklerTipi> _spSprinklerTipleri = [
+  _SpSprinklerTipi(
+    ad: 'Sınıfa Göre Otomatik',
+    aciklama: 'Standart K80 (LH/OH) veya K115 (HH) — varsayılan',
+  ),
+  _SpSprinklerTipi(
+    ad: 'Standart K57',
+    kFactor: 57.0,
+    aciklama: 'Yalnızca özel onaylı düşük debili uygulamalarda',
+  ),
+  _SpSprinklerTipi(
+    ad: 'Standart K80',
+    kFactor: 80.0,
+    aciklama: 'LH/OH sınıfları için standart',
+  ),
+  _SpSprinklerTipi(
+    ad: 'Yüksek Debili K115',
+    kFactor: 115.0,
+    aciklama: 'HH sınıfları için standart',
+  ),
+  _SpSprinklerTipi(
+    ad: 'Büyük Damla K161',
+    kFactor: 161.0,
+    aciklama: 'Yüksek depolama / raf sistemleri — üretici onayı gerekir',
+  ),
+  _SpSprinklerTipi(
+    ad: 'Ekstra Büyük Damla K200',
+    kFactor: 200.0,
+    aciklama: 'Özel yüksek debili uygulamalar — üretici onayı gerekir',
+  ),
+  _SpSprinklerTipi(
+    ad: 'ESFR K242 (bilgi amaçlı)',
+    kFactor: 242.0,
+    aciklama:
+        'Erken bastırma hızlı tepki — EN 12845 kapsamı dışıdır; NFPA 13 / listeleme verisi esas alınmalıdır',
+  ),
+];
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// KURULUM SINIFI  ·  Su kaynağı / pompa yedekliliği (EN 12845 Böl. 6 ilkeleri)
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class _SpKurulumSinifi {
+  final String ad;
+  final String aciklama;
+  final int pompaSayisi; // jokey pompa hariç
+  final bool dizelGerekli;
+  final bool ciftKaynak;
+  const _SpKurulumSinifi({
+    required this.ad,
+    required this.aciklama,
+    required this.pompaSayisi,
+    required this.dizelGerekli,
+    required this.ciftKaynak,
+  });
+}
+
+const List<_SpKurulumSinifi> _spKurulumSiniflari = [
+  _SpKurulumSinifi(
+    ad: 'Tekli Kaynak + Tek Pompa',
+    aciklama:
+        'Yedekliliği yoktur — yalnızca LH ve düşük riskli, tek kaynaklı '
+        'tesislerde kabul edilebilir.',
+    pompaSayisi: 1,
+    dizelGerekli: false,
+    ciftKaynak: false,
+  ),
+  _SpKurulumSinifi(
+    ad: 'Çiftli Pompa (Elektrik + Dizel)',
+    aciklama:
+        'OH ve çoğu HH tesisinde yaygın çözüm — elektrik kesintisinde '
+        'dizel pompa otomatik devreye girer.',
+    pompaSayisi: 2,
+    dizelGerekli: true,
+    ciftKaynak: false,
+  ),
+  _SpKurulumSinifi(
+    ad: 'Çiftli Kaynak + Çiftli Pompa (Superior)',
+    aciklama:
+        'En yüksek güvenilirlik — kritik tesisler, HH sınıfları ve yüksek '
+        'riskli depolarda önerilir; iki bağımsız su kaynağı ve pompa seti.',
+    pompaSayisi: 2,
+    dizelGerekli: true,
+    ciftKaynak: true,
+  ),
+];
+
+/// Boru şebekesi iç hacmi (L) — dry-pipe hava hacmi / priming suyu tahmini için.
+double _spBoruHacmiL(int dn, double uzunlukM) {
+  final id = _spBorular.firstWhere((b) => b.$1 == dn).$2; // mm
+  final rM = id / 1000.0 / 2.0;
+  return math.pi * rM * rM * uzunlukM * 1000.0; // L
+}
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // KÖPÜK SİSTEMİ  ·  EN 13565-2 / TS EN 13565-2
@@ -10889,6 +16152,27 @@ class _SpSonuc {
   final List<_SpHidrolikNode> kritikDevre;
   // ¦¦ Köpük sistemi (isteğe bağlı)
   final _KopukSonuc? kopuk;
+  // ¦¦ Boru malzemesi
+  final String boruMalzeme;
+  final double boruC;
+  // ¦¦ Sprinkler tipi / K-Faktör override
+  final _SpSprinklerTipi sprinklerTipi;
+  final double kFactorEfektif;
+  final String? kFactorUyari;
+  // ¦¦ Kurulum sınıfı / pompa yedekliliği
+  final _SpKurulumSinifi kurulum;
+  final double jokeyDebi; // L/min
+  final double jokeyBasinc; // bar
+  // ¦¦ Kuru borulu sistem
+  final bool kuruBoru;
+  final double? kuruBoruHacmi; // L — boru şebekesi iç hacmi
+  // ¦¦ Basınç düşürücü vana / zon ayrımı
+  final int zonSayisi;
+  // ¦¦ Raf depolama (in-rack sprinkler) — ön tasarım
+  final bool rafDepolama;
+  final int? rafKatSayisi;
+  final int? rafEkSprinkler;
+  final double? rafEkDebi; // L/min
 
   const _SpSonuc({
     required this.binaAlani,
@@ -10946,6 +16230,21 @@ class _SpSonuc {
     required this.maxBasincUyari,
     required this.kritikDevre,
     this.kopuk,
+    required this.boruMalzeme,
+    required this.boruC,
+    required this.sprinklerTipi,
+    required this.kFactorEfektif,
+    this.kFactorUyari,
+    required this.kurulum,
+    required this.jokeyDebi,
+    required this.jokeyBasinc,
+    required this.kuruBoru,
+    this.kuruBoruHacmi,
+    required this.zonSayisi,
+    required this.rafDepolama,
+    this.rafKatSayisi,
+    this.rafEkSprinkler,
+    this.rafEkDebi,
   });
 }
 
@@ -10971,6 +16270,13 @@ class _SprinkleState extends State<SprinkleSistemi> {
   String _kopukTipKod = 'AFFF3';
   int _kopukSure = 10; // dakika
   String? _secilenFaaliyet;
+  // ¦¦ Gelişmiş tasarım seçenekleri
+  int _boruMalzemeIdx = 0;
+  int _sprinklerTipiIdx = 0;
+  int _kurulumSinifIdx = 1;
+  bool _kuruBoru = false;
+  bool _rafDepolama = false;
+  final _rafKatSayisiCtrl = TextEditingController(text: '2');
 
   /// Seçili faaliyete göre tehlike sınıfı indeksini otomatik belirler
   int? get _sinifIdx {
@@ -10985,11 +16291,37 @@ class _SprinkleState extends State<SprinkleSistemi> {
   _SpSonuc? _sonuc;
 
   @override
+  void initState() {
+    super.initState();
+    final g = ProjeServisi.kayitliGirdiler;
+    if (g != null) {
+      ProjeServisi.kayitliGirdiler = null;
+      _enCtrl.text = g['en'] ?? '';
+      _boyCtrl.text = g['boy'] ?? '';
+      _yuksCtrl.text = g['yuks'] ?? '';
+      _asmaBoslukCtrl.text = g['asmaBosluk'] ?? '';
+      _asmaTavan = g['asmaTavan'] == 'true';
+      final faaliyet = g['faaliyet'] ?? '';
+      _secilenFaaliyet = faaliyet.isNotEmpty ? faaliyet : null;
+      _boruMalzemeIdx = int.tryParse(g['boruMalzemeIdx'] ?? '0') ?? 0;
+      _sprinklerTipiIdx = int.tryParse(g['sprinklerTipiIdx'] ?? '0') ?? 0;
+      _kurulumSinifIdx = int.tryParse(g['kurulumSinifIdx'] ?? '1') ?? 1;
+      _kuruBoru = g['kuruBoru'] == 'true';
+      _rafDepolama = g['rafDepolama'] == 'true';
+      _rafKatSayisiCtrl.text = g['rafKatSayisi'] ?? '2';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hesapla();
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _enCtrl.dispose();
     _boyCtrl.dispose();
     _yuksCtrl.dispose();
     _asmaBoslukCtrl.dispose();
+    _rafKatSayisiCtrl.dispose();
     super.dispose();
   }
 
@@ -11022,6 +16354,19 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
     final sinif = _spSiniflar[_sinifIdx!];
     final alan = en * boy;
+
+    // ¦¦ Boru malzemesi — Hazen-Williams C katsayısı
+    final boruMalzeme = _spBoruMalzemeleri[_boruMalzemeIdx];
+    final boruC = boruMalzeme.$2;
+
+    // ¦¦ Sprinkler tipi / K-Faktör override (varsayılan: sınıfa göre otomatik)
+    final sprinklerTipi = _spSprinklerTipleri[_sprinklerTipiIdx];
+    final kFactorEfektif = sprinklerTipi.kFactor ?? sinif.kFactor;
+    final kFactorUyari = kFactorEfektif < sinif.kFactor
+        ? 'Seçilen K-Faktör (K${kFactorEfektif.toInt()}), ${sinif.kod} sınıfının '
+              'gerektirdiği minimum K${sinif.kFactor.toInt()} değerinin altındadır — '
+              'üretici onayı ve tam hidrolik hesap doğrulaması zorunludur.'
+        : null;
 
     // ¦¦ Asma tavan hesabı (EN 12845 Md. 5.4)
     final asmaBoslukStr = _asmaBoslukCtrl.text.replaceAll(',', '.');
@@ -11061,9 +16406,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
     // K-faktör: LH/OH=80, HH=115 (EN 12845)
     // Min. işletme basıncı: LH=0,35 bar | OH/HH=0,50 bar (EN 12845 Tablo 1)
     final qHeadHesap = sinif.yogunluk * maxKapsamaEfektif; // L/min
-    double pHead = math.pow(qHeadHesap / sinif.kFactor, 2).toDouble();
+    double pHead = math.pow(qHeadHesap / kFactorEfektif, 2).toDouble();
     if (pHead < sinif.minBasinc) pHead = sinif.minBasinc;
-    final qHead = sinif.kFactor * math.sqrt(pHead); // gerçek debi
+    final qHead = kFactorEfektif * math.sqrt(pHead); // gerçek debi
 
     // ¦¦ Minimum yoğunluk kontrolü için referans debi (iteratif hesapla güncellenir)
     final qTasarimMin = sinif.yogunluk * sinif.tasarimAlani; // L/min
@@ -11101,9 +16446,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
     double pIter = pHead;
     double cumQDal = 0.0;
     for (int i = 1; i <= headPerBranch; i++) {
-      final qi = sinif.kFactor * math.sqrt(pIter);
+      final qi = kFactorEfektif * math.sqrt(pIter);
       cumQDal += qi;
-      final dpNext = _spHW(cumQDal, dnBranch, aralik * 1.2);
+      final dpNext = _spHW(cumQDal, dnBranch, aralik * 1.2, c: boruC);
       kritikDevre.add(
         _SpHidrolikNode(
           no: i,
@@ -11128,7 +16473,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
     for (int j = 1; j <= nBranchPipes; j++) {
       final qBranchJ = qDalBoru * math.sqrt(pTaliIter / pDesignPoint);
       cumQTali += qBranchJ;
-      final dpNextTali = _spHW(cumQTali, dnCross, aralik * 1.2);
+      final dpNextTali = _spHW(cumQTali, dnCross, aralik * 1.2, c: boruC);
       final String? noteJ = j == 1
           ? null
           : 'Kol $j: Q = ${qDalBoru.toStringAsFixed(1)}×√(${pTaliIter.toStringAsFixed(3)}/${pDesignPoint.toStringAsFixed(3)}) = ${qBranchJ.toStringAsFixed(1)} L/min';
@@ -11188,7 +16533,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
     // Faz 3: Ana boru (main pipe) — 1 düğüm (qEfektif ve lMain mevcut)
     {
-      final dpAna = _spHW(qEfektif, dnMain, lMain);
+      final dpAna = _spHW(qEfektif, dnMain, lMain, c: boruC);
       kritikDevre.add(
         _SpHidrolikNode(
           no: 1,
@@ -11235,6 +16580,41 @@ class _SprinkleState extends State<SprinkleSistemi> {
     // ¦¦ Su deposu hacmi (EN 12845 Tablo 2)
     // LH=30 dk, OH=60 dk, HH=90 dk  ×  Q_efektif (Tablo 6 bağlayıcı ise)
     final suDepoHacmi = qEfektif * sinif.sureDk.toDouble(); // L
+
+    // ¦¦ Kurulum sınıfı / pompa yedekliliği (EN 12845 Böl. 6 ilkeleri)
+    final kurulum = _spKurulumSiniflari[_kurulumSinifIdx];
+    // Jokey (basınç bekletme) pompası: tipik pratik değer — ana debinin ~%1'i,
+    // basıncı ana pompa kapalı-vana (churn) basıncından bir miktar yüksek tutulur.
+    final jokeyDebi = pompaDeb * 0.01;
+    final jokeyBasinc = pompaBasinc * 1.10;
+
+    // ¦¦ Kuru borulu sistem — boru şebekesi iç hacmi (hava/priming suyu tahmini)
+    final kuruBoruHacmi = _kuruBoru
+        ? (_spBoruHacmiL(dnBranch, mBranch) +
+              _spBoruHacmiL(dnCross, mCross) +
+              _spBoruHacmiL(dnMain, mMain))
+        : null;
+
+    // ¦¦ Basınç düşürücü vana / zon ayrımı — §8.2 sınırı (12 bar) aşıldığında
+    final zonSayisi = maxBasincUyari ? (pompaBasinc / 12.0).ceil() : 1;
+
+    // ¦¦ Raf depolama (in-rack sprinkler) — basitleştirilmiş ön tasarım
+    // Not: Kesin in-rack yerleşimi (flue space, kat aralığı) EN 12845 Ek H
+    // kapsamında tam tasarımla belirlenmelidir; burada yalnızca ön fikir verilir.
+    int? rafKatSayisi;
+    int? rafEkSprinkler;
+    double? rafEkDebi;
+    if (_rafDepolama) {
+      rafKatSayisi = int.tryParse(_rafKatSayisiCtrl.text.trim()) ?? 0;
+      if (rafKatSayisi > 0) {
+        const rafYatayAralik = 3.0; // m — tipik in-rack ön tasarım varsayımı
+        final rafSiraBasi = math.max(1, (en / rafYatayAralik).ceil());
+        rafEkSprinkler = rafKatSayisi * rafSiraBasi;
+        const kFactorRaf = 80.0; // tipik in-rack K80
+        const pRafMin = 1.0; // bar — in-rack ön tasarım min. basınç varsayımı
+        rafEkDebi = rafEkSprinkler * kFactorRaf * math.sqrt(pRafMin);
+      }
+    }
 
     // ¦¦ Köpük sistemi hesabı (EN 13565-2)
     _KopukSonuc? kopukSonuc;
@@ -11322,8 +16702,76 @@ class _SprinkleState extends State<SprinkleSistemi> {
         maxBasincUyari: maxBasincUyari,
         kritikDevre: kritikDevre,
         kopuk: kopukSonuc,
+        boruMalzeme: boruMalzeme.$1,
+        boruC: boruC,
+        sprinklerTipi: sprinklerTipi,
+        kFactorEfektif: kFactorEfektif,
+        kFactorUyari: kFactorUyari,
+        kurulum: kurulum,
+        jokeyDebi: jokeyDebi,
+        jokeyBasinc: jokeyBasinc,
+        kuruBoru: _kuruBoru,
+        kuruBoruHacmi: kuruBoruHacmi,
+        zonSayisi: zonSayisi,
+        rafDepolama: _rafDepolama,
+        rafKatSayisi: rafKatSayisi,
+        rafEkSprinkler: rafEkSprinkler,
+        rafEkDebi: rafEkDebi,
       );
     });
+    if (_sonuc != null) {
+      final s = _sonuc!;
+      final wSpacing = s.en / s.nX;
+      final lSpacing = s.boy / s.nY;
+      final emniyet = s.pompaBasinc - s.pHead - s.dpToplam - s.pStatik;
+      final resultsText = [
+        '## Bina & Tasarım Parametreleri',
+        'Bina: ${s.en.toStringAsFixed(1)}×${s.boy.toStringAsFixed(1)} m  |  Bina Alanı: ${s.binaAlani.toStringAsFixed(1)} m²  |  Tavan Yüksekliği: ${s.yuks.toStringAsFixed(1)} m',
+        'Tehlike Sınıfı: ${s.sinif.kod}  |  Açıklama: ${s.sinif.ad}',
+        'Tasarım Yoğunluğu: ${s.sinif.yogunluk.toStringAsFixed(2)} mm/min  |  Tasarım Alanı: ${s.sinif.tasarimAlani.toStringAsFixed(0)} m²  |  Maks. Kapsama/Sprinkler: ${s.maxKapsamaEfektif.toStringAsFixed(0)} m²',
+        '## Sprinkler Yerleşim Hesabı',
+        'Izgara Aralığı: ${s.aralik.toStringAsFixed(2)} m  |  Gerçek Kapsama: ${s.gercekKapsama.toStringAsFixed(2)} m²',
+        'Yatay Sıra: ${s.nX} adet × ${wSpacing.toStringAsFixed(2)} m  |  Dikey Sıra: ${s.nY} adet × ${lSpacing.toStringAsFixed(2)} m',
+        'Toplam Sprinkler: ${s.nToplam} adet  |  Tasarım Grubu: ${s.nTasarim} adet',
+        '## Kritik Devre Hidrolik Hesabı',
+        'En Uzak Sprinkler Debisi: ${s.qHead.toStringAsFixed(1)} L/min  |  En Uzak Basınç: ${s.pHead.toStringAsFixed(3)} bar  |  K-Faktör: ${s.kFactorEfektif.toStringAsFixed(0)} (${s.sprinklerTipi.ad})',
+        'Boru Malzemesi: ${s.boruMalzeme} (C=${s.boruC.toStringAsFixed(0)})',
+        'Q Tasarım: ${s.qTasarim.toStringAsFixed(1)} L/min  |  Pompa Debi: ${s.pompaDeb.toStringAsFixed(0)} L/min',
+        'Dal Boru: DN${s.dnBranch}  |  Dağıtım Boru: DN${s.dnCross}  |  Ana Boru: DN${s.dnMain}',
+        'ΔP Sürtünme: ${s.dpToplam.toStringAsFixed(3)} bar  |  Statik Yük: ${s.pStatik.toStringAsFixed(3)} bar  |  Emniyet: ${emniyet.clamp(0, 10).toStringAsFixed(3)} bar',
+        '## Pompa Gereksinimleri',
+        'Pompa Debi: ${s.pompaDeb.toStringAsFixed(0)} L/min  |  Pompa Basınç: ${s.pompaBasinc.toStringAsFixed(2)} bar',
+        'Kurulum Sınıfı: ${s.kurulum.ad}  |  Jokey Pompa: ${s.jokeyDebi.toStringAsFixed(1)} L/min @ ${s.jokeyBasinc.toStringAsFixed(2)} bar',
+        if (s.zonSayisi > 1)
+          'Basınç Zonu: ${s.zonSayisi} adet (12 bar sınırı — PRV gerekli)',
+        '## Su Deposu — EN 12845 Tablo 2',
+        'Besleme Süresi: ${s.sinif.sureDk} dak.  |  Su Deposu Hacmi: ${(s.suDepoHacmi / 1000).toStringAsFixed(2)} m³',
+        if (s.kuruBoru)
+          'Kuru Borulu Sistem: Boru şebekesi hacmi ≈ ${(s.kuruBoruHacmi! / 1000).toStringAsFixed(2)} m³ (hava/priming suyu tahmini)',
+        if (s.rafDepolama && s.rafEkSprinkler != null)
+          'Raf Depolama (In-Rack, ön tasarım): ${s.rafKatSayisi} kat × ek ${s.rafEkSprinkler} sprinkler  |  Ek Debi: ${s.rafEkDebi!.toStringAsFixed(0)} L/min',
+      ].join('\n');
+      ProjeServisi.hesapVeri = jsonEncode({
+        'i': {
+          'en': _enCtrl.text,
+          'boy': _boyCtrl.text,
+          'yuks': _yuksCtrl.text,
+          'asmaTavan': _asmaTavan.toString(),
+          'asmaBosluk': _asmaBoslukCtrl.text,
+          'faaliyet': _secilenFaaliyet ?? '',
+          'boruMalzemeIdx': _boruMalzemeIdx.toString(),
+          'sprinklerTipiIdx': _sprinklerTipiIdx.toString(),
+          'kurulumSinifIdx': _kurulumSinifIdx.toString(),
+          'kuruBoru': _kuruBoru.toString(),
+          'rafDepolama': _rafDepolama.toString(),
+          'rafKatSayisi': _rafKatSayisiCtrl.text,
+        },
+        'r': resultsText,
+      });
+    } else {
+      ProjeServisi.hesapVeri = '';
+    }
+    ProjeServisi.hesapSinyali.value = true;
   }
 
   /// Arama destekli faaliyet seçim diyaloğu
@@ -11478,7 +16926,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
             border: const Color(0xFF38BDF8),
             child: const Text(
               'EN 12845 / TS EN 12845 — Sabit Söndürücü Sistemler · Otomatik Sprinkler\n'
-              'Tehlike sınıfına göre kritik devre hidrolik hesabı  ·  Hazen–Williams (C = 120)',
+              'Tehlike sınıfına göre kritik devre hidrolik hesabı  ·  Hazen–Williams (seçilebilir boru malzemesi C katsayısı)',
               style: TextStyle(fontSize: 11, height: 1.5),
             ),
           ),
@@ -11679,6 +17127,203 @@ class _SprinkleState extends State<SprinkleSistemi> {
             ),
           ],
           const SizedBox(height: 16),
+
+          // ¦¦ Gelişmiş Tasarım Seçenekleri
+          const Text(
+            'Gelişmiş Tasarım Seçenekleri',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<int>(
+            value: _boruMalzemeIdx,
+            isExpanded: true,
+            decoration: _spDecor('Boru Malzemesi', Icons.plumbing_rounded),
+            items: [
+              for (int i = 0; i < _spBoruMalzemeleri.length; i++)
+                DropdownMenuItem(
+                  value: i,
+                  child: Text(
+                    '${_spBoruMalzemeleri[i].$1}  —  C=${_spBoruMalzemeleri[i].$2.toInt()}',
+                    style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+            ],
+            onChanged: (v) => setState(() {
+              _boruMalzemeIdx = v ?? 0;
+              _sonuc = null;
+            }),
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<int>(
+            value: _sprinklerTipiIdx,
+            isExpanded: true,
+            decoration: _spDecor(
+              'Sprinkler Tipi (K-Faktör)',
+              Icons.water_drop_rounded,
+            ),
+            items: [
+              for (int i = 0; i < _spSprinklerTipleri.length; i++)
+                DropdownMenuItem(
+                  value: i,
+                  child: Text(
+                    _spSprinklerTipleri[i].ad,
+                    style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+            ],
+            onChanged: (v) => setState(() {
+              _sprinklerTipiIdx = v ?? 0;
+              _sonuc = null;
+            }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 6, left: 4),
+            child: Text(
+              _spSprinklerTipleri[_sprinklerTipiIdx].aciklama,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<int>(
+            value: _kurulumSinifIdx,
+            isExpanded: true,
+            decoration: _spDecor(
+              'Kurulum Sınıfı / Pompa Yedekliliği',
+              Icons.settings_input_component_rounded,
+            ),
+            items: [
+              for (int i = 0; i < _spKurulumSiniflari.length; i++)
+                DropdownMenuItem(
+                  value: i,
+                  child: Text(
+                    _spKurulumSiniflari[i].ad,
+                    style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+            ],
+            onChanged: (v) => setState(() {
+              _kurulumSinifIdx = v ?? 1;
+              _sonuc = null;
+            }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 6, left: 4),
+            child: Text(
+              _spKurulumSiniflari[_kurulumSinifIdx].aciklama,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFCBD5E1)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: _kuruBoru,
+                  activeColor: _kC,
+                  onChanged: (v) => setState(() {
+                    _kuruBoru = v ?? false;
+                    _sonuc = null;
+                  }),
+                ),
+                const Expanded(
+                  child: Text(
+                    'Kuru borulu sistem (donma riskli alan)',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_kuruBoru)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3C7),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFFCD34D)),
+                ),
+                child: const Text(
+                  'Kuru borulu sistemlerde şebekeye hava/nitrojen basılır ve tetikleme '
+                  '(trip) süresi, kompresör kapasitesi ve boru eğimi (drenaj) ayrıca '
+                  'tasarlanmalıdır. Donma riski olmayan alanlarda ıslak sistem tercih edilmelidir.',
+                  style: TextStyle(fontSize: 11, height: 1.4),
+                ),
+              ),
+            ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFCBD5E1)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: _rafDepolama,
+                  activeColor: _kC,
+                  onChanged: (v) => setState(() {
+                    _rafDepolama = v ?? false;
+                    _sonuc = null;
+                  }),
+                ),
+                const Expanded(
+                  child: Text(
+                    'Raf / palet depolama — In-Rack sprinkler (ön tasarım)',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_rafDepolama) ...[
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _rafKatSayisiCtrl,
+              keyboardType: TextInputType.number,
+              decoration: _spDecor(
+                'Raf Kat Sayısı (in-rack seviyesi)',
+                Icons.view_agenda_rounded,
+                suffix: 'kat',
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF3C7),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFCD34D)),
+              ),
+              child: const Text(
+                'Bu yalnızca ön fikir amaçlı basitleştirilmiş bir tahmindir. Kesin in-rack '
+                'sprinkler sayısı, flue space (boşluk) genişliği ve kat aralığı EN 12845 '
+                'Ek H kapsamında tam tasarımla belirlenmelidir.',
+                style: TextStyle(fontSize: 11, height: 1.4),
+              ),
+            ),
+          ],
 
           const SizedBox(height: 16),
 
@@ -12429,8 +18074,8 @@ class _SpResultCard extends StatelessWidget {
                     child: Text(
                       '⚠ EN 12845 §8.2 — Pompa basıncı ${s.pompaBasinc.toStringAsFixed(2)} bar, '
                       'sistemdeki herhangi bir sprinkler konumundaki maksimum işletme basıncı '
-                      '12 bar\'ı aşmamalıdır. Basınç düşürücü vana (PRV) veya sistem yeniden '
-                      'tasarımı değerlendirilmelidir.',
+                      '12 bar\'ı aşmamalıdır. Basınç düşürücü vana (PRV) ile ${s.zonSayisi} '
+                      'basınç zonuna ayrılması veya sistem yeniden tasarımı değerlendirilmelidir.',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.red.shade800,
@@ -12442,6 +18087,53 @@ class _SpResultCard extends StatelessWidget {
               ),
             ),
           ),
+        const SizedBox(height: 12),
+
+        // 4a2. Kurulum Sınıfı & Pompa Yedekliliği
+        _spHeader(
+          'Kurulum Sınıfı & Pompa Yedekliliği',
+          Icons.power_settings_new_rounded,
+          renk,
+        ),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: renk.withOpacity(0.06),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: renk.withOpacity(0.35)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _spTable([
+                ('Kurulum Sınıfı', s.kurulum.ad),
+                (
+                  'Pompa Sayısı',
+                  '${s.kurulum.pompaSayisi} adet'
+                      '${s.kurulum.dizelGerekli ? "  (elektrik + dizel)" : ""}',
+                ),
+                (
+                  'Su Kaynağı',
+                  s.kurulum.ciftKaynak ? 'Çiftli (bağımsız)' : 'Tekli',
+                ),
+                (
+                  'Jokey Pompa',
+                  '${s.jokeyDebi.toStringAsFixed(1)} L/min @ ${s.jokeyBasinc.toStringAsFixed(2)} bar',
+                ),
+              ], renk),
+              const SizedBox(height: 8),
+              Text(
+                s.kurulum.aciklama,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 12),
 
         // 4b. Su Deposu
@@ -12510,6 +18202,92 @@ class _SpResultCard extends StatelessWidget {
 
         const SizedBox(height: 12),
 
+        // 4c. Kuru Borulu Sistem (isteğe bağlı)
+        if (s.kuruBoru) ...[
+          _spHeader(
+            'Kuru Borulu Sistem  —  Donma Riski',
+            Icons.ac_unit_rounded,
+            renk,
+          ),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: renk.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: renk.withOpacity(0.35)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _spTable([
+                  (
+                    'Boru Şebekesi İç Hacmi',
+                    '${(s.kuruBoruHacmi! / 1000).toStringAsFixed(2)} m³  (${s.kuruBoruHacmi!.toStringAsFixed(0)} L)',
+                  ),
+                ], renk),
+                const SizedBox(height: 8),
+                const Text(
+                  'Bu hacim yalnızca hava kompresörü / nitrojen jeneratörü ve priming '
+                  'suyu ön boyutlandırması için bir referanstır. Tetikleme (trip) süresi, '
+                  'aksesuar (accelerator/exhauster) ihtiyacı ve boru eğimi ayrıca '
+                  'üretici/tasarım standardına göre kesinleştirilmelidir.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black54,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+
+        // 4d. Raf Depolama (In-Rack Sprinkler) — ön tasarım
+        if (s.rafDepolama && s.rafEkSprinkler != null) ...[
+          _spHeader(
+            'Raf Depolama — In-Rack Sprinkler (Ön Tasarım)',
+            Icons.view_agenda_rounded,
+            renk,
+          ),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: renk.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: renk.withOpacity(0.35)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _spTable([
+                  ('Raf Kat Sayısı', '${s.rafKatSayisi} kat'),
+                  ('Tahmini Ek In-Rack Sprinkler', '${s.rafEkSprinkler} adet'),
+                  (
+                    'Tahmini Ek Debi',
+                    '${s.rafEkDebi!.toStringAsFixed(0)} L/min',
+                  ),
+                ], renk),
+                const SizedBox(height: 8),
+                const Text(
+                  'Basitleştirilmiş ön tasarım değeridir (3 m yatay aralık varsayımı, K80, '
+                  '1,0 bar). Kesin in-rack yerleşimi — flue space genişliği, kat aralığı ve '
+                  'gerçek hidrolik talep — EN 12845 Ek H kapsamında tam tasarımla '
+                  'belirlenmeli ve pompa/su deposu hesabına ayrıca eklenmelidir.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black54,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+
         // 5. Boru Çapı Özeti
         _spHeader(
           'Boru Çapı Özeti  —  EN 12845 Tablo 14',
@@ -12534,6 +18312,14 @@ class _SpResultCard extends StatelessWidget {
           ),
         _spTable([
           (
+            'Boru Malzemesi',
+            '${s.boruMalzeme}  (Hazen-Williams C=${s.boruC.toInt()})',
+          ),
+          (
+            'Sprinkler Tipi / K-Faktör',
+            '${s.sprinklerTipi.ad}  —  K${s.kFactorEfektif.toInt()}',
+          ),
+          (
             'Dal boru (branch line)',
             'DN ${s.dnBranch}  —  ${s.nBranch} spr./dal'
                 '${s.boruTabloHH ? "  (hız yöntemi)" : "  (Tb.14)"}',
@@ -12549,6 +18335,24 @@ class _SpResultCard extends StatelessWidget {
                 '${s.boruTabloHH ? "  (hız yöntemi)" : "  (Tb.14)"}',
           ),
         ], renk),
+        if (s.kFactorUyari != null)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.red.shade400),
+            ),
+            child: Text(
+              '⚠  ${s.kFactorUyari}',
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.4,
+                color: Colors.red.shade800,
+              ),
+            ),
+          ),
         const SizedBox(height: 4),
 
         _spHeader('Boru Metrajı (Yaklaşık)', Icons.straighten_rounded, renk),

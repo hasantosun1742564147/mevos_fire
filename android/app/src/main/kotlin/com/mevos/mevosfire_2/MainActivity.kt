@@ -1,4 +1,4 @@
-package com.mevos.mevos_fire
+package com.mevos.mevosfire_2
 
 import io.flutter.embedding.android.FlutterActivity
 

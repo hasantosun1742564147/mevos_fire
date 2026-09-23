@@ -1698,6 +1698,30 @@
         "aciklama": ""
     },
     {
+        "numara": "LPS 1666",
+        "ad": "Doğrudan Düşük Basınçlı Uygulama (DLP) yangın söndürme sistemleri için gereksinimler",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Elektrik/telekom panoları gibi küçük hacimli (≤2 m³) kabinler için pnömatik algılama tubingli, önceden mühendislik hesabı yapılmış (pre-engineered) doğrudan boşaltmalı sistem. Tubing ≤10 m. LPCB sertifikası."
+    },
+    {
+        "numara": "UL 2166",
+        "ad": "Halocarbon Clean Agent Extinguishing System Units",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Pano içi (ILP - Indirect Low Pressure) temiz ajan söndürme ünitelerinin UL sertifikasyon standardı. Orta hacimli (≤9-10 m³) kabinler, tubing ≤35 m."
+    },
+    {
+        "numara": "FM 5600",
+        "ad": "Clean Agent Fire Extinguishing System Units",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Pano içi (ILP) önceden mühendislik hesabı yapılmış temiz ajan söndürme ünitelerinin FM Approvals sertifikasyon standardı."
+    },
+    {
+        "numara": "VdS 2093",
+        "ad": "CO₂-Feuerlöschanlagen - Planung und Einbau (CO₂ söndürme sistemleri - projelendirme ve kurulum)",
+        "kategori": "Gazlı Söndürme",
+        "aciklama": "Pano içi CO₂ pnömatik tubing sistemleri (DHP/IHP) için VdS onay standardı. DHP ≤2,5-3 m³/tubing ≤25 m, IHP ≤30-40 m³/tubing ≤100 m."
+    },
+    {
         "numara": "TS EN 54-1",
         "ad": "Yangin algilama ve yangin alarm sistemleri - Bölüm 1: Giris",
         "kategori": "Yangın Alarm",
@@ -4192,6 +4216,60 @@
         "ad": "Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme",
         "kategori": "Mutfak Söndürme",
         "aciklama": "Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme."
+    },
+    {
+        "numara": "NFPA 34",
+        "ad": "Yanıcı veya tutuşabilir sıvı kullanan daldırma, kaplama ve baskı prosesleri standardı",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Matbaa baskı makineleri dahil yanıcı/tutuşabilir sıvı kullanan endüstriyel prosesler için yangın ve patlama tehlikesi azaltma standardı. §10 Printing Operations: baskı alanı havalandırma, elektrik sınıflandırması ve §10.6 otomatik söndürme sistemleri zorunluluklarını kapsar."
+    },
+    {
+        "numara": "NFPA 34 §10",
+        "ad": "Baskı prosesleri — Özel gereksinimler (Printing Operations)",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "§10.1 Kapsam: Sınıf I/II sıvı kullanan baskı prosesleri. §10.3 Mürekkep/solvent taşıma ve depolama. §10.4 Havalandırma. §10.5 ATEX/NEC elektrik sınıflandırması. §10.6 Otomatik yangın söndürme zorunluluğu."
+    },
+    {
+        "numara": "NFPA 34 §10.6",
+        "ad": "Baskı alanları otomatik yangın söndürme — Fire Protection",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Sınıf I sıvı kullanan baskı alanlarında otomatik sprinkler (NFPA 13) zorunludur. Web-ofset ve solvent kurutucu bölmeleri için yerel uygulama CO₂ (NFPA 12) veya temiz ajan (NFPA 2001) sistemi gerekebilir. Söndürme tetiklendiğinde solvent/mürekkep beslemesi otomatik kesilmelidir."
+    },
+    {
+        "numara": "NFPA 12",
+        "ad": "Karbondioksit (CO₂) söndürme sistemleri standardı",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Toplam taşkın ve lokal uygulama CO₂ sistemleri. Baskı makinesi kurutucu bölmeleri ve baskı kabinleri için yaygın olarak kullanılır. İnsan varlığında kullanım kısıtlamalarına dikkat edilmelidir."
+    },
+    {
+        "numara": "NFPA 30",
+        "ad": "Yanıcı ve tutuşabilir sıvılar kodu — Depolama ve kullanım",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Baskı tesislerinde solvent (IPA, toluen, etil asetat vb.) depolama ve kullanımına ilişkin güvenlik gereksinimleri. NFPA 34 ile birlikte uygulanır."
+    },
+    {
+        "numara": "NFPA 70 (NEC) Art.516",
+        "ad": "ABD — Ulusal Elektrik Kodu — Bölüm 516: Daldırma, kaplama ve baskı prosesleri",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Yanıcı/tutuşabilir sıvı kullanan baskı alanlarında patlayıcı atmosfer (ATEX) sınıflandırması ve elektrik ekipmanı gereksinimleri."
+    },
+    {
+        "numara": "EN 1010-1",
+        "ad": "Baskı makinelerinin güvenliği — Genel gereksinimler",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Baskı, baskı sonrası işlem ve kağıt dönüştürme makinelerinin güvenliği — Genel gereksinimler (Avrupa standardı)."
+    },
+    {
+        "numara": "EN 1010-2",
+        "ad": "Baskı makinelerinin güvenliği — Baskı ve baskı lakı uygulama makineleri",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Ofset, flexo, gravür ve dijital dahil baskı makinelerine özel güvenlik gereksinimleri. Yangın ve patlama riski azaltma önlemlerini kapsar."
+    },
+    {
+        "numara": "EN 13463-1",
+        "ad": "Potansiyel patlayıcı ortam — Güvenlik kriterleri (ATEX Ekipmanlar)",
+        "kategori": "Baskı Makinesi Söndürme",
+        "aciklama": "Solvent buharı riski olan baskı alanlarında kullanılacak ekipmanlar için ATEX sınıflandırma ve sertifikasyon gereksinimleri."
     },
     {
         "numara": "EN 54-5",
