@@ -401,12 +401,45 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
   bool _yukleniyor = false;
   bool _sifreGizle = true;
   String? _hata;
+  Timer? _rateLimitZamanlayici;
+  int _rateLimitSaniye = 0;
 
   @override
   void dispose() {
     _emailCtrl.dispose();
     _sifreCtrl.dispose();
+    _rateLimitZamanlayici?.cancel();
     super.dispose();
+  }
+
+  String _sureFormatla(int saniye) {
+    final dk = saniye ~/ 60;
+    final sn = saniye % 60;
+    return '${dk.toString().padLeft(2, '0')}:${sn.toString().padLeft(2, '0')}';
+  }
+
+  void _rateLimitBaslat(String mesaj) {
+    final eslesme = RegExp(r'(\d+)\s*dakika').firstMatch(mesaj);
+    if (eslesme == null) return;
+    final dakika = int.tryParse(eslesme.group(1)!) ?? 0;
+    if (dakika <= 0) return;
+    _rateLimitZamanlayici?.cancel();
+    setState(() => _rateLimitSaniye = dakika * 60);
+    _rateLimitZamanlayici = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      setState(() {
+        if (_rateLimitSaniye <= 1) {
+          _rateLimitSaniye = 0;
+          _hata = null;
+          t.cancel();
+        } else {
+          _rateLimitSaniye--;
+        }
+      });
+    });
   }
 
   Future<void> _girisYap() async {
@@ -433,6 +466,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         final token = data['token'] as String;
         final user = data['user'] as Map<String, dynamic>;
         final perms = (user['perms'] as Map<String, dynamic>?) ?? {};
+        debugPrint('LOGIN USER: ${jsonEncode(user)}');
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt_token', token);
         await prefs.setString('user_name', (user['name'] as String?) ?? '');
@@ -449,7 +483,8 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         if (!hasActiveFirePerm(perms)) {
           setState(() {
             _hata =
-                'Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.';
+                'Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\n'
+                'Sunucudan gelen perms: ${jsonEncode(perms)}';
             _yukleniyor = false;
           });
           return;
@@ -462,10 +497,12 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         }
       } else {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final mesaj = (data['error'] as String?) ?? 'Giriş başarısız';
         setState(() {
-          _hata = (data['error'] as String?) ?? 'Giriş başarısız';
+          _hata = mesaj;
           _yukleniyor = false;
         });
+        _rateLimitBaslat(mesaj);
       }
     } on TimeoutException {
       setState(() {
@@ -677,7 +714,10 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  _hata!,
+                                  _rateLimitSaniye > 0
+                                      ? 'Çok fazla hatalı giriş denemesi. '
+                                            '${_sureFormatla(_rateLimitSaniye)} sonra tekrar deneyin.'
+                                      : _hata!,
                                   style: const TextStyle(
                                     color: Color(0xFFFCA5A5),
                                     fontSize: 12,
@@ -693,7 +733,9 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: _yukleniyor ? null : _girisYap,
+                          onPressed: (_yukleniyor || _rateLimitSaniye > 0)
+                              ? null
+                              : _girisYap,
                           icon: _yukleniyor
                               ? const SizedBox(
                                   width: 18,
@@ -705,7 +747,11 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                                 )
                               : const Icon(Icons.login_rounded, size: 20),
                           label: Text(
-                            _yukleniyor ? 'Giriş yapılıyor...' : 'Giriş Yap',
+                            _yukleniyor
+                                ? 'Giriş yapılıyor...'
+                                : _rateLimitSaniye > 0
+                                ? _sureFormatla(_rateLimitSaniye)
+                                : 'Giriş Yap',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
@@ -721,6 +767,42 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               alpha: 0.5,
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      // Demo ile giriş
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const AnaSayfa(demoModu: true),
+                                ),
+                                (route) => false,
+                              ),
+                          icon: const Icon(
+                            Icons.play_circle_outline_rounded,
+                            size: 20,
+                          ),
+                          label: const Text(
+                            'Demo ile Gir (Davlumbaz Söndürme)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.5),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
                             ),
@@ -1424,7 +1506,9 @@ class _KaydedilmisVeriPaneliState extends State<_KaydedilmisVeriPaneli> {
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 
 class AnaSayfa extends StatelessWidget {
-  const AnaSayfa({super.key});
+  const AnaSayfa({super.key, this.demoModu = false});
+
+  final bool demoModu;
 
   static const Color _kFire = Color(0xFFB91C1C);
 
@@ -1541,6 +1625,48 @@ class AnaSayfa extends StatelessWidget {
     );
   }
 
+  // Demo modunda yalnızca Davlumbaz Söndürme serbest; diğerleri kayıt sayfasına yönlendirir.
+  void _modulAc(
+    BuildContext context, {
+    required bool demoIzinli,
+    required VoidCallback ac,
+  }) {
+    if (demoModu && !demoIzinli) {
+      _surumYukseltUyarisiGoster(context);
+    } else {
+      ac();
+    }
+  }
+
+  void _surumYukseltUyarisiGoster(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Sürüm Yükselt'),
+        content: const Text(
+          'Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için '
+          'MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Vazgeç'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              launchUrl(
+                Uri.parse('https://www.mevos.com.tr/pages/kayit.html'),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+            child: const Text('Kayıt Ol'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1608,6 +1734,41 @@ class AnaSayfa extends StatelessWidget {
                 ],
               ),
             ),
+            if (demoModu) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7ED),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFFFDBA74)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.info_rounded,
+                      color: Color(0xFF9A3412),
+                      size: 18,
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'DEMO MODU · Yalnızca "Davlumbaz Söndürme" modülü açıktır. '
+                        'Diğer modüller için hesap oluşturup abone olun.',
+                        style: TextStyle(
+                          color: Color(0xFF9A3412),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 20),
 
             // Modül kartları
@@ -1617,10 +1778,14 @@ class AnaSayfa extends StatelessWidget {
                   'EN 1991-1-2 yangın yükü yoğunluğu + ISO 14520 / EN 12845 söndürme maddesi hesabı',
               ikon: Icons.whatshot_rounded,
               renk: const Color(0xFF0F766E),
-              onTap: () => _git(
+              onTap: () => _modulAc(
                 context,
-                const YanginYukuSayfasi(),
-                'Yangın Yükü Hesabı',
+                demoIzinli: false,
+                ac: () => _git(
+                  context,
+                  const YanginYukuSayfasi(),
+                  'Yangın Yükü Hesabı',
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -1630,10 +1795,14 @@ class AnaSayfa extends StatelessWidget {
                   'Ticari mutfak davlumbaz söndürme sistemi — NFPA 17A / TS EN 15751 / UL 300',
               ikon: Icons.kitchen_rounded,
               renk: const Color(0xFF0369A1),
-              onTap: () => _git(
+              onTap: () => _modulAc(
                 context,
-                const DavlumbazSondurme(),
-                'Davlumbaz Söndürme',
+                demoIzinli: true,
+                ac: () => _git(
+                  context,
+                  const DavlumbazSondurme(),
+                  'Davlumbaz Söndürme',
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -1643,10 +1812,14 @@ class AnaSayfa extends StatelessWidget {
                   'Toplam hacim gazlı söndürme ve baskı makineleri — TS EN 15004 / NFPA 2001 · FM-200 · Novec 1230 · CO² · Inert gazlar',
               ikon: Icons.cloud_rounded,
               renk: const Color(0xFF0891B2),
-              onTap: () => _git(
+              onTap: () => _modulAc(
                 context,
-                const GazliSondurme(),
-                'Gazlı Söndürme Sistemi',
+                demoIzinli: false,
+                ac: () => _git(
+                  context,
+                  const GazliSondurme(),
+                  'Gazlı Söndürme Sistemi',
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -1656,8 +1829,15 @@ class AnaSayfa extends StatelessWidget {
                   'ESS soğutma gereksinimi — ISO 3941:2026 · NFPA 855:2023 · IEC 62619 · FM Global DS 5-33',
               ikon: Icons.battery_charging_full_rounded,
               renk: const Color(0xFF7C3AED),
-              onTap: () =>
-                  _git(context, const LityumPilYangini(), 'Lityum Pil Yangını'),
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () => _git(
+                  context,
+                  const LityumPilYangini(),
+                  'Lityum Pil Yangını',
+                ),
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1666,8 +1846,12 @@ class AnaSayfa extends StatelessWidget {
                   'Otomatik sprinkler — EN 12845 tehlike sınıfı bazlı kritik devre hidrolik hesabı, pompa & boru çapı',
               ikon: Icons.water_rounded,
               renk: const Color(0xFF0EA5E9),
-              onTap: () =>
-                  _git(context, const SprinkleSistemi(), 'Sprinkler Sistemi'),
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () =>
+                    _git(context, const SprinkleSistemi(), 'Sprinkler Sistemi'),
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1676,8 +1860,12 @@ class AnaSayfa extends StatelessWidget {
                   'Nokta dedektör yerleşimi · Yapı tipi · Oda tipi — TS EN 54-7 / EN 54-14',
               ikon: Icons.sensors_rounded,
               renk: const Color(0xFF7C2D12),
-              onTap: () =>
-                  _git(context, const DumanAlgilama(), 'Duman Algılama'),
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () =>
+                    _git(context, const DumanAlgilama(), 'Duman Algılama'),
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1687,8 +1875,11 @@ class AnaSayfa extends StatelessWidget {
               ikon: Icons.air_rounded,
               renk: const Color(0xFF374151),
 
-              onTap: () =>
-                  _git(context, const DumanKontrol(), 'Duman Kontrolü'),
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () => _git(context, const DumanKontrol(), 'Duman Kontrolü'),
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1697,8 +1888,12 @@ class AnaSayfa extends StatelessWidget {
                   'Yangın ve güvenlik standartları veritabanında numara, ad veya kategori ile arama',
               ikon: Icons.search_rounded,
               renk: const Color(0xFF065F46),
-              onTap: () =>
-                  _git(context, const StandartArama(), 'Standart Arama'),
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () =>
+                    _git(context, const StandartArama(), 'Standart Arama'),
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1707,49 +1902,53 @@ class AnaSayfa extends StatelessWidget {
                   'Yangın sistemleri standart kategorileri, kapsam ve referans özeti',
               ikon: Icons.menu_book_rounded,
               renk: const Color(0xFF6D28D9),
-              onTap: () {
-                final rehberKey = GlobalKey<_StandartRehberiState>();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: _kFire,
-                        foregroundColor: Colors.white,
-                        title: _appBarTitle('Standart Rehberi'),
-                        actions: [
-                          TextButton.icon(
-                            onPressed: () => rehberKey.currentState
-                                ?._ozelStandartEkleDiyalogu(),
-                            icon: const Icon(
-                              Icons.add_rounded,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              'Standart Ekle',
-                              style: TextStyle(
+              onTap: () => _modulAc(
+                context,
+                demoIzinli: false,
+                ac: () {
+                  final rehberKey = GlobalKey<_StandartRehberiState>();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(
+                          backgroundColor: _kFire,
+                          foregroundColor: Colors.white,
+                          title: _appBarTitle('Standart Rehberi'),
+                          actions: [
+                            TextButton.icon(
+                              onPressed: () => rehberKey.currentState
+                                  ?._ozelStandartEkleDiyalogu(),
+                              icon: const Icon(
+                                Icons.add_rounded,
+                                size: 18,
                                 color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
+                              ),
+                              label: const Text(
+                                'Standart Ekle',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.logout_rounded,
-                              color: Colors.white,
+                            IconButton(
+                              icon: const Icon(
+                                Icons.logout_rounded,
+                                color: Colors.white,
+                              ),
+                              tooltip: 'Çıkış',
+                              onPressed: () => _cikisYap(context),
                             ),
-                            tooltip: 'Çıkış',
-                            onPressed: () => _cikisYap(context),
-                          ),
-                        ],
+                          ],
+                        ),
+                        body: StandartRehberi(key: rehberKey),
                       ),
-                      body: StandartRehberi(key: rehberKey),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -1757,9 +1956,13 @@ class AnaSayfa extends StatelessWidget {
               aciklama: 'Kaydettiğiniz tüm hesap projeleri',
               ikon: Icons.folder_rounded,
               renk: const Color(0xFF92400E),
-              onTap: () => Navigator.push(
+              onTap: () => _modulAc(
                 context,
-                MaterialPageRoute(builder: (_) => const KayitliProjeler()),
+                demoIzinli: false,
+                ac: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const KayitliProjeler()),
+                ),
               ),
             ),
             const SizedBox(height: 24),
