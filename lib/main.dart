@@ -1678,7 +1678,7 @@ class AnaSayfa extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_rounded, color: Colors.white),
-            tooltip: 'API Ayarları',
+            tooltip: 'Ayarlar',
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const ApiAyarlariSayfasi()),
@@ -14904,6 +14904,79 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
   final _ctrl = TextEditingController();
   bool _gizle = true;
   bool _kaydedildi = false;
+  bool _siliniyor = false;
+  String _kullaniciEposta = '';
+
+  Future<void> _hesabiSil() async {
+    final onay = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Hesabınızı silmeyi onaylıyor musunuz?'),
+        content: const Text(
+          'Onaylarsanız hesabınız kalıcı olarak silinecek ve uygulamadan çıkış yapılacak. Bu işlem geri alınamaz.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Vazgeç'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hesabımı Sil'),
+          ),
+        ],
+      ),
+    );
+    if (onay != true || !mounted) return;
+
+    setState(() => _siliniyor = true);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token') ?? '';
+      if (token.isEmpty) {
+        throw Exception('Oturum bulunamadı. Lütfen yeniden giriş yapın.');
+      }
+      final response = await http
+          .post(
+            Uri.parse('$kApiBase/api/auth/delete-account.php'),
+            headers: {'Authorization': 'Bearer $token'},
+          )
+          .timeout(const Duration(seconds: 20));
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode != 200) {
+        throw Exception(data['error']?.toString() ?? 'Hesap silinemedi.');
+      }
+
+      for (final key in [
+        'jwt_token',
+        'user_name',
+        'user_email',
+        'is_premium',
+        'fire_perm',
+        'fire_perm_at',
+        'ozel_standartlar_fire',
+        'kayitli_projeler_v1',
+        'gemini_api_key',
+      ]) {
+        await prefs.remove(key);
+      }
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const GirisSayfasi()),
+        (route) => false,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _siliniyor = false);
+    }
+  }
 
   @override
   void initState() {
@@ -14914,7 +14987,12 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
   Future<void> _yukle() async {
     final prefs = await SharedPreferences.getInstance();
     final val = prefs.getString('gemini_api_key') ?? '';
-    setState(() => _ctrl.text = val);
+    final eposta = prefs.getString('user_email') ?? '';
+    if (!mounted) return;
+    setState(() {
+      _ctrl.text = val;
+      _kullaniciEposta = eposta;
+    });
   }
 
   Future<void> _kaydet() async {
@@ -14938,7 +15016,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFB91C1C),
         foregroundColor: Colors.white,
-        title: const Text('AI Ayarları', style: TextStyle(fontSize: 16)),
+        title: const Text('Ayarlar', style: TextStyle(fontSize: 16)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.white),
@@ -14947,7 +15025,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -15014,6 +15092,53 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                   color: Color(0xFF0369A1),
                   decoration: TextDecoration.underline,
                   fontSize: 13,
+                ),
+              ),
+            ),
+            const Divider(height: 36),
+            const Text(
+              'Hesap Yönetimi',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Hesabınızı ve bu cihazda saklanan hesap bilgilerinizi kalıcı olarak silebilirsiniz.',
+              style: TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            if (_kullaniciEposta.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.email_outlined, size: 18, color: Colors.black54),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _kullaniciEposta,
+                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _siliniyor ? null : _hesabiSil,
+                icon: _siliniyor
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.delete_forever_rounded),
+                label: Text(
+                  _siliniyor ? 'Hesap siliniyor...' : 'Hesabımı Kalıcı Olarak Sil',
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  side: const BorderSide(color: Colors.red),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
             ),
