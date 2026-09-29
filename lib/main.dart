@@ -1,17 +1,69 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'l10n/app_localizations.dart';
+import 'l10n/building_type_translations.dart';
 
-void main() => runApp(const MevosFireApp());
+final ValueNotifier<Locale?> _localeNotifier = ValueNotifier(null);
+final Map<String, Map<String, String>> _buildingTypeNameCache = {};
+
+String _binaGorunenAd(String value, AppLocalizations l10n) {
+  final names = _buildingTypeNameCache.putIfAbsent(
+    l10n.localeName,
+    () => buildingTypeTranslations[l10n.localeName] ?? {},
+  );
+  return names[value] ?? value;
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final savedLocale = prefs.getString('app_locale');
+  _localeNotifier.value = Locale(
+    savedLocale == 'en' || savedLocale == 'de' ? savedLocale! : 'tr',
+  );
+  runApp(const MevosFireApp());
+}
+
+Future<void> _setAppLocale(Locale locale) async {
+  _localeNotifier.value = locale;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('app_locale', locale.languageCode);
+}
+
+class _DilSecici extends StatelessWidget {
+  final Color? color;
+  const _DilSecici({this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return PopupMenuButton<String>(
+      tooltip: l10n.languageLabel,
+      icon: Icon(Icons.language_rounded, color: color),
+      onSelected: (value) => _setAppLocale(Locale(value)),
+      itemBuilder: (context) => [
+        PopupMenuItem(value: 'tr', child: Text('🇹🇷 ${l10n.turkish}')),
+        PopupMenuItem(value: 'en', child: Text('🇬🇧 ${l10n.english}')),
+        PopupMenuItem(value: 'de', child: Text('🇩🇪 ${l10n.german}')),
+      ],
+    );
+  }
+}
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // GEMINI API
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+// Google tarafında "high demand" (503 UNAVAILABLE) hataları sık ve genellikle
+// geçicidir; bu yüzden birden fazla model + backoff ile yeniden deneniyor.
+const _geminiModelZinciri = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
 Future<String> geminiChat({
   required String apiKey,
@@ -40,37 +92,54 @@ Future<String> geminiChat({
       ],
     };
   }
-  late http.Response res;
-  try {
-    res = await http
-        .post(
-          Uri.parse(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=$apiKey',
-          ),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(body),
-        )
-        .timeout(const Duration(seconds: 30));
-  } on TimeoutException {
-    throw Exception('Sunucuya bağlanılamadı. Bağlantınızı kontrol edin.');
-  } catch (e) {
-    throw Exception(
-      'İnternet bağlantısı yok. Yapay zeka özelliği çevrimiçi bağlantı gerektirir.',
-    );
-  }
 
-  if (res.statusCode == 200) {
-    final d = jsonDecode(res.body) as Map<String, dynamic>;
-    final candidates = d['candidates'] as List;
-    final parts = candidates.first['content']['parts'] as List;
-    return (parts.first['text'] as String).trim();
-  } else if (res.statusCode == 401 || res.statusCode == 403) {
-    throw Exception('Geçersiz API anahtarı. Lütfen güncelleyiniz.');
-  } else {
-    final d = jsonDecode(res.body) as Map<String, dynamic>;
-    final msg = (d['error'] as Map?)?['message'] ?? res.statusCode.toString();
-    throw Exception('Gemini hatası: $msg');
+  Object? sonHata;
+  for (final model in _geminiModelZinciri) {
+    for (var deneme = 0; deneme < 3; deneme++) {
+      late http.Response res;
+      try {
+        res = await http
+            .post(
+              Uri.parse(
+                'https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey',
+              ),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(body),
+            )
+            .timeout(const Duration(seconds: 30));
+      } on TimeoutException {
+        throw Exception('Sunucuya bağlanılamadı. Bağlantınızı kontrol edin.');
+      } catch (e) {
+        throw Exception(
+          'İnternet bağlantısı yok. Yapay zeka özelliği çevrimiçi bağlantı gerektirir.',
+        );
+      }
+
+      if (res.statusCode == 200) {
+        final d = jsonDecode(res.body) as Map<String, dynamic>;
+        final candidates = d['candidates'] as List;
+        final parts = candidates.first['content']['parts'] as List;
+        return (parts.first['text'] as String).trim();
+      } else if (res.statusCode == 401 || res.statusCode == 403) {
+        throw Exception('Geçersiz API anahtarı. Lütfen güncelleyiniz.');
+      } else if (res.statusCode == 503 || res.statusCode == 429) {
+        // Geçici yoğunluk/kota hatası — kısa bekleyip yeniden dene,
+        // olmazsa zincirdeki bir sonraki modele geç.
+        sonHata = Exception(
+          'Gemini hatası: ${res.statusCode} — model yoğun, yeniden deneniyor.',
+        );
+        await Future.delayed(Duration(milliseconds: 700 * (deneme + 1)));
+        continue;
+      } else {
+        final d = jsonDecode(res.body) as Map<String, dynamic>;
+        final msg = (d['error'] as Map?)?['message'] ?? res.statusCode.toString();
+        throw Exception('Gemini hatası: $msg');
+      }
+    }
   }
+  throw Exception(
+    'Gemini şu anda yoğun, lütfen birkaç dakika sonra tekrar deneyin. (${sonHata ?? ''})',
+  );
 }
 
 Future<String?> _geminiApiAl(BuildContext context) async {
@@ -90,13 +159,13 @@ Future<String?> _geminiApiDiyaloguGoster(
   final result = await showDialog<String>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: const Text('Gemini API Anahtarı'),
+      title: Text(AppLocalizations.of(context)!.apiKeyTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Yapay zeka için ücretsiz Google Gemini API anahtarı gereklidir.',
+          Text(
+            AppLocalizations.of(context).geminiApiKeyRequiredInfo,
             style: TextStyle(fontSize: 13, color: Colors.black54),
           ),
           const SizedBox(height: 8),
@@ -124,8 +193,8 @@ Future<String?> _geminiApiDiyaloguGoster(
           TextField(
             controller: ctrl,
             obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Gemini API Anahtarı',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.apiKeyTitle,
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.key_rounded),
             ),
@@ -135,11 +204,11 @@ Future<String?> _geminiApiDiyaloguGoster(
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),
-          child: const Text('İptal'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
-          child: const Text('Kaydet'),
+          child: Text(AppLocalizations.of(context).save),
         ),
       ],
     ),
@@ -282,19 +351,18 @@ class _StartupEkraniState extends State<_StartupEkrani> {
       final indirUrl = data['download_url'] as String? ?? '';
       if (sunucuVersiyon.isEmpty || !mounted) return;
       if (_versiyonKarsilastir(sunucuVersiyon, kAppVersion) > 0) {
+        if (!mounted) return;
+        final l10n = AppLocalizations.of(context);
         await showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (_) => AlertDialog(
-            title: const Text('Yeni Sürüm Mevcut'),
-            content: Text(
-              'Uygulama v$sunucuVersiyon sürümüne güncellendi.\n'
-              'En yeni özellikleri kullanmak için güncelleyiniz.',
-            ),
+            title: Text(l10n.updateAvailableTitle),
+            content: Text(l10n.updateAvailableMessage(sunucuVersiyon)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Sonra'),
+                child: Text(l10n.updateLaterButton),
               ),
               FilledButton(
                 onPressed: () async {
@@ -306,7 +374,7 @@ class _StartupEkraniState extends State<_StartupEkrani> {
                     );
                   }
                 },
-                child: const Text('Güncelle'),
+                child: Text(l10n.updateNowButton),
               ),
             ],
           ),
@@ -368,15 +436,26 @@ class MevosFireApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MEVOS Fire',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFB91C1C)),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: _localeNotifier,
+      builder: (context, locale, _) => MaterialApp(
+        title: 'MEVOS Fire',
+        debugShowCheckedModeBanner: false,
+        locale: locale,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFB91C1C)),
+          useMaterial3: true,
+          fontFamily: 'Roboto',
+        ),
+        home: const _StartupEkrani(),
       ),
-      home: const _StartupEkrani(),
     );
   }
 }
@@ -482,9 +561,9 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         );
         if (!hasActiveFirePerm(perms)) {
           setState(() {
-            _hata =
-                'Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\n'
-                'Sunucudan gelen perms: ${jsonEncode(perms)}';
+            _hata = AppLocalizations.of(
+              context,
+            ).fireModuleSubscriptionMissing(jsonEncode(perms));
             _yukleniyor = false;
           });
           return;
@@ -497,7 +576,9 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         }
       } else {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final mesaj = (data['error'] as String?) ?? 'Giriş başarısız';
+        final mesaj =
+            (data['error'] as String?) ??
+            AppLocalizations.of(context).loginFailed;
         setState(() {
           _hata = mesaj;
           _yukleniyor = false;
@@ -506,14 +587,14 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
       }
     } on TimeoutException {
       setState(() {
-        _hata = 'Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.';
+        _hata = AppLocalizations.of(context).loginServerUnreachable;
         _yukleniyor = false;
       });
     } catch (e, st) {
       debugPrint('LOGIN HATA: $e');
       debugPrint('STACK: $st');
       setState(() {
-        _hata = 'Hata: $e';
+        _hata = AppLocalizations.of(context).genericErrorWithDetail('$e');
         _yukleniyor = false;
       });
     }
@@ -556,6 +637,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -576,6 +658,10 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: _DilSecici(color: Colors.white),
+                      ),
                       const SizedBox(height: 16),
                       // Logo
                       Container(
@@ -636,7 +722,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Hesabınıza giriş yapın',
+                        l10n.loginSubtitle,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 13,
@@ -649,14 +735,12 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(color: Colors.white),
                         decoration: _inputDecor(
-                          'E-posta adresi',
+                          l10n.emailAddress,
                           Icons.email_rounded,
                         ),
                         validator: (v) {
-                          if (v == null || v.isEmpty)
-                            return 'E-posta gereklidir';
-                          if (!v.contains('@'))
-                            return 'Geçerli bir e-posta girin';
+                          if (v == null || v.isEmpty) return l10n.emailRequired;
+                          if (!v.contains('@')) return l10n.validEmailRequired;
                           return null;
                         },
                       ),
@@ -666,8 +750,11 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                         controller: _sifreCtrl,
                         obscureText: _sifreGizle,
                         style: const TextStyle(color: Colors.white),
-                        decoration: _inputDecor('Şifre', Icons.lock_rounded)
-                            .copyWith(
+                        decoration:
+                            _inputDecor(
+                              l10n.password,
+                              Icons.lock_rounded,
+                            ).copyWith(
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _sifreGizle
@@ -681,7 +768,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               ),
                             ),
                         validator: (v) => (v == null || v.isEmpty)
-                            ? 'Şifre gereklidir'
+                            ? l10n.passwordRequired
                             : null,
                         onFieldSubmitted: (_) => _girisYap(),
                       ),
@@ -715,8 +802,9 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               Expanded(
                                 child: Text(
                                   _rateLimitSaniye > 0
-                                      ? 'Çok fazla hatalı giriş denemesi. '
-                                            '${_sureFormatla(_rateLimitSaniye)} sonra tekrar deneyin.'
+                                      ? l10n.loginRateLimitMessage(
+                                          _sureFormatla(_rateLimitSaniye),
+                                        )
                                       : _hata!,
                                   style: const TextStyle(
                                     color: Color(0xFFFCA5A5),
@@ -748,10 +836,10 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               : const Icon(Icons.login_rounded, size: 20),
                           label: Text(
                             _yukleniyor
-                                ? 'Giriş yapılıyor...'
+                                ? l10n.loggingIn
                                 : _rateLimitSaniye > 0
                                 ? _sureFormatla(_rateLimitSaniye)
-                                : 'Giriş Yap',
+                                : l10n.login,
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
@@ -790,8 +878,8 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                             Icons.play_circle_outline_rounded,
                             size: 20,
                           ),
-                          label: const Text(
-                            'Demo ile Gir (Davlumbaz Söndürme)',
+                          label: Text(
+                            l10n.demoLogin,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -825,9 +913,9 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                               color: Colors.white.withValues(alpha: 0.55),
                             ),
                             children: [
-                              const TextSpan(text: 'Henüz hesabınız yok mu? '),
+                              TextSpan(text: l10n.accountPrompt),
                               TextSpan(
-                                text: 'Kayıt olun →',
+                                text: l10n.register,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
@@ -843,7 +931,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Ön hesap aracıdır · Resmi proje hesabı değildir',
+                        l10n.preliminaryToolDisclaimer,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.35),
                           fontSize: 11,
@@ -890,6 +978,18 @@ class _Proje {
     veri: j['veri'] as String? ?? '',
   );
 }
+
+String _localizedProjectModule(AppLocalizations l10n, String module) =>
+    switch (module) {
+      'Yangın Yükü Hesabı' => l10n.fireLoadTitle,
+      'Davlumbaz Söndürme' => l10n.kitchenSuppressionTitle,
+      'Gazlı Söndürme Sistemi' => l10n.gasSuppressionTitle,
+      'Lityum Pil Yangını' => l10n.lithiumFireTitle,
+      'Sprinkler Sistemi' => l10n.sprinklerTitle,
+      'Duman Algılama' => l10n.smokeDetectionTitle,
+      'Duman Kontrolü' => l10n.smokeControlTitle,
+      _ => module,
+    };
 
 class ProjeServisi {
   static const _key = 'kayitli_projeler_v1';
@@ -950,19 +1050,20 @@ class _KayitliProjelerState extends State<KayitliProjeler> {
   }
 
   Future<void> _sil(_Proje p) async {
+    final l10n = AppLocalizations.of(context);
     final onay = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Projeyi Sil'),
-        content: Text('"${p.ad}" projesi silinecek. Emin misiniz?'),
+        title: Text(l10n.deleteProjectTitle),
+        content: Text(l10n.deleteProjectConfirm(p.ad)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('İptal'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sil', style: TextStyle(color: Colors.red)),
+            child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -982,14 +1083,15 @@ class _KayitliProjelerState extends State<KayitliProjeler> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFFEF2F2),
       appBar: AppBar(
         backgroundColor: const Color(0xFFB91C1C),
         foregroundColor: Colors.white,
-        title: const Text(
-          'Kayıtlı Projeler',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.savedProjects,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
       body: _yukleniyor
@@ -1006,7 +1108,7 @@ class _KayitliProjelerState extends State<KayitliProjeler> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Henüz kayıtlı proje yok',
+                    l10n.noSavedProjects,
                     style: TextStyle(color: Colors.grey.shade500),
                   ),
                 ],
@@ -1043,7 +1145,7 @@ class _KayitliProjelerState extends State<KayitliProjeler> {
                       ),
                     ),
                     subtitle: Text(
-                      '${p.modul}  ·  $tarihStr',
+                      '${_localizedProjectModule(l10n, p.modul)}  ·  $tarihStr',
                       style: const TextStyle(fontSize: 11),
                     ),
                     trailing: IconButton(
@@ -1068,6 +1170,7 @@ class _ProjeKaydetBant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -1082,10 +1185,10 @@ class _ProjeKaydetBant extends StatelessWidget {
             color: Color(0xFFB91C1C),
           ),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Hesabı proje olarak kaydet',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+              l10n.saveProjectPrompt,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
           ),
           TextButton(
@@ -1094,9 +1197,9 @@ class _ProjeKaydetBant extends StatelessWidget {
               foregroundColor: const Color(0xFFB91C1C),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             ),
-            child: const Text(
-              'Kaydet',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            child: Text(
+              l10n.save,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
         ],
@@ -1105,20 +1208,21 @@ class _ProjeKaydetBant extends StatelessWidget {
   }
 
   Future<void> _kaydetDiyalog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     final ctrl = TextEditingController();
     final ad = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(
-          'Projeyi Kaydet',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.saveProjectTitle,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: 'Proje Adı',
-            hintText: 'örn. Ofis Binası Zemin Kat',
+            labelText: l10n.projectName,
+            hintText: l10n.projectNameExample,
             border: const OutlineInputBorder(),
             isDense: true,
           ),
@@ -1127,13 +1231,13 @@ class _ProjeKaydetBant extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('İptal'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
-            child: const Text(
-              'Kaydet',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Text(
+              l10n.save,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -1151,7 +1255,7 @@ class _ProjeKaydetBant extends StatelessWidget {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('"$ad" kaydedildi'),
+          content: Text(l10n.projectSaved(ad)),
           backgroundColor: const Color(0xFF15803D),
           duration: const Duration(seconds: 2),
         ),
@@ -1287,7 +1391,9 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Kaydedilme: ${_formatTarih(proje.tarih)}',
+                  AppLocalizations.of(
+                    context,
+                  ).savedOnLabel(_formatTarih(proje.tarih)),
                   style: const TextStyle(fontSize: 12, color: Colors.black45),
                 ),
               ],
@@ -1312,7 +1418,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.bookmark_rounded,
                           size: 18,
@@ -1320,7 +1426,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'Hesap Sonuçları',
+                          AppLocalizations.of(context)!.calculationResults,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -1405,8 +1511,8 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                   color: const Color(0xFFF3F4F6),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  'Bu proje için kaydedilmiş hesap sonucu bulunamadı.',
+                child: Text(
+                  AppLocalizations.of(context)!.noSavedCalculationResult,
                   style: TextStyle(fontSize: 13, color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
@@ -1418,7 +1524,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () => _yenidenHesapla(context),
                 icon: const Icon(Icons.calculate_rounded),
-                label: const Text('Yeniden Hesapla'),
+                label: Text(AppLocalizations.of(context)!.recalculate),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFB91C1C),
                   foregroundColor: Colors.white,
@@ -1463,9 +1569,9 @@ class _KaydedilmisVeriPaneliState extends State<_KaydedilmisVeriPaneli> {
                     color: Color(0xFF92400E),
                   ),
                   const SizedBox(width: 6),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Kaydedilen Değerler',
+                      AppLocalizations.of(context)!.savedValues,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -1570,10 +1676,7 @@ class AnaSayfa extends StatelessWidget {
         ),
         if (altBaslik != null) ...[
           const SizedBox(width: 8),
-          const Text(
-            '·',
-            style: TextStyle(color: Colors.white54, fontSize: 16),
-          ),
+          Text('·', style: TextStyle(color: Colors.white54, fontSize: 16)),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
@@ -1592,6 +1695,7 @@ class AnaSayfa extends StatelessWidget {
   }
 
   void _git(BuildContext context, Widget sayfa, String baslik) {
+    final l10n = AppLocalizations.of(context);
     ProjeServisi.hesapSinyali.value = false;
     Navigator.push(
       context,
@@ -1604,7 +1708,7 @@ class AnaSayfa extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.logout_rounded, color: Colors.white),
-                tooltip: 'Çıkış',
+                tooltip: l10n.logout,
                 onPressed: () => _cikisYap(context),
               ),
             ],
@@ -1615,7 +1719,9 @@ class AnaSayfa extends StatelessWidget {
               ValueListenableBuilder<bool>(
                 valueListenable: ProjeServisi.hesapSinyali,
                 builder: (_, val, __) => val
-                    ? _ProjeKaydetBant(modulAdi: baslik)
+                    ? _ProjeKaydetBant(
+                        modulAdi: _projeModulKimligi(sayfa, baslik),
+                      )
                     : const SizedBox.shrink(),
               ),
             ],
@@ -1623,6 +1729,17 @@ class AnaSayfa extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _projeModulKimligi(Widget sayfa, String baslik) {
+    if (sayfa is YanginYukuSayfasi) return 'Yangın Yükü Hesabı';
+    if (sayfa is DavlumbazSondurme) return 'Davlumbaz Söndürme';
+    if (sayfa is GazliSondurme) return 'Gazlı Söndürme Sistemi';
+    if (sayfa is LityumPilYangini) return 'Lityum Pil Yangını';
+    if (sayfa is SprinkleSistemi) return 'Sprinkler Sistemi';
+    if (sayfa is DumanAlgilama) return 'Duman Algılama';
+    if (sayfa is DumanKontrol) return 'Duman Kontrolü';
+    return baslik;
   }
 
   // Demo modunda yalnızca Davlumbaz Söndürme serbest; diğerleri kayıt sayfasına yönlendirir.
@@ -1639,18 +1756,16 @@ class AnaSayfa extends StatelessWidget {
   }
 
   void _surumYukseltUyarisiGoster(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Sürüm Yükselt'),
-        content: const Text(
-          'Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için '
-          'MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.',
-        ),
+        title: Text(l10n.upgradeRequiredTitle),
+        content: Text(l10n.upgradeRequiredMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Vazgeç'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -1660,7 +1775,7 @@ class AnaSayfa extends StatelessWidget {
                 mode: LaunchMode.externalApplication,
               );
             },
-            child: const Text('Kayıt Ol'),
+            child: Text(l10n.upgradeSignUpButton),
           ),
         ],
       ),
@@ -1669,6 +1784,7 @@ class AnaSayfa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFFEF2F2),
       appBar: AppBar(
@@ -1676,9 +1792,10 @@ class AnaSayfa extends StatelessWidget {
         foregroundColor: Colors.white,
         title: _appBarTitle(null),
         actions: [
+          const _DilSecici(color: Colors.white),
           IconButton(
             icon: const Icon(Icons.settings_rounded, color: Colors.white),
-            tooltip: 'Ayarlar',
+            tooltip: l10n.settingsTitle,
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const ApiAyarlariSayfasi()),
@@ -1686,7 +1803,7 @@ class AnaSayfa extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: 'Çıkış',
+            tooltip: l10n.logout,
             onPressed: () => _cikisYap(context),
           ),
           Padding(
@@ -1715,11 +1832,11 @@ class AnaSayfa extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Yangın Güvenliği Hesap Merkezi',
+                    l10n.fireSafetyCalculator,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1746,7 +1863,7 @@ class AnaSayfa extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: const Color(0xFFFDBA74)),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.info_rounded,
@@ -1756,8 +1873,7 @@ class AnaSayfa extends StatelessWidget {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'DEMO MODU · Yalnızca "Davlumbaz Söndürme" modülü açıktır. '
-                        'Diğer modüller için hesap oluşturup abone olun.',
+                        l10n.demoMode,
                         style: TextStyle(
                           color: Color(0xFF9A3412),
                           fontSize: 12,
@@ -1773,9 +1889,8 @@ class AnaSayfa extends StatelessWidget {
 
             // Modül kartları
             _ModulKarti(
-              baslik: 'Yangın Yükü Hesabı',
-              aciklama:
-                  'EN 1991-1-2 yangın yükü yoğunluğu + ISO 14520 / EN 12845 söndürme maddesi hesabı',
+              baslik: l10n.fireLoadTitle,
+              aciklama: l10n.fireLoadDescription,
               ikon: Icons.whatshot_rounded,
               renk: const Color(0xFF0F766E),
               onTap: () => _modulAc(
@@ -1784,15 +1899,14 @@ class AnaSayfa extends StatelessWidget {
                 ac: () => _git(
                   context,
                   const YanginYukuSayfasi(),
-                  'Yangın Yükü Hesabı',
+                  l10n.fireLoadTitle,
                 ),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Davlumbaz Söndürme',
-              aciklama:
-                  'Ticari mutfak davlumbaz söndürme sistemi — NFPA 17A / TS EN 15751 / UL 300',
+              baslik: l10n.kitchenSuppressionTitle,
+              aciklama: l10n.kitchenSuppressionDescription,
               ikon: Icons.kitchen_rounded,
               renk: const Color(0xFF0369A1),
               onTap: () => _modulAc(
@@ -1801,15 +1915,14 @@ class AnaSayfa extends StatelessWidget {
                 ac: () => _git(
                   context,
                   const DavlumbazSondurme(),
-                  'Davlumbaz Söndürme',
+                  l10n.kitchenSuppressionTitle,
                 ),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Gazlı Söndürme Sistemi',
-              aciklama:
-                  'Toplam hacim gazlı söndürme ve baskı makineleri — TS EN 15004 / NFPA 2001 · FM-200 · Novec 1230 · CO² · Inert gazlar',
+              baslik: l10n.gasSuppressionTitle,
+              aciklama: l10n.gasSuppressionDescription,
               ikon: Icons.cloud_rounded,
               renk: const Color(0xFF0891B2),
               onTap: () => _modulAc(
@@ -1818,15 +1931,14 @@ class AnaSayfa extends StatelessWidget {
                 ac: () => _git(
                   context,
                   const GazliSondurme(),
-                  'Gazlı Söndürme Sistemi',
+                  l10n.gasSuppressionTitle,
                 ),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Lityum Pil Yangını',
-              aciklama:
-                  'ESS soğutma gereksinimi — ISO 3941:2026 · NFPA 855:2023 · IEC 62619 · FM Global DS 5-33',
+              baslik: l10n.lithiumFireTitle,
+              aciklama: l10n.lithiumFireDescription,
               ikon: Icons.battery_charging_full_rounded,
               renk: const Color(0xFF7C3AED),
               onTap: () => _modulAc(
@@ -1835,71 +1947,70 @@ class AnaSayfa extends StatelessWidget {
                 ac: () => _git(
                   context,
                   const LityumPilYangini(),
-                  'Lityum Pil Yangını',
+                  l10n.lithiumFireTitle,
                 ),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Sprinkler Sistemi',
-              aciklama:
-                  'Otomatik sprinkler — EN 12845 tehlike sınıfı bazlı kritik devre hidrolik hesabı, pompa & boru çapı',
+              baslik: l10n.sprinklerTitle,
+              aciklama: l10n.sprinklerDescription,
               ikon: Icons.water_rounded,
               renk: const Color(0xFF0EA5E9),
               onTap: () => _modulAc(
                 context,
                 demoIzinli: false,
                 ac: () =>
-                    _git(context, const SprinkleSistemi(), 'Sprinkler Sistemi'),
+                    _git(context, const SprinkleSistemi(), l10n.sprinklerTitle),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Duman Algılama',
-              aciklama:
-                  'Nokta dedektör yerleşimi · Yapı tipi · Oda tipi — TS EN 54-7 / EN 54-14',
+              baslik: l10n.smokeDetectionTitle,
+              aciklama: l10n.smokeDetectionDescription,
               ikon: Icons.sensors_rounded,
               renk: const Color(0xFF7C2D12),
               onTap: () => _modulAc(
                 context,
                 demoIzinli: false,
-                ac: () =>
-                    _git(context, const DumanAlgilama(), 'Duman Algılama'),
+                ac: () => _git(
+                  context,
+                  const DumanAlgilama(),
+                  l10n.smokeDetectionTitle,
+                ),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Duman Kontrolü',
-              aciklama:
-                  'Doğal tahliye · Mekanik tahliye · Basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6',
+              baslik: l10n.smokeControlTitle,
+              aciklama: l10n.smokeControlDescription,
               ikon: Icons.air_rounded,
               renk: const Color(0xFF374151),
 
               onTap: () => _modulAc(
                 context,
                 demoIzinli: false,
-                ac: () => _git(context, const DumanKontrol(), 'Duman Kontrolü'),
+                ac: () =>
+                    _git(context, const DumanKontrol(), l10n.smokeControlTitle),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Standart Arama',
-              aciklama:
-                  'Yangın ve güvenlik standartları veritabanında numara, ad veya kategori ile arama',
+              baslik: l10n.standardSearch,
+              aciklama: l10n.standardSearchDescription,
               ikon: Icons.search_rounded,
               renk: const Color(0xFF065F46),
               onTap: () => _modulAc(
                 context,
                 demoIzinli: false,
                 ac: () =>
-                    _git(context, const StandartArama(), 'Standart Arama'),
+                    _git(context, const StandartArama(), l10n.standardSearch),
               ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Standart Rehberi',
-              aciklama:
-                  'Yangın sistemleri standart kategorileri, kapsam ve referans özeti',
+              baslik: l10n.standardGuide,
+              aciklama: l10n.standardGuideDescription,
               ikon: Icons.menu_book_rounded,
               renk: const Color(0xFF6D28D9),
               onTap: () => _modulAc(
@@ -1914,7 +2025,7 @@ class AnaSayfa extends StatelessWidget {
                         appBar: AppBar(
                           backgroundColor: _kFire,
                           foregroundColor: Colors.white,
-                          title: _appBarTitle('Standart Rehberi'),
+                          title: _appBarTitle(l10n.standardGuide),
                           actions: [
                             TextButton.icon(
                               onPressed: () => rehberKey.currentState
@@ -1924,8 +2035,8 @@ class AnaSayfa extends StatelessWidget {
                                 size: 18,
                                 color: Colors.white,
                               ),
-                              label: const Text(
-                                'Standart Ekle',
+                              label: Text(
+                                l10n.addStandard,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -1938,7 +2049,7 @@ class AnaSayfa extends StatelessWidget {
                                 Icons.logout_rounded,
                                 color: Colors.white,
                               ),
-                              tooltip: 'Çıkış',
+                              tooltip: l10n.logout,
                               onPressed: () => _cikisYap(context),
                             ),
                           ],
@@ -1952,8 +2063,8 @@ class AnaSayfa extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             _ModulKarti(
-              baslik: 'Kayıtlı Projeler',
-              aciklama: 'Kaydettiğiniz tüm hesap projeleri',
+              baslik: l10n.savedProjects,
+              aciklama: l10n.savedProjectsDescription,
               ikon: Icons.folder_rounded,
               renk: const Color(0xFF92400E),
               onTap: () => _modulAc(
@@ -1966,8 +2077,8 @@ class AnaSayfa extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'MEVOS Fire  ·  Yangın güvenliği ön hesap aracıdır, resmi proje hesabı değildir.',
+            Text(
+              l10n.moduleDisclaimer,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 10, color: Colors.black38),
             ),
@@ -2618,7 +2729,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
       final h = double.tryParse(_pHCtrl.text.replaceAll(',', '.'));
       final d = double.tryParse(_pDCtrl.text.replaceAll(',', '.'));
       if (w == null || h == null || d == null || w <= 0 || h <= 0 || d <= 0) {
-        setState(() => _hata = 'Pano iç ölçülerini eksiksiz giriniz (cm).');
+        setState(
+          () =>
+              _hata = AppLocalizations.of(context).enterPanelInnerDimensionsCm,
+        );
         return;
       }
       final v = (w / 100) * (h / 100) * (d / 100);
@@ -2647,12 +2761,18 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
       });
     } else if (_mod == _Mod.depo) {
       if (_depolar.isEmpty) {
-        setState(() => _hata = 'En az bir yakıt deposu ekleyiniz.');
+        setState(
+          () => _hata = AppLocalizations.of(context).addAtLeastOneFuelTank,
+        );
         return;
       }
       for (final d in _depolar) {
         if (d.miktar <= 0) {
-          setState(() => _hata = '"${d.tur}" için miktar giriniz.');
+          setState(
+            () => _hata = AppLocalizations.of(
+              context,
+            ).enterQuantityForFuel(d.tur),
+          );
           return;
         }
       }
@@ -2662,17 +2782,24 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     } else {
       final a = double.tryParse(_alanCtrl.text.replaceAll(',', '.'));
       if (a == null || a <= 0) {
-        setState(() => _hata = 'Geçerli kat alanı giriniz (m²).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterValidFloorAreaM2,
+        );
         return;
       }
       alan = a;
       for (final m in _malzemeler) {
         if (m.kg <= 0) {
-          setState(() => _hata = '"${m.ad}" kütlesi eksik.');
+          setState(
+            () =>
+                _hata = AppLocalizations.of(context).materialMassMissing(m.ad),
+          );
           return;
         }
         if (m.ncv <= 0) {
-          setState(() => _hata = '"${m.ad}" ısıl değeri eksik.');
+          setState(
+            () => _hata = AppLocalizations.of(context).materialNcvMissing(m.ad),
+          );
           return;
         }
       }
@@ -2893,15 +3020,17 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     final alan = double.tryParse(_alanCtrl.text.replaceAll(',', '.'));
     final yuks = double.tryParse(_sYuksCtrl.text.replaceAll(',', '.'));
     if (qf == null) {
-      setState(() => _sHata = 'Önce Yangın Yükü hesaplayınız.');
+      setState(
+        () => _sHata = AppLocalizations.of(context).calculateFireLoadFirst,
+      );
       return;
     }
     if (alan == null || alan <= 0) {
-      setState(() => _sHata = 'Geçerli alan giriniz.');
+      setState(() => _sHata = AppLocalizations.of(context).enterValidArea);
       return;
     }
     if (yuks == null || yuks <= 0) {
-      setState(() => _sHata = 'Oda yüksekliğini giriniz (m).');
+      setState(() => _sHata = AppLocalizations.of(context).enterRoomHeightM);
       return;
     }
     final v = alan * yuks;
@@ -3029,6 +3158,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -3038,10 +3168,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
           _InfoBox(
             color: const Color(0xFFFEF3C7),
             border: const Color(0xFFFCD34D),
-            child: const Text(
-              'q = (m × H) / A\n'
-              'm = yanıcı malzeme kütlesi (kg)  ·  H = NCV (MJ/kg)  ·  A = kat alanı (m²)',
-              style: TextStyle(
+            child: Text(
+              l10n.fireLoadFormulaInfo,
+              style: const TextStyle(
                 fontSize: 11,
                 fontFamily: 'monospace',
                 height: 1.6,
@@ -3052,20 +3181,23 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
 
           // Mod seçimi
           SegmentedButton<_Mod>(
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: _Mod.bina,
-                label: Text('Bina', style: TextStyle(fontSize: 12)),
+                label: Text(l10n.building, style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.domain_rounded),
               ),
               ButtonSegment(
                 value: _Mod.pano,
-                label: Text('Elektrik Panosu', style: TextStyle(fontSize: 12)),
+                label: Text(
+                  l10n.electricalPanel,
+                  style: TextStyle(fontSize: 12),
+                ),
                 icon: Icon(Icons.electrical_services_rounded),
               ),
               ButtonSegment(
                 value: _Mod.depo,
-                label: Text('Yakıt / Depo', style: TextStyle(fontSize: 12)),
+                label: Text(l10n.fuelOrStorage, style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.local_gas_station_rounded),
               ),
             ],
@@ -3116,15 +3248,14 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 }
               },
               child: InputDecorator(
-                decoration: _decor(
-                  'Bina / Kullanım Türü',
-                  Icons.domain_rounded,
-                ),
+                decoration: _decor(l10n.buildingUseType, Icons.domain_rounded),
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        _secilenBina ?? 'Bina / Kullanım Türü Seçiniz',
+                        _secilenBina == null
+                            ? l10n.chooseBuildingUseType
+                            : _binaGorunenAd(_secilenBina!, l10n),
                         style: TextStyle(
                           fontSize: 13,
                           color: _secilenBina != null
@@ -3155,7 +3286,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             if (_secilenBina != null) ...[
               const SizedBox(height: 4),
               Text(
-                'Referans yoğunluk: ${_refYog[_secilenBina]!.toStringAsFixed(0)} MJ/m²',
+                '${l10n.referenceDensity}: ${_refYog[_secilenBina]!.toStringAsFixed(0)} MJ/m²',
                 style: const TextStyle(
                   fontSize: 12,
                   color: _kC,
@@ -3164,7 +3295,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               ),
               if (_e5.containsKey(_secilenBina))
                 Text(
-                  'E.5 › ${_e5[_secilenBina]!.hiz}  '
+                  'E.5 › ${_buyumeHizL10n(l10n, _e5[_secilenBina]!.hiz)}  '
                   't\u03b1=${_e5[_secilenBina]!.tAlfa}s  '
                   'RHRf=${_e5[_secilenBina]!.rhrF}kW/m²',
                   style: const TextStyle(fontSize: 11, color: Colors.black54),
@@ -3176,7 +3307,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               children: [
                 const Icon(Icons.trending_up_rounded, size: 16, color: _kC),
                 const SizedBox(width: 6),
-                const Text('Büyüme hızı:', style: TextStyle(fontSize: 13)),
+                Text(l10n.growthRate, style: TextStyle(fontSize: 13)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: DropdownButtonHideUnderline(
@@ -3200,7 +3331,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                           return DropdownMenuItem(
                             value: e.key,
                             child: Text(
-                              '${e.key}  (t\u03b1=${ta}s)',
+                              '${_buyumeHizL10n(l10n, e.key)}  (t\u03b1=${ta}s)',
                               style: const TextStyle(fontSize: 13),
                             ),
                           );
@@ -3221,7 +3352,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 decimal: true,
               ),
               decoration: _decor(
-                'Kat Alanı  A  (m²)',
+                l10n.floorArea,
                 lblFontSize: 12,
                 Icons.square_foot_rounded,
                 suffix: 'm²',
@@ -3235,7 +3366,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               ),
               onChanged: (_) => setState(() {}),
               decoration: _decor(
-                'Yangın Dolabı Nozul Basıncı  (min 4 bar)',
+                l10n.cabinetNozzlePressure,
                 Icons.compress_rounded,
                 suffix: 'bar',
               ),
@@ -3245,20 +3376,20 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             // Malzeme listesi başlığı
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Yanıcı Malzemeler',
+                    l10n.combustibleMaterials,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                 ),
                 TextButton.icon(
                   onPressed: () => setState(
                     () => _malzemeler.add(
-                      _Malzeme(ad: 'Ahşap / Kereste', kg: 0, ncv: 17.5),
+                      _Malzeme(ad: l10n.woodTimber, kg: 0, ncv: 17.5),
                     ),
                   ),
                   icon: const Icon(Icons.add_circle_rounded, size: 20),
-                  label: const Text('Ekle'),
+                  label: Text(l10n.addMaterial),
                   style: TextButton.styleFrom(foregroundColor: _kC),
                 ),
               ],
@@ -3280,23 +3411,23 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
 
           // ¦¦ Pano modu
           if (_mod == _Mod.pano) ...[
-            const Text(
-              'Pano İç Ölçüleri (cm)',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+            Text(
+              l10n.panelInnerDimensions,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(child: _panocm('Genişlik', _pWCtrl)),
+                Expanded(child: _panocm(l10n.panelWidth, _pWCtrl)),
                 const SizedBox(width: 8),
-                Expanded(child: _panocm('Yükseklik', _pHCtrl)),
+                Expanded(child: _panocm(l10n.panelHeight, _pHCtrl)),
                 const SizedBox(width: 8),
-                Expanded(child: _panocm('Derinlik', _pDCtrl)),
+                Expanded(child: _panocm(l10n.panelDepth, _pDCtrl)),
               ],
             ),
             const SizedBox(height: 10),
             SegmentedButton<String>(
-              segments: const [
+              segments: [
                 ButtonSegment(value: 'PVC', label: Text('PVC')),
                 ButtonSegment(value: 'XLPE', label: Text('XLPE')),
               ],
@@ -3314,7 +3445,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Kablo dolum oranı: % ${(_pDolum * 100).round()}',
+              l10n.cableFillRatio((_pDolum * 100).round()),
               style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
             Slider(
@@ -3333,11 +3464,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             _InfoBox(
               color: const Color(0xFFFFF7ED),
               border: const Color(0xFFFED7AA),
-              child: const Text(
-                'Her tank türü, adedi ve kapasitesini girin.\n'
-                'LPG için ton, sıvı yakıtlar için m³ veya ton kullanabilirsiniz.\n'
-                'Yangın yükü yoğunluğu için bund/havuz alanı opsiyoneldir.',
-                style: TextStyle(
+              child: Text(
+                l10n.fuelStorageInstructions,
+                style: const TextStyle(
                   fontSize: 11,
                   color: Colors.black54,
                   height: 1.5,
@@ -3347,10 +3476,13 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Yakıt / Kimyasal Tanklar',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    l10n.fuelChemicalTanks,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
                 TextButton.icon(
@@ -3360,7 +3492,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                     ),
                   ),
                   icon: const Icon(Icons.add_circle_rounded, size: 20),
-                  label: const Text('Ekle'),
+                  label: Text(l10n.addMaterial),
                   style: TextButton.styleFrom(foregroundColor: _kC),
                 ),
               ],
@@ -3392,7 +3524,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                     toplamTon += massTon * d.adet;
                   }
                   return Text(
-                    'Toplam yaklaşık kütle: ${toplamTon.toStringAsFixed(1)} ton',
+                    l10n.totalApproxMass(toplamTon.toStringAsFixed(1)),
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.black54,
@@ -3410,15 +3542,15 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 decimal: true,
               ),
               decoration: _decor(
-                'Bund / Havuz Alanı  (m²)  —  opsiyonel',
+                l10n.bundPoolArea,
                 Icons.water_rounded,
                 suffix: 'm²',
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Girilirse yangın yükü yoğunluğu (MJ/m²) hesaplanır.',
-              style: TextStyle(fontSize: 11, color: Colors.black38),
+            Text(
+              l10n.fireLoadDensityIfEntered,
+              style: const TextStyle(fontSize: 11, color: Colors.black38),
             ),
           ],
           if (_mod != _Mod.depo) ...[
@@ -3430,21 +3562,20 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                   activeColor: _kC,
                   onChanged: (v) => setState(() => _havaGoster = v ?? false),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Havalandırma sınırlı Q_max hesabına dahil et (opsiyonel)',
-                    style: TextStyle(fontSize: 12),
+                    l10n.ventilationLimitedQmaxInclude,
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
               ],
             ),
             if (!_havaGoster)
-              const Padding(
-                padding: EdgeInsets.only(left: 4, bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 4),
                 child: Text(
-                  'Not: Varsayılan hesap yalnızca yakıt yüzeyi sınırlı Q_max (RHRf×A) kullanır; '
-                  'açıklık (pencere/kapı) sınırlı Q_max hesaba katılmaz (EN 1991-1-2 Ek E).',
-                  style: TextStyle(
+                  l10n.ventilationLimitedQmaxNote,
+                  style: const TextStyle(
                     fontSize: 10,
                     color: Colors.black45,
                     height: 1.4,
@@ -3462,7 +3593,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                         decimal: true,
                       ),
                       decoration: _decor(
-                        'Açıklık (Pencere/Kapı) Alanı  Aᵥ',
+                        l10n.openingArea,
                         Icons.window_rounded,
                         suffix: 'm²',
                         lblFontSize: 11,
@@ -3477,7 +3608,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                         decimal: true,
                       ),
                       decoration: _decor(
-                        'Açıklık Yüksekliği  h_eq',
+                        l10n.openingHeight,
                         Icons.height_rounded,
                         suffix: 'm',
                         lblFontSize: 11,
@@ -3487,10 +3618,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 ],
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Aᵥ: mahaldeki tüm pencere/kapı açıklıklarının toplam alanı  ·  '
-                'h_eq: bu açıklıkların ortalama yüksekliği (mahal/oda yüksekliği DEĞİL).',
-                style: TextStyle(
+              Text(
+                l10n.openingAreaHeightExplanation,
+                style: const TextStyle(
                   fontSize: 10,
                   color: Colors.black45,
                   height: 1.4,
@@ -3498,10 +3628,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Q̇ₘₐₓ,ᵥ ≈ 0,09×Aᵥ×√h_eq × Hu_ort × 0,8  —  yaklaşık Kawagoe ventilasyon '
-                'faktörü (Drysdale / SFPE); kesin tasarım için tam açıklık faktörü hesabı gereklidir.',
-                style: TextStyle(
+              Text(
+                l10n.ventilationQmaxFormulaNote,
+                style: const TextStyle(
                   fontSize: 10,
                   color: Colors.black45,
                   height: 1.4,
@@ -3512,7 +3641,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
+            label: Text(AppLocalizations.of(context)!.calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kC,
               foregroundColor: Colors.white,
@@ -3557,7 +3686,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'TOPLAM YANGIN ENERJİSİ',
+                        l10n.totalFireEnergyLabel,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
@@ -3567,31 +3696,31 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       ),
                       const Divider(height: 16),
                       _SonucSatir(
-                        etiket: 'Toplam Enerji',
+                        etiket: l10n.totalEnergy,
                         deger: '${_toplamMJ!.toStringAsFixed(0)} MJ',
                         renk: c,
                       ),
                       const SizedBox(height: 4),
                       _SonucSatir(
-                        etiket: 'Toplam Enerji (GJ)',
+                        etiket: l10n.totalEnergyGJ,
                         deger: '${gj.toStringAsFixed(1)} GJ',
                         renk: c,
                       ),
                       const SizedBox(height: 4),
                       _SonucSatir(
-                        etiket: 'Toplam Enerji (MWh)',
+                        etiket: l10n.totalEnergyMWh,
                         deger: '${mwh.toStringAsFixed(2)} MWh',
                         renk: c,
                       ),
                       const SizedBox(height: 4),
                       _SonucSatir(
-                        etiket: 'Toplam Enerji (GWh)',
+                        etiket: l10n.totalEnergyGWh,
                         deger: '${gwh.toStringAsFixed(4)} GWh',
                         renk: c,
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Bund/havuz alanı girilirse yangın yükü yoğunluğu (MJ/m²) hesaplanır.',
+                        l10n.bundAreaIfEnteredNote,
                         style: const TextStyle(
                           fontSize: 11,
                           color: Colors.black45,
@@ -3618,7 +3747,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'HESAPLAMA SONUCU',
+                    l10n.calculationResultLabel,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
@@ -3628,7 +3757,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                   ),
                   const Divider(height: 16),
                   _SonucSatir(
-                    etiket: 'Toplam Yangın Yükü',
+                    etiket: l10n.totalFireLoad,
                     deger:
                         '${_toplamMJ!.toStringAsFixed(0)} MJ'
                         '  /  ${(_toplamMJ! / 1000).toStringAsFixed(1)} GJ'
@@ -3637,7 +3766,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                   ),
                   const SizedBox(height: 4),
                   _SonucSatir(
-                    etiket: 'Yangın Yükü Yoğunluğu  q',
+                    etiket: l10n.fireLoadDensityLabel,
                     deger: '${_yogunluk!.toStringAsFixed(1)} MJ/m²',
                     renk: _riskRenk!,
                   ),
@@ -3654,7 +3783,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       border: Border.all(color: _riskRenk!.withOpacity(0.4)),
                     ),
                     child: Text(
-                      _riskSinifi!,
+                      _riskClassDisplay(_riskSinifi!, l10n),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -3703,8 +3832,12 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                               const SizedBox(height: 4),
                               Text(
                                 fark > 0
-                                    ? '^ +${fark.toStringAsFixed(0)} MJ/m² — Referansı AŞIYOR'
-                                    : ' ${fark.abs().toStringAsFixed(0)} MJ/m² — Referans Altında',
+                                    ? l10n.exceedsReferenceLabel(
+                                        fark.toStringAsFixed(0),
+                                      )
+                                    : l10n.belowReferenceLabel(
+                                        fark.abs().toStringAsFixed(0),
+                                      ),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -3713,7 +3846,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                'Kaynak: ${_refKaynak[_secilenBina] ?? 'EN 1991-1-2 Ek E'}',
+                                '${l10n.sourceLabel}: ${_refKaynak[_secilenBina] ?? 'EN 1991-1-2 Ek E'}',
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: Colors.black45,
@@ -3735,9 +3868,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Yangın Büyüme Takvimi (EN 1991-1-2 E.4)',
-                            style: TextStyle(
+                          Text(
+                            l10n.fireGrowthTimeline,
+                            style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF134E4A),
@@ -3745,25 +3878,30 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                           ),
                           const SizedBox(height: 8),
                           _ZamanSatir(
-                            faz: 'Büyüme fazı sonu',
+                            faz: l10n.growthPhaseEnd,
                             sure: _tBuyume!,
                             renk: const Color(0xFFEA580C),
                           ),
                           _ZamanSatir(
-                            faz: 'Bozunma başlangıcı (% 70 tüketim)',
+                            faz: l10n.decayPhaseStart,
                             sure: _tSabit!,
                             renk: const Color(0xFFDC2626),
                           ),
                           _ZamanSatir(
-                            faz: 'Toplam yangın süresi',
+                            faz: l10n.totalFireDuration,
                             sure: _tToplam!,
                             renk: const Color(0xFF7C3AED),
                           ),
                           if (_qPik != null && _sinirlayanFaktor != null) ...[
                             const SizedBox(height: 6),
                             Text(
-                              'Tepe Q̇: ${_qPik!.toStringAsFixed(2)} MW  '
-                              '·  Sınırlayan faktör: $_sinirlayanFaktor',
+                              l10n.peakHeatReleaseLabel(
+                                _limitingFactorDisplay(
+                                  _sinirlayanFaktor!,
+                                  l10n,
+                                ),
+                                _qPik!.toStringAsFixed(2),
+                              ),
                               style: const TextStyle(
                                 fontSize: 10,
                                 color: Color(0xFF134E4A),
@@ -3795,17 +3933,17 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.fire_extinguisher_rounded,
                           color: Color(0xFF0369A1),
                           size: 20,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
-                          'Söndürme Maddesi Hesabı',
-                          style: TextStyle(
+                          l10n.extinguishingAgentCalcTitle,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                             color: Color(0xFF0369A1),
@@ -3828,8 +3966,11 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                          'Hacim yüksekliği (pano): '
-                          '${(double.tryParse(_pHCtrl.text) ?? 0) > 0 ? '${((double.tryParse(_pHCtrl.text) ?? 0) / 100).toStringAsFixed(2)} m' : '—'}',
+                          l10n.panelVolumeHeight(
+                            (double.tryParse(_pHCtrl.text) ?? 0) > 0
+                                ? '${((double.tryParse(_pHCtrl.text) ?? 0) / 100).toStringAsFixed(2)} m'
+                                : '—',
+                          ),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Color(0xFF0369A1),
@@ -3846,7 +3987,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                             decimal: true,
                           ),
                           decoration: _sBordDecor(
-                            'Oda Yüksekliği (m)',
+                            l10n.roomHeightLabel,
                             Icons.height_rounded,
                           ),
                         ),
@@ -3857,19 +3998,19 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       _InfoBox(
                         color: const Color(0xFFEFF6FF),
                         border: const Color(0xFF3B82F6),
-                        child: const Row(
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.lightbulb_outline_rounded,
                               size: 14,
                               color: Color(0xFF1D4ED8),
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                'Elektrik panosu için FM-200 (HFC-227ea) veya Novec 1230 önerilir — ISO 14520 / NFPA 2001.',
-                                style: TextStyle(
+                                l10n.panelAgentRecommendation,
+                                style: const TextStyle(
                                   fontSize: 11,
                                   color: Color(0xFF1E40AF),
                                   height: 1.4,
@@ -3887,7 +4028,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       value: _sAjanIdx,
                       isExpanded: true,
                       decoration: _sBordDecor(
-                        'Söndürme Maddesi',
+                        l10n.extinguishingAgentLabel,
                         Icons.fire_extinguisher_rounded,
                       ),
                       items: List.generate(
@@ -3929,7 +4070,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                           decimal: true,
                         ),
                         decoration: _sBordDecor(
-                          'Tasarım Konsantrasyonu (%)',
+                          l10n.designConcentration,
                           Icons.percent_rounded,
                         ),
                       ),
@@ -3944,9 +4085,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                           onChanged: (v) =>
                               setState(() => _sRakimGoster = v ?? false),
                         ),
-                        const Text(
-                          'Rakım düzeltmesi (ISO 14520-1 Ek A)',
-                          style: TextStyle(fontSize: 12),
+                        Text(
+                          l10n.altitudeCorrectionLabel,
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -3957,7 +4098,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                           decimal: true,
                         ),
                         decoration: _sBordDecor(
-                          'Rakım (m)',
+                          l10n.altitudeLabel,
                           Icons.terrain_rounded,
                         ),
                       ),
@@ -3976,7 +4117,11 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                     ElevatedButton.icon(
                       onPressed: _hesaplaAjan,
                       icon: const Icon(Icons.calculate_rounded),
-                      label: const Text('Söndürme Maddesini Hesapla'),
+                      label: Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.calculateExtinguishingAgent,
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0369A1),
                         foregroundColor: Colors.white,
@@ -3999,8 +4144,8 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                               ...[
                                 _SonucSatirMavi(
                                   etiket: isInert
-                                      ? 'Gerekli Ajan'
-                                      : 'Gerekli Ajan Kütlesi',
+                                      ? l10n.requiredAgent
+                                      : l10n.requiredAgentMass,
                                   deger: isInert
                                       ? '${_sAjanMiktar!.toStringAsFixed(1)} Nm³'
                                       : '${_sAjanMiktar!.toStringAsFixed(1)} kg',
@@ -4009,8 +4154,8 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                                   const SizedBox(height: 4),
                                   _SonucSatirMavi(
                                     etiket: isInert
-                                        ? 'Şişe Sayısı (80L/200bar?16Nm³)'
-                                        : 'Şişe / Kap Sayısı',
+                                        ? l10n.cylinderCountApprox
+                                        : l10n.cylinderContainerCount,
                                     deger: ' ${_sSilindirSayisi!.toInt()} adet',
                                   ),
                                 ],
@@ -4038,18 +4183,18 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.fire_extinguisher,
                         color: Color(0xFFEA580C),
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Taşınabilir Yangın Söndürücü (TS 862-7 EN 3-7)',
-                          style: TextStyle(
+                          l10n.portableExtinguisherTitle,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                             color: Color(0xFFEA580C),
@@ -4060,7 +4205,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _yanginSinifiAciklama ?? '',
+                    _yanginSinifiAciklama == null
+                        ? ''
+                        : _fireClassDisplay(_yanginSinifiAciklama!, l10n),
                     style: const TextStyle(fontSize: 11, color: Colors.black54),
                   ),
                   const Divider(height: 16),
@@ -4085,9 +4232,9 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                   ),
 
                   const SizedBox(height: 8),
-                  const Text(
-                    'Kaynak: TS 862-7 EN 3-7+A1 (2010) · BYKHY Madde 94-96',
-                    style: TextStyle(fontSize: 10, color: Colors.black38),
+                  Text(
+                    l10n.portableExtinguisherSourceFooter,
+                    style: const TextStyle(fontSize: 10, color: Colors.black38),
                   ),
                 ],
               ),
@@ -4189,10 +4336,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                             size: 20,
                           ),
                           const SizedBox(width: 8),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Yangın Dolabı (BYKHY Md. 91-93 / TS EN 671-1)',
-                              style: TextStyle(
+                              l10n.fireCabinetTitle,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: Color(0xFF0369A1),
@@ -4207,11 +4354,13 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                         color: const Color(0xFFF0F9FF),
                         border: const Color(0xFFBAE6FD),
                         child: Text(
-                          'DN25 (1\") yarı sert hortumlu makara · TS EN 671-1 · K=50\n'
-                          'Q = K × √P = 50 × √${pGirilen.toStringAsFixed(1)} bar'
-                          ' = ${flowLmin.toStringAsFixed(1)} L/min\n'
-                          'Pratik söndürme kapasitesi:\n'
-                          '  ${isSinifB ? "B sınıfı: 0.6 MW/dolap" : "A sınıfı: 2.0 MW/dolap"}',
+                          l10n.fireCabinetTechSpecs(
+                            isSinifB
+                                ? l10n.classBCapacityPerCabinet
+                                : l10n.classACapacityPerCabinet,
+                            flowLmin.toStringAsFixed(1),
+                            pGirilen.toStringAsFixed(1),
+                          ),
                           style: const TextStyle(
                             fontSize: 11,
                             fontFamily: 'monospace',
@@ -4222,26 +4371,26 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       const SizedBox(height: 10),
                       // Hesap sonuçları
                       _SonucSatirMavi(
-                        etiket: 'Tehlike sınıfı',
-                        deger: '$tehlikeSinifi',
+                        etiket: l10n.hazardClassLabel,
+                        deger: _hazardClassDisplay(tehlikeSinifi, l10n),
                       ),
                       const SizedBox(height: 4),
                       if (alan > 0) ...[
                         const SizedBox(height: 4),
                         _SonucSatirMavi(
-                          etiket: 'Gerekli dolap adedi',
+                          etiket: l10n.requiredCabinetCount,
                           deger: '$alanBazli adet',
                         ),
                       ],
                       const SizedBox(height: 4),
                       _SonucSatirMavi(
-                        etiket: 'Toplam söndürme kapasitesi',
+                        etiket: l10n.totalExtinguishingCapacityLabel,
                         deger:
                             '${toplamQ.toStringAsFixed(2)} MW  ($alanBazli × ${qPerDolap.toStringAsFixed(1)} MW)',
                       ),
                       const SizedBox(height: 4),
                       _SonucSatirMavi(
-                        etiket: 'Su rezerv hacmi (${rezervMin.toInt()} dk)',
+                        etiket: l10n.waterReserveVolumeLabel(rezervMin.toInt()),
                         deger:
                             '${rezervM3.toStringAsFixed(1)} m³  (${rezervLitre.toStringAsFixed(0)} L)',
                       ),
@@ -4283,13 +4432,17 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                                   Expanded(
                                     child: Text(
                                       yeterli
-                                          ? '$alanBazli dolap YETERLİ'
-                                                '  —  söndürme ${toplamQ.toStringAsFixed(2)} MW'
-                                                ' ≥ yangın yükü ${yangYukuMW.toStringAsFixed(2)} MW'
-                                          : '$alanBazli dolap YETERSİZ'
-                                                '  —  söndürme ${toplamQ.toStringAsFixed(2)} MW'
-                                                ' < yangın yükü ${yangYukuMW.toStringAsFixed(2)} MW'
-                                                ' (min ${(yangYukuMW / qPerDolap).ceil()} dolap gerekli)',
+                                          ? l10n.cabinetSufficientLabel(
+                                              alanBazli,
+                                              yangYukuMW.toStringAsFixed(2),
+                                              toplamQ.toStringAsFixed(2),
+                                            )
+                                          : l10n.cabinetInsufficientLabel(
+                                              alanBazli,
+                                              yangYukuMW.toStringAsFixed(2),
+                                              (yangYukuMW / qPerDolap).ceil(),
+                                              toplamQ.toStringAsFixed(2),
+                                            ),
                                       style: TextStyle(
                                         fontSize: 11,
                                         color: renk,
@@ -4304,9 +4457,12 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                         ),
                       ],
                       const SizedBox(height: 6),
-                      const Text(
-                        'Kaynak: BYKHY Md. 91-93 · TS EN 671-1 · TS 9811',
-                        style: TextStyle(fontSize: 10, color: Colors.black38),
+                      Text(
+                        l10n.fireCabinetSourceFooter,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.black38,
+                        ),
                       ),
                     ],
                   ),
@@ -4315,10 +4471,10 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
             ),
           ],
           const SizedBox(height: 20),
-          const Text(
-            'Kaynak: EN 1991-1-2:2002 Ek E · ISO 14520 · EN 12845 · TS 862-7 EN 3-7+A1',
+          Text(
+            l10n.fireLoadSourcesFooter,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, color: Colors.black38),
+            style: const TextStyle(fontSize: 10, color: Colors.black38),
           ),
         ],
       ),
@@ -4326,6 +4482,44 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   }
 
   // helpers
+  String _limitingFactorDisplay(String v, AppLocalizations l10n) => switch (v) {
+    'Yakıt Yüzeyi (RHRf × A)' => l10n.limitingFactorFuelSurface,
+    'Toplam Enerji (düşük yangın yükü)' => l10n.limitingFactorTotalEnergy,
+    'Havalandırma (açıklık — yaklaşık)' => l10n.limitingFactorVentilation,
+    _ => v,
+  };
+
+  String _riskClassDisplay(String v, AppLocalizations l10n) => switch (v) {
+    'Düşük Risk  (≤ 200 MJ/m²)' => l10n.riskClassLow,
+    'Orta Risk  (200–600 MJ/m²)' => l10n.riskClassMedium,
+    'Yüksek Risk  (600–1200 MJ/m²)' => l10n.riskClassHigh,
+    'Çok Yüksek Risk  (> 1200 MJ/m²)' => l10n.riskClassVeryHigh,
+    _ => v,
+  };
+
+  String _hazardClassDisplay(String v, AppLocalizations l10n) => switch (v) {
+    'Düşük' => l10n.hazardClassLow,
+    'Yüksek' => l10n.hazardClassHigh,
+    _ => l10n.hazardClassMedium,
+  };
+
+  String _fireClassDisplay(String v, AppLocalizations l10n) => switch (v) {
+    'Sınıf B/C (elektrik ekipmanı yağı / gaz) — Toz veya CO₂' =>
+      l10n.fireClassPanel,
+    'Sınıf C (sıkıştırılmış yanıcı gaz) — KKP Toz, CO₂ veya Köpük' =>
+      l10n.fireClassGasStorage,
+    'Sınıf B + Sınıf C (sıvı/gaz yakıt) — KKP ABC Toz veya Köpük' =>
+      l10n.fireClassLiquidGasStorage,
+    'Sınıf B (yanıcı sıvı) — ABC Kuru Kimyevi Toz veya Köpük' =>
+      l10n.fireClassLiquidStorage,
+    'Sınıf A + Sınıf B (katı/sıvı yanıcı) — ABC Kuru Kimyevi Toz' =>
+      l10n.fireClassSolidLiquidStorage,
+    'Sınıf B (sıvı yakıt) — ABC Toz veya Köpük' => l10n.fireClassParking,
+    'Sınıf A (katı yanıcı) — ABC Kuru Kimyevi Toz veya Su' =>
+      l10n.fireClassSolidDefault,
+    _ => v,
+  };
+
   Widget _panocm(String lbl, TextEditingController c) => TextField(
     controller: c,
     keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -4644,11 +4838,11 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
   List<String> _filtreli = [];
 
   static const _grupSirasi = ['D', 'O', 'Y', '?'];
-  static const _grupAdi = {
-    'D': 'Düşük Tehlike  (Ek-1/A)',
-    'O': 'Orta Tehlike  (Ek-1/B)',
-    'Y': 'Yüksek Tehlike  (Ek-1/C)',
-    '?': 'Sınıflandırılmamış',
+  String _grupAdi(String group, AppLocalizations l10n) => switch (group) {
+    'D' => l10n.lowHazardAppendix,
+    'O' => l10n.ordinaryHazardAppendix,
+    'Y' => l10n.highHazardAppendix,
+    _ => l10n.unclassified,
   };
   static const _grupRenk = {
     'D': Color(0xFF16A34A),
@@ -4670,7 +4864,12 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
       _filtreli = q.isEmpty
           ? widget.secenekler
           : widget.secenekler
-                .where((s) => s.toLowerCase().contains(q))
+                .where(
+                  (s) =>
+                      '${_binaGorunenAd(s, AppLocalizations.of(context)!)} ${_grupAdi(widget.tehlikeMap[s] ?? '?', AppLocalizations.of(context)!)}'
+                          .toLowerCase()
+                          .contains(q),
+                )
                 .toList();
     });
   }
@@ -4706,7 +4905,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
               controller: widget.araCtrl,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: 'Bina türü ara...',
+                hintText: AppLocalizations.of(context)!.searchBuildingTypes,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: widget.araCtrl.text.isNotEmpty
                     ? IconButton(
@@ -4725,9 +4924,9 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
           const SizedBox(height: 8),
           Expanded(
             child: _filtreli.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      'Sonuç bulunamadı',
+                      AppLocalizations.of(context)!.noResults,
                       style: TextStyle(color: Colors.black45),
                     ),
                   )
@@ -4755,7 +4954,10 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
                         itemBuilder: (_, i) {
                           final (text, isHeader) = rows[i];
                           if (isHeader) {
-                            final ad = _grupAdi[text] ?? text;
+                            final ad = _grupAdi(
+                              text,
+                              AppLocalizations.of(context)!,
+                            );
                             final renk = _grupRenk[text] ?? Colors.black54;
                             return Container(
                               width: double.infinity,
@@ -4790,7 +4992,10 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
                                   : Colors.black38,
                             ),
                             title: Text(
-                              item,
+                              _binaGorunenAd(
+                                item,
+                                AppLocalizations.of(context)!,
+                              ),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: secili
@@ -4931,8 +5136,8 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                       }
                     },
                     child: InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'Malzeme',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.material,
                         border: OutlineInputBorder(),
                         isDense: true,
                         labelStyle: TextStyle(color: kC),
@@ -4941,7 +5146,10 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                         children: [
                           Expanded(
                             child: Text(
-                              widget.malzeme.ad,
+                              _malzemeGorunenAd(
+                                widget.malzeme.ad,
+                                AppLocalizations.of(context)!,
+                              ),
                               style: const TextStyle(fontSize: 12),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -4979,8 +5187,8 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    decoration: const InputDecoration(
-                      labelText: 'Kütle (kg)',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.massKg,
 
                       border: OutlineInputBorder(),
                       isDense: true,
@@ -5003,8 +5211,10 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    decoration: const InputDecoration(
-                      labelText: 'NCV (MJ/kg)',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(
+                        context,
+                      )!.netCalorificValue,
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'MJ/kg',
@@ -5028,6 +5238,52 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
   }
 }
 
+String _malzemeGorunenAd(String value, AppLocalizations l10n) =>
+    switch (value) {
+      'Ahşap / Kereste' => l10n.materialWoodTimber,
+      'Kontrplak / MDF' => l10n.materialPlywoodMdf,
+      'Kâğıt / Karton' => l10n.materialPaperCardboard,
+      'Tekstil (pamuklu)' => l10n.materialCottonTextile,
+      'Tekstil (sentetik)' => l10n.materialSyntheticTextile,
+      'Yün' => l10n.materialWool,
+      'Giysi' => l10n.materialClothing,
+      'Deri' => l10n.materialLeather,
+      'Polietilen (PE)' => l10n.materialPolyethylene,
+      'Polipropilen (PP)' => l10n.materialPolypropylene,
+      'PVC (sert)' => l10n.materialRigidPvc,
+      'PVC (esnek/kablo)' => l10n.materialFlexiblePvc,
+      'Polistiren (PS)' => l10n.materialPolystyrene,
+      'EPS köpük' => l10n.materialEpsFoam,
+      'XPS köpük' => l10n.materialXpsFoam,
+      'ABS Plastik' => l10n.materialAbsPlastic,
+      'PMMA (Pleksiglas)' => l10n.materialPmma,
+      'Epoksi Reçine' => l10n.materialEpoxyResin,
+      'Polyester Reçine (CTP/FRP)' => l10n.materialPolyesterResin,
+      'Poliüretan köpük (sert)' => l10n.materialRigidPolyurethaneFoam,
+      'Poliüretan köpük (esnek)' => l10n.materialFlexiblePolyurethaneFoam,
+      'Kauçuk (doğal)' => l10n.materialNaturalRubber,
+      'Lastik (araç)' => l10n.materialVehicleTire,
+      'Benzin' => l10n.materialGasoline,
+      'Dizel' => l10n.materialDiesel,
+      'LPG' => l10n.materialLpg,
+      'Propan' => l10n.materialPropane,
+      'Doğalgaz (CNG)' => l10n.materialNaturalGasCng,
+      'Metanol' => l10n.materialMethanol,
+      'Etanol' => l10n.materialEthanol,
+      'Aseton / Solvent (genel)' => l10n.materialAcetoneSolvent,
+      'Boya / Vernik (solventli)' => l10n.materialSolventBasedPaint,
+      'Asfalt / Bitüm' => l10n.materialAsphaltBitumen,
+      'Kömür' => l10n.materialCoal,
+      'Trafo Yağı (mineral)' => l10n.materialMineralTransformerOil,
+      'Hidrolik Yağ' => l10n.materialHydraulicOil,
+      'Elektrik Kablosu (PVC)' => l10n.materialPvcCable,
+      'Elektrik Kablosu (XLPE)' => l10n.materialXlpeCable,
+      'Li-ion Batarya' => l10n.materialLithiumIonBattery,
+      'Mobilya (karma)' => l10n.materialMixedFurniture,
+      'Diğer (manuel)' => l10n.materialOtherManual,
+      _ => value,
+    };
+
 // Aramalı, katı/sıvı/gaz kategorilerine ayrılmış malzeme seçici bottom sheet
 class _MalzemeSeciciSheet extends StatefulWidget {
   final TextEditingController araCtrl;
@@ -5049,7 +5305,15 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
   final Set<String> _acikGruplar = {};
 
   static const _grupSirasi = ['K', 'S', 'G', 'D'];
-  static const _grupAdi = {'K': 'Katı', 'S': 'Sıvı', 'G': 'Gaz', 'D': 'Diğer'};
+  String _grupAdi(String group, AppLocalizations l10n) => switch (group) {
+    'K' => l10n.solid,
+    'S' => l10n.liquid,
+    'G' => l10n.gas,
+    _ => l10n.other,
+  };
+
+  String _malzemeAdi(String value, AppLocalizations l10n) =>
+      _malzemeGorunenAd(value, l10n);
   static const _grupIkon = {
     'K': Icons.widgets_rounded,
     'S': Icons.water_drop_rounded,
@@ -5075,11 +5339,12 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
 
   void _filtrele() {
     final q = widget.araCtrl.text.toLowerCase();
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _filtreli = q.isEmpty
           ? widget.secenekler
           : widget.secenekler
-                .where((s) => s.toLowerCase().contains(q))
+                .where((s) => _malzemeAdi(s, l10n).toLowerCase().contains(q))
                 .toList();
     });
   }
@@ -5091,7 +5356,8 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
   }
 
   Widget _grupBaslik(String g, int adet, bool acik) {
-    final ad = _grupAdi[g] ?? g;
+    final l10n = AppLocalizations.of(context)!;
+    final ad = _grupAdi(g, l10n);
     final renk = _grupRenk[g] ?? Colors.black54;
     final ikon = _grupIkon[g] ?? Icons.circle;
     return InkWell(
@@ -5112,7 +5378,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                '$ad  ·  $adet malzeme',
+                l10n.materialGroupCount(ad, adet),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -5137,12 +5403,13 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
 
   Widget _malzemeSatiri(String item) {
     final secili = item == widget.secilenMalzeme;
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       dense: true,
       selected: secili,
       selectedTileColor: const Color(0xFF0F766E).withOpacity(0.08),
       title: Text(
-        item,
+        _malzemeAdi(item, l10n),
         style: TextStyle(
           fontSize: 13,
           fontWeight: secili ? FontWeight.bold : FontWeight.normal,
@@ -5185,7 +5452,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
               controller: widget.araCtrl,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: 'Malzeme ara...',
+                hintText: AppLocalizations.of(context)!.searchMaterials,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: widget.araCtrl.text.isNotEmpty
                     ? IconButton(
@@ -5204,9 +5471,9 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
           const SizedBox(height: 8),
           Expanded(
             child: _filtreli.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      'Sonuç bulunamadı',
+                      AppLocalizations.of(context)!.noResults,
                       style: TextStyle(color: Colors.black45),
                     ),
                   )
@@ -5421,7 +5688,7 @@ class _DepoSatirState extends State<_DepoSatir> {
                       decimal: true,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Kapasite / tank',
+                      labelText: AppLocalizations.of(context)!.capacityTank,
                       border: const OutlineInputBorder(),
                       isDense: true,
                       suffixText: widget.depo.birim,
@@ -5441,8 +5708,8 @@ class _DepoSatirState extends State<_DepoSatir> {
                   flex: 2,
                   child: DropdownButtonHideUnderline(
                     child: InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'Birim',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.unit,
                         border: OutlineInputBorder(),
                         isDense: true,
                         labelStyle: TextStyle(color: kC),
@@ -5471,8 +5738,8 @@ class _DepoSatirState extends State<_DepoSatir> {
                   child: TextField(
                     controller: _adetC,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Adet',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.quantity,
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'adet',
@@ -5723,6 +5990,30 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
     return 'Yüksek';
   }
 
+  static String _hoodAgentName(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.hoodAgentPotassiumCarbonateName,
+    1 => l10n.hoodAgentPotassiumAcetateName,
+    2 => l10n.hoodAgentPotassiumCitrateName,
+    3 => l10n.hoodAgentSodiumBicarbonateName,
+    _ => _wetAjanlar[i].ad,
+  };
+
+  static String _hoodAgentDesc(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.hoodAgentPotassiumCarbonateDesc,
+    1 => l10n.hoodAgentPotassiumAcetateDesc,
+    2 => l10n.hoodAgentPotassiumCitrateDesc,
+    3 => l10n.hoodAgentSodiumBicarbonateDesc,
+    _ => _wetAjanlar[i].aciklama,
+  };
+
+  static String _hoodAgentReco(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.hoodAgentPotassiumCarbonateReco,
+    1 => l10n.hoodAgentPotassiumAcetateReco,
+    2 => l10n.hoodAgentPotassiumCitrateReco,
+    3 => l10n.hoodAgentSodiumBicarbonateReco,
+    _ => _wetAjanlar[i].oneri,
+  };
+
   void _hesapla() {
     setState(() {
       _hata = null;
@@ -5731,7 +6022,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
     final uz = double.tryParse(_uzCtrl.text.replaceAll(',', '.'));
     final gen = double.tryParse(_genCtrl.text.replaceAll(',', '.'));
     if (uz == null || gen == null || uz <= 0 || gen <= 0) {
-      setState(() => _hata = 'Davlumbaz uzunluk ve genişliğini giriniz (cm).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterHoodLengthWidthCm,
+      );
       return;
     }
     final alanM2 = (uz / 100) * (gen / 100);
@@ -5777,11 +6070,18 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
       _temizlikSikligi = temizlikSikligi;
       _filterMesafeUyari = filterUyari;
       _fritUyari = fritUyari;
-      _notlar =
-          'NFPA 17A §7.3 — ${_wetAjanlar[_ajanIdx].ad} uygulaması.\n'
-          'Tehlike sınıfı: $tehlike  ·  Ekipman puanı: ${puan.toStringAsFixed(1)}  ·  '
-          'Min. deşarj: 30 s  ·  Filtre alanı: ${alanM2.toStringAsFixed(2)} m².\n'
-          'Ek baca / kanallar i\u00e7in ek nozul hesab\u0131 yap\u0131lmal\u0131d\u0131r.';
+      final l10nNotes = AppLocalizations.of(context)!;
+      final hazardText = tehlike == 'Orta'
+          ? l10nNotes.hazardMedium
+          : tehlike == 'Yüksek'
+          ? l10nNotes.hazardHigh
+          : l10nNotes.hazardLight;
+      _notlar = l10nNotes.hoodNotesText(
+        _hoodAgentName(l10nNotes, _ajanIdx),
+        hazardText,
+        puan.toStringAsFixed(1),
+        alanM2.toStringAsFixed(2),
+      );
     });
     ProjeServisi.hesapVeri = jsonEncode({
       'i': {
@@ -5839,6 +6139,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -5847,9 +6148,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           _InfoBox(
             color: const Color(0xFFEFF6FF),
             border: _kD,
-            child: const Text(
-              'Ticari mutfak davlumbaz söndürme sistemi boyutlandırması.\n'
-              'Referans: NFPA 17A:2021 · TS EN 15751:2016 · UL 300 · Ansul R-102',
+            child: Text(
+              l10n.hoodSystemDescription,
               style: TextStyle(
                 fontSize: 11,
                 height: 1.5,
@@ -5860,8 +6160,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           const SizedBox(height: 16),
 
           // Ekipman seçimi
-          const Text(
-            'Davlumbaz Altı Ekipmanlar',
+          Text(
+            l10n.hoodEquipmentHeading,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
@@ -5869,8 +6169,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Ekipman sayısını + / - ile ayarlayın. Seçime göre tehlike sınıfı otomatik hesaplanır.',
+          Text(
+            l10n.hoodEquipmentInstructions,
             style: TextStyle(fontSize: 11, color: Colors.black54, height: 1.4),
           ),
           const SizedBox(height: 10),
@@ -5880,6 +6180,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
               padding: const EdgeInsets.only(bottom: 6),
               child: _EkipmanKarti(
                 ekipman: _ekipmanlar[i],
+                index: i,
                 sayi: _ekipmanSayilari[i] ?? 0,
                 onArtir: () => setState(
                   () => _ekipmanSayilari[i] = (_ekipmanSayilari[i] ?? 0) + 1,
@@ -5900,6 +6201,11 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
               final puan = _toplamHazard();
               final sinif = _hesaplaTehlike();
               final toplam = _ekipmanSayilari.values.fold(0, (s, v) => s + v);
+              final kategori = switch (sinif) {
+                'Orta' => l10n.hazardMedium,
+                'Yüksek' => l10n.hazardHigh,
+                _ => l10n.hazardLight,
+              };
               final Color sinifRenk = sinif == 'Düşük'
                   ? const Color(0xFF16A34A)
                   : sinif == 'Orta'
@@ -5917,7 +6223,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Tehlike Sınıfı: $sinif',
+                            l10n.hoodHazardClass(kategori),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
@@ -5925,9 +6231,10 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                             ),
                           ),
                           Text(
-                            'Ekipman puanı: ${puan.toStringAsFixed(1)}  ·  '
-                            '$toplam adet seçildi  ·  '
-                            '< 2 › Düşük · 2–5 › Orta ·  5 › Yüksek',
+                            l10n.hoodEquipmentScore(
+                              toplam,
+                              puan.toStringAsFixed(1),
+                            ),
                             style: TextStyle(
                               fontSize: 10,
                               color: sinifRenk.withOpacity(0.8),
@@ -5944,8 +6251,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           const SizedBox(height: 14),
 
           // Davlumbaz boyutları
-          const Text(
-            'Davlumbaz Filtre Alanı (iç ölçü)',
+          Text(
+            l10n.hoodFilterArea,
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
           const SizedBox(height: 6),
@@ -5958,7 +6265,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                     decimal: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Uzunluk',
+                    labelText: l10n.singleLength,
                     suffixText: 'cm',
                     border: const OutlineInputBorder(),
                     isDense: true,
@@ -5977,7 +6284,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                     decimal: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Genişlik',
+                    labelText: l10n.singleWidth,
                     suffixText: 'cm',
                     border: const OutlineInputBorder(),
                     isDense: true,
@@ -5997,7 +6304,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
             value: _ajanIdx,
             isExpanded: true,
             decoration: InputDecoration(
-              labelText: 'Söndürme Maddesi',
+              labelText: l10n.extinguishingAgent,
               prefixIcon: const Icon(Icons.water_drop_rounded),
               border: const OutlineInputBorder(),
               isDense: true,
@@ -6011,7 +6318,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
               (i) => DropdownMenuItem(
                 value: i,
                 child: Text(
-                  _wetAjanlar[i].ad,
+                  _hoodAgentName(l10n, i),
                   style: const TextStyle(fontSize: 13),
                 ),
               ),
@@ -6020,7 +6327,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           ),
           const SizedBox(height: 4),
           Text(
-            '${_wetAjanlar[_ajanIdx].standart}  ·  ${_wetAjanlar[_ajanIdx].aciklama}',
+            '${_wetAjanlar[_ajanIdx].standart}  ·  ${_hoodAgentDesc(l10n, _ajanIdx)}',
             style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
           const SizedBox(height: 6),
@@ -6036,8 +6343,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
             ),
             label: Text(
               _karsilastirmaAcik
-                  ? 'Karşılaştırmayı Gizle'
-                  : 'Maddeleri Karşılaştır',
+                  ? l10n.hoodHideComparison
+                  : l10n.hoodCompareAgents,
               style: const TextStyle(fontSize: 12),
             ),
             style: TextButton.styleFrom(
@@ -6056,12 +6363,12 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                 children: [
                   // Başlık satırı
                   Row(
-                    children: const [
+                    children: [
                       Expanded(
                         flex: 3,
                         child: Text(
-                          'Madde',
-                          style: TextStyle(
+                          l10n.hoodTableAgentCol,
+                          style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF0369A1),
@@ -6071,8 +6378,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          'Etkinlik',
-                          style: TextStyle(
+                          l10n.hoodTableEffectivenessCol,
+                          style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF0369A1),
@@ -6082,9 +6389,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                       SizedBox(
                         width: 22,
                         child: Text(
-                          'D',
+                          l10n.hoodColLowAbbr,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF0369A1),
@@ -6094,9 +6401,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                       SizedBox(
                         width: 22,
                         child: Text(
-                          'O',
+                          l10n.hoodColMediumAbbr,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF0369A1),
@@ -6106,9 +6413,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                       SizedBox(
                         width: 22,
                         child: Text(
-                          'Y',
+                          l10n.hoodColHighAbbr,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF0369A1),
@@ -6161,7 +6468,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                  a.ad,
+                                  _hoodAgentName(l10n, i),
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: secili
@@ -6225,7 +6532,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                           if (secili) ...[
                             const SizedBox(height: 3),
                             Text(
-                              a.oneri,
+                              _hoodAgentReco(l10n, i),
                               style: const TextStyle(
                                 fontSize: 10,
                                 color: Color(0xFF0369A1),
@@ -6238,10 +6545,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                     );
                   }),
                   const Divider(height: 8, thickness: 1),
-                  const Text(
-                    'D = Düşük  ·  O = Orta  ·  Y = Yüksek tehlike sınıfı\n'
-                    'Renkli sütun = hesaplanan tehlike sınıfı',
-                    style: TextStyle(fontSize: 9, color: Colors.black45),
+                  Text(
+                    l10n.hoodComparisonLegend,
+                    style: const TextStyle(fontSize: 9, color: Colors.black45),
                   ),
                 ],
               ),
@@ -6264,7 +6570,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
+            label: Text(AppLocalizations.of(context)!.calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kD,
               foregroundColor: Colors.white,
@@ -6287,9 +6593,9 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'SÖNDÜRME BOYUTLANDIRMA SONUCU',
-                    style: TextStyle(
+                  Text(
+                    l10n.hoodResultTitleCaps,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       color: Color(0xFF0369A1),
@@ -6299,28 +6605,35 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                   const Divider(height: 16),
                   if (_tehlikeSinifi != null) ...[
                     _SonucSatirMavi(
-                      etiket: 'Tehlike Sınıfı',
+                      etiket: l10n.hoodHazardClass(''),
                       deger:
-                          '$_tehlikeSinifi  (puan: ${_hazardPuan!.toStringAsFixed(1)})',
+                          '${_tehlikeSinifi == "Orta"
+                              ? l10n.hazardMedium
+                              : _tehlikeSinifi == "Yüksek"
+                              ? l10n.hazardHigh
+                              : l10n.hazardLight}  (score: ${_hazardPuan!.toStringAsFixed(1)})',
                     ),
                     const SizedBox(height: 4),
                   ],
                   _SonucSatirMavi(
-                    etiket: 'Söndürme Maddesi',
-                    deger: _wetAjanlar[_ajanIdx].ad,
+                    etiket: l10n.extinguishingAgent,
+                    deger: _hoodAgentName(l10n, _ajanIdx),
                   ),
                   const SizedBox(height: 4),
                   _SonucSatirMavi(
-                    etiket: 'Kimyasal Ajan Miktarı',
+                    etiket: l10n.chemicalAgentAmount,
                     deger: '${_sChem!.toStringAsFixed(1)} L',
                   ),
                   const SizedBox(height: 4),
                   _SonucSatirMavi(
-                    etiket: 'Min. Nozul Sayısı',
+                    etiket: l10n.minimumNozzleCount,
                     deger: '${_noSpr!.ceil()} adet',
                   ),
                   const SizedBox(height: 4),
-                  _SonucSatirMavi(etiket: 'Min. Deşarj Süresi', deger: '30 s'),
+                  _SonucSatirMavi(
+                    etiket: l10n.minimumDischargeTime,
+                    deger: '30 s',
+                  ),
                   const SizedBox(height: 10),
                   _InfoBox(
                     color: const Color(0xFFF0FDF4),
@@ -6349,17 +6662,17 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.checklist_rounded,
                               size: 15,
                               color: Color(0xFF92400E),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
-                              'NFPA 96 Zorunlu Gereklilikler',
-                              style: TextStyle(
+                              l10n.hoodNfpa96RequirementsTitle,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                                 color: Color(0xFF92400E),
@@ -6370,106 +6683,75 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                         const SizedBox(height: 8),
                         _Nfpa96Satir(
                           ikon: Icons.electrical_services_rounded,
-                          metin:
-                              'Yakıt & Elektrik Kesilmesi (§10.4): '
-                              'Sistem devreye girdiğinde tüm ısı kaynaklarının '
-                              'yakıtı ve elektriği otomatik kesilmelidir. Manuel sıfırlama gerekir.',
+                          metin: l10n.hoodReqFuelElectric,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.settings_backup_restore_rounded,
-                          metin:
-                              'Manuel Çekme Kolu (§10.5): '
-                              'Yerden 1067–1219 mm yükseklikte, '
-                              'davlumbazdan min. 3 m – maks. 6 m uzaklıkta, '
-                              'kaçış yolu üzerinde konumlandırılmalıdır.',
+                          metin: l10n.hoodReqManualPull,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.campaign_rounded,
-                          metin:
-                              'Alarm (§10.6): '
-                              'Sistem aktivasyonunda sesli alarm veya görsel gösterge zorunludur.',
+                          metin: l10n.hoodReqAlarm,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.air_rounded,
-                          metin:
-                              'Fan & Takviye Hava (§8.2.3 / §8.3.2): '
-                              'Egzoz fanı aktivasyon sonrası çalışmaya devam eder. '
-                              'Hood içi takviye hava (makeup air) sistem aktivasyonunda kesilir.',
+                          metin: l10n.hoodReqFanMakeupAir,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.fire_extinguisher_rounded,
-                          metin:
-                              'Sınıf K Söndürücü (§10.10.2): '
-                              'Bitkisel / hayvansal yağ kullanan ekipmanlar için '
-                              'Sınıf K yangın söndürücü zorunludur.',
+                          metin: l10n.hoodReqClassKExtinguisher,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.filter_alt_rounded,
-                          metin:
-                              'Filtre Mesafesi (§6.2.1): '
-                              'Filtre alt kenarı – pişirme yüzeyi arası en az 457 mm (18 in.).'
-                              '${_filterMesafeUyari != null ? '\n⚠ $_filterMesafeUyari' : ''}',
+                          metin: l10n.hoodReqFilterDistance(
+                            _filterMesafeUyari != null
+                                ? '\n⚠ ${l10n.hoodFilterDistanceWarning}'
+                                : '',
+                          ),
                           vurgu: _filterMesafeUyari != null,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.build_rounded,
-                          metin:
-                              'Bakım (§11.2.1): '
-                              'Sertifikalı teknisyen tarafından en az 6 ayda bir bakım. '
-                              'Ergitme bağlantıları (fusible link) 6 ayda bir değiştirilir (§11.2.4).',
+                          metin: l10n.hoodReqMaintenance,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.cleaning_services_rounded,
-                          metin:
-                              'Temizlik Sıklığı (Tablo 11.4): $_temizlikSikligi.',
+                          metin: l10n.hoodReqCleaningFrequency(
+                            _temizlikSikligi == '3 ayda bir (wok / charbroiler / büyük fritöz)'
+                                ? l10n.hoodCleaningFreqHighVolume
+                                : _temizlikSikligi == 'Yıllık (düşük hacimli)'
+                                ? l10n.hoodCleaningFreqLow
+                                : l10n.hoodCleaningFreqMedium,
+                          ),
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.link_rounded,
-                          metin:
-                              'Eşzamanlı Çalışma (§10.3): '
-                              'Tek tehlike bölgesindeki tüm sabit söndürme sistemleri '
-                              'aynı anda devreye girmelidir.',
+                          metin: l10n.hoodReqSimultaneousOperation,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.fastfood_rounded,
-                          metin:
-                              'Fritöz Mesafesi (§12.1.2.4): '
-                              'Fritöz, açık alev kaynaklarından yatayda min. 406 mm (16 in.) uzakta olmalıdır. '
-                              'Ara plaka (baffle) kullanıldığında min. 203 mm (8 in.) yükseklik yeterlidir (§12.1.2.5).'
-                              '${_fritUyari != null ? '\n⚠ $_fritUyari' : ''}',
+                          metin: l10n.hoodReqFryerDistance(
+                            _fritUyari != null
+                                ? '\n⚠ ${l10n.hoodFryerDistanceWarning}'
+                                : '',
+                          ),
                           vurgu: _fritUyari != null,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.thermostat_rounded,
-                          metin:
-                              'Fritöz Yüksek Sıcaklık Sınırlayıcısı (§12.2): '
-                              'Derin yağda kızartma ekipmanında otomatik sıcaklık sınırlayıcı zorunludur. '
-                              'Yağ yüzeyinden 25,4 mm (1 in.) aşağıda 246°C (475°F) sıcaklığa ulaştığında '
-                              'ısı kaynağını otomatik olarak keser.',
+                          metin: l10n.hoodReqFryerHighTempLimiter,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.straighten_rounded,
-                          metin:
-                              'Davlumbaz / Kanal Mesafeleri (§4.2.1): '
-                              'Yanıcı yüzeylere min. 457 mm (18 in.), '
-                              'sınırlı yanıcı yüzeylere min. 76 mm (3 in.), '
-                              'yanmaz yüzeylere 0 mm boşluk bırakılabilir.',
+                          metin: l10n.hoodReqHoodDuctClearance,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.architecture_rounded,
-                          metin:
-                              'Kanal Eğimi (§7.1.4): '
-                              'Yatay kanal uzunluğu ≤ 22,86 m (75 ft) ise min. %2, '
-                              '> 22,86 m (75 ft) ise min. %8 eğim uygulanmalıdır '
-                              '(gres birikiminin tahliyesi için).',
+                          metin: l10n.hoodReqDuctSlope,
                         ),
                         _Nfpa96Satir(
                           ikon: Icons.domain_rounded,
-                          metin:
-                              'Kanal Yangın Bölmesi Direnci (§7.7.2.1): '
-                              'Kanal geçişleri için yangın bölmesi: '
-                              '< 4 katlı yapılar → min. 1 saatlik yangına dayanıklı bölme; '
-                              '≥ 4 katlı yapılar → min. 2 saatlik yangına dayanıklı bölme.',
+                          metin: l10n.hoodReqDuctFireBarrier,
                         ),
                       ],
                     ),
@@ -6528,36 +6810,20 @@ class _DavlumbazStandartOzet extends StatelessWidget {
   const _DavlumbazStandartOzet();
   @override
   Widget build(BuildContext context) {
-    const items = [
-      (
-        'NFPA 96 (2014)',
-        'Ticari yemek pişirme operasyonları için havalandırma kontrolü ve yangın koruması. '
-            'Davlumbaz boyutlandırma, filtre mesafeleri, söndürme sistemi gereklilikleri, '
-            'manuel çekme kolu, yakıt kesme, bakım ve temizlik sıklıkları.',
-      ),
-      (
-        'NFPA 17A',
-        'Islak kimyasal söndürme sistemleri standardı. Deşarj süresi, ajan miktarı, nozul aralıkları.',
-      ),
-      (
-        'TS EN 15751',
-        'Avrupa standardı — Ticari yemek pişirme ekipmanı söndürme sistemleri.',
-      ),
-      (
-        'UL 300',
-        'ABD — Mutfak söndürme sistemleri için ürün onay standardı (Ansul R-102, Amerex B500 vb.).',
-      ),
-      (
-        'TS EN 1825-1/2',
-        'Mutfak davlumbazı için gres filtre sistemleri ve yangın kapakları.',
-      ),
+    final l10n = AppLocalizations.of(context);
+    final items = [
+      ('NFPA 96 (2014)', l10n.hoodStdNfpa96Desc),
+      ('NFPA 17A', l10n.hoodStdNfpa17aDesc),
+      ('TS EN 15751', l10n.hoodStdTsEn15751Desc),
+      ('UL 300', l10n.hoodStdUl300Desc),
+      ('TS EN 1825-1/2', l10n.hoodStdTsEn1825Desc),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Referans Standartlar',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        Text(
+          l10n.sourceStandards,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
         const SizedBox(height: 8),
         ...items.map(
@@ -6598,12 +6864,14 @@ class _DavlumbazStandartOzet extends StatelessWidget {
 
 class _EkipmanKarti extends StatelessWidget {
   final _EkipmanTip ekipman;
+  final int index;
   final int sayi;
   final VoidCallback onArtir;
   final VoidCallback onAzalt;
 
   const _EkipmanKarti({
     required this.ekipman,
+    required this.index,
     required this.sayi,
     required this.onArtir,
     required this.onAzalt,
@@ -6611,6 +6879,31 @@ class _EkipmanKarti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final equipmentName = switch (index) {
+      0 => l10n.hoodToastSandwichMachine,
+      1 => l10n.hoodSmallElectricOven,
+      2 => l10n.hoodConvectionOven,
+      3 => l10n.hoodSingleBurnerRange,
+      4 => l10n.hoodDoubleBurnerRange,
+      5 => l10n.hoodFourToSixBurnerRange,
+      6 => l10n.hoodWokRange,
+      7 => l10n.hoodDoubleWokRange,
+      8 => l10n.hoodSalamanderGrill,
+      9 => l10n.hoodCharbroilerGrill,
+      10 => l10n.hoodFryerUpTo22L,
+      11 => l10n.hoodFryerOver22L,
+      12 => l10n.hoodTiltingSkillet,
+      _ => ekipman.ad.replaceAll('\n', ' '),
+    };
+    final hazardName = switch (index) {
+      0 || 1 || 3 => l10n.hazardLight,
+      2 || 4 || 8 || 12 => l10n.hazardMedium,
+      5 => l10n.hazardMediumHigh,
+      6 || 9 || 10 => l10n.hazardHigh,
+      7 || 11 => l10n.hazardVeryHigh,
+      _ => ekipman.altBilgi,
+    };
     final secili = sayi > 0;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -6657,7 +6950,7 @@ class _EkipmanKarti extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    ekipman.ad.replaceAll('\n', ' '),
+                    equipmentName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -6667,7 +6960,7 @@ class _EkipmanKarti extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ekipman.altBilgi,
+                    hazardName,
                     style: TextStyle(
                       fontSize: 10,
                       color: secili
@@ -7155,6 +7448,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
     ),
   ];
 
+  static String gazAgentDesc(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.gasAgentHfc227Desc,
+    1 => l10n.gasAgentFk512Desc,
+    2 => l10n.gasAgentCo2Desc,
+    3 => l10n.gasAgentIg541Desc,
+    4 => l10n.gasAgentIg55Desc,
+    5 => l10n.gasAgentIg100Desc,
+    6 => l10n.gasAgentIg01Desc,
+    _ => _ajanlar[i].aciklama,
+  };
+
   String? _hata;
   double? _netHacim, _konsantrasyon, _ajanMiktar, _silindirSayisi;
   String? _noaelUyari;
@@ -7182,14 +7486,18 @@ class _GazliSondurmeState extends State<GazliSondurme>
       final l = double.tryParse(_lCtrl.text.replaceAll(',', '.'));
       final h = double.tryParse(_hCtrl.text.replaceAll(',', '.'));
       if (w == null || l == null || h == null || w <= 0 || l <= 0 || h <= 0) {
-        setState(() => _hata = 'Oda ölçülerini eksiksiz giriniz (m).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterRoomDimensionsFullyM,
+        );
         return;
       }
       v = w * l * h;
     } else {
       final vv = double.tryParse(_vCtrl.text.replaceAll(',', '.'));
       if (vv == null || vv <= 0) {
-        setState(() => _hata = 'Net koruma hacmini giriniz (m³).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterNetProtectedVolumeM3,
+        );
         return;
       }
       v = vv;
@@ -7207,7 +7515,8 @@ class _GazliSondurmeState extends State<GazliSondurme>
     final cParsed = double.tryParse(_konsanCtrl.text.replaceAll(',', '.'));
     if (cParsed == null || cParsed <= 0 || cParsed >= 100) {
       setState(
-        () => _hata = 'Geçerli bir konsantrasyon değeri giriniz (0–100%).',
+        () =>
+            _hata = AppLocalizations.of(context).enterValidConcentrationPercent,
       );
       return;
     }
@@ -7231,28 +7540,26 @@ class _GazliSondurmeState extends State<GazliSondurme>
 
     final silindirSayisi = (miktar / ajan.silindirKapasite).ceil().toDouble();
 
+    final l10nCalc = AppLocalizations.of(context);
     final String noaelUyari;
     if (ajan.noael < 0) {
-      noaelUyari =
-          '⚠ CO² yüksek konsantrasyonlarda hayati tehlike oluşturur. '
-          'Yalnızca insan bulunmayan hacimler için kullanılmalıdır. '
-          'TS EN 15004-2 / NFPA 12.';
+      noaelUyari = l10nCalc.gasNoaelCo2Warning;
     } else if (c >= ajan.loael && ajan.loael > 0) {
-      noaelUyari =
-          '⚠ Tasarım konsantrasyonu (${c.toStringAsFixed(1)}%) '
-          'LOAEL sınırını (${ajan.loael.toStringAsFixed(1)}%) ASIYOR — '
-          'tahliye zorunludur, yüksek risk!  (NFPA 2001:2022 Tablo 5.6.2.1)';
+      noaelUyari = l10nCalc.gasNoaelLoaelExceeded(
+        c.toStringAsFixed(1),
+        ajan.loael.toStringAsFixed(1),
+      );
     } else if (c >= ajan.noael) {
-      noaelUyari =
-          '⚠ Tasarım konsantrasyonu (${c.toStringAsFixed(1)}%) '
-          'NOAEL sınırına (${ajan.noael.toStringAsFixed(1)}%) ulaşıyor veya '
-          'aşıyor — kullanım öncesi tahliye şarttır.  (NFPA 2001:2022 Tablo 5.6.2.1)';
+      noaelUyari = l10nCalc.gasNoaelReached(
+        c.toStringAsFixed(1),
+        ajan.noael.toStringAsFixed(1),
+      );
     } else {
-      noaelUyari =
-          '✓ Tasarım konsantrasyonu (${c.toStringAsFixed(1)}%) '
-          'NOAEL (${ajan.noael.toStringAsFixed(1)}%) altında. '
-          'NFPA 2001:2022 kapsamında insan varlığında kullanılabilir.  '
-          'LOAEL: ${ajan.loael.toStringAsFixed(1)}%';
+      noaelUyari = l10nCalc.gasNoaelOk(
+        c.toStringAsFixed(1),
+        ajan.noael.toStringAsFixed(1),
+        ajan.loael.toStringAsFixed(1),
+      );
     }
 
     setState(() {
@@ -7478,6 +7785,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final ajan = _ajanlar[_ajanIdx];
     return Column(
       children: [
@@ -7486,15 +7794,18 @@ class _GazliSondurmeState extends State<GazliSondurme>
           labelColor: _kGaz,
           indicatorColor: _kGaz,
           unselectedLabelColor: Colors.black54,
-          tabs: const [
-            Tab(icon: Icon(Icons.cloud_rounded, size: 18), text: 'Mahal'),
+          tabs: [
+            Tab(
+              icon: Icon(Icons.cloud_rounded, size: 18),
+              text: l10n.gasRoomTab,
+            ),
             Tab(
               icon: Icon(Icons.print_rounded, size: 18),
-              text: 'Baskı Makinesi',
+              text: l10n.gasPrintingTab,
             ),
             Tab(
               icon: Icon(Icons.electrical_services_rounded, size: 18),
-              text: 'Pano İçi',
+              text: l10n.gasPanelTab,
             ),
           ],
         ),
@@ -7511,10 +7822,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     _InfoBox(
                       color: const Color(0xFFECFEFF),
                       border: _kGaz,
-                      child: const Text(
-                        'TS EN 15004-1:2019 · NFPA 2001:2022\n'
-                        'Toplam taşkın gazlı söndürme sistemi ajan miktarı ön hesap aracı.',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.gasInfoBoxText,
+                        style: const TextStyle(
                           fontSize: 11,
                           height: 1.5,
                           color: Color(0xFF0E7490),
@@ -7525,11 +7835,11 @@ class _GazliSondurmeState extends State<GazliSondurme>
 
                     // Hacim giriş modu
                     SegmentedButton<bool>(
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: true,
                           label: Text(
-                            'Oda Ölçüsü',
+                            l10n.roomDimensions,
                             style: TextStyle(fontSize: 12),
                           ),
                           icon: Icon(Icons.straighten_rounded),
@@ -7537,7 +7847,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                         ButtonSegment(
                           value: false,
                           label: Text(
-                            'Doğrudan Hacim',
+                            l10n.directVolume,
                             style: TextStyle(fontSize: 12),
                           ),
                           icon: Icon(Icons.view_in_ar_rounded),
@@ -7565,7 +7875,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                         children: [
                           Expanded(
                             child: _gazField(
-                              'Genişlik',
+                              l10n.singleWidth,
                               _wCtrl,
                               'm',
                               labelStyle: TextStyle(fontSize: 12),
@@ -7574,7 +7884,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                           const SizedBox(width: 8),
                           Expanded(
                             child: _gazField(
-                              'Uzunluk',
+                              l10n.singleLength,
                               _lCtrl,
                               'm',
                               labelStyle: TextStyle(fontSize: 12),
@@ -7583,7 +7893,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                           const SizedBox(width: 8),
                           Expanded(
                             child: _gazField(
-                              'Yükseklik',
+                              l10n.panelHeight,
                               _hCtrl,
                               'm',
                               labelStyle: TextStyle(fontSize: 12),
@@ -7592,13 +7902,13 @@ class _GazliSondurmeState extends State<GazliSondurme>
                         ],
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'Net koruma hacmi — sabit mobilya/ekipman varsa brüt hacimden çıkarınız.',
-                        style: TextStyle(fontSize: 10, color: Colors.black45),
+                      Text(
+                        l10n.gasNetVolumeHint,
+                        style: const TextStyle(fontSize: 10, color: Colors.black45),
                       ),
                     ] else ...[
                       _gazField(
-                        'Net Koruma Hacmi',
+                        l10n.netProtectionVolume,
                         _vCtrl,
                         'm³',
                         labelStyle: TextStyle(fontSize: 12),
@@ -7607,15 +7917,15 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     const SizedBox(height: 12),
 
                     _gazField(
-                      'Min. Tasarım Sıcaklığı',
+                      l10n.minimumDesignTemperature,
                       _tCtrl,
                       '°C',
                       labelStyle: TextStyle(fontSize: 12),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Hacimdeki minimum hava sıcaklığı — TS EN 15004-1 §A.2  (varsayılan: 20 °C)',
-                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    Text(
+                      l10n.gasMinDesignTempHint,
+                      style: const TextStyle(fontSize: 10, color: Colors.black45),
                     ),
                     const SizedBox(height: 8),
 
@@ -7627,16 +7937,16 @@ class _GazliSondurmeState extends State<GazliSondurme>
                           onChanged: (v) =>
                               setState(() => _rakimGoster = v ?? false),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Rakım düzeltmesi (TS EN 15004-1 Ek A)',
+                            l10n.altitudeCorrection,
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                       ],
                     ),
                     if (_rakimGoster) ...[
-                      _gazField('Rakım', _rakimCtrl, 'm'),
+                      _gazField(l10n.gasAltitudeFieldLabel, _rakimCtrl, 'm'),
                       const SizedBox(height: 8),
                     ],
 
@@ -7648,9 +7958,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                           onChanged: (v) =>
                               setState(() => _guvenlikPayi = v ?? true),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            '%10 Güvenlik Payı (TS EN 15004-1 §5.5)',
+                            l10n.safetyMargin,
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
@@ -7659,8 +7969,8 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     const SizedBox(height: 10),
 
                     // Yangın sınıfı
-                    const Text(
-                      'Yangın Sınıfı',
+                    Text(
+                      l10n.fireClass,
                       style: TextStyle(fontSize: 12, color: Colors.black54),
                     ),
                     const SizedBox(height: 6),
@@ -7669,10 +7979,10 @@ class _GazliSondurmeState extends State<GazliSondurme>
                       runSpacing: 6,
                       children: [
                         for (final (val, icon, lbl) in [
-                          ('A', Icons.home_rounded, 'Sınıf A (Yüzey)'),
-                          ('AD', Icons.layers_rounded, 'Sınıf A (Derin)'),
-                          ('B', Icons.local_gas_station_rounded, 'Sınıf B'),
-                          ('C', Icons.electrical_services_rounded, 'Sınıf C'),
+                          ('A', Icons.home_rounded, l10n.surfaceClassA),
+                          ('AD', Icons.layers_rounded, l10n.deepClassA),
+                          ('B', Icons.local_gas_station_rounded, l10n.classB),
+                          ('C', Icons.electrical_services_rounded, l10n.classC),
                         ])
                           ChoiceChip(
                             avatar: Icon(
@@ -7712,62 +8022,56 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     const SizedBox(height: 4),
                     if (_yanginSinifi == 'A') ...[
                       _GazSinifAciklama(
-                        baslik: 'Surface Class A  —  Yüzey Yangınları',
-                        maddeler: const [
-                          'PMMA (polimetilmetakrilat / pleksiglas) ',
-                          'PP (polipropilen)',
-                          'ABS (akrilonitril bütadien stiren) ',
-                          'Ahşap, mobilya ve döşeme malzemeleri',
-                          'Kağıt ve karton',
-                          'Tekstil / kumaş',
-                          'Kauçuk (lastik)',
-                          'Diğer termoplastikler (PE, PS, PVC vb.)',
+                        baslik: l10n.surfaceClassA,
+                        maddeler: [
+                          l10n.gasClassAMaterial1,
+                          l10n.gasClassAMaterial2,
+                          l10n.gasClassAMaterial3,
+                          l10n.gasClassAMaterial4,
+                          l10n.gasClassAMaterial5,
+                          l10n.gasClassAMaterial6,
+                          l10n.gasClassAMaterial7,
+                          l10n.gasClassAMaterial8,
                         ],
-                        kaynak:
-                            'TS EN 15004-1:2019 Ek C.6.3.2 (polimerik test yakıtı levha dizisi) '
-                            '· ISO 14520-1 Sınıf A tanımı (genel örnekler)',
+                        kaynak: l10n.gasClassASource,
                       ),
                     ] else if (_yanginSinifi == 'AD') ...[
                       _GazSinifAciklama(
-                        baslik:
-                            'Higher Hazard Class A  —  Yüksek Tehlikeli Yangınlar',
-                        maddeler: const [
-                          'Yığın/istifli plastik depolama (raf/palet, derin yerleşik — yüzey Sınıf A\'daki tekil/açık plastik parçalardan farklıdır)',
-                          'Yoğun kablo demetleri > 100 mm',
-                          'Kablo tavası doluluk > %20',
-                          'Kablo tavaları arası < 250 mm',
-                          'Söndürme sırasında enerjili ekipman > 5 kW',
-                          'Telekomünikasyon',
-                          'Kontrol odaları',
-                          'Elektrik/elektronik ekipman yoğun alanlar',
+                        baslik: l10n.gasClassADTitle,
+                        maddeler: [
+                          l10n.gasClassADMaterial1,
+                          l10n.gasClassADMaterial2,
+                          l10n.gasClassADMaterial3,
+                          l10n.gasClassADMaterial4,
+                          l10n.gasClassADMaterial5,
+                          l10n.gasClassADMaterial6,
+                          l10n.gasClassADMaterial7,
+                          l10n.gasClassADMaterial8,
                         ],
-                        kaynak: 'TS EN 15004-1:2019 Tablo 4',
+                        kaynak: l10n.gasClassADSource,
                       ),
                     ] else if (_yanginSinifi == 'B') ...[
                       _GazSinifAciklama(
-                        baslik:
-                            'Class B  —  Sıvı ve Eriyebilir Katı Madde Yangınları',
-                        maddeler: const [
-                          'Benzin, dizel, fuel-oil',
-                          'Solvent, alkol, aseton',
-                          'Yağlı trafo',
-                          'Boya, vernik, reçine',
-                          'Mum, parafin gibi eriyebilir katılar',
+                        baslik: l10n.gasClassBTitle,
+                        maddeler: [
+                          l10n.gasClassBMaterial1,
+                          l10n.gasClassBMaterial2,
+                          l10n.gasClassBMaterial3,
+                          l10n.gasClassBMaterial4,
+                          l10n.gasClassBMaterial5,
                         ],
                         kaynak: 'ISO 3941 / TS EN 15004-1:2019 / NFPA 2001',
                       ),
                     ] else ...[
                       _GazSinifAciklama(
-                        baslik: 'Class C  —  Enerjili Elektriksel Yangınlar',
-                        maddeler: const [
-                          'Elektrik panoları (lokal)',
-                          'Motor kontrol üniteleri',
-                          'UPS ve akü sistemleri',
-                          'Aydınlatma ve güç dağıtım ekipmanı',
+                        baslik: l10n.classC,
+                        maddeler: [
+                          l10n.gasClassCMaterial1,
+                          l10n.gasClassCMaterial2,
+                          l10n.gasClassCMaterial3,
+                          l10n.gasClassCMaterial4,
                         ],
-                        kaynak:
-                            'Telekomünikasyon / kontrol odaları / yoğun kablo için → Sınıf A (Derin)\n'
-                            'ISO 3941 / NFPA 2001',
+                        kaynak: l10n.gasClassCSource,
                       ),
                     ],
                     const SizedBox(height: 12),
@@ -7777,7 +8081,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                       value: _ajanIdx,
                       isExpanded: true,
                       decoration: _gazDecor(
-                        'Söndürme Gazı',
+                        l10n.gasAgent,
                         Icons.cloud_rounded,
                       ),
                       items: List.generate(
@@ -7797,7 +8101,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${_ajanlar[_ajanIdx].standart}  ·  ${_ajanlar[_ajanIdx].aciklama}',
+                      '${_ajanlar[_ajanIdx].standart}  ·  ${gazAgentDesc(l10n, _ajanIdx)}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: Colors.black54,
@@ -7817,22 +8121,28 @@ class _GazliSondurmeState extends State<GazliSondurme>
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              'Standart varsayılan — Sınıf ${_yanginSinifi == 'AD'
-                                  ? 'A (Derin)'
-                                  : _yanginSinifi == 'A'
-                                  ? 'A (Yüzey)'
-                                  : _yanginSinifi}: '
-                              '${(() {
-                                final a = _ajanlar[_ajanIdx];
-                                return _yanginSinifi == "A"
-                                    ? a.konsanA
-                                    : _yanginSinifi == "AD"
-                                    ? a.konsanADerin
-                                    : _yanginSinifi == "B"
-                                    ? a.konsanB
-                                    : a.konsanC;
-                              })().toStringAsFixed(1)}%'
-                              '  ·  Silindir: ${_ajanlar[_ajanIdx].silindirKapasite} ${_ajanlar[_ajanIdx].silindirBirim}',
+                              l10n.gasStandardDefaultInfo(
+                                _yanginSinifi == 'AD'
+                                    ? l10n.deepClassA
+                                    : _yanginSinifi == 'A'
+                                    ? l10n.surfaceClassA
+                                    : _yanginSinifi == 'B'
+                                    ? l10n.classB
+                                    : l10n.classC,
+                                (() {
+                                  final a = _ajanlar[_ajanIdx];
+                                  return _yanginSinifi == "A"
+                                      ? a.konsanA
+                                      : _yanginSinifi == "AD"
+                                      ? a.konsanADerin
+                                      : _yanginSinifi == "B"
+                                      ? a.konsanB
+                                      : a.konsanC;
+                                })().toStringAsFixed(1),
+                                _ajanlar[_ajanIdx].silindirKapasite
+                                    .toString(),
+                                _ajanlar[_ajanIdx].silindirBirim,
+                              ),
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: Color(0xFF0E7490),
@@ -7845,22 +8155,21 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     const SizedBox(height: 10),
 
                     // Tasarım konsantrasyonu (düzenlenebilir)
-                    _gazField('Tasarım Konsantrasyonu', _konsanCtrl, '%'),
+                    _gazField(l10n.designConcentration, _konsanCtrl, '%'),
                     const SizedBox(height: 4),
-                    const Text(
-                      'TS EN 15004-1 kapsamı dışı değer kullanıyorsanız düzenleyebilirsiniz. '
-                      'Standart değer için ajan/sınıf seçiminde otomatik güncellenir.',
-                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    Text(
+                      l10n.gasConcentrationHint,
+                      style: const TextStyle(fontSize: 10, color: Colors.black45),
                     ),
                     const SizedBox(height: 16),
 
                     // Deşarj süresi girişi
-                    _gazField('Deşarj Süresi', _desarjCtrl, 's'),
+                    _gazField(l10n.dischargeDuration, _desarjCtrl, 's'),
                     const SizedBox(height: 4),
                     Text(
                       _yanginSinifi == 'B'
-                          ? 'Sınıf B: maks. 10 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli'
-                          : 'Sınıf A/A(Derin)/C: maks. 60 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli',
+                          ? l10n.gasDischargeDurationHintClassB
+                          : l10n.gasDischargeDurationHintOther,
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.black45,
@@ -7871,8 +8180,8 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     // Nozul çapı seçimi
                     Row(
                       children: [
-                        const Text(
-                          'Nozul Çapı:',
+                        Text(
+                          l10n.nozzleDiameter + ':',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
@@ -7893,10 +8202,10 @@ class _GazliSondurmeState extends State<GazliSondurme>
                               ),
                             ),
                             items: [
-                              const DropdownMenuItem<int?>(
+                              DropdownMenuItem<int?>(
                                 value: null,
                                 child: Text(
-                                  'Otomatik (alan/hacim bazlı)',
+                                  l10n.automaticNozzle,
                                   style: TextStyle(fontSize: 13),
                                 ),
                               ),
@@ -7907,8 +8216,11 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                     (e) => DropdownMenuItem<int?>(
                                       value: e.key,
                                       child: Text(
-                                        '${e.value.$1} mm  '
-                                        '(${e.value.$2}–${e.value.$3} kg/s)',
+                                        l10n.gasNozzleFlowRange(
+                                          e.value.$1.toString(),
+                                          e.value.$2.toString(),
+                                          e.value.$3.toString(),
+                                        ),
                                         style: const TextStyle(fontSize: 13),
                                       ),
                                     ),
@@ -7921,10 +8233,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Nozul çapı seçilirse hesap kütle debisi bazlı yapılır; '
-                      'otomatik modda alan/hacim kuralı uygulanır.',
-                      style: TextStyle(fontSize: 10, color: Colors.black45),
+                    Text(
+                      l10n.gasNozzleHint,
+                      style: const TextStyle(fontSize: 10, color: Colors.black45),
                     ),
                     const SizedBox(height: 16),
 
@@ -7946,7 +8257,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     ElevatedButton.icon(
                       onPressed: _hesapla,
                       icon: const Icon(Icons.calculate_rounded),
-                      label: const Text('Hesapla'),
+                      label: Text(AppLocalizations.of(context)!.calculate),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _kGaz,
                         foregroundColor: Colors.white,
@@ -7970,17 +8281,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Row(
+                            Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.cloud_done_rounded,
                                   color: Color(0xFF0891B2),
                                   size: 20,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'HESAPLAMA SONUCU',
-                                  style: TextStyle(
+                                  l10n.calculationResultCaps,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
                                     color: Color(0xFF0891B2),
@@ -7991,29 +8302,29 @@ class _GazliSondurmeState extends State<GazliSondurme>
                             ),
                             const Divider(height: 16),
                             _GazSonucSatir(
-                              etiket: 'Net Koruma Hacmi',
+                              etiket: l10n.netProtectionVolume,
                               deger: '${_netHacim!.toStringAsFixed(2)} m³',
                             ),
                             const SizedBox(height: 4),
                             _GazSonucSatir(
-                              etiket: 'Tasarım Konsantrasyonu',
+                              etiket: l10n.designConcentration,
                               deger: '${_konsantrasyon!.toStringAsFixed(1)} %',
                             ),
                             const SizedBox(height: 4),
                             _GazSonucSatir(
                               etiket: ajan.inert
-                                  ? 'Gerekli Ajan Hacmi'
-                                  : 'Gerekli Ajan Kütlesi',
+                                  ? l10n.gasRequiredAgentVolume
+                                  : l10n.requiredAgentMass,
                               deger: ajan.inert
                                   ? '${_ajanMiktar!.toStringAsFixed(1)} Nm³'
-                                        '${_guvenlikPayi ? '  (+%10 pay)' : ''}'
+                                        '${_guvenlikPayi ? l10n.gasSafetyMarginSuffix : ''}'
                                   : '${_ajanMiktar!.toStringAsFixed(1)} kg'
-                                        '${_guvenlikPayi ? '  (+%10 pay)' : ''}',
+                                        '${_guvenlikPayi ? l10n.gasSafetyMarginSuffix : ''}',
                             ),
                             if (_guvenlikPayi) ...[
                               const SizedBox(height: 4),
                               _GazSonucSatir(
-                                etiket: 'Pay Hariç Hesap',
+                                etiket: l10n.gasExcludingMarginLabel,
                                 deger: ajan.inert
                                     ? '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} Nm³'
                                     : '${(_ajanMiktar! / 1.10).toStringAsFixed(1)} kg',
@@ -8021,7 +8332,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                             ],
                             const SizedBox(height: 4),
                             _GazSonucSatir(
-                              etiket: 'Min. Silindir Sayısı',
+                              etiket: l10n.minimumNozzleCount,
                               deger:
                                   ' ${_silindirSayisi!.toInt()} adet'
                                   '  (${ajan.silindirKapasite} ${ajan.silindirBirim}/silindir)',
@@ -8035,9 +8346,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Deşarj Süresi Gereklilikleri — TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.gasDischargeRequirementsTitle,
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 11,
                                       color: Color(0xFF166534),
@@ -8046,25 +8357,21 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                   const SizedBox(height: 4),
                                   Text(
                                     ajan.inert
-                                        ? '• Maks. deşarj süresi: ≤ 60 s  (NFPA 2001:2022 §6.7.1)\n'
-                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                              '• Boru akış hızı: Tam hidrolik hesap gereklidir (TS EN 15004-1 Ek E)\n'
-                                              '• Silindir dep. sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)'
+                                        ? l10n.gasDischargeReqInert
                                         : ajan.ad.contains('CO²')
-                                        ? '• Maks. deşarj süresi: ≤ 60 s  (TS EN 15004-2 §8.3 / NFPA 12 §5.4.1)\n'
-                                              '• Min. bekleme süresi (soak): ≥ 20 dakika\n'
-                                              '• YALNIZCA insan bulunmayan hacimler — tahliye zorunludur'
+                                        ? l10n.gasDischargeReqCo2
                                         : ajan.ad.contains('FM-200') ||
                                               ajan.ad.contains('227')
-                                        ? '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
-                                              '(EN 15004-5:2020 §8.3 / NFPA 2001:2022 §6.7.1)\n'
-                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                              '• Silindir depolama sıcaklığı: −20 °C – +54 °C\n'
-                                              '• Özgül hacim: S = 0,1269 + 0,000513×T m³/kg  (EN 15004-5 §6.3 Tablo 3)'
-                                        : '• Maks. deşarj süresi: ≤ ${_yanginSinifi == "B" ? "10 s  (Sınıf B)" : "60 s  (Sınıf A/C)"}  '
-                                              '(TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1)\n'
-                                              '• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n'
-                                              '• Silindir depolama sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)',
+                                        ? l10n.gasDischargeReqFm200(
+                                            _yanginSinifi == "B"
+                                                ? l10n.gasMaxDischargeClassB
+                                                : l10n.gasMaxDischargeClassOther,
+                                          )
+                                        : l10n.gasDischargeReqDefault(
+                                            _yanginSinifi == "B"
+                                                ? l10n.gasMaxDischargeClassB
+                                                : l10n.gasMaxDischargeClassOther,
+                                          ),
                                     style: const TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFF166534),
@@ -8084,17 +8391,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.storage_rounded,
                                           size: 14,
                                           color: Color(0xFF0369A1),
                                         ),
-                                        SizedBox(width: 6),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          'IG-01 Silindir Özellikleri  —  TS EN 15004-7:2009 §6.1',
-                                          style: TextStyle(
+                                          l10n.gasIg01SpecsTitle,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 11,
                                             color: Color(0xFF0369A1),
@@ -8118,22 +8425,22 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                               4,
                                             ),
                                           ),
-                                          children: const [
+                                          children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                 horizontal: 6,
                                                 vertical: 3,
                                               ),
                                               child: Text(
-                                                'Özellik',
-                                                style: TextStyle(
+                                                l10n.gasTablePropertyHeader,
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.bold,
                                                   color: Color(0xFF0C4A6E),
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8147,7 +8454,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8161,7 +8468,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8178,30 +8485,29 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                           ],
                                         ),
                                         _gazPropRow(
-                                          'Doldurma basıncı @15°C (bar)',
+                                          l10n.gasFillPressureLabel,
                                           '160',
                                           '200',
                                           '300',
                                         ),
                                         _gazPropRow(
-                                          'Maks. çalışma basıncı @50°C (bar)',
+                                          l10n.gasMaxOperatingPressureLabel,
                                           '188',
                                           '235',
                                           '362',
                                         ),
                                         _gazPropRow(
-                                          'Aşırı basınçlandırma',
-                                          'Uygulanmaz',
-                                          'Uygulanmaz',
-                                          'Uygulanmaz',
+                                          l10n.gasOverpressurizationLabel,
+                                          l10n.gasNotApplicable,
+                                          l10n.gasNotApplicable,
+                                          l10n.gasNotApplicable,
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 6),
-                                    const Text(
-                                      'IG-01 tanklar aşırı basınçlandırılmaz (TS EN 15004-7 §6.2). '
-                                      'Tasarım sıcaklığında S = 0,56119 + 0,002055×T m³/kg formülü kullanılır.',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.gasIg01Note,
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Color(0xFF0369A1),
                                         height: 1.4,
@@ -8222,17 +8528,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.propane_tank_rounded,
                                           size: 14,
                                           color: Color(0xFF1D4ED8),
                                         ),
-                                        SizedBox(width: 6),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          'HFC-227ea Silindir Özellikleri  —  EN 15004-5:2020 §6.1',
-                                          style: TextStyle(
+                                          l10n.gasFm200SpecsTitle,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 11,
                                             color: Color(0xFF1D4ED8),
@@ -8256,22 +8562,22 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                               4,
                                             ),
                                           ),
-                                          children: const [
+                                          children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                 horizontal: 6,
                                                 vertical: 3,
                                               ),
                                               child: Text(
-                                                'Özellik',
-                                                style: TextStyle(
+                                                l10n.gasTablePropertyHeader,
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.bold,
                                                   color: Color(0xFF1E3A8A),
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8285,7 +8591,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8299,7 +8605,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 4,
                                                 vertical: 3,
@@ -8316,19 +8622,19 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                           ],
                                         ),
                                         _gazPropRow(
-                                          'Maks. dolum yoğunluğu (kg/m³)',
+                                          l10n.gasMaxFillDensityLabel,
                                           '1 150',
                                           '1 150',
                                           '1 150',
                                         ),
                                         _gazPropRow(
-                                          'Maks. çalışma basıncı @50°C (bar)',
+                                          l10n.gasMaxOperatingPressureLabel,
                                           '34',
                                           '53',
                                           '—',
                                         ),
                                         _gazPropRow(
-                                          'N₂ şişeleme basıncı @21°C (bar)',
+                                          l10n.gasN2FillingPressureLabel,
                                           '25',
                                           '42',
                                           '50',
@@ -8336,11 +8642,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                       ],
                                     ),
                                     const SizedBox(height: 6),
-                                    const Text(
-                                      'Maks. dolum yoğunluğu aşılması durumunda küçük sıcaklık '
-                                      'artışlarında çok yüksek basınç oluşur; silindir bütünlüğü tehlikeye girer. '
-                                      '(EN 15004-5:2020 §6.1)',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.gasFm200Note,
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Color(0xFF1D4ED8),
                                         height: 1.4,
@@ -8386,17 +8690,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Row(
+                                  Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.checklist_rounded,
                                         size: 15,
                                         color: Color(0xFF92400E),
                                       ),
-                                      SizedBox(width: 5),
+                                      const SizedBox(width: 5),
                                       Text(
-                                        'NFPA 2001:2022 Zorunlu Gereklilikler',
-                                        style: TextStyle(
+                                        l10n.gasNfpa2001RequirementsTitle,
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
                                           color: Color(0xFF92400E),
@@ -8405,40 +8709,23 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                     ],
                                   ),
                                   const SizedBox(height: 8),
-                                  const _GazNfpaSatir(
-                                    '§6.6.1 — Ön Deşarj Alarmı: Dolu alanlarda ajan devreye '
-                                    'girmeden önce sesli/ışıklı uyarı verilmeli; tahliye için '
-                                    'yeterli süre tanınmalıdır.',
+                                  _GazNfpaSatir(l10n.gasReqPreDischargeAlarm),
+                                  _GazNfpaSatir(l10n.gasReqAbortSwitch),
+                                  _GazNfpaSatir(l10n.gasReqVolumeIntegrity),
+                                  _GazNfpaSatir(l10n.gasReqCylinderStorage),
+                                  _GazNfpaSatir(
+                                    l10n.gasReqPostDischargeVentilation,
                                   ),
-                                  const _GazNfpaSatir(
-                                    '§6.6.6 — Abort Anahtarı: Dolu alanlarda el ile iptal (abort) '
-                                    'düğmesi zorunludur; sistemi en az 30 saniye geciktirir.',
-                                  ),
-                                  const _GazNfpaSatir(
-                                    '§6.5.4 — Koruma Hacmi Bütünlüğü: Hacim, soak süresi boyunca '
-                                    'tasarım konsantrasyonunu koruyacak sızdırmazlığa sahip olmalıdır. '
-                                    'Kapı fan testi (door fan test) tavsiye edilir.',
-                                  ),
-                                  const _GazNfpaSatir(
-                                    '§4.4.1 — Silindir Depolama: −20 °C ile +54 °C arasında '
-                                    'muhafaza; dolum basıncı üretici listesine uygun olmalıdır.',
-                                  ),
-                                  const _GazNfpaSatir(
-                                    '§6.9 — Deşarj Sonrası Havalandırma: Ortama girişten önce '
-                                    'O₂ seviyesi ≥ %19,5\'e ulaşana dek zorlamalı havalandırma yapılmalıdır.',
-                                  ),
-                                  const _GazNfpaSatir(
-                                    '§6.1.2 — Bağlantılı Sistemler: Deşarj anında HVAC ve tüm '
-                                    'hava sağlayan damperler otomatik kapanmalıdır.',
+                                  _GazNfpaSatir(l10n.gasReqInterlockedSystems),
+                                  _GazNfpaSatir(
+                                    l10n.gasReqSafetyMargin(
+                                      _guvenlikPayi
+                                          ? l10n.gasSafetyMarginApplied
+                                          : l10n.gasSafetyMarginNotApplied,
+                                    ),
                                   ),
                                   _GazNfpaSatir(
-                                    '§5.4.1.3 — Güvenlik Payı: Min. %10 güvenlik payı zorunludur; '
-                                    'bu hesapta ${_guvenlikPayi ? "uygulandı." : "⚠ uygulanmadı!"}',
-                                  ),
-                                  const _GazNfpaSatir(
-                                    '§7.2.2 — Periyodik Muayene: Silindirler yılda bir ağırlık/'
-                                    'basınç ile kontrol edilmeli; halokarbon dolum miktarı '
-                                    'çiçek valf ölçümü ile doğrulanmalıdır.',
+                                    l10n.gasReqPeriodicInspection,
                                   ),
                                 ],
                               ),
@@ -8453,17 +8740,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.plumbing_rounded,
                                           size: 14,
                                           color: Color(0xFF6D28D9),
                                         ),
-                                        SizedBox(width: 6),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          'Boru Çapı — Ana Hat',
-                                          style: TextStyle(
+                                          l10n.gasMainPipeSizeTitle,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 11,
                                             color: Color(0xFF6D28D9),
@@ -8479,9 +8766,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text(
-                                                'Min. iç çap',
-                                                style: TextStyle(
+                                              Text(
+                                                l10n.gasMinInnerDiameterLabel,
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                   color: Colors.black45,
                                                 ),
@@ -8508,9 +8795,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text(
-                                                'Standart DN',
-                                                style: TextStyle(
+                                              Text(
+                                                l10n.gasStandardDnLabel,
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                   color: Colors.black45,
                                                 ),
@@ -8518,7 +8805,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                               Text(
                                                 _boruDN != null
                                                     ? 'DN $_boruDN'
-                                                    : 'DN > 150',
+                                                    : l10n.gasDnOver150,
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold,
@@ -8537,8 +8824,11 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                           bottom: 4,
                                         ),
                                         child: Text(
-                                          'Hacimsel debi (Q): ${(_akisDebiM3s! * 1000).toStringAsFixed(2)} L/s'
-                                          '  (${_akisDebiM3s!.toStringAsFixed(4)} m³/s)',
+                                          l10n.gasVolumetricFlowLabel(
+                                            (_akisDebiM3s! * 1000)
+                                                .toStringAsFixed(2),
+                                            _akisDebiM3s!.toStringAsFixed(4),
+                                          ),
                                           style: const TextStyle(
                                             fontSize: 11,
                                             color: Color(0xFF6D28D9),
@@ -8551,9 +8841,13 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                           bottom: 4,
                                         ),
                                         child: Text(
-                                          'DN ${_boruDN ?? '>150'} için gerçek hız: '
-                                          '${_boruAkisHizi!.toStringAsFixed(1)} m/s'
-                                          '${_boruAkisHizi! > 30 ? '  ? 30 m/s üstünde' : ' ✓'}',
+                                          l10n.gasPipeActualSpeedLabel(
+                                            _boruDN?.toString() ?? '>150',
+                                            _boruAkisHizi!.toStringAsFixed(1),
+                                            _boruAkisHizi! > 30
+                                                ? l10n.gasSpeedOverLimitSuffix
+                                                : l10n.gasSpeedOkSuffix,
+                                          ),
                                           style: TextStyle(
                                             fontSize: 11,
                                             color: _boruAkisHizi! > 30
@@ -8565,11 +8859,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                           ),
                                         ),
                                       ),
-                                    const Text(
-                                      'Ana hat ön boyutlandırmadır — Q = gaz miktarı ÷ boşalma süresi. '
-                                      'Dağıtım boruları ve nozul hatları ayrıca hesaplanmalıdır. '
-                                      'Kesin tasarım için TS EN 15004-1 Ek E akış hesabı yapınız.',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.gasMainPipeSizingNote,
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.black45,
                                         height: 1.4,
@@ -8589,17 +8881,17 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.scatter_plot_rounded,
                                           size: 14,
                                           color: Color(0xFF065F46),
                                         ),
-                                        SizedBox(width: 6),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          'Nozul & Dağıtım Borusu',
-                                          style: TextStyle(
+                                          l10n.gasNozzleDistributionTitle,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 11,
                                             color: Color(0xFF065F46),
@@ -8613,26 +8905,33 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                       children: [
                                         Expanded(
                                           child: _GazBilgiKutu(
-                                            etiket: 'Nozul Sayısı',
+                                            etiket: l10n.gasNozzleCountLabel,
                                             deger: '${_nozulSayisi!} adet',
                                             alt: _nozulBoreIdx != null
-                                                ? '${_GazliSondurmeState._nozulTablosu[_nozulBoreIdx!].$1} mm nozul\n(kütle debisi bazlı)'
+                                                ? l10n.gasNozzleAltMassBased(
+                                                    _GazliSondurmeState
+                                                        ._nozulTablosu[_nozulBoreIdx!]
+                                                        .$1
+                                                        .toString(),
+                                                  )
                                                 : _olcuModu
-                                                ? 'maks. 50 m²/nozul\n(alan bazlı)'
-                                                : 'maks. 150 m³/nozul\n(hacim bazlı — tahmini)',
+                                                ? l10n.gasNozzleAltAreaBased
+                                                : l10n.gasNozzleAltVolumeBased,
                                             renk: const Color(0xFF065F46),
                                           ),
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
                                           child: _GazBilgiKutu(
-                                            etiket: 'Şube Boru',
+                                            etiket: l10n.gasBranchPipeLabel,
                                             deger: _dalBoruDN != null
                                                 ? 'DN $_dalBoruDN'
-                                                : 'DN > 150',
+                                                : l10n.gasDnOver150,
                                             alt: _dalBoruCapMin != null
-                                                ? 'min. iç çap:\n'
-                                                      '${_dalBoruCapMin!.toStringAsFixed(1)} mm'
+                                                ? l10n.gasBranchMinInnerDiameter(
+                                                    _dalBoruCapMin!
+                                                        .toStringAsFixed(1),
+                                                  )
                                                 : '',
                                             renk: const Color(0xFF047857),
                                           ),
@@ -8663,10 +8962,15 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                                   BorderRadius.circular(6),
                                             ),
                                             child: Text(
-                                              'Nozul başına: '
-                                              '${_nozulAkisKgs!.toStringAsFixed(3)} kg/s  '
-                                              '(izin verilen: ${nozul.$2}–${nozul.$3} kg/s)  '
-                                              '${ok ? "✓" : "⚠ Aralık dışı — farklı çap seçin"}',
+                                              l10n.gasFlowPerNozzleLabel(
+                                                _nozulAkisKgs!
+                                                    .toStringAsFixed(3),
+                                                nozul.$2.toString(),
+                                                nozul.$3.toString(),
+                                                ok
+                                                    ? l10n.gasFlowOk
+                                                    : l10n.gasFlowOutOfRange,
+                                              ),
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w500,
@@ -8682,10 +8986,16 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                     if (_dalBoruHizi != null) ...[
                                       const SizedBox(height: 6),
                                       Text(
-                                        'Şube hız: ${_dalBoruHizi!.toStringAsFixed(1)} m/s'
-                                        '  (nozul başına Q: '
-                                        '${(_akisDebiM3s! / _nozulSayisi! * 1000).toStringAsFixed(2)} L/s)'
-                                        '${_dalBoruHizi! > 30 ? '  ⚠ 30 m/s üstünde!' : '  ✓'}',
+                                        l10n.gasBranchSpeedLabel(
+                                          _dalBoruHizi!.toStringAsFixed(1),
+                                          (_akisDebiM3s! /
+                                                  _nozulSayisi! *
+                                                  1000)
+                                              .toStringAsFixed(2),
+                                          _dalBoruHizi! > 30
+                                              ? l10n.gasBranchSpeedWarning
+                                              : l10n.gasBranchSpeedOk,
+                                        ),
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: _dalBoruHizi! > 30
@@ -8719,9 +9029,10 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              'Tahmini boru metrajı: '
-                                              '≈ ${_tahminiBoruMetraj!.toStringAsFixed(0)} m '
-                                              '(ana hat + dağıtım + nozul düşeyleri)',
+                                              l10n.gasEstimatedPipeLengthLabel(
+                                                _tahminiBoruMetraj!
+                                                    .toStringAsFixed(0),
+                                              ),
                                               style: const TextStyle(
                                                 fontSize: 11,
                                                 color: Color(0xFF065F46),
@@ -8733,11 +9044,9 @@ class _GazliSondurmeState extends State<GazliSondurme>
                                       ),
                                     ],
                                     const SizedBox(height: 6),
-                                    const Text(
-                                      'Nozul yerleşimi: TS EN 15004-1 / NFPA 2001 üretici listesi şartlarına uygun '
-                                      'olarak tavan düzeyine, eşit aralıklı konumlandırılmalıdır.\n'
-                                      'Boru metrajı tahminidir — gerçek proje metrajı mekan planına göre değişir.',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.gasNozzlePlacementNote,
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.black45,
                                         height: 1.4,
@@ -8753,10 +9062,10 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     ],
 
                     const SizedBox(height: 20),
-                    const Text(
-                      'Kaynak: TS EN 15004-1:2019 · NFPA 2001:2022 · NFPA 12:2022',
+                    Text(
+                      l10n.gasSourceFooter,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 10, color: Colors.black38),
+                      style: const TextStyle(fontSize: 10, color: Colors.black38),
                     ),
                   ],
                 ),
@@ -8890,6 +9199,50 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
     ('Su Bazlı Mürekkep', 80.0, 'Yanıcı solvent yok — Sınıf A uygulaması'),
   ];
 
+  static String _baskiMakineAdi(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.baskiOffsetName,
+    1 => l10n.baskiFlexoName,
+    2 => l10n.baskiGravureName,
+    3 => l10n.baskiUvOffsetName,
+    4 => l10n.baskiDigitalName,
+    5 => l10n.baskiPadName,
+    _ => _makineIipleri[i].$1,
+  };
+
+  static String _baskiMakineAciklama(AppLocalizations l10n, int i) =>
+      switch (i) {
+        0 => l10n.baskiOffsetDesc,
+        1 => l10n.baskiFlexoDesc,
+        2 => l10n.baskiGravureDesc,
+        3 => l10n.baskiUvOffsetDesc,
+        4 => l10n.baskiDigitalDesc,
+        5 => l10n.baskiPadDesc,
+        _ => _makineIipleri[i].$2,
+      };
+
+  static String _baskiCozucuAdi(AppLocalizations l10n, int i) => switch (i) {
+    0 => l10n.baskiIpaName,
+    1 => l10n.baskiTolueneName,
+    2 => l10n.baskiEthylAcetateName,
+    3 => l10n.baskiMethanolName,
+    4 => l10n.baskiNPropylName,
+    5 => l10n.baskiSolventMixName,
+    6 => l10n.baskiWaterBasedInkName,
+    _ => _cozucuTipleri[i].$1,
+  };
+
+  static String _baskiCozucuAciklama(AppLocalizations l10n, int i) =>
+      switch (i) {
+        0 => l10n.baskiIpaDesc,
+        1 => l10n.baskiTolueneDesc,
+        2 => l10n.baskiEthylAcetateDesc,
+        3 => l10n.baskiMethanolDesc,
+        4 => l10n.baskiNPropylDesc,
+        5 => l10n.baskiSolventMixDesc,
+        6 => l10n.baskiWaterBasedInkDesc,
+        _ => _cozucuTipleri[i].$3,
+      };
+
   int _makineTipiIdx = 0;
   int _ajanIdx = 0;
   int _cozucuIdx = 0;
@@ -8931,7 +9284,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
 
     final unitSayisi = int.tryParse(_unitSayisiCtrl.text.trim()) ?? 0;
     if (unitSayisi <= 0 || unitSayisi > 50) {
-      setState(() => _hata = 'Geçerli ünite sayısı giriniz (1–50).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterValidUnitCount1to50,
+      );
       return;
     }
 
@@ -8942,7 +9297,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
       final h = double.tryParse(_hCtrl.text.replaceAll(',', '.'));
       if (w == null || l == null || h == null || w <= 0 || l <= 0 || h <= 0) {
         setState(
-          () => _hata = 'Makine kabini ölçülerini eksiksiz giriniz (m).',
+          () => _hata = AppLocalizations.of(
+            context,
+          ).enterMachineCabinDimensionsFullyM,
         );
         return;
       }
@@ -8950,7 +9307,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
     } else {
       final vv = double.tryParse(_vCtrl.text.replaceAll(',', '.'));
       if (vv == null || vv <= 0) {
-        setState(() => _hata = 'Ünite kabini hacmini giriniz (m³).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterUnitCabinVolumeM3,
+        );
         return;
       }
       v = vv;
@@ -8959,7 +9318,10 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
     final tVal = double.tryParse(_tCtrl.text.replaceAll(',', '.')) ?? 20.0;
     final cParsed = double.tryParse(_konsanCtrl.text.replaceAll(',', '.'));
     if (cParsed == null || cParsed <= 0 || cParsed >= 100) {
-      setState(() => _hata = 'Geçerli konsantrasyon değeri giriniz (0–100%).');
+      setState(
+        () =>
+            _hata = AppLocalizations.of(context).enterValidConcentrationPercent,
+      );
       return;
     }
 
@@ -9082,6 +9444,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final ajan = _ajanlar[_ajanIdx];
     final makine = _makineIipleri[_makineTipiIdx];
     final cozucu = _cozucuTipleri[_cozucuIdx];
@@ -9093,10 +9456,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           _InfoBox(
             color: const Color(0xFFECFEFF),
             border: _kBaski,
-            child: const Text(
-              'NFPA 34:2024 §10.6 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019\n'
-              'Matbaa / baskı makinesi kabini gazlı söndürme ön hesap aracı.',
-              style: TextStyle(
+            child: Text(
+              l10n.baskiInfoBoxText,
+              style: const TextStyle(
                 fontSize: 11,
                 height: 1.5,
                 color: Color(0xFF0E7490),
@@ -9110,7 +9472,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
             value: _makineTipiIdx,
             isExpanded: true,
             decoration: InputDecoration(
-              labelText: 'Makine Tipi',
+              labelText: l10n.machineType,
               prefixIcon: const Icon(Icons.print_rounded),
               border: const OutlineInputBorder(),
               isDense: true,
@@ -9124,7 +9486,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
               (i) => DropdownMenuItem(
                 value: i,
                 child: Text(
-                  _makineIipleri[i].$1,
+                  _baskiMakineAdi(l10n, i),
                   style: const TextStyle(fontSize: 13),
                 ),
               ),
@@ -9136,7 +9498,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           ),
           const SizedBox(height: 4),
           Text(
-            makine.$2,
+            _baskiMakineAciklama(l10n, _makineTipiIdx),
             style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
           const SizedBox(height: 10),
@@ -9146,7 +9508,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
             value: _cozucuIdx,
             isExpanded: true,
             decoration: InputDecoration(
-              labelText: 'Mürekkep / Çözücü Tipi',
+              labelText: l10n.inkSolventType,
               prefixIcon: const Icon(Icons.water_drop_rounded),
               border: const OutlineInputBorder(),
               isDense: true,
@@ -9160,7 +9522,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
               (i) => DropdownMenuItem(
                 value: i,
                 child: Text(
-                  _cozucuTipleri[i].$1,
+                  _baskiCozucuAdi(l10n, i),
                   style: const TextStyle(fontSize: 13),
                 ),
               ),
@@ -9176,7 +9538,10 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 ? const Color(0xFFFCA5A5)
                 : const Color(0xFFFBBF24),
             child: Text(
-              'Tutuşma noktası: ${cozucu.$2.toStringAsFixed(0)} °C  ·  ${cozucu.$3}',
+              l10n.baskiIgnitionPointLabel(
+                cozucu.$2.toStringAsFixed(0),
+                _baskiCozucuAciklama(l10n, _cozucuIdx),
+              ),
               style: TextStyle(
                 fontSize: 11,
                 color: cozucu.$2 < 15.0
@@ -9189,30 +9554,32 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
 
           // Ünite sayısı
           _baskiField(
-            'Baskı Ünitesi Sayısı',
+            l10n.printingUnitCount,
             _unitSayisiCtrl,
             'adet',
             tip: TextInputType.number,
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Aynı hacimdeki her ünite için ayrı silindir hesaplanır. '
-            'Farklı hacimliyse birden fazla hesap yapınız.',
-            style: TextStyle(fontSize: 10, color: Colors.black45),
+          Text(
+            l10n.baskiUnitCountHint,
+            style: const TextStyle(fontSize: 10, color: Colors.black45),
           ),
           const SizedBox(height: 12),
 
           // Hacim giriş modu
           SegmentedButton<bool>(
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: true,
-                label: Text('Kabini Ölç', style: TextStyle(fontSize: 12)),
+                label: Text(
+                  l10n.measureCabinet,
+                  style: TextStyle(fontSize: 12),
+                ),
                 icon: Icon(Icons.straighten_rounded),
               ),
               ButtonSegment(
                 value: false,
-                label: Text('Doğrudan Hacim', style: TextStyle(fontSize: 12)),
+                label: Text(l10n.directVolume, style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.view_in_ar_rounded),
               ),
             ],
@@ -9235,7 +9602,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
               children: [
                 Expanded(
                   child: _baskiField(
-                    'Genişlik',
+                    l10n.singleWidth,
                     _wCtrl,
                     'm',
                     labelStyle: TextStyle(fontSize: 12),
@@ -9245,7 +9612,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _baskiField(
-                    'Uzunluk / Derinlik',
+                    l10n.baskiLengthDepthLabel,
                     _lCtrl,
                     'm',
                     labelStyle: TextStyle(fontSize: 12),
@@ -9254,7 +9621,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _baskiField(
-                    'Yükseklik',
+                    l10n.panelHeight,
                     _hCtrl,
                     'm',
                     labelStyle: TextStyle(fontSize: 12),
@@ -9263,13 +9630,13 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
               ],
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Bir ünite kabininin iç boyutları — brüt değil, net iç hacim.',
-              style: TextStyle(fontSize: 10, color: Colors.black45),
+            Text(
+              l10n.baskiCabinetDimensionsHint,
+              style: const TextStyle(fontSize: 10, color: Colors.black45),
             ),
           ] else ...[
             _baskiField(
-              'Ünite Kabini Net Hacmi',
+              l10n.baskiUnitNetVolumeLabel,
               _vCtrl,
               'm³',
               labelStyle: TextStyle(fontSize: 12),
@@ -9278,15 +9645,15 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           const SizedBox(height: 12),
 
           _baskiField(
-            'Min. Tasarım Sıcaklığı',
+            l10n.minimumDesignTemperature,
             _tCtrl,
             '°C',
             labelStyle: TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Makine kabin içi minimum sıcaklık — TS EN 15004-1 §A.2 (varsayılan: 20 °C)',
-            style: TextStyle(fontSize: 10, color: Colors.black45),
+          Text(
+            l10n.baskiMinTempHint,
+            style: const TextStyle(fontSize: 10, color: Colors.black45),
           ),
           const SizedBox(height: 10),
 
@@ -9297,9 +9664,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 activeColor: _kBaski,
                 onChanged: (v) => setState(() => _guvenlikPayi = v ?? true),
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  '%10 Güvenlik Payı (TS EN 15004-1 §5.5)',
+                  l10n.safetyMargin,
                   style: TextStyle(fontSize: 12),
                 ),
               ),
@@ -9312,9 +9679,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 activeColor: _kBaski,
                 onChanged: (v) => setState(() => _lokalUygulama = v ?? false),
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Lokal Uygulama +%30 (NFPA 2001 §6.4) — Açık makine kabinleri için',
+                  l10n.baskiLocalApplicationLabel,
                   style: TextStyle(fontSize: 12),
                 ),
               ),
@@ -9325,17 +9692,17 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           // Silindir tasarım yaklaşımı — birden fazla ünite varsa kritik karar
           if (int.tryParse(_unitSayisiCtrl.text.trim()) != null &&
               (int.tryParse(_unitSayisiCtrl.text.trim()) ?? 1) > 1) ...[
-            const Text(
-              'Tahliye Şekli (Birden Fazla Ünite)',
+            Text(
+              l10n.baskiDischargeModeTitle,
               style: TextStyle(fontSize: 12, color: Colors.black54),
             ),
             const SizedBox(height: 6),
             SegmentedButton<bool>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: true,
                   label: Text(
-                    'Eşzamanlı (Toplam)',
+                    l10n.baskiSimultaneousLabel,
                     style: TextStyle(fontSize: 11),
                   ),
                   icon: Icon(Icons.dynamic_feed_rounded, size: 14),
@@ -9343,7 +9710,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 ButtonSegment(
                   value: false,
                   label: Text(
-                    'Seçici Vana (Bağımsız)',
+                    l10n.baskiSelectiveValveLabel,
                     style: TextStyle(fontSize: 11),
                   ),
                   icon: Icon(Icons.call_split_rounded, size: 14),
@@ -9365,8 +9732,8 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
             const SizedBox(height: 4),
             Text(
               _esZamanli
-                  ? 'Tüm üniteler ortak alanda ve tek seferde tahliye olacaksa seçin — ana besleme = tüm ünitelerin toplam ihtiyacı.'
-                  : 'Her ünite bağımsız algılama + seçici vana ile korunuyorsa seçin — ana besleme yalnızca tek ünite ihtiyacına göre boyutlandırılır (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).',
+                  ? l10n.baskiSimultaneousHint
+                  : l10n.baskiSelectiveValveHint,
               style: const TextStyle(fontSize: 10, color: Colors.black45),
             ),
             const SizedBox(height: 10),
@@ -9379,9 +9746,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                 activeColor: _kBaski,
                 onChanged: (v) => setState(() => _yedekBesleme = v ?? false),
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Yedek (%100) Besleme Grubu (NFPA 12 §4.5.3) — normal işgal edilen alanlar için önerilir',
+                  l10n.baskiBackupSupplyLabel,
                   style: TextStyle(fontSize: 12),
                 ),
               ),
@@ -9394,7 +9761,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
             value: _ajanIdx,
             isExpanded: true,
             decoration: InputDecoration(
-              labelText: 'Söndürme Gazı',
+              labelText: l10n.gasAgent,
               prefixIcon: const Icon(Icons.cloud_rounded),
               border: const OutlineInputBorder(),
               isDense: true,
@@ -9420,25 +9787,29 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           ),
           const SizedBox(height: 4),
           Text(
-            '${ajan.standart}  ·  ${ajan.aciklama}',
+            '${ajan.standart}  ·  ${_GazliSondurmeState.gazAgentDesc(l10n, _ajanIdx)}',
             style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
           const SizedBox(height: 10),
 
-          _baskiField('Tasarım Konsantrasyonu', _konsanCtrl, '%'),
+          _baskiField(l10n.designConcentration, _konsanCtrl, '%'),
           const SizedBox(height: 4),
           Text(
-            'Yangın sınıfı: ${makine.$3 == "B" ? "Sınıf B" : "Sınıf A"}  ·  '
-            'Standart min.: ${makine.$3 == "B" ? ajan.konsanB.toStringAsFixed(1) : ajan.konsanA.toStringAsFixed(1)} %  ·  '
-            'NOAEL: ${ajan.noael >= 0 ? "${ajan.noael.toStringAsFixed(1)} %" : "—"}',
+            l10n.baskiClassSummaryLabel(
+              makine.$3 == "B" ? l10n.classB : l10n.baskiClassAPlain,
+              makine.$3 == "B"
+                  ? ajan.konsanB.toStringAsFixed(1)
+                  : ajan.konsanA.toStringAsFixed(1),
+              ajan.noael >= 0 ? "${ajan.noael.toStringAsFixed(1)} %" : "—",
+            ),
             style: const TextStyle(fontSize: 10, color: Colors.black45),
           ),
           const SizedBox(height: 10),
 
-          _baskiField('Deşarj Süresi', _desarjCtrl, 's'),
+          _baskiField(l10n.dischargeDuration, _desarjCtrl, 's'),
           const SizedBox(height: 4),
-          const Text(
-            'Sınıf B makineler: maks. 10 s  ·  Sınıf A makineler: maks. 60 s  (TS EN 15004-1 §8.3)',
+          Text(
+            l10n.baskiDischargeHint,
             style: TextStyle(fontSize: 10, color: Colors.black45),
           ),
           const SizedBox(height: 16),
@@ -9458,7 +9829,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
+            label: Text(AppLocalizations.of(context)!.calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kBaski,
               foregroundColor: Colors.white,
@@ -9481,17 +9852,17 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.print_rounded,
                         color: Color(0xFF0891B2),
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'HESAPLAMA SONUCU',
-                        style: TextStyle(
+                        l10n.calculationResultCaps,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                           color: Color(0xFF0891B2),
@@ -9501,32 +9872,35 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                     ],
                   ),
                   const Divider(height: 16),
-                  _GazSonucSatir(etiket: 'Makine Tipi', deger: makine.$1),
+                  _GazSonucSatir(
+                    etiket: l10n.machineType,
+                    deger: _baskiMakineAdi(l10n, _makineTipiIdx),
+                  ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket: 'Ünite Kabini Hacmi',
+                    etiket: l10n.unitCabinetVolume,
                     deger: '${_unitHacim!.toStringAsFixed(1)} m³',
                   ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket: 'Baskı Ünitesi Sayısı',
+                    etiket: l10n.printingUnitCount,
                     deger: '${_unitSayisiCtrl.text} adet',
                   ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket: 'Tasarım Konsantrasyonu',
+                    etiket: l10n.designConcentration,
                     deger: '${_konsantrasyon!.toStringAsFixed(1)} %',
                   ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket: 'Ünite Başına Ajan',
+                    etiket: l10n.agentPerUnit,
                     deger: ajan.inert
                         ? '${_ajanBirimMiktar!.toStringAsFixed(2)} Nm³${_guvenlikPayi ? "  (+%10)" : ""}'
                         : '${_ajanBirimMiktar!.toStringAsFixed(2)} kg${_guvenlikPayi ? "  (+%10)" : ""}',
                   ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket: 'Toplam Ajan (${_unitSayisiCtrl.text} ünite)',
+                    etiket: l10n.totalAgent,
                     deger: ajan.inert
                         ? '${_ajanToplamMiktar!.toStringAsFixed(2)} Nm³'
                         : '${_ajanToplamMiktar!.toStringAsFixed(2)} kg',
@@ -9534,27 +9908,29 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                   const SizedBox(height: 4),
                   _GazSonucSatir(
                     etiket: _esZamanli
-                        ? 'Ana Besleme İhtiyacı (eşzamanlı — toplam)'
-                        : 'Ana Besleme İhtiyacı (seçici vana — tek ünite)',
+                        ? l10n.baskiMainSupplySimultaneous
+                        : l10n.baskiMainSupplySelective,
                     deger: ajan.inert
                         ? '${_anaBeslemeMiktar!.toStringAsFixed(2)} Nm³'
                         : '${_anaBeslemeMiktar!.toStringAsFixed(2)} kg',
                   ),
                   const SizedBox(height: 4),
                   _GazSonucSatir(
-                    etiket:
-                        'Ana Besleme Silindir Sayısı (${ajan.silindirKapasite} ${ajan.silindirBirim}/silindir)',
+                    etiket: l10n.baskiMainSupplyCylinderCount(
+                      ajan.silindirKapasite.toString(),
+                      ajan.silindirBirim,
+                    ),
                     deger: '$_silindirSayisi adet',
                   ),
                   if (_yedekBesleme) ...[
                     const SizedBox(height: 4),
                     _GazSonucSatir(
-                      etiket: 'Yedek Besleme Silindir Sayısı',
+                      etiket: l10n.backupCylinderCount,
                       deger: '$_silindirYedekSayisi adet',
                     ),
                     const SizedBox(height: 4),
                     _GazSonucSatir(
-                      etiket: 'Toplam Silindir (Ana + Yedek)',
+                      etiket: l10n.totalCylinders,
                       deger: '${_silindirSayisi! + _silindirYedekSayisi!} adet',
                     ),
                   ],
@@ -9563,12 +9939,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                     _InfoBox(
                       color: const Color(0xFFECFEFF),
                       border: const Color(0xFF67E8F9),
-                      child: const Text(
-                        'Seçici vana tasarımı: her ünite kabini bağımsız algılama devresine sahip olmalı; '
-                        'yalnızca yangın algılanan ünitenin vanası açılır. Ana besleme tek ünite ihtiyacına göre '
-                        'boyutlandırılmıştır — birden fazla ünitede eşzamanlı yangın riski varsa "Eşzamanlı" seçilmelidir '
-                        '(NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.baskiSelectiveValveInfo,
+                        style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFF0E7490),
                         ),
@@ -9580,10 +9953,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                     _InfoBox(
                       color: const Color(0xFFFFF7ED),
                       border: const Color(0xFFFBBF24),
-                      child: const Text(
-                        'Lokal uygulama +%30 faktörü uygulandı (NFPA 2001 §6.4).\n'
-                        'Açık makinelerde veya tam kapalı olmayan kabinlerde uygulanır.',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.baskiLocalApplicationInfo,
+                        style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFF92400E),
                         ),
@@ -9593,9 +9965,9 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                   const SizedBox(height: 10),
                   const Divider(),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Uygulama Notları',
-                    style: TextStyle(
+                  Text(
+                    l10n.baskiApplicationNotesTitle,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                       color: Color(0xFF0891B2),
@@ -9606,11 +9978,11 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
                     color: const Color(0xFFECFEFF),
                     border: const Color(0xFF67E8F9),
                     child: Text(
-                      '• Her baskı ünitesi kabini ayrı ayrı korunmalıdır.\n'
-                      '• Makine içi nozul yerleşimi üretici onayına tabidir.\n'
-                      '• Deşarj öncesi mürekkep/solvent kaynağı otomatik kesilmelidir.\n'
-                      '• ${cozucu.$2 < 23.0 ? "Tutuşma noktası < 23 °C — ATEX bölgesi değerlendirmesi zorunludur." : "Solvent tipi için patlama riski analizi yapılmalıdır."}\n'
-                      '• Silindir sayısı, seçilen tahliye şekli (eşzamanlı/seçici vana) ve yedek besleme kararına göre değişir — üretici tipine göre kesinleştirilmelidir.',
+                      l10n.baskiAppNotesBody(
+                        cozucu.$2 < 23.0
+                            ? l10n.baskiIgnitionNoteAtex
+                            : l10n.baskiIgnitionNoteExplosionRisk,
+                      ),
                       style: const TextStyle(
                         fontSize: 11,
                         color: Color(0xFF0E7490),
@@ -9624,10 +9996,10 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           ],
 
           const SizedBox(height: 20),
-          const Text(
-            'Kaynak: NFPA 34:2024 §10 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019 · EN 1010-2',
+          Text(
+            l10n.baskiSourceFooter,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, color: Colors.black38),
+            style: const TextStyle(fontSize: 10, color: Colors.black38),
           ),
         ],
       ),
@@ -9789,6 +10161,31 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
         'hortumları ve nozullardan oluşan dağıtım sistemi ile geniş alanlarda homojen söndürme sağlanır.',
   );
 
+  static String _panoAgentGroupName(AppLocalizations l10n, int i) =>
+      i == 1 ? l10n.panoAgentGroupCo2 : l10n.panoAgentGroupClean;
+
+  static String _panoSistemAciklama(
+    AppLocalizations l10n,
+    _PanoSistemTipi s,
+  ) => switch (s.kod) {
+    'DLP' => l10n.panoDlpAciklama,
+    'ILP' => l10n.panoIlpAciklama,
+    'DHP' => l10n.panoDhpAciklama,
+    'IHP' => l10n.panoIhpAciklama,
+    _ => s.aciklama,
+  };
+
+  static String _panoSistemDesarjNotu(
+    AppLocalizations l10n,
+    _PanoSistemTipi s,
+  ) => switch (s.kod) {
+    'DLP' => l10n.panoDlpDesarjNotu,
+    'ILP' => l10n.panoIlpDesarjNotu,
+    'DHP' => l10n.panoDhpDesarjNotu,
+    'IHP' => l10n.panoIhpDesarjNotu,
+    _ => s.desarjNotu,
+  };
+
   int _ajanGrubuIdx = 0;
   int _temizAjanIdx =
       0; // 0 = FK-5-1-12, 1 = HFC-227ea (yalnızca temiz gaz grubunda kullanılır)
@@ -9824,14 +10221,20 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
       final l = double.tryParse(_lCtrl.text.replaceAll(',', '.'));
       final h = double.tryParse(_hCtrl.text.replaceAll(',', '.'));
       if (w == null || l == null || h == null || w <= 0 || l <= 0 || h <= 0) {
-        setState(() => _hata = 'Pano/kabin ölçülerini eksiksiz giriniz (m).');
+        setState(
+          () => _hata = AppLocalizations.of(
+            context,
+          ).enterPanelCabinDimensionsFullyM,
+        );
         return;
       }
       v = w * l * h;
     } else {
       final vv = double.tryParse(_vCtrl.text.replaceAll(',', '.'));
       if (vv == null || vv <= 0) {
-        setState(() => _hata = 'Pano/kabin hacmini giriniz (m³).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterPanelCabinVolumeM3,
+        );
         return;
       }
       v = vv;
@@ -9933,6 +10336,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -9941,11 +10345,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           _InfoBox(
             color: const Color(0xFFECFEFF),
             border: _kPano,
-            child: const Text(
-              'LPS 1666 · UL 2166 / FM 5600 · VdS 2093\n'
-              'Elektrik/telekom pano ve kabinleri için önceden mühendislik hesabı yapılmış (pre-engineered) '
-              'pnömatik tubing söndürme sistemi tipi öneri aracı — hidrolik hesap değildir.',
-              style: TextStyle(
+            child: Text(
+              l10n.panoInfoBoxText,
+              style: const TextStyle(
                 fontSize: 11,
                 height: 1.5,
                 color: Color(0xFF0E7490),
@@ -9956,10 +10358,10 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
 
           // Ajan grubu
           SegmentedButton<int>(
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: 0,
-                label: Text('Temiz Gaz', style: TextStyle(fontSize: 12)),
+                label: Text(l10n.cleanAgent, style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.eco_rounded),
               ),
               ButtonSegment(
@@ -9973,13 +10375,13 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           ),
           const SizedBox(height: 4),
           Text(
-            _ajanGruplari[_ajanGrubuIdx],
+            _panoAgentGroupName(l10n, _ajanGrubuIdx),
             style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
           if (_ajanGrubuIdx == 0) ...[
             const SizedBox(height: 10),
             SegmentedButton<int>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: 0,
                   label: Text(
@@ -10001,15 +10403,18 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
 
           // Hacim giriş modu
           SegmentedButton<bool>(
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: true,
-                label: Text('Pano Ölçüsü', style: TextStyle(fontSize: 12)),
+                label: Text(
+                  l10n.panelDimensions,
+                  style: TextStyle(fontSize: 12),
+                ),
                 icon: Icon(Icons.straighten_rounded),
               ),
               ButtonSegment(
                 value: false,
-                label: Text('Doğrudan Hacim', style: TextStyle(fontSize: 12)),
+                label: Text(l10n.directVolume, style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.view_in_ar_rounded),
               ),
             ],
@@ -10021,15 +10426,15 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           if (_olcuModu) ...[
             Row(
               children: [
-                Expanded(child: _panoField('Genişlik', _wCtrl, 'm')),
+                Expanded(child: _panoField(l10n.singleWidth, _wCtrl, 'm')),
                 const SizedBox(width: 8),
-                Expanded(child: _panoField('Uzunluk', _lCtrl, 'm')),
+                Expanded(child: _panoField(l10n.singleLength, _lCtrl, 'm')),
                 const SizedBox(width: 8),
-                Expanded(child: _panoField('Yükseklik', _hCtrl, 'm')),
+                Expanded(child: _panoField(l10n.panelHeight, _hCtrl, 'm')),
               ],
             ),
           ] else
-            _panoField('Pano/Kabin Hacmi', _vCtrl, 'm³'),
+            _panoField(l10n.panelCabinetVolume, _vCtrl, 'm³'),
           const SizedBox(height: 12),
 
           CheckboxListTile(
@@ -10039,9 +10444,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
             contentPadding: EdgeInsets.zero,
             dense: true,
             activeColor: _kPano,
-            title: const Text(
-              'Kapatılamayan açıklık yok (kablo geçişi, havalandırma vb. sızdırmaz)',
-              style: TextStyle(fontSize: 12),
+            title: Text(
+              l10n.panoNoOpeningLabel,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
           if (!_sizdirmazMi) ...[
@@ -10049,17 +10454,16 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
             _InfoBox(
               color: const Color(0xFFFEE2E2),
               border: const Color(0xFFFCA5A5),
-              child: const Text(
-                'Kapatılamayan açıklık varsa ajan tutulamaz ve sistem etkisiz kalabilir. '
-                'Açıklıklar kapatılmalı veya devreye girişte havalandırma/damper otomatik olarak kesilmelidir.',
-                style: TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
+              child: Text(
+                l10n.panoOpeningWarning,
+                style: const TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
               ),
             ),
           ],
           const SizedBox(height: 12),
 
           _panoField(
-            'İhtiyaç Duyulan Tubing Uzunluğu (opsiyonel)',
+            l10n.panoTubingLengthLabel,
             _tubingCtrl,
             'm',
           ),
@@ -10080,7 +10484,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
+            label: Text(AppLocalizations.of(context)!.calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kPano,
               foregroundColor: Colors.white,
@@ -10103,17 +10507,17 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.electrical_services_rounded,
                         color: Color(0xFF0891B2),
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'ÖNERİLEN SİSTEM',
-                        style: TextStyle(
+                        l10n.panoRecommendedSystemCaps,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                           color: Color(0xFF0891B2),
@@ -10124,7 +10528,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                   ),
                   const Divider(height: 16),
                   _GazSonucSatir(
-                    etiket: 'Pano/Kabin Hacmi',
+                    etiket: l10n.panelCabinetVolume,
                     deger: '${_hacim!.toStringAsFixed(2)} m³',
                   ),
                   if (_hacimAsimi) ...[
@@ -10133,9 +10537,16 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                       color: const Color(0xFFFEE2E2),
                       border: const Color(0xFFFCA5A5),
                       child: Text(
-                        'Hacim, pre-engineered pano içi sistem sınırlarını aşıyor '
-                        '(${_ajanGrubuIdx == 0 ? "ILP maks. ${_ilp.maxHacimM3.toStringAsFixed(0)} m³" : "IHP maks. ${_ihp.maxHacimM3.toStringAsFixed(0)} m³"}). '
-                        'Bu hacim için mühendislik hesaplı toplam taşkın sistemi gereklidir — "Mahal" sekmesini kullanınız.',
+                        l10n.panoVolumeExceededWarning(
+                          _ajanGrubuIdx == 0
+                              ? l10n.panoIlpMaxVolume(
+                                  _ilp.maxHacimM3.toStringAsFixed(0),
+                                )
+                              : l10n.panoIhpMaxVolume(
+                                  _ihp.maxHacimM3.toStringAsFixed(0),
+                                ),
+                          l10n.gasRoomTab,
+                        ),
                         style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFFDC2626),
@@ -10144,13 +10555,16 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                     ),
                   ] else if (_sistem != null) ...[
                     const SizedBox(height: 4),
-                    _GazSonucSatir(etiket: 'Sistem Tipi', deger: _sistem!.kod),
+                    _GazSonucSatir(
+                      etiket: l10n.systemType,
+                      deger: _sistem!.kod,
+                    ),
                     const SizedBox(height: 8),
                     _InfoBox(
                       color: const Color(0xFFF8FAFC),
                       border: const Color(0xFFCBD5E1),
                       child: Text(
-                        _sistem!.aciklama,
+                        _panoSistemAciklama(l10n, _sistem!),
                         style: const TextStyle(
                           fontSize: 11,
                           height: 1.5,
@@ -10160,23 +10574,23 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                     ),
                     const SizedBox(height: 8),
                     _GazSonucSatir(
-                      etiket: 'Standart',
+                      etiket: l10n.standard,
                       deger: _sistem!.standart,
                     ),
                     const SizedBox(height: 4),
                     _GazSonucSatir(
-                      etiket: 'Sertifikasyon',
+                      etiket: l10n.certification,
                       deger: _sistem!.sertifika,
                     ),
                     const SizedBox(height: 4),
                     _GazSonucSatir(
-                      etiket: 'Maks. Tubing Uzunluğu',
+                      etiket: l10n.maximumTubingLength,
                       deger: '${_sistem!.maxTubingM.toStringAsFixed(0)} m',
                     ),
                     if (_ajanKg != null) ...[
                       const SizedBox(height: 4),
                       _GazSonucSatir(
-                        etiket: 'Tahmini Ajan Miktarı',
+                        etiket: l10n.estimatedAgentAmount,
                         deger:
                             '${_ajanKg!.toStringAsFixed(2)} kg '
                             '${_ajanGrubuIdx == 1 ? 'CO₂' : _temizAjanlar[_temizAjanIdx]}',
@@ -10186,9 +10600,14 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                         color: const Color(0xFFECFEFF),
                         border: const Color(0xFF67E8F9),
                         child: Text(
-                          'Bu miktar, %${_ajanGrubuIdx == 1 ? _co2TasarimYuzde.toStringAsFixed(0) : (_temizAjanIdx == 0 ? _fk512TasarimYuzde : _hfc227TasarimYuzde).toStringAsFixed(1)} '
-                          'tasarım konsantrasyonu ve 20°C referans alınarak yapılan bir yaklaşık hesaptır. '
-                          'Kesin silindir dolum miktarı üretici onaylı pre-engineered sistem tablosundan seçilmelidir.',
+                          l10n.panoAgentAmountNote(
+                            _ajanGrubuIdx == 1
+                                ? _co2TasarimYuzde.toStringAsFixed(0)
+                                : (_temizAjanIdx == 0
+                                          ? _fk512TasarimYuzde
+                                          : _hfc227TasarimYuzde)
+                                      .toStringAsFixed(1),
+                          ),
                           style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFF0E7490),
@@ -10202,9 +10621,11 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                         color: const Color(0xFFFEE2E2),
                         border: const Color(0xFFFCA5A5),
                         child: Text(
-                          'Girilen tubing uzunluğu (${_tubingCtrl.text} m), ${_sistem!.kod} sisteminin '
-                          '${_sistem!.maxTubingM.toStringAsFixed(0)} m sınırını aşıyor. Bir üst sistem tipine geçilmeli '
-                          'veya birden fazla bağımsız sistem kullanılmalıdır.',
+                          l10n.panoTubingExceededWarning(
+                            _tubingCtrl.text,
+                            _sistem!.kod,
+                            _sistem!.maxTubingM.toStringAsFixed(0),
+                          ),
                           style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFFDC2626),
@@ -10217,11 +10638,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                       _InfoBox(
                         color: const Color(0xFFFEE2E2),
                         border: const Color(0xFFFCA5A5),
-                        child: const Text(
-                          'ILP sistemi tam sızdırmaz kabin gerektirir (UL/FM test şartı). İşaretli kapatılamayan '
-                          'açıklık nedeniyle bu sistem güvenilir değildir — panoyu sızdırmaz hâle getiriniz ya da '
-                          'CO₂ ajan grubuna (DHP/IHP, sızdırmazlık gerekmez) geçiniz.',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.panoSealingWarning,
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFFDC2626),
                           ),
@@ -10233,7 +10652,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                       color: const Color(0xFFECFEFF),
                       border: const Color(0xFF67E8F9),
                       child: Text(
-                        _sistem!.desarjNotu,
+                        _panoSistemDesarjNotu(l10n, _sistem!),
                         style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFF0E7490),
@@ -10245,10 +10664,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                       _InfoBox(
                         color: const Color(0xFFFFF7ED),
                         border: const Color(0xFFFBBF24),
-                        child: const Text(
-                          'CO₂ toksiktir: pano çevresinde sürekli insan bulunmamalıdır. Komşu/bitişik alanlara sızıntı '
-                          'riski varsa %5 LOAEL sınırı gözetilmeli, gerekirse tahliye ve havalandırma planlanmalıdır.',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.panoCo2ToxicityWarning,
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFF92400E),
                           ),
@@ -10259,10 +10677,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                         _InfoBox(
                           color: const Color(0xFFFFF7ED),
                           border: const Color(0xFFFBBF24),
-                          child: const Text(
-                            'Sızdırmazlık şart değildir ancak kapatılamayan açıklık miktarı üreticiye bildirilmeli; '
-                            'VdS 2093 hesabında ek ajan miktarı olarak dikkate alınmalıdır.',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.panoNoSealingRequiredNote,
+                            style: const TextStyle(
                               fontSize: 11,
                               color: Color(0xFF92400E),
                             ),
@@ -10273,9 +10690,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                     const SizedBox(height: 10),
                     const Divider(),
                     const SizedBox(height: 6),
-                    const Text(
-                      'Tasarım Gereklilikleri',
-                      style: TextStyle(
+                    Text(
+                      l10n.panoDesignRequirementsTitle,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                         color: Color(0xFF0891B2),
@@ -10286,13 +10703,8 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                       color: const Color(0xFFECFEFF),
                       border: const Color(0xFF67E8F9),
                       child: Text(
-                        '${_sistem!.kod == 'ILP' || _sistem!.kod == 'IHP' ? '• Manuel boşaltma butonu: ${_sistem!.kod} sistemlerinde tubing hattı ayrı olduğundan, otomatik '
-                                  'tetiklemeye ek olarak acil manuel boşaltma butonu bulunmalıdır.\n' : ''}'
-                        '• Alarm entegrasyonu: sistem aktivasyonunda sesli/ışıklı ön deşarj alarmı ve bina yangın alarm '
-                        'paneline sinyal aktarımı sağlanmalıdır.\n'
-                        '• Silindir seti CE/TPED (Taşınabilir Basınçlı Ekipman Yönetmeliği) uygunluğuna sahip olmalıdır.\n'
-                        '• Satın alma öncesi bağımsız sistem sertifikası (LPCB/UL/FM/VdS) aranmalı; sadece bileşen '
-                        '(silindir, nozul) sertifikası yeterli değildir. Kurulum yetkili/onaylı partner tarafından yapılmalıdır.',
+                        '${_sistem!.kod == 'ILP' || _sistem!.kod == 'IHP' ? l10n.panoManualReleaseNote(_sistem!.kod) : ''}'
+                        '${l10n.panoDesignRequirementsBody}',
                         style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFF0E7490),
@@ -10304,9 +10716,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                   const SizedBox(height: 10),
                   const Divider(),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Bakım Takvimi',
-                    style: TextStyle(
+                  Text(
+                    l10n.panoMaintenanceScheduleTitle,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                       color: Color(0xFF0891B2),
@@ -10316,14 +10728,9 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
                   _InfoBox(
                     color: const Color(0xFFECFEFF),
                     border: const Color(0xFF67E8F9),
-                    child: const Text(
-                      '• Aylık: görsel kontrol (basınç göstergesi, tubing hasarı/korozyonu).\n'
-                      '• 6 ayda bir: basınç anahtarı, conta ve bağlantı kontrolü.\n'
-                      '• 5 yılda bir: silindir hidrostatik testi.\n'
-                      '• 10 yılda bir: sistem revizyonu / bileşen ömür sonu değerlendirmesi.\n'
-                      '• Her dolumda üretici dolum sertifikası alınmalı; sistem devre dışıysa (impaired) '
-                      'en kısa sürede (üretici/otorite talimatına göre azami 48 saat) devreye alınmalı veya yangın gözcüsü tahsis edilmelidir.',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.panoMaintenanceScheduleBody,
+                      style: const TextStyle(
                         fontSize: 11,
                         color: Color(0xFF0E7490),
                         height: 1.5,
@@ -10336,10 +10743,10 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           ],
 
           const SizedBox(height: 20),
-          const Text(
-            'Kaynak: LPS 1666 · UL 2166 · FM 5600 · VdS 2093',
+          Text(
+            l10n.panoSourceFooter,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, color: Colors.black38),
+            style: const TextStyle(fontSize: 10, color: Colors.black38),
           ),
         ],
       ),
@@ -10447,6 +10854,16 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
     ('Depo Rafı', 'Raf arası — S_n × 0.75', false),
   ];
 
+  List<String> _odaTipEtiketleri(AppLocalizations l10n) => [
+    l10n.roomStandard,
+    l10n.roomOpenOffice,
+    l10n.roomTechnical,
+    l10n.roomKitchen,
+    l10n.roomCorridor,
+    l10n.roomProduction,
+    l10n.roomWarehouseRack,
+  ];
+
   int _yapiIdx = 0;
   final List<_KatModel> _katlar = [];
   int _uidSayac = 0;
@@ -10503,9 +10920,11 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
   }
 
   Future<void> _odaDialog({required String katUid, _OdaModel? duzelt}) async {
+    final l10n = AppLocalizations.of(context);
+    final odaEtiketleri = _odaTipEtiketleri(l10n);
     final kat = _katlar.firstWhere((k) => k.uid == katUid);
     int odaTipiIdx = duzelt?.odaTipiIdx ?? 0;
-    final adCtrl = TextEditingController(text: duzelt?.ad ?? _odaTipleri[0].$1);
+    final adCtrl = TextEditingController(text: duzelt?.ad ?? odaEtiketleri[0]);
     final wCtrl = TextEditingController(
       text: duzelt != null ? duzelt.w.toString() : '',
     );
@@ -10522,7 +10941,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setS) => AlertDialog(
           title: Text(
-            duzelt == null ? 'Oda / Alan Ekle' : 'Oda Düzenle',
+            duzelt == null ? l10n.addRoomArea : l10n.editRoomArea,
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
@@ -10536,17 +10955,20 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
               children: [
                 TextField(
                   controller: adCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Oda / Alan Adı',
-                    hintText: 'örn. Yemekhane, Server Odası…',
+                  decoration: InputDecoration(
+                    labelText: l10n.roomAreaName,
+                    hintText: l10n.roomAreaExample,
                     border: OutlineInputBorder(),
                     isDense: true,
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Alan Tipi',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.areaType,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Wrap(
@@ -10556,10 +10978,10 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                     final sel = odaTipiIdx == i;
                     return GestureDetector(
                       onTap: () => setS(() {
-                        final prevAd = _odaTipleri[odaTipiIdx].$1;
+                        final prevAd = odaEtiketleri[odaTipiIdx];
                         odaTipiIdx = i;
                         if (adCtrl.text.isEmpty || adCtrl.text == prevAd) {
-                          adCtrl.text = _odaTipleri[i].$1;
+                          adCtrl.text = odaEtiketleri[i];
                         }
                       }),
                       child: Container(
@@ -10573,7 +10995,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          _odaTipleri[i].$1,
+                          odaEtiketleri[i],
                           style: TextStyle(
                             fontSize: 11,
                             color: sel ? Colors.white : const Color(0xFF7C2D12),
@@ -10592,8 +11014,8 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'G (m)',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.unitWidth,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -10606,8 +11028,8 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'U (m)',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.unitLength,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -10620,8 +11042,8 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'H (m)',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.unitHeight,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -10645,7 +11067,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('İptal'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -10662,11 +11084,11 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                     w <= 0 ||
                     l <= 0 ||
                     h <= 0) {
-                  setS(() => hata = 'Geçerli ölçüler giriniz.');
+                  setS(() => hata = l10n.validDimensions);
                   return;
                 }
                 if (adCtrl.text.trim().isEmpty) {
-                  setS(() => hata = 'Oda adı boş bırakılamaz.');
+                  setS(() => hata = l10n.roomNameRequired);
                   return;
                 }
                 setState(() {
@@ -10692,7 +11114,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                 });
                 Navigator.pop(ctx);
               },
-              child: Text(duzelt == null ? 'Ekle' : 'Kaydet'),
+              child: Text(duzelt == null ? l10n.add : l10n.save),
             ),
           ],
         ),
@@ -10705,20 +11127,21 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
   }
 
   Future<void> _katAdDialog(_KatModel kat) async {
+    final l10n = AppLocalizations.of(context);
     final ctrl = TextEditingController(text: kat.ad);
     await showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Kat / Bölge Adı'),
+        title: Text(l10n.floorZone),
         content: TextField(
           controller: ctrl,
           autofocus: true,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
+          decoration: InputDecoration(border: OutlineInputBorder()),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('İptal'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -10731,7 +11154,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Tamam'),
+            child: Text(l10n.done),
           ),
         ],
       ),
@@ -10741,12 +11164,22 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final toplamDet = _katlar.fold(0, (s, k) => s + k.toplamDet);
+    final yapiEtiketleri = [
+      l10n.buildingOffice,
+      l10n.buildingHome,
+      l10n.buildingHospital,
+      l10n.buildingCommercial,
+      l10n.buildingWarehouseNormal,
+      l10n.buildingWarehouseHigh,
+      l10n.buildingIndustrial,
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Duman Algılama',
+        title: Text(
+          l10n.smokeDetectionTitle,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: _kA,
@@ -10765,9 +11198,8 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: const Color(0xFFFED7AA)),
               ),
-              child: const Text(
-                'TS EN 54-7:2006 / EN 54-14:2004  —  Nokta Tipi Duman Dedektörü Yerleşimi\n'
-                'Ön boyutlandırma — kesin tasarım için sistem mühendisi onayı gereklidir.',
+              child: Text(
+                l10n.smokeReference,
                 style: TextStyle(
                   fontSize: 11,
                   color: Color(0xFF92400E),
@@ -10778,9 +11210,9 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
             const SizedBox(height: 14),
 
             // Yapı tipi
-            const Text(
-              'Yapı Tipi',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            Text(
+              l10n.buildingType,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
             const SizedBox(height: 6),
             Wrap(
@@ -10790,7 +11222,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                 final sec = _yapiIdx == i;
                 return ChoiceChip(
                   label: Text(
-                    _yapiTipleri[i].$1,
+                    yapiEtiketleri[i],
                     style: TextStyle(
                       fontSize: 12,
                       color: sec ? Colors.white : _kA,
@@ -10810,8 +11242,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Varsayılan tavan yüksekliği: ${_varsayilanH.toStringAsFixed(1)} m  '
-              '(her odada ayrıca düzenlenebilir)',
+              '${l10n.defaultCeilingHeight(_varsayilanH.toStringAsFixed(1))} (${l10n.editablePerRoom})',
               style: const TextStyle(fontSize: 10, color: Colors.black45),
             ),
             const SizedBox(height: 16),
@@ -10845,12 +11276,12 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                 final idx = _katlar.length + 1;
                 setState(
                   () => _katlar.add(
-                    _KatModel(uid: _uid(), ad: 'Kat / Bölge $idx'),
+                    _KatModel(uid: _uid(), ad: '${l10n.floorZone} $idx'),
                   ),
                 );
               },
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Kat / Bölge Ekle'),
+              label: Text(l10n.addFloorZone),
               style: OutlinedButton.styleFrom(
                 foregroundColor: _kA,
                 side: BorderSide(color: _kA),
@@ -10881,9 +11312,9 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                       size: 20,
                     ),
                     const SizedBox(width: 10),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Toplam Dedektör',
+                        l10n.totalDetectors,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -10892,7 +11323,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                       ),
                     ),
                     Text(
-                      '$toplamDet adet',
+                      l10n.detectorCount(toplamDet),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -10905,10 +11336,10 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
             ],
 
             const SizedBox(height: 20),
-            const Text(
-              'Kaynak: TS EN 54-7:2006 · EN 54-14:2004',
+            Text(
+              '${l10n.sourceLabel}: TS EN 54-7:2006 · EN 54-14:2004',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 10, color: Colors.black38),
+              style: const TextStyle(fontSize: 10, color: Colors.black38),
             ),
           ],
         ),
@@ -10939,6 +11370,7 @@ class _KatKarti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Container(
@@ -10988,7 +11420,7 @@ class _KatKarti extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${kat.odalar.length} alan · ${kat.toplamDet} det.',
+                      l10n.floorZoneSummary(kat.odalar.length, kat.toplamDet),
                       style: const TextStyle(
                         fontSize: 11,
                         color: Colors.black45,
@@ -11034,10 +11466,7 @@ class _KatKarti extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: onOdaEkle,
                   icon: const Icon(Icons.add_rounded, size: 16),
-                  label: const Text(
-                    'Oda / Alan Ekle',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  label: Text(l10n.addRoomArea, style: TextStyle(fontSize: 12)),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: kA,
                     side: BorderSide(color: kA),
@@ -11083,8 +11512,17 @@ class _OdaSatiriState extends State<_OdaSatiri> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final o = widget.oda;
-    final tip = widget.odaTipleri[o.odaTipiIdx].$1;
+    final tip = [
+      l10n.roomStandard,
+      l10n.roomOpenOffice,
+      l10n.roomTechnical,
+      l10n.roomKitchen,
+      l10n.roomCorridor,
+      l10n.roomProduction,
+      l10n.roomWarehouseRack,
+    ][o.odaTipiIdx];
     return Column(
       children: [
         const Divider(height: 1, indent: 12, endIndent: 12),
@@ -11133,7 +11571,7 @@ class _OdaSatiriState extends State<_OdaSatiri> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${o.detSayisi} det.',
+                      l10n.detectorBadge(o.detSayisi!),
                       style: const TextStyle(
                         fontSize: 11,
                         color: Colors.white,
@@ -11147,7 +11585,7 @@ class _OdaSatiriState extends State<_OdaSatiri> {
                   color: Colors.grey,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  tooltip: 'Kopyala',
+                  tooltip: l10n.copy,
                   onPressed: widget.onKopyala,
                 ),
                 const SizedBox(width: 2),
@@ -11174,16 +11612,16 @@ class _OdaSatiriState extends State<_OdaSatiri> {
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 0, 12, 8),
             child: o.yuksekTavan
-                ? const Text(
-                    '⚠ H > 12 m — Işın tipi / ASD dedektör gereklidir (EN 54-12 / EN 54-20)',
+                ? Text(
+                    l10n.highCeilingNotice,
                     style: TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (o.isinOneri)
-                        const Text(
-                          'ℹ H = 8–12 m — Işın dedektör de değerlendirilebilir',
+                        Text(
+                          l10n.beamRecommendation,
                           style: TextStyle(
                             fontSize: 11,
                             color: Color(0xFF92400E),
@@ -11191,16 +11629,14 @@ class _OdaSatiriState extends State<_OdaSatiri> {
                         ),
                       if (o.aralikY != null) ...[
                         Text(
-                          'Genişlik aralığı: ${o.aralikX!.toStringAsFixed(2)} m  |  '
-                          'Uzunluk aralığı: ${o.aralikY!.toStringAsFixed(2)} m',
+                          '${l10n.widthSpacing(o.aralikX!.toStringAsFixed(2))} | ${l10n.lengthSpacing(o.aralikY!.toStringAsFixed(2))}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: Colors.black54,
                           ),
                         ),
                         Text(
-                          'Duvar mesafesi W: ${o.duvarX!.toStringAsFixed(2)} m  |  '
-                          'Duvar mesafesi L: ${o.duvarY!.toStringAsFixed(2)} m',
+                          '${l10n.wallDistanceWidth(o.duvarX!.toStringAsFixed(2))} | ${l10n.wallDistanceLength(o.duvarY!.toStringAsFixed(2))}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: Colors.black54,
@@ -11208,8 +11644,7 @@ class _OdaSatiriState extends State<_OdaSatiri> {
                         ),
                       ] else if (o.aralikX != null) ...[
                         Text(
-                          'Koridor aralığı: ${o.aralikX!.toStringAsFixed(2)} m  |  '
-                          'Duvar mesafesi: ${o.duvarY!.toStringAsFixed(2)} m',
+                          '${l10n.corridorSpacing(o.aralikX!.toStringAsFixed(2))} | ${l10n.wallDistance(o.duvarY!.toStringAsFixed(2))}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: Colors.black54,
@@ -11218,7 +11653,9 @@ class _OdaSatiriState extends State<_OdaSatiri> {
                       ],
                       if (o.snKullan != null)
                         Text(
-                          'S_n = ${o.snKullan!.toStringAsFixed(0)} m²/adet.',
+                          l10n.snAreaPerDetector(
+                            o.snKullan!.toStringAsFixed(0),
+                          ),
                           style: const TextStyle(
                             fontSize: 10,
                             color: Colors.black38,
@@ -11269,6 +11706,12 @@ class _DumanKontrolState extends State<DumanKontrol> {
     ('Alçıpan (Çift)', 3.0e-4),
   ];
   int _duvarMalzemeIdx = 0;
+
+  List<String> _duvarMalzemeEtiketleri(AppLocalizations l10n) => [
+    l10n.wallMaterialConcrete,
+    l10n.wallMaterialLightBlock,
+    l10n.wallMaterialGypsum,
+  ];
 
   String? _hata;
   double? _mp, _Ts, _dT, _AvEff, _Ai;
@@ -11345,20 +11788,24 @@ class _DumanKontrolState extends State<DumanKontrol> {
 
     if (_mod < 2) {
       if (alan == null || alan <= 0) {
-        setState(() => _hata = 'Oda alanı giriniz (m²).');
+        setState(() => _hata = AppLocalizations.of(context).enterRoomAreaM2);
         return;
       }
       if (H == null || H <= 0) {
-        setState(() => _hata = 'Tavan yüksekliği giriniz (m).');
+        setState(
+          () => _hata = AppLocalizations.of(context).enterCeilingHeightSimpleM,
+        );
         return;
       }
       if (Q == null || Q <= 0) {
-        setState(() => _hata = 'Tasarım HRR giriniz (kW).');
+        setState(() => _hata = AppLocalizations.of(context).enterDesignHrrKw);
         return;
       }
       final z = double.tryParse(_zCtrl.text.replaceAll(',', '.'));
       if (z == null || z <= 0 || z >= H) {
-        setState(() => _hata = 'Duman katmanı taban yüksekliği: 0 < z < H');
+        setState(
+          () => _hata = AppLocalizations.of(context).smokeLayerHeightRangeError,
+        );
         return;
       }
 
@@ -11510,6 +11957,7 @@ class _DumanKontrolState extends State<DumanKontrol> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -11530,7 +11978,7 @@ class _DumanKontrolState extends State<DumanKontrol> {
                     Icon(Icons.air_rounded, color: _kD, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      'Duman Kontrol Sistemi',
+                      l10n.smokeControlTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
@@ -11540,8 +11988,8 @@ class _DumanKontrolState extends State<DumanKontrol> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'EN 12101-2 Doğal · EN 12101-3 Mekanik · EN 12101-6 Basınçlandırma',
+                Text(
+                  l10n.smokeControlStandards,
                   style: TextStyle(fontSize: 11, color: Colors.black54),
                 ),
               ],
@@ -11549,37 +11997,37 @@ class _DumanKontrolState extends State<DumanKontrol> {
           ),
           const SizedBox(height: 14),
 
-          const Text(
-            'Sistem Türü',
+          Text(
+            l10n.systemType,
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
           const SizedBox(height: 6),
           SegmentedButton<int>(
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: 0,
                 label: Text(
-                  'Doğal\nTahliye',
+                  l10n.naturalExhaust,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11),
+                  style: const TextStyle(fontSize: 11),
                 ),
                 icon: Icon(Icons.open_in_new_rounded, size: 16),
               ),
               ButtonSegment(
                 value: 1,
                 label: Text(
-                  'Mekanik\nTahliye',
+                  l10n.mechanicalExhaust,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11),
+                  style: const TextStyle(fontSize: 11),
                 ),
                 icon: Icon(Icons.cyclone_rounded, size: 16),
               ),
               ButtonSegment(
                 value: 2,
                 label: Text(
-                  'Basınçlan-\ndırma',
+                  l10n.pressurization,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11),
+                  style: const TextStyle(fontSize: 11),
                 ),
                 icon: Icon(Icons.compress_rounded, size: 16),
               ),
@@ -11603,18 +12051,18 @@ class _DumanKontrolState extends State<DumanKontrol> {
           if (_mod < 2) ...[
             Row(
               children: [
-                Expanded(child: _field('Oda Alanı', _alanCtrl, 'm²')),
+                Expanded(child: _field(l10n.roomArea, _alanCtrl, 'm²')),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _field('Tavan Yüksekliği', _yukseklikCtrl, 'm'),
+                  child: _field(l10n.ceilingHeight, _yukseklikCtrl, 'm'),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            _field('Tasarım HRR (Yangın Gücü)', _qCtrl, 'kW'),
+            _field(l10n.designFirePower, _qCtrl, 'kW'),
             const SizedBox(height: 4),
-            const Text(
-              'Tasarım yangın gücü — EN 1991-1-2 Ek E. Örn: orta tehlike ofis ≈ 500 kW',
+            Text(
+              l10n.designFirePowerHint,
               style: TextStyle(fontSize: 10, color: Colors.black45),
             ),
             const SizedBox(height: 6),
@@ -11626,9 +12074,9 @@ class _DumanKontrolState extends State<DumanKontrol> {
                     appBar: AppBar(
                       backgroundColor: const Color(0xFFB91C1C),
                       foregroundColor: Colors.white,
-                      title: const Text(
-                        'Yangın Yükü & Söndürme',
-                        style: TextStyle(
+                      title: Text(
+                        l10n.fireAndSuppression,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -11639,9 +12087,9 @@ class _DumanKontrolState extends State<DumanKontrol> {
                 ),
               ),
               icon: const Icon(Icons.calculate_outlined, size: 16),
-              label: const Text(
-                'HRR değerini bilmiyorum — Yangın yükü hesabı yap',
-                style: TextStyle(fontSize: 12),
+              label: Text(
+                l10n.unknownFirePowerButton,
+                style: const TextStyle(fontSize: 12),
               ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: _kD,
@@ -11656,10 +12104,10 @@ class _DumanKontrolState extends State<DumanKontrol> {
               ),
             ),
             const SizedBox(height: 8),
-            _field('Duman Katmanı Taban Yüksekliği  z', _zCtrl, 'm'),
+            _field(l10n.smokeLayerHeight, _zCtrl, 'm'),
             const SizedBox(height: 4),
-            const Text(
-              'Temiz hava katmanı üst sınırı (zeminden ölçülür). z < H olmak zorunda. Hedef z ≥ 2.5 m',
+            Text(
+              l10n.smokeLayerHeightHint,
               style: TextStyle(fontSize: 10, color: Colors.black45),
             ),
             Builder(
@@ -11678,20 +12126,22 @@ class _DumanKontrolState extends State<DumanKontrol> {
                 if (d <= 0 || z >= H) {
                   bg = const Color(0xFFFEE2E2);
                   fg = const Color(0xFFDC2626);
-                  msg =
-                      'Hata: z ≥ H — duman katmanı oluşamaz. z < ${H.toStringAsFixed(1)} m olmalı.';
+                  msg = l10n.smokeLayerHeightError(H.toStringAsFixed(1));
                 } else if (warn) {
                   bg = const Color(0xFFFFFBEB);
                   fg = const Color(0xFFB45309);
-                  msg =
-                      'Uyarı: z = ${z.toStringAsFixed(1)} m < 2.5 m — tahliye güvenliği yetersiz.  '
-                      'd (duman derinliği) = ${d.toStringAsFixed(1)} m';
+                  msg = l10n.smokeLayerLowWarning(
+                    z.toStringAsFixed(1),
+                    d.toStringAsFixed(1),
+                  );
                 } else {
                   bg = const Color(0xFFF0FDF4);
                   fg = const Color(0xFF166534);
-                  msg =
-                      'z = ${z.toStringAsFixed(1)} m  →  d (duman derinliği) = ${d.toStringAsFixed(1)} m  '
-                      '(H − z = ${H.toStringAsFixed(1)} − ${z.toStringAsFixed(1)})';
+                  msg = l10n.smokeLayerDepthInfo(
+                    z.toStringAsFixed(1),
+                    d.toStringAsFixed(1),
+                    H.toStringAsFixed(1),
+                  );
                 }
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -11712,7 +12162,9 @@ class _DumanKontrolState extends State<DumanKontrol> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(child: _field('Ortam Sıcaklığı', _tambiCtrl, '°C')),
+                Expanded(
+                  child: _field(l10n.ambientTemperature, _tambiCtrl, '°C'),
+                ),
               ],
             ),
           ],
@@ -11720,36 +12172,32 @@ class _DumanKontrolState extends State<DumanKontrol> {
           if (_mod == 2) ...[
             Row(
               children: [
-                Expanded(child: _field('Kapı Genişliği', _kapiGenCtrl, 'm')),
+                Expanded(child: _field(l10n.doorWidth, _kapiGenCtrl, 'm')),
                 const SizedBox(width: 8),
-                Expanded(child: _field('Kapı Yüksekliği', _kapiYukCtrl, 'm')),
+                Expanded(child: _field(l10n.doorHeight, _kapiYukCtrl, 'm')),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(
-                  child: _field('Merdiven Şaft Genişliği', _mGenCtrl, 'm'),
-                ),
+                Expanded(child: _field(l10n.stairShaftWidth, _mGenCtrl, 'm')),
                 const SizedBox(width: 8),
-                Expanded(
-                  child: _field('Merdiven Şaft Derinliği', _mDepCtrl, 'm'),
-                ),
+                Expanded(child: _field(l10n.stairShaftDepth, _mDepCtrl, 'm')),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(child: _field('Kat Yüksekliği', _katYukCtrl, 'm')),
+                Expanded(child: _field(l10n.floorHeight, _katYukCtrl, 'm')),
                 const SizedBox(width: 8),
-                Expanded(child: _field('Kat Sayısı', _katCtrl, 'kat')),
+                Expanded(child: _field(l10n.floorCount, _katCtrl, 'kat')),
               ],
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
               value: _duvarMalzemeIdx,
               decoration: InputDecoration(
-                labelText: 'Şaft Duvarı Malzemesi',
+                labelText: l10n.shaftWallMaterial,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -11764,7 +12212,7 @@ class _DumanKontrolState extends State<DumanKontrol> {
                 (i) => DropdownMenuItem(
                   value: i,
                   child: Text(
-                    '${_duvarMalzemeler[i].$1}  —  ${(_duvarMalzemeler[i].$2 * 1e4).toStringAsFixed(1)}×10⁻⁴ m²/m²',
+                    '${_duvarMalzemeEtiketleri(l10n)[i]}  —  ${(_duvarMalzemeler[i].$2 * 1e4).toStringAsFixed(1)}×10⁻⁴ m²/m²',
                     style: const TextStyle(fontSize: 13),
                   ),
                 ),
@@ -11772,8 +12220,8 @@ class _DumanKontrolState extends State<DumanKontrol> {
               onChanged: (v) => setState(() => _duvarMalzemeIdx = v ?? 0),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Hedef ΔP = 50 Pa, kapı aralığı 10 mm  (EN 12101-6 §7.3.3 / Ek F Tablo F.1)',
+            Text(
+              l10n.pressurizationConditions,
               style: TextStyle(fontSize: 10, color: Colors.black45),
             ),
           ],
@@ -11798,7 +12246,7 @@ class _DumanKontrolState extends State<DumanKontrol> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: const Text('Hesapla'),
+            label: Text(l10n.calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kD,
               foregroundColor: Colors.white,
@@ -11815,31 +12263,25 @@ class _DumanKontrolState extends State<DumanKontrol> {
             const SizedBox(height: 16),
             _DumanSonucKutu(
               renk: _kD,
-              baslik: 'Doğal Tahliye Sonuçları  (EN 12101-2)',
+              baslik: l10n.naturalExhaustResult,
               satirlar: [
-                ('Plume kütle debisi  ṁₚ', '${_mp!.toStringAsFixed(3)} kg/s'),
+                (l10n.smokeMassFlow, '${_mp!.toStringAsFixed(3)} kg/s'),
                 (
-                  'Duman sıcaklığı  Tₛ',
+                  l10n.smokeTemperature,
                   '${(_Ts! - 273.15).toStringAsFixed(1)} °C',
                 ),
-                ('Sıcaklık artışı  ΔT', '${_dT!.toStringAsFixed(1)} °C'),
-                (
-                  'Gerekli efektif açıklık  Av',
-                  '${_AvEff!.toStringAsFixed(2)} m²',
-                ),
-                (
-                  'Min. taze hava girişi  Ai ≥ 1.1 Av',
-                  '${_Ai!.toStringAsFixed(2)} m²',
-                ),
+                (l10n.temperatureRise, '${_dT!.toStringAsFixed(1)} °C'),
+                (l10n.effectiveOpening, '${_AvEff!.toStringAsFixed(2)} m²'),
+                (l10n.minimumFreshAir, '${_Ai!.toStringAsFixed(2)} m²'),
               ],
             ),
             const SizedBox(height: 8),
             _dumanNot([
-              'Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Kütle debisi (Thomas formülü, EN 12101-2 Ek B): ṁₚ = 0.071×Qc¹³×z⁵³ + 0.0018×Qc',
-              'Cd = 0.5 (çatı menfezi, EN 12101-2 §6.4)',
-              'Taze hava girişi alt bölgeden; açıklıklar eşit dağıtılmalı',
-              'Hesap minimum alandır; sektörleme ve güvenlik payı ayrıca eklenmeli',
-              'Sorumluluk: Bu hesap gerçekleştirilen ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+              l10n.smokeNoteNaturalPlume,
+              l10n.smokeNoteNaturalCd,
+              l10n.smokeNoteNaturalFreshAir,
+              l10n.smokeNoteMinimumAreaCaveat,
+              l10n.smokeNoteResponsibilityNatural,
             ]),
           ],
 
@@ -11848,35 +12290,35 @@ class _DumanKontrolState extends State<DumanKontrol> {
             const SizedBox(height: 16),
             _DumanSonucKutu(
               renk: _kD,
-              baslik: 'Mekanik Tahliye Sonuçları  (EN 12101-3)',
+              baslik: l10n.mechanicalExhaustResult,
               satirlar: [
-                ('Plume kütle debisi  ṁₚ', '${_mp!.toStringAsFixed(3)} kg/s'),
+                (l10n.smokeMassFlow, '${_mp!.toStringAsFixed(3)} kg/s'),
                 (
-                  'Duman sıcaklığı  Tₛ',
+                  l10n.smokeTemperature,
                   '${(_Ts! - 273.15).toStringAsFixed(1)} °C',
                 ),
-                ('Sıcaklık artışı  ΔT', '${_dT!.toStringAsFixed(1)} °C'),
+                (l10n.temperatureRise, '${_dT!.toStringAsFixed(1)} °C'),
                 (
-                  'Hacimsel duman debisi  V̇',
+                  l10n.smokeVolumeFlow,
                   '${_vDot!.toStringAsFixed(3)} m³/s  (${(_vDot! * 3600).toStringAsFixed(0)} m³/h)',
                 ),
                 (
-                  'Hesaplanan hava değişimi',
+                  l10n.calculatedAirChanges,
                   '${_havaD!.toStringAsFixed(1)} 1/h',
                 ),
                 (
-                  'Fan tasarım debisi',
-                  '${_fanM3h!.toStringAsFixed(0)} m³/h  →  ${_minHDYonetir ? 'min. hava değişimi kriteri' : 'plume debisi kriteri'}',
+                  l10n.fanDesignFlow,
+                  '${_fanM3h!.toStringAsFixed(0)} m³/h  →  ${_minHDYonetir ? l10n.fanCriterionMinAirChange : l10n.fanCriterionPlumeFlow}',
                 ),
               ],
             ),
             const SizedBox(height: 8),
             _dumanNot([
-              'Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Fan kapasitesi plume debisini karşılayacak büyüklükte seçilir.',
-              'Min. hava değişimi ≥ 10/h (EN 12101-3 §5.2)',
-              'Fan sıcaklık dayanımı ≥ 400 °C / 120 dk (F400) — EN 12101-3',
-              "Taze hava girişi duman tahliye debisinin en az %70'i olmalı",
-              'Sorumluluk: Bu hesap ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+              l10n.smokeNoteMechanicalPlume,
+              l10n.smokeNoteMinAirChange,
+              l10n.smokeNoteFanTempRating,
+              l10n.smokeNoteFreshAirPercent,
+              l10n.smokeNoteResponsibility,
             ]),
           ],
 
@@ -11885,33 +12327,27 @@ class _DumanKontrolState extends State<DumanKontrol> {
             const SizedBox(height: 16),
             _DumanSonucKutu(
               renk: _kD,
-              baslik: 'Basınçlandırma Sonuçları  (EN 12101-6)',
+              baslik: l10n.pressurizationResult,
               satirlar: [
-                ('Hedef basınç farkı  ΔP', '50 Pa'),
+                (l10n.targetPressureDifference, '50 Pa'),
+                (l10n.openDoorFlow, '${_qKapi!.toStringAsFixed(0)} m³/h'),
                 (
-                  'Açık kapı geçiş debisi',
-                  '${_qKapi!.toStringAsFixed(0)} m³/h',
-                ),
-                (
-                  'Kapalı kapı sızıntısı / kat',
+                  l10n.closedDoorLeakage,
                   '${_qSizinti!.toStringAsFixed(0)} m³/h',
                 ),
-                (
-                  'Duvar sızıntısı (tüm katlar)',
-                  '${_qDuvar!.toStringAsFixed(0)} m³/h',
-                ),
-                ('Toplam fan debisi', '${_qToplam!.toStringAsFixed(0)} m³/h'),
+                (l10n.wallLeakage, '${_qDuvar!.toStringAsFixed(0)} m³/h'),
+                (l10n.totalFanFlow, '${_qToplam!.toStringAsFixed(0)} m³/h'),
               ],
             ),
             const SizedBox(height: 8),
             _dumanNot([
-              'Açık kapı geçiş debisi: tahliye sırasında 1 kat kapısı açıkken merdivenden akan hava — fanın karşılaması gereken en büyük ani yük',
-              'Hesap: Q = A_kapı × √(2ΔP/ρ)  — kapı tam açık, tam ΔP geçerli kabulü (güvenli taraf)',
-              'Duvar sızıntısı: beton/kagir şaft için 1.3×10⁻⁴ m²/m²  (EN 12101-6 Ek F Tablo F.1)',
-              'Kapı aralık genişliği 10 mm, Cd = 0.83  (EN 12101-6 Ek F)',
-              'Açık kapı koşulunda kapı itme kuvveti ≤ 100 N kontrol edilmeli',
-              'ΔP sınır: ≥ 50 Pa (yangın katında) / ≤ 60 Pa (diğer katlar)',
-              'Sorumluluk: Bu hesap ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.',
+              l10n.smokeNoteDoorFlowExplain,
+              l10n.smokeNoteDoorFlowFormula,
+              l10n.smokeNoteWallLeakageConcrete,
+              l10n.smokeNoteDoorGapCd,
+              l10n.smokeNoteDoorForceCheck,
+              l10n.smokeNotePressureLimit,
+              l10n.smokeNoteResponsibility,
             ]),
           ],
         ],
@@ -12080,15 +12516,21 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
     final a = double.tryParse(_alanCtrl.text.replaceAll(',', '.'));
     final t = double.tryParse(_sureCtrl.text.replaceAll(',', '.'));
     if (e == null || e <= 0) {
-      setState(() => _hata = 'Kurulu kapasiteyi giriniz (kWh).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterInstalledCapacityKwh,
+      );
       return;
     }
     if (a == null || a <= 0) {
-      setState(() => _hata = 'Koruma alanını giriniz (m²).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterProtectionAreaM2,
+      );
       return;
     }
     if (t == null || t <= 0) {
-      setState(() => _hata = 'Uygulama süresini giriniz (dk).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterApplicationDurationMin,
+      );
       return;
     }
     // NFPA 855:2023 §4.4.2 — tehlike kategorisi
@@ -12156,15 +12598,22 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
     final n = int.tryParse(_aracSayisiCtrl.text);
     final t = double.tryParse(_evSureCtrl.text.replaceAll(',', '.'));
     if (e == null || e <= 0) {
-      setState(() => _evHata = 'Araç batarya kapasitesini giriniz (kWh).');
+      setState(
+        () => _evHata = AppLocalizations.of(
+          context,
+        ).enterVehicleBatteryCapacityKwh,
+      );
       return;
     }
     if (n == null || n <= 0) {
-      setState(() => _evHata = 'Araç sayısını giriniz.');
+      setState(() => _evHata = AppLocalizations.of(context).enterVehicleCount);
       return;
     }
     if (t == null || t <= 0) {
-      setState(() => _evHata = 'Uygulama süresini giriniz (dk).');
+      setState(
+        () =>
+            _evHata = AppLocalizations.of(context).enterApplicationDurationMin,
+      );
       return;
     }
     // Araç başına minimum debi — VdS 3471:2023
@@ -12249,6 +12698,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -12267,18 +12717,18 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             fillColor: _kLi,
             color: _kLi,
             constraints: const BoxConstraints(minHeight: 42, minWidth: 0),
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
-                  'ESS / Sabit Depo',
+                  l10n.essStationary,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
-                  'Elektrikli Araç',
+                  l10n.electricVehicleMode,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                 ),
               ),
@@ -12290,11 +12740,9 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             _InfoBox(
               color: const Color(0xFFEDE9FE),
               border: _kLi,
-              child: const Text(
-                'ISO 3941:2026 · NFPA 855:2023 · IEC 62619:2022 · FM Global DS 5-33\n'
-                'Lityum iyon/polimer pil yangınlarında termik kaçış (thermal runaway) nedeniyle '
-                'gazlı baskılama değil soğutma esastır. Aşağıdaki hesap ön boyutlandırma amaçlıdır.',
-                style: TextStyle(
+              child: Text(
+                l10n.essLithiumFireInfo,
+                style: const TextStyle(
                   fontSize: 11,
                   height: 1.5,
                   color: Color(0xFF4C1D95),
@@ -12304,8 +12752,8 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             const SizedBox(height: 16),
 
             // Pil kimyası
-            const Text(
-              'Pil Teknolojisi',
+            Text(
+              l10n.batteryTechnology,
               style: TextStyle(fontSize: 12, color: Colors.black54),
             ),
             const SizedBox(height: 6),
@@ -12314,26 +12762,10 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
               runSpacing: 8,
               children: [
                 for (final entry in [
-                  (
-                    'NMC',
-                    'NMC/NCM',
-                    'Nikel-Manganez-Kobalt\n30 MJ/kWh — Yüksek yoğunluk, orta stabilite',
-                  ),
-                  (
-                    'LFP',
-                    'LFP',
-                    'Lityum Demir Fosfat\n12 MJ/kWh — Düşük ısı, yüksek güvenlik',
-                  ),
-                  (
-                    'NCA',
-                    'NCA',
-                    'Nikel-Kobalt-Alüminyum\n35 MJ/kWh — En yüksek enerji yoğunluğu',
-                  ),
-                  (
-                    'LCO',
-                    'LCO',
-                    'Lityum Kobalt Oksit\n35 MJ/kWh — Tüketici elektroniği',
-                  ),
+                  ('NMC', 'NMC/NCM', l10n.nmcDescription),
+                  ('LFP', 'LFP', l10n.lfpDescription),
+                  ('NCA', 'NCA', l10n.ncaDescription),
+                  ('LCO', 'LCO', l10n.lcoDescription),
                 ])
                   Tooltip(
                     message: entry.$3,
@@ -12372,12 +12804,12 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             const SizedBox(height: 4),
             Text(
               _kimya == 'NMC'
-                  ? 'NMC/NCM: Nikel-Manganez-Kobalt — 30 MJ/kWh termik kaçış ısısı (IEC 62619)'
+                  ? l10n.nmcThermalRunawayNote
                   : _kimya == 'LFP'
-                  ? 'LFP: Lityum Demir Fosfat — 12 MJ/kWh termik kaçış ısısı (IEC 62619)'
+                  ? l10n.lfpThermalRunawayNote
                   : _kimya == 'NCA'
-                  ? 'NCA: Nikel-Kobalt-Alüminyum — 35 MJ/kWh termik kaçış ısısı (IEC 62619)'
-                  : 'LCO: Lityum Kobalt Oksit — 35 MJ/kWh termik kaçış ısısı (IEC 62619)',
+                  ? l10n.ncaThermalRunawayNote
+                  : l10n.lcoThermalRunawayNote,
               style: const TextStyle(
                 fontSize: 11,
                 color: Colors.black54,
@@ -12387,20 +12819,20 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             const SizedBox(height: 14),
 
             // Giriş alanları
-            _field('Kurulu Kapasite (ESS)', _kapasiteCtrl, 'kWh'),
+            _field(l10n.installedCapacity, _kapasiteCtrl, 'kWh'),
             const SizedBox(height: 4),
-            const Text(
-              'NFPA 855:2023 §4.4.2 — Tehlike sınıflandırmasına esas',
-              style: TextStyle(fontSize: 10, color: Colors.black45),
+            Text(
+              l10n.hazardClassificationBasisNote,
+              style: const TextStyle(fontSize: 10, color: Colors.black45),
             ),
             const SizedBox(height: 10),
-            _field('Koruma Alanı (ESS ayak izi)', _alanCtrl, 'm²'),
+            _field(l10n.protectedArea, _alanCtrl, 'm²'),
             const SizedBox(height: 10),
-            _field('Uygulama Süresi', _sureCtrl, 'dk'),
+            _field(l10n.applicationDuration, _sureCtrl, 'dk'),
             const SizedBox(height: 4),
-            const Text(
-              'FM Global DS 5-33 min. süre: 30 dk  —  NFPA 855:2023 §12.4',
-              style: TextStyle(fontSize: 10, color: Colors.black45),
+            Text(
+              l10n.fmGlobalMinDurationNote,
+              style: const TextStyle(fontSize: 10, color: Colors.black45),
             ),
             const SizedBox(height: 14),
 
@@ -12408,12 +12840,9 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             _InfoBox(
               color: const Color(0xFFF5F3FF),
               border: const Color(0xFFDDD6FE),
-              child: const Text(
-                'NFPA 855:2023 Tehlike Kategorisi & FM DS 5-33 Uygulama Yoğunluğu:\n'
-                '  • Düşük  (< 20 kWh)  ›  8,2 L/min/m²\n'
-                '  • Orta   (20–600 kWh)  ›  12,2 L/min/m²\n'
-                '  • Yüksek (> 600 kWh)  ›  16,3 L/min/m²',
-                style: TextStyle(
+              child: Text(
+                l10n.essHazardCategoryInfo,
+                style: const TextStyle(
                   fontSize: 11,
                   height: 1.6,
                   color: Color(0xFF4C1D95),
@@ -12440,7 +12869,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             ElevatedButton.icon(
               onPressed: _hesapla,
               icon: const Icon(Icons.calculate_rounded),
-              label: const Text('Soğutma Gereksinimini Hesapla'),
+              label: Text(AppLocalizations.of(context)!.calculateCooling),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _kLi,
                 foregroundColor: Colors.white,
@@ -12463,7 +12892,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Icon(
                           Icons.water_drop_rounded,
@@ -12472,7 +12901,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'SOĞUTMA HESABI SONUCU',
+                          l10n.coolingCalculationResult,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
@@ -12484,53 +12913,51 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                     ),
                     const Divider(height: 16),
                     _LiSonucSatir(
-                      etiket: 'NFPA 855 Tehlike Kategorisi',
-                      deger: _kategori!,
+                      etiket: l10n.fireRiskCategory,
+                      deger: _kategori!.startsWith('D')
+                          ? l10n.hazardLight
+                          : _kategori!.startsWith('O')
+                          ? l10n.hazardMedium
+                          : l10n.hazardHigh,
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'Termik Kaçış Isı Tahmini ($_kimya)',
+                      etiket: l10n.thermalRunawayHeat,
                       deger: '${_isi!.toStringAsFixed(0)} MJ',
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'Tahmini Tepe HRR (SP 2022:08)',
+                      etiket: l10n.estimatedPeakHrr,
                       deger: '${_essHrrTepe!.toStringAsFixed(2)} MW',
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'Tepeye Ulaşma Süresi (t² — hızlı)',
+                      etiket: l10n.timeToPeak,
                       deger:
                           '${_essTbuyume!.toStringAsFixed(0)} s  (${(_essTbuyume! / 60).toStringAsFixed(1)} dk)',
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'Minimum Debi (FM DS 5-33)',
+                      etiket: l10n.minimumFlowRate,
                       deger: '${_debi!.toStringAsFixed(1)} L/min',
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'Toplam Su Hacmi',
+                      etiket: l10n.totalWaterVolume,
                       deger: '${_hacim!.toStringAsFixed(0)} L',
                     ),
                     const SizedBox(height: 4),
                     _LiSonucSatir(
-                      etiket: 'F-500 Miktarı (%1,5 çözelti)',
+                      etiket: l10n.f500Amount,
                       deger: '${_f500!.toStringAsFixed(1)} L',
                     ),
                     const SizedBox(height: 10),
                     _InfoBox(
                       color: const Color(0xFFF5F3FF),
                       border: const Color(0xFFDDD6FE),
-                      child: const Text(
-                        '• Isı katsayısı: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n'
-                        '• Tepe HRR katsayısı: NMC 3,0 · LFP 1,5 · NCA/LCO 3,5 kW/kWh  (SP 2022:08)\n'
-                        '• t² büyüme: ?=0,0469 kW/s² (hızlı sınıf · ISO 16734 / NFPA 72)\n'
-                        '• F-500 konsantrasyonu: %1,5 (üretici test verisi — Enviro Voraxial)\n'
-                        '• Su sisi alternatif: NFPA 750 / TS EN 14972-1\n'
-                        '• Büyük ESS (> 600 kWh): IEC 63272, UL 9540A testleri zorunludur\n'
-                        '• Bu hesap ön boyutlandırma amaçlıdır. FM Global DS 5-33 onaylı sistem zorunludur.',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.essResultsFooterNote,
+                        style: const TextStyle(
                           fontSize: 10,
                           height: 1.5,
                           color: Color(0xFF4C1D95),
@@ -12542,32 +12969,34 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
               ),
             ],
           ] else
-            ..._evForm(),
+            ..._evForm(l10n),
         ],
       ),
     );
   }
 
-  List<Widget> _evForm() {
+  List<Widget> _evForm(AppLocalizations l10n) {
     final aracTipiLabel = _aracTipi == 'binek'
-        ? 'Binek Araç'
+        ? l10n.passengerCar
         : _aracTipi == 'hafif_ticari'
-        ? 'Hafif Ticari'
-        : 'Ağır Ticari / Otobüs';
+        ? l10n.lightCommercial
+        : l10n.heavyCommercialBus;
     return [
       _InfoBox(
         color: const Color(0xFFEDE9FE),
         border: _kLi,
-        child: const Text(
-          'ISO 6469 · NFPA 88A:2021 · VdS 3471:2023 · IEC 62619:2022\n'
-          'Elektrikli araç yangınlarında termik kaçış soğutma ile yönetilir; '
-          'gazlı veya kuru baskılama etkisizdir.',
-          style: TextStyle(fontSize: 11, height: 1.5, color: Color(0xFF4C1D95)),
+        child: Text(
+          l10n.evLithiumFireInfo,
+          style: const TextStyle(
+            fontSize: 11,
+            height: 1.5,
+            color: Color(0xFF4C1D95),
+          ),
         ),
       ),
       const SizedBox(height: 14),
-      const Text(
-        'Araç Tipi',
+      Text(
+        l10n.vehicleType,
         style: TextStyle(fontSize: 12, color: Colors.black54),
       ),
       const SizedBox(height: 6),
@@ -12576,21 +13005,9 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
         runSpacing: 8,
         children: [
           for (final entry in [
-            (
-              'binek',
-              'Binek Araç',
-              'Otomobil — 30–100 kWh\n400–600 L/min · 60 dk min. (VdS 3471)',
-            ),
-            (
-              'hafif_ticari',
-              'Hafif Ticari',
-              'Van / Minibüs — 60–120 kWh\n600 L/min · 60 dk min.',
-            ),
-            (
-              'ag_ticari',
-              'Ağır Ticari / Otobüs',
-              'Elektrikli otobüs/kamyon — 200–600 kWh\n1 000 L/min · 90 dk min.',
-            ),
+            ('binek', l10n.passengerCar, l10n.passengerCarSpecNote),
+            ('hafif_ticari', l10n.lightCommercial, l10n.lightCommercialSpecNote),
+            ('ag_ticari', l10n.heavyCommercialBus, l10n.heavyCommercialSpecNote),
           ])
             Tooltip(
               message: entry.$3,
@@ -12628,8 +13045,8 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
         ],
       ),
       const SizedBox(height: 14),
-      const Text(
-        'Pil Teknolojisi',
+      Text(
+        l10n.batteryTechnology,
         style: TextStyle(fontSize: 12, color: Colors.black54),
       ),
       const SizedBox(height: 6),
@@ -12638,10 +13055,10 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
         runSpacing: 8,
         children: [
           for (final entry in [
-            ('NMC', 'NMC/NCM', 'Nikel-Manganez-Kobalt — 30 MJ/kWh'),
-            ('LFP', 'LFP', 'Lityum Demir Fosfat — 12 MJ/kWh'),
-            ('NCA', 'NCA', 'Nikel-Kobalt-Alüminyum — 35 MJ/kWh'),
-            ('LCO', 'LCO', 'Lityum Kobalt Oksit — 35 MJ/kWh'),
+            ('NMC', 'NMC/NCM', l10n.nmcHeatValue),
+            ('LFP', 'LFP', l10n.lfpHeatValue),
+            ('NCA', 'NCA', l10n.ncaHeatValue),
+            ('LCO', 'LCO', l10n.lcoHeatValue),
           ])
             Tooltip(
               message: entry.$3,
@@ -12679,37 +13096,33 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
         ],
       ),
       const SizedBox(height: 14),
-      _field('Araç Batarya Kapasitesi', _kapasiteCtrl, 'kWh'),
+      _field(l10n.batteryCapacity, _kapasiteCtrl, 'kWh'),
       const SizedBox(height: 4),
-      const Text(
-        'Tek araç batarya kapasitesi — IEC 62619 termik kaçış hesabına esas',
-        style: TextStyle(fontSize: 10, color: Colors.black45),
+      Text(
+        l10n.vehicleBatteryCapacityNote,
+        style: const TextStyle(fontSize: 10, color: Colors.black45),
       ),
       const SizedBox(height: 10),
-      _field('Araç Sayısı (risk bölgesi)', _aracSayisiCtrl, 'adet'),
+      _field(l10n.vehicleCount, _aracSayisiCtrl, 'adet'),
       const SizedBox(height: 4),
-      const Text(
-        'VdS 3471:2023 — maks. 2 araç eş zamanlı yanma kabul edilir',
-        style: TextStyle(fontSize: 10, color: Colors.black45),
+      Text(
+        l10n.maxSimultaneousVehiclesNote,
+        style: const TextStyle(fontSize: 10, color: Colors.black45),
       ),
       const SizedBox(height: 10),
-      _field('Uygulama Süresi', _evSureCtrl, 'dk'),
+      _field(l10n.applicationDuration, _evSureCtrl, 'dk'),
       const SizedBox(height: 4),
-      const Text(
-        'Binek / Hafif ticari min. 60 dk · Ağır ticari min. 90 dk  (VdS 3471:2023)',
-        style: TextStyle(fontSize: 10, color: Colors.black45),
+      Text(
+        l10n.vehicleApplicationDurationNote,
+        style: const TextStyle(fontSize: 10, color: Colors.black45),
       ),
       const SizedBox(height: 14),
       _InfoBox(
         color: const Color(0xFFF5F3FF),
         border: const Color(0xFFDDD6FE),
-        child: const Text(
-          'VdS 3471:2023 Araç Başına Minimum Debi:\n'
-          '  • Binek araç < 60 kWh  ›  400 L/min\n'
-          '  • Binek araç ? 60 kWh  ›  600 L/min\n'
-          '  • Hafif ticari           ›  600 L/min\n'
-          '  • Ağır ticari / Otobüs  ›  1 000 L/min',
-          style: TextStyle(fontSize: 11, height: 1.6, color: Color(0xFF4C1D95)),
+        child: Text(
+          l10n.vdsMinimumFlowInfo,
+          style: const TextStyle(fontSize: 11, height: 1.6, color: Color(0xFF4C1D95)),
         ),
       ),
       const SizedBox(height: 14),
@@ -12727,7 +13140,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       ElevatedButton.icon(
         onPressed: _hesaplaEv,
         icon: const Icon(Icons.calculate_rounded),
-        label: const Text('Soğutma Gereksinimini Hesapla'),
+        label: Text(AppLocalizations.of(context)!.calculateCooling),
         style: ElevatedButton.styleFrom(
           backgroundColor: _kLi,
           foregroundColor: Colors.white,
@@ -12749,7 +13162,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.directions_car_rounded,
@@ -12758,7 +13171,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'ELEKTRİKLİ ARAÇ YANGIN HESABI',
+                    l10n.electricVehicleFireResult,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
@@ -12769,62 +13182,62 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                 ],
               ),
               const Divider(height: 16),
-              _LiSonucSatir(etiket: 'Araç Tipi', deger: aracTipiLabel),
+              _LiSonucSatir(etiket: l10n.vehicleType, deger: aracTipiLabel),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Termik Kaçış Isısı ($_kimya)',
-                deger: '${_evIsi!.toStringAsFixed(0)} MJ/araç',
+                etiket: l10n.thermalRunawayHeat,
+                deger: l10n.heatPerVehicleMj(_evIsi!.toStringAsFixed(0)),
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Ort. Isı Salım Hızı (HRR)',
-                deger:
-                    '${(_evIsi! / (double.tryParse(_evSureCtrl.text.replaceAll(',', '.'))! * 60)).toStringAsFixed(2)} MW/araç',
+                etiket: l10n.averageHeatReleaseRate,
+                deger: l10n.avgHrrPerVehicleMw(
+                  (_evIsi! /
+                          (double.tryParse(
+                                _evSureCtrl.text.replaceAll(',', '.'),
+                              )! *
+                              60))
+                      .toStringAsFixed(2),
+                ),
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Tepe HRR (SP / BRE referans)',
+                etiket: l10n.estimatedPeakHrr,
                 deger: '${_evHrrTepe!.toStringAsFixed(0)} MW',
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Tepeye Ulaşma Süresi (t²)',
+                etiket: l10n.timeToPeak,
                 deger:
                     '${_evTbuyume!.toStringAsFixed(0)} s  (${(_evTbuyume! / 60).toStringAsFixed(1)} dk)',
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Araç Başı Min. Debi (VdS 3471)',
+                etiket: l10n.vehicleMinimumFlow,
                 deger: '${_evDebiArac!.toStringAsFixed(0)} L/min',
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Toplam Debi (maks. 2 araç eş zamanlı)',
+                etiket: l10n.simultaneousVehicleFlow,
                 deger: '${_evDebiToplam!.toStringAsFixed(0)} L/min',
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Toplam Su Hacmi',
+                etiket: l10n.totalWaterVolume,
                 deger: '${_evHacim!.toStringAsFixed(0)} L',
               ),
               const SizedBox(height: 4),
               _LiSonucSatir(
-                etiket: 'Container Daldırma (alternatif)',
+                etiket: l10n.containerImmersion,
                 deger: '${_evDaldirma!.toStringAsFixed(0)} L',
               ),
               const SizedBox(height: 10),
               _InfoBox(
                 color: const Color(0xFFF5F3FF),
                 border: const Color(0xFFDDD6FE),
-                child: const Text(
-                  '• Isı katsayısı: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n'
-                  '• Tepe HRR: binek <60kWh›3MW, ?60kWh›6MW · hafif ticari›8MW · ağır›15MW  (SP 2021:11)\n'
-                  '• t² büyüme modeli: ?=0,1876 kW/s² (ultra-fast · ISO 16734 / NFPA 72 Tablo B.2.3)\n'
-                  '• Su debisi: VdS 3471:2023 — 2 araç eş zamanlı (otopark)\n'
-                  '• Container daldırma: 3 000 L/araç (BRE Global / SFPE)\n'
-                  '• Kapalı otopark: NFPA 88A:2021 sprinkler gereklidir\n'
-                  '• Bu hesap ön boyutlandırma amaçlıdır.',
-                  style: TextStyle(
+                child: Text(
+                  l10n.evResultsFooterNote,
+                  style: const TextStyle(
                     fontSize: 10,
                     height: 1.5,
                     color: Color(0xFF4C1D95),
@@ -12884,6 +13297,7 @@ class _StandartAramaState extends State<StandartArama> {
   bool _yukleniyor = true;
   final _aramaCtrl = TextEditingController();
   String? _secilenKategori;
+  String? _yuklenenDil;
 
   // JSON kategori adı → uygulama modül adı (yangın dışı kategoriler dahil değil)
   static const Map<String, String> _kategoriDonusum = {
@@ -12901,26 +13315,58 @@ class _StandartAramaState extends State<StandartArama> {
   };
 
   @override
-  void initState() {
-    super.initState();
-    _yukle();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final languageCode = Localizations.localeOf(context).languageCode;
+    if (_yuklenenDil != languageCode) {
+      _yuklenenDil = languageCode;
+      _yukle(languageCode);
+    }
   }
 
-  Future<void> _yukle() async {
+  Future<void> _yukle(String languageCode) async {
+    final l10n = AppLocalizations.of(context);
     final jsonStr = await rootBundle.loadString('assets/standartlar_db.json');
     final liste = json.decode(jsonStr) as List<dynamic>;
+    final Map<String, dynamic> translations =
+        languageCode == 'en' || languageCode == 'de'
+        ? json.decode(
+                await rootBundle.loadString(
+                  'assets/standartlar_$languageCode.json',
+                ),
+              )
+              as Map<String, dynamic>
+        : {};
+    final englishCategories = <String, String>{
+      'Yangın': l10n.fireAndSuppression,
+      'Yangın Yükü': l10n.fireAndSuppression,
+      'Yapısal Yangına Direniç': l10n.fireAndSuppression,
+      'Mutfak Söndürme': l10n.kitchenSuppression,
+      'Gazlı Söndürme': l10n.gasSuppression,
+      'Baskı Makinesi Söndürme': l10n.printingSuppression,
+      'Su Bazlı Söndürme': l10n.sprinklerSystems,
+      'Köpüklü Söndürme': l10n.sprinklerSystems,
+      'Yangın Alarm': l10n.fireAlarm,
+      'Yangın Söndürücüler': l10n.fireExtinguishers,
+      'Duman Kontrolü': l10n.smokeControl,
+    };
+    if (!mounted) return;
     setState(() {
       _tumListe = liste
           .map((e) => _Standart.fromJson(e as Map<String, dynamic>))
           .where((s) => _kategoriDonusum.containsKey(s.kategori))
-          .map(
-            (s) => _Standart(
+          .map((s) {
+            final translation = translations[s.numara] as Map<String, dynamic>?;
+            return _Standart(
               numara: s.numara,
-              ad: s.ad,
-              kategori: _kategoriDonusum[s.kategori]!,
-              aciklama: s.aciklama,
-            ),
-          )
+              ad: (translation?['ad'] ?? s.ad).toString(),
+              kategori: languageCode == 'en'
+                  ? (translation?['kategori']?.toString() ??
+                        englishCategories[s.kategori]!)
+                  : _kategoriDonusum[s.kategori]!,
+              aciklama: (translation?['aciklama'] ?? s.aciklama).toString(),
+            );
+          })
           .toList();
       _sonuclar = List.from(_tumListe);
       _yukleniyor = false;
@@ -12949,6 +13395,7 @@ class _StandartAramaState extends State<StandartArama> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (_yukleniyor) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -12965,7 +13412,7 @@ class _StandartAramaState extends State<StandartArama> {
                 controller: _aramaCtrl,
                 onChanged: _ara,
                 decoration: InputDecoration(
-                  hintText: 'Numara, ad veya kategori...',
+                  hintText: l10n.standardSearchHint,
                   prefixIcon: const Icon(
                     Icons.search_rounded,
                     color: Color(0xFF065F46),
@@ -12996,7 +13443,7 @@ class _StandartAramaState extends State<StandartArama> {
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: _secilenKategori,
-                hint: const Text('Tüm Kategoriler'),
+                hint: Text(l10n.allCategories),
                 isExpanded: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -13007,9 +13454,9 @@ class _StandartAramaState extends State<StandartArama> {
                   fillColor: Colors.white,
                 ),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: null,
-                    child: Text('Tüm Kategoriler'),
+                    child: Text(l10n.allCategories),
                   ),
                   ...kategoriler.map(
                     (k) => DropdownMenuItem(
@@ -13025,7 +13472,7 @@ class _StandartAramaState extends State<StandartArama> {
               ),
               const SizedBox(height: 6),
               Text(
-                '${_sonuclar.length} standart bulundu',
+                l10n.standardsFound(_sonuclar.length),
                 style: const TextStyle(fontSize: 11, color: Colors.black54),
               ),
             ],
@@ -13099,7 +13546,7 @@ class _StandartAramaState extends State<StandartArama> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Kategori: ${s.kategori}',
+                            l10n.category(s.kategori),
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.black54,
@@ -13118,7 +13565,7 @@ class _StandartAramaState extends State<StandartArama> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(dlgCtx),
-                        child: const Text('Kapat'),
+                        child: Text(l10n.close),
                       ),
                       TextButton.icon(
                         icon: const Icon(
@@ -13126,8 +13573,8 @@ class _StandartAramaState extends State<StandartArama> {
                           size: 16,
                           color: Color(0xFF0369A1),
                         ),
-                        label: const Text(
-                          "Web'de Ara",
+                        label: Text(
+                          l10n.searchWeb,
                           style: TextStyle(color: Color(0xFF0369A1)),
                         ),
                         onPressed: () async {
@@ -13148,8 +13595,8 @@ class _StandartAramaState extends State<StandartArama> {
                           size: 16,
                           color: Color(0xFF7C3AED),
                         ),
-                        label: const Text(
-                          'AI\'ya Sor',
+                        label: Text(
+                          l10n.askAi,
                           style: TextStyle(color: Color(0xFF7C3AED)),
                         ),
                         onPressed: () async {
@@ -13275,7 +13722,11 @@ class _StandartRehberiState extends State<StandartRehberi> {
           Future<void> numaraIleAra() async {
             final numara = numaraCtrl.text.trim();
             if (numara.isEmpty) {
-              setLocal(() => numaraHatasi = 'Önce standart numarasını girin.');
+              setLocal(
+                () => numaraHatasi = AppLocalizations.of(
+                  context,
+                ).enterStandardNumberFirst,
+              );
               return;
             }
             setLocal(() {
@@ -13292,7 +13743,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
               if (apiKey == null || apiKey.isEmpty) {
                 setLocal(() {
                   numaraAraniyor = false;
-                  numaraHatasi = 'API anahtarı gerekli.';
+                  numaraHatasi = AppLocalizations.of(
+                    context,
+                  ).apiKeyRequiredError;
                 });
                 return;
               }
@@ -13340,7 +13793,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
               if (aciklama.isNotEmpty) aciklamaCtrl.text = aciklama;
               setLocal(() {
                 numaraAraniyor = false;
-                numaraHatasi = aciklama.isEmpty ? 'Standart bulunamadı.' : '';
+                numaraHatasi = aciklama.isEmpty
+                    ? AppLocalizations.of(context).standardNotFoundError
+                    : '';
               });
             } on Exception catch (e) {
               setLocal(() {
@@ -13355,7 +13810,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
             final konu = konuCtrl.text.trim();
             if (konu.isEmpty) {
               setLocal(
-                () => konuHatasi = 'Önce konu veya anahtar kelime girin.',
+                () => konuHatasi = AppLocalizations.of(
+                  context,
+                ).enterTopicOrKeywordFirst,
               );
               return;
             }
@@ -13375,7 +13832,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
               if (apiKey == null || apiKey.isEmpty) {
                 setLocal(() {
                   konuAraniyor = false;
-                  konuHatasi = 'API anahtarı gerekli.';
+                  konuHatasi = AppLocalizations.of(context).apiKeyRequiredError;
                 });
                 return;
               }
@@ -13432,7 +13889,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                 konuSonuclari = sonuclar;
                 secilenIndexler = {};
                 konuHatasi = sonuclar.isEmpty
-                    ? 'İlgili standart bulunamadı.'
+                    ? AppLocalizations.of(context).relatedStandardNotFound
                     : '';
               });
             } on Exception catch (e) {
@@ -13458,9 +13915,12 @@ class _StandartRehberiState extends State<StandartRehberi> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Özel Standart Ekle',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                  Text(
+                    AppLocalizations.of(context).addCustomStandardTitle,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 12),
 
@@ -13506,7 +13966,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    'Numara ile',
+                                    AppLocalizations.of(context).byNumberTab,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: tabIndex == 0
@@ -13555,7 +14015,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    'Konuya Göre',
+                                    AppLocalizations.of(context).byTopicTab,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: tabIndex == 1
@@ -13586,9 +14046,13 @@ class _StandartRehberiState extends State<StandartRehberi> {
                           child: TextField(
                             controller: numaraCtrl,
                             textCapitalization: TextCapitalization.characters,
-                            decoration: const InputDecoration(
-                              labelText: 'Standart Numarası *',
-                              hintText: 'ör: EN 12345',
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(
+                                context,
+                              )!.standardNumber,
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.standardNumberExample,
                               prefixIcon: Icon(Icons.tag_rounded),
                               border: OutlineInputBorder(),
                               isDense: true,
@@ -13612,7 +14076,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                   ),
                                 )
                               : Tooltip(
-                                  message: 'AI ile açıklamayı bul',
+                                  message: AppLocalizations.of(
+                                    context,
+                                  ).findDescriptionWithAiTooltip,
                                   child: FilledButton(
                                     onPressed: numaraIleAra,
                                     style: FilledButton.styleFrom(
@@ -13649,9 +14115,11 @@ class _StandartRehberiState extends State<StandartRehberi> {
                     TextField(
                       controller: aciklamaCtrl,
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        labelText: 'Açıklama *',
-                        hintText: 'Standardın kısa açıklaması...',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.description,
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.shortDescriptionHint,
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
@@ -13665,9 +14133,13 @@ class _StandartRehberiState extends State<StandartRehberi> {
                         Expanded(
                           child: TextField(
                             controller: konuCtrl,
-                            decoration: const InputDecoration(
-                              labelText: 'Konu veya Anahtar Kelime',
-                              hintText: 'ör: baca brandası, ofis sprinkler...',
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(
+                                context,
+                              )!.topicKeyword,
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.topicKeywordExample,
                               prefixIcon: Icon(Icons.topic_rounded),
                               border: OutlineInputBorder(),
                               isDense: true,
@@ -13691,7 +14163,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                   ),
                                 )
                               : Tooltip(
-                                  message: 'AI ile standartları ara',
+                                  message: AppLocalizations.of(
+                                    context,
+                                  ).searchStandardsWithAiTooltip,
                                   child: FilledButton(
                                     onPressed: konuyaGoreAra,
                                     style: FilledButton.styleFrom(
@@ -13730,7 +14204,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${konuSonuclari.length} standart bulundu',
+                            AppLocalizations.of(
+                              context,
+                            ).standardsFound(konuSonuclari.length),
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.black54,
@@ -13753,8 +14229,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
                             ),
                             child: Text(
                               secilenIndexler.isEmpty
-                                  ? 'Tümünü Seç'
-                                  : 'Tümünü Kaldır',
+                                  ? AppLocalizations.of(context).selectAllButton
+                                  : AppLocalizations.of(
+                                      context,
+                                    ).deselectAllButton,
                               style: const TextStyle(fontSize: 12),
                             ),
                           ),
@@ -13846,7 +14324,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: const Text('İptal'),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                       const SizedBox(width: 8),
                       FilledButton(
@@ -13876,8 +14354,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
                         },
                         child: Text(
                           tabIndex == 1 && konuSonuclari.isNotEmpty
-                              ? 'Seçilenleri Ekle (${secilenIndexler.length})'
-                              : 'Ekle',
+                              ? AppLocalizations.of(
+                                  context,
+                                ).addSelectedButton(secilenIndexler.length)
+                              : AppLocalizations.of(context).add,
                         ),
                       ),
                     ],
@@ -14483,7 +14963,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Özel Eklenmiş Standartlar',
+                        AppLocalizations.of(
+                          context,
+                        ).customAddedStandardsHeader,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -14545,7 +15027,9 @@ class _StandartRehberiState extends State<StandartRehberi> {
                               Row(
                                 children: [
                                   _AraButon(
-                                    etiket: "Web'de Ara",
+                                    etiket: AppLocalizations.of(
+                                      context,
+                                    ).searchWeb,
                                     ikon: Icons.search_rounded,
                                     renk: const Color(0xFF0369A1),
                                     url:
@@ -14557,14 +15041,24 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                     onTap: () => showDialog(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                        title: const Text('Standardı Sil'),
+                                        title: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          ).deleteStandardTitle,
+                                        ),
                                         content: Text(
-                                          '"${s.numara}" standardını listeden kaldırmak istiyor musunuz?',
+                                          AppLocalizations.of(
+                                            context,
+                                          ).deleteStandardConfirm(s.numara),
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: () => Navigator.pop(ctx),
-                                            child: const Text('İptal'),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.cancel,
+                                            ),
                                           ),
                                           FilledButton(
                                             onPressed: () {
@@ -14574,7 +15068,11 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                             style: FilledButton.styleFrom(
                                               backgroundColor: Colors.red,
                                             ),
-                                            child: const Text('Sil'),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              ).delete,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -14591,18 +15089,20 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                           color: Colors.red.withOpacity(0.3),
                                         ),
                                       ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.delete_outline_rounded,
                                             size: 13,
                                             color: Colors.red,
                                           ),
-                                          SizedBox(width: 4),
+                                          const SizedBox(width: 4),
                                           Text(
-                                            'Sil',
-                                            style: TextStyle(
+                                            AppLocalizations.of(
+                                              context,
+                                            ).delete,
+                                            style: const TextStyle(
                                               fontSize: 11,
                                               color: Colors.red,
                                               fontWeight: FontWeight.w600,
@@ -14642,6 +15142,7 @@ class _KategoriKartState extends State<_KategoriKart> {
   @override
   Widget build(BuildContext context) {
     final k = widget.kategori;
+    final l10n = AppLocalizations.of(context);
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       elevation: 2,
@@ -14668,7 +15169,7 @@ class _KategoriKartState extends State<_KategoriKart> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      k.baslik,
+                      _rehberBaslikCevir(l10n, k.baslik),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -14735,7 +15236,7 @@ class _KategoriKartState extends State<_KategoriKart> {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        s.$2,
+                                        _standartAciklamaL10n(l10n, s.$2),
                                         style: const TextStyle(
                                           fontSize: 11,
                                           color: Colors.black54,
@@ -14753,7 +15254,9 @@ class _KategoriKartState extends State<_KategoriKart> {
                               child: Row(
                                 children: [
                                   _AraButon(
-                                    etiket: 'Web\'de Ara',
+                                    etiket: AppLocalizations.of(
+                                      context,
+                                    ).searchWeb,
                                     ikon: Icons.search_rounded,
                                     renk: const Color(0xFF0369A1),
                                     url:
@@ -14762,7 +15265,10 @@ class _KategoriKartState extends State<_KategoriKart> {
                                   const SizedBox(width: 6),
                                   _GrokButon(
                                     standartAdi: s.$1,
-                                    standartAciklama: s.$2,
+                                    standartAciklama: _standartAciklamaL10n(
+                                      l10n,
+                                      s.$2,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -14874,9 +15380,9 @@ class _GrokButonState extends State<_GrokButon> {
           children: [
             const Icon(Icons.auto_awesome_rounded, size: 13, color: renk),
             const SizedBox(width: 4),
-            const Text(
-              'AI\'ya Sor',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context).askAi,
+              style: const TextStyle(
                 fontSize: 11,
                 color: renk,
                 fontWeight: FontWeight.w600,
@@ -14908,23 +15414,22 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
   String _kullaniciEposta = '';
 
   Future<void> _hesabiSil() async {
+    final l10n = AppLocalizations.of(context);
     final onay = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('Hesabınızı silmeyi onaylıyor musunuz?'),
-        content: const Text(
-          'Onaylarsanız hesabınız kalıcı olarak silinecek ve uygulamadan çıkış yapılacak. Bu işlem geri alınamaz.',
-        ),
+        title: Text(l10n.accountDeleteTitle),
+        content: Text(l10n.accountDeleteWarning),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Vazgeç'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Hesabımı Sil'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -14936,7 +15441,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token') ?? '';
       if (token.isEmpty) {
-        throw Exception('Oturum bulunamadı. Lütfen yeniden giriş yapın.');
+        throw Exception(l10n.sessionNotFoundRelogin);
       }
       final response = await http
           .post(
@@ -14946,7 +15451,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
           .timeout(const Duration(seconds: 20));
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode != 200) {
-        throw Exception(data['error']?.toString() ?? 'Hesap silinemedi.');
+        throw Exception(data['error']?.toString() ?? l10n.accountDeleteFailed);
       }
 
       for (final key in [
@@ -15012,15 +15517,16 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFB91C1C),
         foregroundColor: Colors.white,
-        title: const Text('Ayarlar', style: TextStyle(fontSize: 16)),
+        title: Text(l10n.settingsTitle, style: const TextStyle(fontSize: 16)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: 'Çıkış',
+            tooltip: l10n.logout,
             onPressed: () => _cikisYap(context),
           ),
         ],
@@ -15030,14 +15536,21 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Gemini API Anahtarı (AI)',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.language_rounded),
+              title: Text(l10n.languageLabel),
+              trailing: const _DilSecici(),
+            ),
+            const Divider(height: 24),
+            Text(
+              l10n.apiKeyTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'aistudio.google.com/apikey adresinden ücretsiz API anahtarı alabilirsiniz.',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+            Text(
+              l10n.apiKeyInstructions,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
             const SizedBox(height: 14),
             TextField(
@@ -15067,7 +15580,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                 icon: Icon(
                   _kaydedildi ? Icons.check_rounded : Icons.save_rounded,
                 ),
-                label: Text(_kaydedildi ? 'Kaydedildi!' : 'Kaydet'),
+                label: Text(_kaydedildi ? l10n.saved : l10n.save),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF7C3AED),
                   foregroundColor: Colors.white,
@@ -15086,9 +15599,9 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                   await launchUrl(uri, mode: LaunchMode.externalApplication);
                 }
               },
-              child: const Text(
-                'aistudio.google.com/apikey › API Anahtarı al',
-                style: TextStyle(
+              child: Text(
+                'aistudio.google.com/apikey › ${l10n.getApiKey}',
+                style: const TextStyle(
                   color: Color(0xFF0369A1),
                   decoration: TextDecoration.underline,
                   fontSize: 13,
@@ -15096,25 +15609,32 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
               ),
             ),
             const Divider(height: 36),
-            const Text(
-              'Hesap Yönetimi',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            Text(
+              l10n.accountManagement,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Hesabınızı ve bu cihazda saklanan hesap bilgilerinizi kalıcı olarak silebilirsiniz.',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+            Text(
+              l10n.accountDeleteInfo,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
             if (_kullaniciEposta.isNotEmpty) ...[
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Icon(Icons.email_outlined, size: 18, color: Colors.black54),
+                  const Icon(
+                    Icons.email_outlined,
+                    size: 18,
+                    color: Colors.black54,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       _kullaniciEposta,
-                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
                 ],
@@ -15133,7 +15653,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                       )
                     : const Icon(Icons.delete_forever_rounded),
                 label: Text(
-                  _siliniyor ? 'Hesap siliniyor...' : 'Hesabımı Kalıcı Olarak Sil',
+                  _siliniyor ? l10n.deletingAccount : l10n.deleteAccount,
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
@@ -15142,7 +15662,227 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                 ),
               ),
             ),
+            const Divider(height: 36),
+            Text(
+              l10n.feedbackTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.feedbackSubtitle,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    insetPadding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 24,
+                    ),
+                    child: _GeriBildirimSheet(),
+                  ),
+                ),
+                icon: const Icon(Icons.feedback_outlined),
+                label: Text(l10n.feedbackTitle),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFB91C1C),
+                  side: const BorderSide(color: Color(0xFFB91C1C)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// GERİ BİLDİRİM (FEEDBACK) BOTTOM SHEET
+// ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+
+class _GeriBildirimSheet extends StatefulWidget {
+  const _GeriBildirimSheet();
+
+  @override
+  State<_GeriBildirimSheet> createState() => _GeriBildirimSheetState();
+}
+
+class _GeriBildirimSheetState extends State<_GeriBildirimSheet> {
+  final _mesajCtrl = TextEditingController();
+  String? _seciliSayfa;
+  bool _gonderiliyor = false;
+
+  List<String> _sayfaListesi(AppLocalizations l10n) => [
+    l10n.feedbackPageHome,
+    l10n.fireLoadTitle,
+    l10n.kitchenSuppressionTitle,
+    l10n.gasSuppressionTitle,
+    l10n.lithiumFireTitle,
+    l10n.sprinklerTitle,
+    l10n.smokeDetectionTitle,
+    l10n.smokeControlTitle,
+    l10n.standardSearch,
+    l10n.standardGuide,
+    l10n.savedProjects,
+    l10n.feedbackPageOther,
+  ];
+
+  @override
+  void dispose() {
+    _mesajCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _gonder(AppLocalizations l10n) async {
+    if (_seciliSayfa == null || _mesajCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.feedbackMessageRequired)),
+      );
+      return;
+    }
+    setState(() => _gonderiliyor = true);
+    final localeCode = Localizations.localeOf(context).languageCode;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token') ?? '';
+      final email = prefs.getString('user_email') ?? '';
+      final response = await http
+          .post(
+            Uri.parse('$kApiBase/api/feedback.php'),
+            headers: {
+              'Content-Type': 'application/json',
+              if (token.isNotEmpty) 'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode({
+              'page': _seciliSayfa,
+              'message': _mesajCtrl.text.trim(),
+              'app_version': kAppVersion,
+              'locale': localeCode,
+              'email': email,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+      if (!mounted) return;
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.feedbackSentSuccess)),
+        );
+      } else {
+        throw Exception(l10n.feedbackSendFailed);
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.feedbackSendFailed)),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _gonderiliyor = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 420),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        ),
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.feedbackTitle,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.feedbackSelectPage,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            initialValue: _seciliSayfa,
+            isExpanded: true,
+            hint: Text(l10n.feedbackSelectPageHint),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 10,
+              ),
+            ),
+            items: _sayfaListesi(l10n)
+                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                .toList(),
+            onChanged: (v) => setState(() => _seciliSayfa = v),
+          ),
+          if (_seciliSayfa != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              l10n.feedbackMessageLabel,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _mesajCtrl,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: l10n.feedbackMessageHint,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: const EdgeInsets.all(12),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _gonderiliyor ? null : () => _gonder(l10n),
+                icon: _gonderiliyor
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.send_rounded),
+                label: Text(
+                  _gonderiliyor ? l10n.feedbackSending : l10n.feedbackSend,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFB91C1C),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
         ),
       ),
     );
@@ -15174,15 +15914,20 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
   final _scrollCtrl = ScrollController();
   final List<Map<String, String>> _mesajlar = [];
   bool _yukleniyor = false;
+  bool _selamlamaEklendi = false;
 
   @override
-  void initState() {
-    super.initState();
-    _mesajlar.add({
-      'role': 'model',
-      'text':
-          '${widget.standartAdi} standardı hakkında sorularınızı alabilir, açıklayabilirim.',
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_selamlamaEklendi) {
+      _selamlamaEklendi = true;
+      _mesajlar.add({
+        'role': 'model',
+        'text': AppLocalizations.of(context).aiChatGreeting(
+          widget.standartAdi,
+        ),
+      });
+    }
   }
 
   @override
@@ -15202,9 +15947,13 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
     });
     _asagiKaydir();
     try {
+      final yanitDili = Localizations.localeOf(context).languageCode == 'en'
+          ? 'English'
+          : 'Turkish';
       final sistem =
           'Sen yangın güvenliği ve standartlar konusunda uzman bir mühendissin. '
-          'Yalnızca aşağıdaki standart hakkında kısa, net ve Türkçe yanıtlar ver. '
+          'Yalnızca aşağıdaki standart hakkında kısa, net yanıtlar ver. '
+          'Yanıt dilin $yanitDili olsun. '
           'Emin olmadığın şeyleri uydurma.\n\n'
           'Standart: ${widget.standartAdi}\n'
           'Açıklama: ${widget.standartAciklama}';
@@ -15234,7 +15983,9 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
       setState(() {
         _mesajlar.add({
           'role': 'model',
-          'text': 'Hata: ${e.toString().replaceAll('Exception: ', '')}',
+          'text': AppLocalizations.of(
+            context,
+          ).genericErrorWithDetail(e.toString().replaceAll('Exception: ', '')),
         });
         _yukleniyor = false;
       });
@@ -15273,6 +16024,7 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     const kAi = Color(0xFF7C3AED);
     return Scaffold(
       appBar: AppBar(
@@ -15281,7 +16033,7 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('YZ Asistan', style: TextStyle(fontSize: 15)),
+            Text(l10n.aiAssistantTitle, style: const TextStyle(fontSize: 15)),
             Text(
               widget.standartAdi,
               style: const TextStyle(fontSize: 11, color: Colors.white70),
@@ -15292,12 +16044,12 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
         actions: [
           IconButton(
             icon: const Icon(Icons.key_rounded),
-            tooltip: 'API Anahtarını Güncelle',
+            tooltip: l10n.updateApiKey,
             onPressed: _apiGuncelle,
           ),
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: 'Çıkış',
+            tooltip: l10n.logout,
             onPressed: () => _cikisYap(context),
           ),
         ],
@@ -15510,7 +16262,7 @@ class _MesajGiris extends StatelessWidget {
               minLines: 1,
               enabled: !yukleniyor,
               decoration: InputDecoration(
-                hintText: 'Sorunuzu yazın...',
+                hintText: AppLocalizations.of(context)!.questionHint,
                 filled: true,
                 fillColor: const Color(0xFFF8F9FF),
                 contentPadding: const EdgeInsets.symmetric(
@@ -15606,6 +16358,15 @@ class _BuyumeVeri {
   const _BuyumeVeri(this.hiz, this.tAlfa, this.rhrF);
 }
 
+String _buyumeHizL10n(AppLocalizations l10n, String hizTr) => switch (hizTr) {
+  'Çok Yavaş' => l10n.growthRateVerySlow,
+  'Yavaş' => l10n.growthRateSlow,
+  'Orta' => l10n.growthRateMedium,
+  'Hızlı' => l10n.growthRateFast,
+  'Çok Hızlı' => l10n.growthRateVeryFast,
+  _ => hizTr,
+};
+
 class _Standart {
   final String numara, ad, kategori, aciklama;
   const _Standart({
@@ -15634,6 +16395,171 @@ class _RehberKategori {
     required this.standartlar,
   });
 }
+
+String _rehberBaslikCevir(AppLocalizations l10n, String baslik) =>
+    switch (baslik) {
+      'Yangın Yükü & Yangın Senaryosu' => l10n.rehberFireLoadScenario,
+      'Gazlı Söndürme Sistemleri' => l10n.rehberGasSuppressionSystems,
+      'Baskı Makinesi Söndürme' => l10n.printingSuppression,
+      'Su Bazlı Söndürme Sistemleri' => l10n.rehberWaterBasedSuppression,
+      'Köpüklü Söndürme Sistemleri' => l10n.rehberFoamSuppressionSystems,
+      'Davlumbaz & Mutfak Söndürme' => l10n.rehberKitchenHoodSuppression,
+      'Yangın Alarm & Algılama' => l10n.fireAlarm,
+      'Duman Kontrolü & Tahliye' => l10n.smokeControl,
+      'Yangın Söndürücüler & Taşınabilir Donanım' =>
+        l10n.rehberFireExtinguishersPortable,
+      'Yapısal Yangına Direnç' => l10n.rehberStructuralFireResistance,
+      'Risk Değerlendirme & Güvenlik Yönetimi' =>
+        l10n.rehberRiskAssessmentSafety,
+      'Endüstriyel & Özel Risk Sistemleri' => l10n.rehberIndustrialSpecialRisk,
+      _ => baslik,
+    };
+
+String _standartAciklamaL10n(AppLocalizations l10n, String aciklama) =>
+    switch (aciklama) {
+  'Eurocode 1 Bölüm 1-2: Yapılara etkiyen yükler — Yangın etkileri. Yangın yükü yoğunluğu, büyüme hızı ve yangın senaryosu hesabı.' => l10n.stdDescEn1991FireLoad,
+  'Yapı malzemeleri ve ürünlerinin yanma ısısının tayini — Net ısıl değer (NCV) belirleme yöntemi.' => l10n.stdDescIso1716Ncv,
+  'Yangın tepkisi deneyleri — Isı salım hızı, duman üretim hızı ve kütle kaybı hızı. Koni kalorimetre yöntemi.' => l10n.stdDescIso5660ConeCalorimeter,
+  'Yangın yükü yoğunluğu hesabı standardı — Bina kullanım tipine göre referans yoğunluk tabloları.' => l10n.stdDescNfpa557FireLoadDensity,
+  'Yangın güvenliği mühendisliği — Yapıda yangın davranışının değerlendirilmesi.' => l10n.stdDescIso24679FireBehaviour,
+  'Yangın güvenliği mühendisliği — Yangın senaryosu ve yangın modellemesi seçimi.' => l10n.stdDescIso16733FireScenario,
+  'Yangın koruma mühendisliği başvuru kitabı — Hesap yöntemleri, yangın dinamiği, duman hareketi.' => l10n.stdDescSfpeHandbook,
+  'BSI — Yapılarda yangın güvenliği mühendisliği uygulaması: Yangın başlangıcı ve gelişimi.' => l10n.stdDescPd7974FireInitiation,
+  'Gazlı söndürme sistemleri — Genel kurallar: tasarım, kurulum, devreye alma, bakım ve güvenlik.' => l10n.stdDescIso145201GeneralRules,
+  'CO² söndürme sistemleri — Toplam taşkın ve yerel uygulama yöntemleri.' => l10n.stdDescIso145202Co2,
+  'HFC-227ea (FM-200) gazlı söndürme sistemleri — Konsantrasyon ve hacim hesabı.' => l10n.stdDescIso145205Hfc227,
+  'HCFC Blend A (Halotron I) söndürme sistemleri.' => l10n.stdDescIso145208Hcfc,
+  'HFC 23 (Triflorometan) söndürme sistemleri.' => l10n.stdDescIso145209Hfc23,
+  'IG-55 (Argonite) sistemleri — N²/Ar karışımı, inert gaz.' => l10n.stdDescIso1452010Ig55,
+  'IG-541 (Inergen) — N²/Ar/CO² karışımı, inert gazlı söndürme.' => l10n.stdDescIso1452011Ig541,
+  'IG-01 (Argon) söndürme sistemleri.' => l10n.stdDescIso1452012Ig01,
+  'IG-100 (Azot) söndürme sistemleri.' => l10n.stdDescIso1452013Ig100,
+  'FK-5-1-12 (Novec 1230) — Düşük GWP değeri, hassas ekipman odaları.' => l10n.stdDescIso1452015Novec,
+  'ABD — Temiz ajan (clean agent) söndürme sistemleri standardı.' => l10n.stdDescNfpa2001CleanAgent,
+  'CO² söndürme sistemleri — ABD standardı, toplam taşkın ve yerel uygulama.' => l10n.stdDescNfpa12Co2Us,
+  'Halon 1301 söndürme sistemleri — ABD, mevcut sistemler.' => l10n.stdDescNfpa12aHalon,
+  'Sabit yangın söndürme sistemleri — Gazlı söndürme sistemleri, genel gereksinimler.' => l10n.stdDescTsEn150041GeneralReq,
+  'Almanya — Gazlı söndürme sistemleri tasarım ve kurulum yönergeleri.' => l10n.stdDescVds2380Design,
+  'Yanıcı/tutuşabilir sıvı kullanan daldırma, kaplama ve baskı prosesleri — temel güvenlik standardı.' => l10n.stdDescNfpa34DippingCoating,
+  'Printing Operations: baskı alanı yapısı, havalandırma, elektrik sınıflandırması ve yangın koruma.' => l10n.stdDescNfpa34Sec10PrintingOps,
+  'Otomatik yangın söndürme zorunluluğu — Sınıf I sıvı için sprinkler; kurutucu bölmeler için yerel CO₂/temiz ajan.' => l10n.stdDescNfpa34Sec106AutoSuppression,
+  'CO₂ söndürme — baskı makinesi ve kurutucu bölme yerel uygulama sistemleri.' => l10n.stdDescNfpa12PrintingPressLocal,
+  'Temiz ajan söndürme — baskı makinesi kabin koruma, insan varlığında tercih edilir.' => l10n.stdDescNfpa2001PrintingCabin,
+  'Yanıcı ve tutuşabilir sıvılar kodu — baskı tesisinde solvent depolama ve kullanım.' => l10n.stdDescNfpa30PrintingSolvent,
+  'Baskı alanı ATEX/NEC patlayıcı atmosfer sınıflandırması ve elektrik ekipmanı.' => l10n.stdDescNfpa70Article516,
+  'Baskı makinelerinin güvenliği — Genel gereksinimler.' => l10n.stdDescEn10101PrintingSafetyGeneral,
+  'Baskı makinelerinin güvenliği — Baskı ve baskı lakı uygulama makineleri (ofset, flexo, gravür).' => l10n.stdDescEn10102PrintingSafetyMachines,
+  'ATEX ekipmanlar — Potansiyel patlayıcı ortamda kullanılacak ekipmanlar için güvenlik kriterleri.' => l10n.stdDescEn13463AtexEquipment,
+  'Gazlı söndürme sistemleri — Genel şartlar (baskı kabini için temiz ajan hesabı).' => l10n.stdDescTsEn150041PrintingCabinet,
+  'Sabit sprinkler sistemleri — Tasarım, tesis ve bakım. Tehlike sınıfı, yoğunluk, debi ve depo hacmi.' => l10n.stdDescTsEn12845Sprinkler,
+  'Sprinkler sistemi kurulumu standardı — ABD, tüm bina tipleri.' => l10n.stdDescNfpa13SprinklerInstallation,
+  'Konut binalarında sprinkler sistemleri — 4 kata kadar yapılar.' => l10n.stdDescNfpa13rResidential,
+  'Tek ve iki ailelik konutlarda sprinkler sistemleri.' => l10n.stdDescNfpa13dOneTwoFamily,
+  'Sabit su spreyi söndürme sistemleri — Ekipman ve risk koruma.' => l10n.stdDescNfpa15WaterSpray,
+  'Köpük-su sprey ve köpük-su sprinkler sistemleri.' => l10n.stdDescNfpa16FoamWaterSpray,
+  'Yeraltı yangın hidranti sistemleri — Tasarım ve kurulum.' => l10n.stdDescEn14339UndergroundHydrant,
+  'Yerüstü yangın hidranti sistemleri.' => l10n.stdDescEn14384AboveGroundHydrant,
+  'Sabit yangın söndürme donanımı — Yarı sert hortumlu makara sistemleri.' => l10n.stdDescEn6711SemiRigidHose,
+  'Sabit yangın söndürme donanımı — Düz hortumlu hidrant sistemleri.' => l10n.stdDescEn6712FlatHoseHydrant,
+  'Sabit yangın söndürme donanımı — Bakım, Bölüm 3.' => l10n.stdDescEn6713Maintenance,
+  'Sabit yangın söndürme sistemleri — Sprinkler ve su spreyi bileşenleri.' => l10n.stdDescEn122591Components,
+  'Sabit söndürme sistemleri — Su sisi sistemleri, Bölüm 1: Tasarım ve kurulum.' => l10n.stdDescTsEn149721WaterMistDesign,
+  'Su sisi (water mist) söndürme sistemleri standardı — ABD.' => l10n.stdDescNfpa750WaterMist,
+  'Düşük, orta ve yüksek genleşmeli köpük söndürme sistemleri — ABD standardı.' => l10n.stdDescNfpa11ExpansionFoam,
+  'Sabit köpük söndürme sistemleri — Bölüm 1: Gereksinimler ve test yöntemleri.' => l10n.stdDescEn135651FoamRequirements,
+  'Sabit köpük söndürme sistemleri — Bölüm 2: Tasarım, kurulum ve bakım.' => l10n.stdDescEn135652FoamDesignInstall,
+  'Yangın söndürücü maddeler — Sıvı akaryakıt yangınları için köpük konsantreleri.' => l10n.stdDescIso72031FoamConcentrates,
+  'Yanıcı ve tutuşabilir sıvılar kodu — Depolama ve taşıma.' => l10n.stdDescNfpa30StorageTransfer,
+  'Petrol endüstrisi — Depo tankları yangın önleme ve söndürme.' => l10n.stdDescApi2021TankFirePrevention,
+  'Islak kimyasal (wet chemical) söndürme sistemleri — Ticari mutfak uygulamaları.' => l10n.stdDescNfpa17aWetChemical,
+  'Kuru kimyasal söndürme sistemleri — Genel sanayi uygulamaları.' => l10n.stdDescNfpa17DryChemical,
+  'Avrupa — Ticari mutfak ekipmanı için sabit yangın söndürme sistemleri.' => l10n.stdDescTsEn15751CommercialKitchen,
+  'ABD ürün onay standardı — Yemek pişirme alanları söndürme sistemleri (Ansul, Amerex vb.).' => l10n.stdDescUl300CookingSuppression,
+  'Otomatik söndürme sistemleri — Pişirme aleti üstü yangın tehlikesi.' => l10n.stdDescUl300aAutoSuppressionCooking,
+  'Mutfak davlumbazı gres tutucular ve filtreler.' => l10n.stdDescTsEn18251GreaseSeparators,
+  'Mutfak davlumbazı gres tutucular — Seçim, kurulum ve bakım.' => l10n.stdDescTsEn18252GreaseSelection,
+  'Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme.' => l10n.stdDescNfpa96VentilationCooking,
+  'Yangın algılama ve alarm sistemleri — Bölüm 1: Sisteme genel bakış.' => l10n.stdDescEn541Introduction,
+  'Yangın alarm kontrol ve gösterge paneli.' => l10n.stdDescEn542ControlIndicating,
+  'Yangın alarm sesli uyarı cihazları.' => l10n.stdDescEn543SoundersDevices,
+  'Güç besleme donanımı.' => l10n.stdDescEn544PowerSupply,
+  'Isı detektörleri — Noktasal.' => l10n.stdDescEn545HeatDetectors,
+  'Duman detektörleri — Dağılım tipi optik detektörler.' => l10n.stdDescEn547SmokeDetectorsOptical,
+  'Alev detektörleri — Noktasal.' => l10n.stdDescEn5410FlameDetectors,
+  'Manuel yangın alarm butonu (kırılır camlı).' => l10n.stdDescEn5411ManualCallPoint,
+  'Duman detektörleri — Doğrusal ışın tipi.' => l10n.stdDescEn5412SmokeDetectorsLinear,
+  'Sistem bileşenlerinin uyumluluğu ve bağlanabilirliği değerlendirmesi.' => l10n.stdDescEn5413SystemCompatibility,
+  'Yangın algılama ve alarm sistemleri — Planlama, tasarım, kurulum, devreye alma, kullanım ve bakım kılavuzu.' => l10n.stdDescEn5414PlanningGuide,
+  'Sesli alarm kontrol ve gösterge donanımı.' => l10n.stdDescEn5416VoiceAlarm,
+  'Kısa devre izolatörleri.' => l10n.stdDescEn5417ShortCircuitIsolators,
+  'Giriş/çıkış cihazları.' => l10n.stdDescEn5418InputOutputDevices,
+  'Duman detektörleri — Aspirasyonlu tip.' => l10n.stdDescEn5420AspiratingSmoke,
+  'Alarm iletim ve arıza uyarı yönlendirme donanımı.' => l10n.stdDescEn5421AlarmTransmission,
+  'Yangın alarm görsel uyarı cihazları.' => l10n.stdDescEn5423VisualAlarm,
+  'Radyo bağlantılı (kablosuz) sistem bileşenleri.' => l10n.stdDescEn5425RadioComponents,
+  'ABD — Ulusal yangın alarm ve sinyalizasyon kodu. Adresleme, bildirim, altyapı.' => l10n.stdDescNfpa72NationalCode,
+  'Almanya — Yangın alarm sistemleri planlama ve kurulum yönergeleri.' => l10n.stdDescVds2095PlanningInstall,
+  'Duman ve ısı tahliye sistemleri — Bölüm 1: Duman ve ısı kontrol perdelerinin özellikleri.' => l10n.stdDescEn121011SmokeCurtains,
+  'Doğal duman ve ısı tahliye ventilatörleri — Performans gereksinimleri.' => l10n.stdDescEn121012NaturalVentilators,
+  'Mekanik duman tahliye sistemleri — Motorlu duman egzoz fanları.' => l10n.stdDescEn121013PoweredExhaust,
+  'Kurulum, kabul testi, rutin bakım ve onarım kılavuzu.' => l10n.stdDescEn121014InstallCommission,
+  'Basınçlı duman kontrol sistemleri — Kit özellikleri.' => l10n.stdDescEn121016PressureDifferential,
+  'Duman ve ısı tahliye ventilatörleri — Kanalsız doğal duman tahliyesi.' => l10n.stdDescEn121017DuctlessNaturalVent,
+  'Tünel için doğal duman tahliye sistemi kontrol panelleri.' => l10n.stdDescEn121018TunnelControlPanels,
+  'Yangın kontrol damperlerinin kontrolü.' => l10n.stdDescEn121019FireDamperControl,
+  'Güç besleme kitleri.' => l10n.stdDescEn1210110PowerSupplyKits,
+  'ABD — Duman kontrol sistemleri standardı. Basınçlı merdivenler, atrium duman yönetimi.' => l10n.stdDescNfpa92SmokeControlUs,
+  'ABD — Can güvenliği kodu, tahliye yolları, çıkış gereksinimleri.' => l10n.stdDescNfpa101LifeSafety,
+  'Yangın ve duman kontrol kapı ve pencere takımları — Yangına direnç deneyi.' => l10n.stdDescEn16341DoorFireResistance,
+  'Yangın kapıları — Yangın ve duman geçirgenliği deneyi.' => l10n.stdDescEn16343SmokeControl,
+  'Havalandırma sistemleri için yangın damperleri.' => l10n.stdDescEn15650FireDampers,
+  'Yangın kontrol damperlerinin genişletilmiş uygulama.' => l10n.stdDescEn158821ExtendedApplication,
+  'Taşınabilir yangın söndürücüler — Performans, test yöntemleri ve yapı.' => l10n.stdDescEn37PortableExtPerformance,
+  'Taşınabilir yangın söndürücüler — Ek gereksinimler ve testler.' => l10n.stdDescEn38PortableExtAdditional,
+  'Taşınabilir yangın söndürücüler — CO² söndürücüler.' => l10n.stdDescEn39PortableExtCo2,
+  'Taşınabilir yangın söndürücüler — Özel gereksinimler.' => l10n.stdDescEn310PortableExtSpecial,
+  'ABD — Taşınabilir yangın söndürücüler standardı.' => l10n.stdDescNfpa10PortableUs,
+  'Taşınabilir CO² söndürücüler.' => l10n.stdDescEn18661MobileCo2,
+  'Yangın söndürücü maddeler — Kuru kimyasal toz özellikleri.' => l10n.stdDescTsEn615DryChemicalPowder,
+  'Yangın söndürücü maddeler — Köpük konsantreleri.' => l10n.stdDescTsEn15683FoamConcentrates,
+  'Betonarme yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 2).' => l10n.stdDescEn1992Eurocode2,
+  'Çelik yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 3).' => l10n.stdDescEn1993Eurocode3,
+  'Kompozit çelik-beton yapılar — Yangın etkisi altında tasarım (Eurocode 4).' => l10n.stdDescEn1994Eurocode4,
+  'Ahşap yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 5).' => l10n.stdDescEn1995Eurocode5,
+  'Yığma yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 6).' => l10n.stdDescEn1996Eurocode6,
+  'Standart yangın eğrisi — Yapı elemanlarının yangına direnç deneyi.' => l10n.stdDescIso8341StandardFireCurve,
+  'Alternatif ve parametrik yangın eğrileri.' => l10n.stdDescIso8342AlternativeCurves,
+  'Yapı malzemeleri ve ürünlerinin yangın performansı sınıflandırması.' => l10n.stdDescEn135011ReactionToFire,
+  'Yapı elemanlarının yangına direnç sınıflandırması.' => l10n.stdDescEn135012FireResistanceClass,
+  'Yangın durumundaki havalandırma servis ürünleri sınıflandırması.' => l10n.stdDescEn135013VentilationServices,
+  'Duman kontrol kapılar ve yapı elemanları sınıflandırması.' => l10n.stdDescEn135014SmokeControlDoors,
+  'Çatılar — Dışarıdan gelen yangına maruz kalma sınıflandırması.' => l10n.stdDescEn135015Roofs,
+  'ABD — Yapı inşaat tipleri standardı.' => l10n.stdDescNfpa220ConstructionTypes,
+  'ABD — Yapı elemanlarının yangına direnç deneyleri.' => l10n.stdDescUl263FireResistanceTests,
+  'ABD — Yapı malzemeleri ve sistemlerinin yangın dayanımı deneyleri.' => l10n.stdDescAstmE119FireEndurance,
+  'Risk yönetimi — Kılavuz ilkeler ve genel çerçeve.' => l10n.stdDescIso31000RiskManagement,
+  'İSG yönetim sistemleri — Gereksinimler ve kullanım kılavuzu.' => l10n.stdDescIso45001Ohs,
+  'Güvenlik işaret sistemleri — Acil kaçış aydınlatması ve yönlendirmesi.' => l10n.stdDescIso16069SafetyWayGuidance,
+  'Acil kaçış aydınlatma sistemleri — Kurulum ve işletme.' => l10n.stdDescEn50172EmergencyLighting,
+  'ABD — Yangın kodu. Bina kullanımı, çıkış, tahliye ve risk.' => l10n.stdDescNfpa1FireCode,
+  'Su bazlı söndürme sistemleri — Denetim, test ve bakım.' => l10n.stdDescNfpa25InspectionTesting,
+  'Güvenlik işaretleri — Acil çıkış, yangın teçhizatı ve tehlike işaretleri.' => l10n.stdDescEnIso7010SafetySigns,
+  'Türkiye — Yangın İçin Güvenlik İşaretleri.' => l10n.stdDescTs9811FireSafetySigns,
+  'Türkiye Bina Deprem Yönetmeliği — Bölüm 3: Yapısal çelik, yangın etkisi.' => l10n.stdDescTbdy2018SeismicSteelFire,
+  'Türkiye — Yapılarda yangından korunma, tahliye, söndürme ve alarm sistemleri gereksinimleri.' => l10n.stdDescTrFireRegulation2015,
+  'Elektrik santrallerinde yangın koruması — Türbin sahaları, trafo ve kablo güzergâhları.' => l10n.stdDescNfpa850PowerGeneration,
+  'Nükleer santraller için yangın koruma standardı.' => l10n.stdDescNfpa804NuclearPlants,
+  'Uçak hangarları yangın koruma standardı.' => l10n.stdDescNfpa409AircraftHangars,
+  'Uçak yakıt ikmal sistemleri ve çalışma alanları.' => l10n.stdDescNfpa415AircraftFueling,
+  'Patlayıcı ortamlar — Patlamadan korunma, temel kavramlar.' => l10n.stdDescEn11271ExplosivePrevention,
+  'Patlayıcı ortamlar — Tehlikeli bölgelerin sınıflandırılması (gaz).' => l10n.stdDescEn6007910ZoneClassification,
+  'İşlevsel güvenlik — Proses endüstrisi güvenlik enstrüman sistemleri.' => l10n.stdDescIec61511FunctionalSafety,
+  'Petrokimya tesislerinde pompalar — Yangın güvenliği gereksinimleri.' => l10n.stdDescApi610PetrochemPumps,
+  'Yanıcı toz yangını ve patlamasına karşı koruma.' => l10n.stdDescNfpa654CombustibleDust,
+  'Patlama basıncı tahliyesi standardı.' => l10n.stdDescNfpa68ExplosionVenting,
+  'Patlama önleme sistemleri standardı.' => l10n.stdDescNfpa69ExplosionPrevention,
+      _ => aciklama,
+    };
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // SPRİNKLER SİSTEMİ  ·  EN 12845 / TS EN 12845
@@ -15768,7 +16694,7 @@ const List<_SpSinif> _spSiniflar = [
       'Terzilik, konfeksiyon ve giyim üretimi',
       'Tekstil eğirme ve dokuma (sentetik elyaf)',
       'Yükleme-boşaltma, sevkiyat/nakliye rampaları',
-      'Genel depolama (istiflenmiş yükseklik ? 4 m)',
+      'Genel depolama (istiflenmiş yükseklik ≤ 4 m)',
     ],
   ),
   _SpSinif(
@@ -15855,7 +16781,7 @@ const List<_SpSinif> _spSiniflar = [
     faaliyetler: [
       // EN 12845:2015 Çizelge 3 — HHP2 · 10,0 mm/min · 260 m²
       'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)',
-      'Kimyasal üretim (parlama noktası ? 55 °C yanıcı sıvı içeren ürünler)',
+      'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)',
       'Solvent bazlı boya ve vernik üretim tesisleri',
       'Sprey boyahane — yanıcı solvent bazlı boya uygulaması',
       'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)',
@@ -16187,18 +17113,15 @@ double _spMaxKapsamaYuks(double yuks, String sinifKod) {
 /// Tavan yüksekliğine göre bilgi / uyarı metni (yoksa null)
 /// TS EN 12845:2015+A1 Tablo 19 alan değerlerini değiştirmez;
 /// ancak yüksek tavanlarda standart sprinkler performansı yetesiz olabilir.
-String? _spYuksUyari(double yuks, String sinifKod) {
+String? _spYuksUyari(AppLocalizations l10n, double yuks, String sinifKod) {
   if (sinifKod == 'LH' && yuks > 6.0) {
-    return 'LH — Tavan yüksekliği > 6 m: Standart sprinkler performansı yetersiz '
-        'kalabilir. ESFR veya yüksek hacim tipi özel tasarım önerilir.';
+    return l10n.spCeilingWarningLH;
   }
   if (sinifKod.startsWith('OH') && yuks > 6.0) {
-    return 'OH — Tavan yüksekliği > 6 m: Standart sprinkler etkinliği düşebilir. '
-        'Tasarım öncesinde yetkili merciyle görüşülmesi tavsiye edilir.';
+    return l10n.spCeilingWarningOH;
   }
   if (sinifKod.startsWith('HH') && yuks > 6.0) {
-    return 'HHP/HHS — Tavan yüksekliği > 6 m: §7.2.2.3 kapsamında boşluk > 4 m ise '
-        'yoğunluk artırımı (her ilave metre için +1 mm/dk) ve min. K115 sprinkler gereklidir.';
+    return l10n.spCeilingWarningHH;
   }
   return null;
 }
@@ -16239,6 +17162,15 @@ const List<(String, double)> _spBoruMalzemeleri = [
   ('Paslanmaz Çelik', 140.0),
   ('CPVC Plastik Boru', 150.0),
 ];
+
+String _spBoruAdiL10n(AppLocalizations l10n, String adTr) => switch (adTr) {
+  'Galvanizli Çelik (Sch.40)' => l10n.spPipeGalvanizedSteel,
+  'Siyah Karbon Çelik — kaynaklı' => l10n.spPipeBlackCarbonSteelWelded,
+  'Bakır Boru' => l10n.spPipeCopper,
+  'Paslanmaz Çelik' => l10n.spPipeStainlessSteel,
+  'CPVC Plastik Boru' => l10n.spPipeCpvcPlastic,
+  _ => adTr,
+};
 
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 // SPRİNKLER TİPİ  ·  K-Faktör seçenekleri (EN 12845 + üretici onaylı özel tipler)
@@ -16576,6 +17508,211 @@ class _SpSonuc {
   });
 }
 
+/// Görüntüleme amaçlı yerelleştirilmiş tehlike sınıfı adı (iç anahtar: kod)
+String _spSinifAdL10n(AppLocalizations l10n, String kod) => switch (kod) {
+  'LH' => l10n.spSinifAdLH,
+  'OH1' => l10n.spSinifAdOH1,
+  'OH2' => l10n.spSinifAdOH2,
+  'OH3' => l10n.spSinifAdOH3,
+  'OH4' => l10n.spSinifAdOH4,
+  'HHP1' => l10n.spSinifAdHHP1,
+  'HHP2' => l10n.spSinifAdHHP2,
+  'HHP3' => l10n.spSinifAdHHP3,
+  'HHP4' => l10n.spSinifAdHHP4,
+  'SF1' => l10n.spSinifAdSF1,
+  'SF2' => l10n.spSinifAdSF2,
+  'SF3' => l10n.spSinifAdSF3,
+  'SF4' => l10n.spSinifAdSF4,
+  'RS1' => l10n.spSinifAdRS1,
+  'RS2' => l10n.spSinifAdRS2,
+  'RS3' => l10n.spSinifAdRS3,
+  'RS4' => l10n.spSinifAdRS4,
+  _ => kod,
+};
+
+/// Görüntüleme amaçlı yerelleştirilmiş sprinkler tipi adı/açıklaması (iç anahtar: orijinal Türkçe ad)
+String _spTipiAdL10n(AppLocalizations l10n, String adTr) => switch (adTr) {
+  'Sınıfa Göre Otomatik' => l10n.spTipAdAuto,
+  'Standart K57' => l10n.spTipAdK57,
+  'Standart K80' => l10n.spTipAdK80,
+  'Yüksek Debili K115' => l10n.spTipAdK115,
+  'Büyük Damla K161' => l10n.spTipAdK161,
+  'Ekstra Büyük Damla K200' => l10n.spTipAdK200,
+  'ESFR K242 (bilgi amaçlı)' => l10n.spTipAdEsfr,
+  _ => adTr,
+};
+
+String _spTipiAciklamaL10n(AppLocalizations l10n, String adTr) => switch (adTr) {
+  'Sınıfa Göre Otomatik' => l10n.spTipDescAuto,
+  'Standart K57' => l10n.spTipDescK57,
+  'Standart K80' => l10n.spTipDescK80,
+  'Yüksek Debili K115' => l10n.spTipDescK115,
+  'Büyük Damla K161' => l10n.spTipDescK161,
+  'Ekstra Büyük Damla K200' => l10n.spTipDescK200,
+  'ESFR K242 (bilgi amaçlı)' => l10n.spTipDescEsfr,
+  _ => adTr,
+};
+
+/// Görüntüleme amaçlı yerelleştirilmiş kurulum sınıfı adı/açıklaması (iç anahtar: orijinal Türkçe ad)
+String _spKurulumAdL10n(AppLocalizations l10n, String adTr) => switch (adTr) {
+  'Tekli Kaynak + Tek Pompa' => l10n.spKurulumAdSingle,
+  'Çiftli Pompa (Elektrik + Dizel)' => l10n.spKurulumAdDual,
+  'Çiftli Kaynak + Çiftli Pompa (Superior)' => l10n.spKurulumAdSuperior,
+  _ => adTr,
+};
+
+String _spKurulumAciklamaL10n(AppLocalizations l10n, String adTr) => switch (adTr) {
+  'Tekli Kaynak + Tek Pompa' => l10n.spKurulumDescSingle,
+  'Çiftli Pompa (Elektrik + Dizel)' => l10n.spKurulumDescDual,
+  'Çiftli Kaynak + Çiftli Pompa (Superior)' => l10n.spKurulumDescSuperior,
+  _ => adTr,
+};
+
+/// Görüntüleme amaçlı yerelleştirilmiş sprinkler faaliyet açıklaması (iç anahtar: orijinal Türkçe faaliyet metni)
+String _spFaaliyetL10n(AppLocalizations l10n, String faaliyet) => switch (faaliyet) {
+  'Ofisler ve yönetim binaları' => l10n.spActOfficesAdmin,
+  'Oteller, misafirhaneler, pansiyonlar' => l10n.spActHotelsHostelsGuesthouses,
+  'Hastaneler, klinikler, sağlık merkezleri' => l10n.spActHospitalsClinics,
+  'Okullar, üniversiteler ve eğitim binaları' => l10n.spActSchoolsUniversities,
+  'Konutlar ve apartmanlar' => l10n.spActResidentialApartments,
+  'Cezaevleri ve ıslahevleri' => l10n.spActPrisonsReformatories,
+  'Kiliseler, camiler ve ibadethaneler' => l10n.spActChurchesMosquesWorship,
+  'Tiyatrolar / sinema (yalnızca seyirci oturma alanları)' => l10n.spActTheatresCinemaSeating,
+  'Müzeler ve sanat galerileri' => l10n.spActMuseumsGalleries,
+  'Bira fabrikaları (damıtma tesisleri hariç)' => l10n.spActBreweriesExclDistilleries,
+  'Çok katlı ve bodrum katlı kapalı otoparklar' => l10n.spActMultiStoreyBasementCarParks,
+  'Seramik ürünleri üretimi' => l10n.spActCeramicsProduction,
+  'Cam ve cam eşya üretimi (cam elyafı hariç)' => l10n.spActGlassGlasswareExclFibre,
+  'Kimya araştırma laboratuvarları' => l10n.spActChemResearchLabs,
+  'Süt ve süt ürünleri işleme tesisleri (mandıralar)' => l10n.spActDairyProcessing,
+  'Elektronik ekipman montaj atölyeleri' => l10n.spActElectronicsAssembly,
+  'Gıda işleme ve paketleme tesisleri' => l10n.spActFoodProcessingPackaging,
+  'Oteller — mutfak, çamaşırhane ve servis alanları' => l10n.spActHotelsKitchenLaundryService,
+  'Kurumsal ve ticari çamaşırhaneler' => l10n.spActInstitutionalCommercialLaundries,
+  'Deri ve deri ürünleri üretimi' => l10n.spActLeatherProductsProduction,
+  'Hafif metal işleme atölyeleri' => l10n.spActLightMetalworkingWorkshops,
+  'Farmasötik (ilaç) üretim tesisleri' => l10n.spActPharmaceuticalProduction,
+  'Araştırma laboratuvarları (yanmaz sıvı kullanımı)' => l10n.spActResearchLabsNonflamLiquids,
+  'Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)' => l10n.spActTextileWeavingNaturalFibresUntreated,
+  'Tütün işleme ve paketleme' => l10n.spActTobaccoProcessingPackaging,
+  'Tarım ve iş makinesi montaj tesisleri' => l10n.spActAgriIndustrialMachineryAssembly,
+  'Tahıl, un değirmeni ve benzeri gıda işleme' => l10n.spActGrainFlourMillFoodProcessing,
+  'Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)' => l10n.spActChemProductionNonflamLiquidsOnly,
+  'Büyük mağazalar ve alışveriş merkezleri (tek katlı)' => l10n.spActDeptStoresShoppingCentresSingleStorey,
+  'Elektrikli ekipman üretim fabrikaları' => l10n.spActElectricalEquipmentFactories,
+  'Bilgisayar ve elektronik veri işleme odaları' => l10n.spActComputerDataProcessingRooms,
+  'Genel mühendislik atölyeleri ve fabrikalar' => l10n.spActGeneralEngineeringWorkshopsFactories,
+  'Meyve, sebze ve konserve işleme tesisleri' => l10n.spActFruitVegCanningFacilities,
+  'Araç bakım-onarım garajları' => l10n.spActVehicleMaintenanceRepairGarages,
+  'Cam elyafı (fiberglas) üretimi ve montajı' => l10n.spActFibreglassProductionAssembly,
+  'Hırdavat ve demir-çelik ürünleri mağazaları' => l10n.spActHardwareIronmongeryStores,
+  'Hastaneler — tedavi ve ameliyat alanları' => l10n.spActHospitalsTreatmentSurgeryAreas,
+  'Örme (triko/hosiery) fabrikaları' => l10n.spActKnittingHosieryFactories,
+  'Kütüphaneler — genel açık raf alanları' => l10n.spActLibrariesOpenShelfAreas,
+  'Genel metal işleme fabrikaları' => l10n.spActGeneralMetalworkingFactories,
+  'Kâğıt ve karton üretim tesisleri' => l10n.spActPaperBoardProductionFacilities,
+  'Plastik ürün imalatı (yalnızca yanmaz plastikler)' => l10n.spActPlasticsManufNonflamOnly,
+  'Genel baskı / matbaa (su bazlı mürekkep)' => l10n.spActGeneralPrintingWaterBasedInk,
+  'Süpermarketler ve hipermarketler' => l10n.spActSupermarketsHypermarkets,
+  'Terzilik, konfeksiyon ve giyim üretimi' => l10n.spActTailoringGarmentManufacture,
+  'Tekstil eğirme ve dokuma (sentetik elyaf)' => l10n.spActTextileSpinningWeavingSynthetic,
+  'Yükleme-boşaltma, sevkiyat/nakliye rampaları' => l10n.spActLoadingShippingDocks,
+  'Genel depolama (istiflenmiş yükseklik ≤ 4 m)' => l10n.spActGeneralStorageUpTo4m,
+  'Uçak hangarları — bakım ve onarım alanları' => l10n.spActAircraftHangarsMaintenance,
+  'Muşamba, branda, çadır bezi ve branda üretimi' => l10n.spActOilclothTarpaulinCanvasProduction,
+  'Kimyasal üretim (parlama noktası > 55 °C ürünler)' => l10n.spActChemProductionFpAbove55,
+  'Soğuk hava depoları' => l10n.spActColdStores,
+  'Film ve televizyon stüdyoları (üretim alanı)' => l10n.spActFilmTvStudiosProduction,
+  'Mobilya ve döşeme üretimi (sünger, kumaş)' => l10n.spActFurnitureUpholsteryProduction,
+  'Marangoz / doğrama — ahşap işleme atölyeleri' => l10n.spActJoineryWoodworkingWorkshops,
+  'Kibrit üretim tesisleri' => l10n.spActMatchProductionFacilities,
+  'Büyük kâğıt arşiv alanları olan ofisler' => l10n.spActOfficesLargePaperArchives,
+  'Su bazlı boya ve vernik üretimi' => l10n.spActWaterBasedPaintVarnishProduction,
+  'Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi' => l10n.spActPaperCorrugatedBoxProduction,
+  'Termoplastik plastik imalat ve şekillendirme' => l10n.spActThermoplasticsManufShaping,
+  'Yüksek hızlı ofset baskı (petrol bazlı mürekkep)' => l10n.spActHighSpeedOffsetPrintingOilInk,
+  'Kauçuk ürünleri üretim tesisleri' => l10n.spActRubberProductsProduction,
+  'Tekstil boyama ve terbiye işleme tesisleri' => l10n.spActTextileDyeingFinishingFacilities,
+  'Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)' => l10n.spActGeneralStorage4to8m,
+  'Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)' => l10n.spActChemProductionClosedProcessFp55,
+  'Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)' => l10n.spActPlasticRubberPartsClosedMoulding,
+  'Tekstil boyama ve terbiye tesisleri (su bazlı)' => l10n.spActTextileDyeingFinishingWaterBased,
+  'Eczane, kozmetik ve deterjan üretim tesisleri' => l10n.spActPharmacyCosmeticsDetergentProduction,
+  'Gıda ve içecek üretim tesisleri (yüksek hacimli)' => l10n.spActFoodBeverageProductionHighVolume,
+  'Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)' => l10n.spActPaperProductionDryCuttingSorting,
+  'Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler' => l10n.spActPaintShopsWaterUvCuring,
+  'Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)' => l10n.spActMetalworkingMachineryHeavySwarfOilMist,
+  'Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri' => l10n.spActFlammableLiquidProcessFp55Plus,
+  'Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri' => l10n.spActFoamRubberFoamPlasticProduction,
+  'Metal ve plastik parçalar için akış kaplama (flow coating)' => l10n.spActFlowCoatingMetalPlasticParts,
+  'Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri' => l10n.spActIndustrialPrintingFlammableInkSolvent,
+  'Aerosol ve sprey ürünleri paketleme/dolum tesisleri' => l10n.spActAerosolSprayPackagingFilling,
+  'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)' => l10n.spActFlammableLiquidProcessFpBelow55Open,
+  'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)' => l10n.spActChemProductionContainingFp55Liquids,
+  'Solvent bazlı boya ve vernik üretim tesisleri' => l10n.spActSolventBasedPaintVarnishProduction,
+  'Sprey boyahane — yanıcı solvent bazlı boya uygulaması' => l10n.spActSpraySolventPaintApplication,
+  'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)' => l10n.spActDryCleaningPerchloroethyleneSolvent,
+  'Solvent ekstraksiyon tesisleri' => l10n.spActSolventExtractionFacilities,
+  'Yanıcı mürekkep kullanan baskı / gravür tesisleri' => l10n.spActPrintingGravureFlammableInk,
+  'Yanıcı sıvı ile sprey kaplama / boyama kabinleri' => l10n.spActSprayCoatingBoothsFlammableLiquid,
+  'Kauçuk mastik ve yanıcı hammadde işleme tesisleri' => l10n.spActRubberMasticFlammableRawMaterialProcessing,
+  'Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri' => l10n.spActPaintInkVarnishPackagingFilling,
+  'Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m' => l10n.spActHighRackPalletStorageSolidAbove4m,
+  'Araç lastikleri ve kauçuk ürün depolaması' => l10n.spActTyresRubberProductsStorage,
+  'Rulo kâğıt ve kâğıt topu depolaması' => l10n.spActPaperRollsReelsStorage,
+  'Katı plastik hammadde ve ürün depolaması (paletli/raflı)' => l10n.spActSolidPlasticRawProductStoragePalletRack,
+  'Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması' => l10n.spActBaledCottonTextileSyntheticFibreStorage,
+  'Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi' => l10n.spActHighRackPalletStorageFlammableLiquidAbove4m,
+  'Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir' => l10n.spActAerosolStoreFlammablePropellantHighRack,
+  'Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem' => l10n.spActFlammableLiquidPackagedProductStorage,
+  'Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması' => l10n.spActHighDensityStorageWaterSensitiveHighCalorific,
+  'Yanmaz ürün depolama — metal, cam, seramik, beton ürünler' => l10n.spActNoncombustibleStorageMetalGlassCeramicConcrete,
+  'Dondurulmuş gıda ve soğuk zincir ürün depolama' => l10n.spActFrozenFoodColdChainStorage,
+  'Kapalı metal kutu / bidon içindeki yanmaz ürünler' => l10n.spActNoncombustibleInSealedMetalCansDrums,
+  'Islak gıda (taze meyve-sebze, konserve) depoları' => l10n.spActWetFoodFreshProduceCannedStorage,
+  'Porselen ve sıhhi tesisat ürünleri depolama' => l10n.spActPorcelainSanitarywareStorage,
+  'Boş cam şişe / boş metal kutu depolama' => l10n.spActEmptyGlassBottlesMetalCansStorage,
+  'Karton ambalajlı yanmaz ürün depolama' => l10n.spActNoncombustibleCartonPackagedStorage,
+  'Tahta kutu / kasalarda yanmaz mal depolama' => l10n.spActNoncombustibleGoodsWoodenCratesStorage,
+  'Cam şişe / plastik kaplar içinde yanmaz sıvı depolama' => l10n.spActNoncombustibleLiquidGlassPlasticContainersStorage,
+  'Küçük oranda yanabilir içerikli karışık ürün depolama' => l10n.spActMixedProductsLowCombustibleContentStorage,
+  'Boya bezlerinde cam ve seramik ürün depolama' => l10n.spActGlassCeramicWrappedStorage,
+  'Kâğıt, karton ve oluklu mukavva ürün depolama' => l10n.spActPaperBoardCorrugatedProductStorage,
+  'Tekstil, iplik, kumaş ve hazır giyim depolama' => l10n.spActTextileYarnFabricGarmentStorage,
+  'Ahşap ve ahşap esaslı ürün depolama' => l10n.spActWoodWoodBasedProductStorage,
+  'Mobilya ve döşeme malzemeleri depolama' => l10n.spActFurnitureUpholsteryMaterialsStorage,
+  'Karışık ambalajlı mallar (kağıt + plastik kombine)' => l10n.spActMixedPackagedGoodsPaperPlastic,
+  'Kuru gıda ve tarım ürünleri (dökme olmayan) depolama' => l10n.spActDryFoodAgriculturalProductsStorage,
+  'Deri ve deri ürünleri depolama' => l10n.spActLeatherProductsStorage,
+  'Küçük elektrikli ev aletleri (ambalajlı) depolama' => l10n.spActSmallElectricalApplianceStoragePackaged,
+  'Ekspande plastik (EPS, PU, XPS) ürün depolama (döşeme)' => l10n.spActExpandedPlasticProductStorageFloor,
+  'Kauçuk ve lastik ürün depolama (döşeme)' => l10n.spActRubberTyreProductStorageFloor,
+  'Yanıcı sıvı içeren plastik kaplar depolama (döşeme)' => l10n.spActFlammableLiquidPlasticContainersStorageFloor,
+  'Aerosol ürün depolama — döşeme, ≤ 3,5 m' => l10n.spActAerosolProductStorageFloor35m,
+  'Polistiren köpük ambalajlı ürün depolama' => l10n.spActPolystyreneFoamPackagedProductStorage,
+  'Yüksek kalorili yanabilir mal depolama (döşeme)' => l10n.spActHighCalorificCombustibleGoodsStorageFloor,
+  'Raf / palet sistemi — Kategori I mallar (metal, cam, seramik)' => l10n.spActRackPalletCategoryIGoods,
+  'Yüksek raflı depo — yanmaz ürünler, istif > 3 m' => l10n.spActHighRackNoncombustibleStorageAbove3m,
+  'Palet üzeri kapalı metal / cam ürün depolama' => l10n.spActPalletSealedMetalGlassStorage,
+  'Soğuk hava deposu yüksek raf sistemi' => l10n.spActColdStoreHighRackSystem,
+  'Raf / palet sistemi — Kategori II mallar (karton ambalajlı)' => l10n.spActRackPalletCategoryIIGoods,
+  'Yüksek raflı depo — karton kutu içinde yanmaz ürünler' => l10n.spActHighRackCartonBoxedNoncombustibleStorage,
+  'Palet üzeri karton ambalajlı ürün depolama, > 3 m' => l10n.spActPalletCartonPackagedStorageAbove3m,
+  'Tahta kasalarda depolama, yüksek raf sistemi' => l10n.spActWoodenCrateStorageHighRack,
+  'Raf / palet sistemi — Kategori III mallar (kâğıt, tekstil, ahşap)' => l10n.spActRackPalletCategoryIIIGoods,
+  'Yüksek raflı depo — mobilya, ahşap ürünler' => l10n.spActHighRackFurnitureWoodProductsStorage,
+  'Balya (pamuk, tekstil) raf depolama, > 3 m' => l10n.spActBaledCottonTextileRackStorageAbove3m,
+  'Rulo kâğıt ve kâğıt topu raf depolama, > 3 m' => l10n.spActPaperRollsRackStorageAbove3m,
+  'Karışık ambalajlı (kağıt + plastik) yüksek raf depolama' => l10n.spActMixedPackagedHighRackStorage,
+  'Raf / palet sistemi — Kategori IV mallar (plastik, kauçuk, köpük)' => l10n.spActRackPalletCategoryIVGoods,
+  'Ekspande plastik ve köpük ürün yüksek raf depolama' => l10n.spActExpandedPlasticFoamHighRackStorage,
+  'Aerosol ürün raf depolama — yanıcı itici gazlı, > 3 m' => l10n.spActAerosolRackStorageFlammablePropellantAbove3m,
+  'Katı plastik hammadde ve ürün yüksek raf depolama' => l10n.spActSolidPlasticRawProductHighRackStorage,
+  'Yanıcı ambalajlı ürün yüksek raf depolama (boya, vernik, solvent)' => l10n.spActFlammablePackagedProductHighRackStorage,
+  'Kauçuk ve lastik ürün yüksek raf depolama, > 3 m' => l10n.spActRubberTyreProductHighRackStorageAbove3m,
+  _ => faaliyet,
+};
+
 // ¦¦ Widget
 class SprinkleSistemi extends StatefulWidget {
   const SprinkleSistemi({super.key});
@@ -16659,24 +17796,31 @@ class _SprinkleState extends State<SprinkleSistemi> {
       _sonuc = null;
     });
 
+    final l10n = AppLocalizations.of(context);
     final en = double.tryParse(_enCtrl.text.replaceAll(',', '.'));
     final boy = double.tryParse(_boyCtrl.text.replaceAll(',', '.'));
     final yuks = double.tryParse(_yuksCtrl.text.replaceAll(',', '.'));
 
     if (en == null || en <= 0) {
-      setState(() => _hata = 'Geçerli bina eni giriniz (m).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterValidBuildingWidthM,
+      );
       return;
     }
     if (boy == null || boy <= 0) {
-      setState(() => _hata = 'Geçerli bina boyu giriniz (m).');
+      setState(
+        () => _hata = AppLocalizations.of(context).enterValidBuildingLengthM,
+      );
       return;
     }
     if (yuks == null || yuks <= 0) {
-      setState(() => _hata = 'Tavan yüksekliğini giriniz (m).');
+      setState(() => _hata = AppLocalizations.of(context).enterCeilingHeightM);
       return;
     }
     if (_sinifIdx == null) {
-      setState(() => _hata = 'Lütfen bina faaliyetini seçiniz.');
+      setState(
+        () => _hata = AppLocalizations.of(context).selectBuildingActivity,
+      );
       return;
     }
 
@@ -16691,9 +17835,11 @@ class _SprinkleState extends State<SprinkleSistemi> {
     final sprinklerTipi = _spSprinklerTipleri[_sprinklerTipiIdx];
     final kFactorEfektif = sprinklerTipi.kFactor ?? sinif.kFactor;
     final kFactorUyari = kFactorEfektif < sinif.kFactor
-        ? 'Seçilen K-Faktör (K${kFactorEfektif.toInt()}), ${sinif.kod} sınıfının '
-              'gerektirdiği minimum K${sinif.kFactor.toInt()} değerinin altındadır — '
-              'üretici onayı ve tam hidrolik hesap doğrulaması zorunludur.'
+        ? l10n.spKFactorWarning(
+            '${kFactorEfektif.toInt()}',
+            sinif.kod,
+            '${sinif.kFactor.toInt()}',
+          )
         : null;
 
     // ¦¦ Asma tavan hesabı (EN 12845 Md. 5.4)
@@ -16709,7 +17855,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
     // ¦¦ Tavan yüksekliği düzeltmesi (EN 12845 Md. 5.2.3)
     final maxKapsamaEfektif = _spMaxKapsamaYuks(yuks, sinif.kod);
-    final yuksUyari = _spYuksUyari(yuks, sinif.kod);
+    final yuksUyari = _spYuksUyari(l10n, yuks, sinif.kod);
     // Düzeltilmiş kapsama alanı → alan bazlı aralık
     final aralikAlan = math.sqrt(maxKapsamaEfektif);
     // Çizelge 19: S ve D mesafe limiti uygulanır (hangi kısıt bağlayıcıysa)
@@ -17106,6 +18252,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
   Future<void> _faaliyetSec(BuildContext context) async {
     final araCtrl = TextEditingController();
     String filtre = '';
+    final l10n = AppLocalizations.of(context)!;
 
     final secilen = await showDialog<String>(
       context: context,
@@ -17123,6 +18270,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                           e.value.toLowerCase().contains(
                             filtre.toLowerCase(),
                           ) ||
+                          _spFaaliyetL10n(l10n, e.value).toLowerCase().contains(
+                            filtre.toLowerCase(),
+                          ) ||
                           e.key.toLowerCase().contains(filtre.toLowerCase()),
                     )
                     .toList();
@@ -17136,8 +18286,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Faaliyet Alanı Seç',
+                  Text(
+                    l10n.spActivityDialogTitle,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   const SizedBox(height: 12),
@@ -17145,7 +18295,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     controller: araCtrl,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: 'Faaliyet ara…',
+                      hintText: l10n.searchActivity,
                       prefixIcon: const Icon(Icons.search, size: 20),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -17163,11 +18313,11 @@ class _SprinkleState extends State<SprinkleSistemi> {
                       maxHeight: MediaQuery.of(ctx).size.height * 0.5,
                     ),
                     child: filtrelenmis.isEmpty
-                        ? const Padding(
-                            padding: EdgeInsets.all(24),
+                        ? Padding(
+                            padding: const EdgeInsets.all(24),
                             child: Text(
-                              'Sonuç bulunamadı',
-                              style: TextStyle(color: Colors.grey),
+                              l10n.spNoResultsFound,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           )
                         : ListView.separated(
@@ -17195,7 +18345,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                                   ),
                                 ),
                                 title: Text(
-                                  e.value,
+                                  _spFaaliyetL10n(l10n, e.value),
                                   style: const TextStyle(fontSize: 13),
                                 ),
                                 onTap: () => Navigator.pop(ctx, e.value),
@@ -17206,7 +18356,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
-                    child: const Text('İptal'),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                 ],
               ),
@@ -17242,6 +18392,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bottomPad = MediaQuery.of(context).padding.bottom;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPad),
@@ -17252,17 +18403,16 @@ class _SprinkleState extends State<SprinkleSistemi> {
           _InfoBox(
             color: const Color(0xFFE0F2FE),
             border: const Color(0xFF38BDF8),
-            child: const Text(
-              'EN 12845 / TS EN 12845 — Sabit Söndürücü Sistemler · Otomatik Sprinkler\n'
-              'Tehlike sınıfına göre kritik devre hidrolik hesabı  ·  Hazen–Williams (seçilebilir boru malzemesi C katsayısı)',
-              style: TextStyle(fontSize: 11, height: 1.5),
+            child: Text(
+              l10n.spFormulaInfo,
+              style: const TextStyle(fontSize: 11, height: 1.5),
             ),
           ),
           const SizedBox(height: 16),
 
           // ¦¦ Bina boyutları
-          const Text(
-            'Bina Boyutları',
+          Text(
+            l10n.buildingDimensions,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 8),
@@ -17275,7 +18425,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     decimal: true,
                   ),
                   decoration: _spDecor(
-                    'En  (m)',
+                    l10n.spFieldWidthM,
                     Icons.width_full_rounded,
                     suffix: 'm',
                   ),
@@ -17289,7 +18439,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     decimal: true,
                   ),
                   decoration: _spDecor(
-                    'Boy  (m)',
+                    l10n.spFieldLengthM,
                     Icons.height_rounded,
                     suffix: 'm',
                   ),
@@ -17303,7 +18453,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     decimal: true,
                   ),
                   decoration: _spDecor(
-                    'Tavan  (m)',
+                    l10n.spFieldCeilingM,
                     Icons.vertical_align_top_rounded,
                     suffix: 'm',
                   ),
@@ -17314,8 +18464,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
           const SizedBox(height: 16),
 
           // ¦¦ Asma Tavan
-          const Text(
-            'Asma Tavan',
+          Text(
+            l10n.ceilingSuspended,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 8),
@@ -17335,10 +18485,10 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     _sonuc = null;
                   }),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Asma tavan mevcut (gizli boşluk)',
-                    style: TextStyle(fontSize: 13),
+                    l10n.spSuspendedCeilingCheckbox,
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
               ],
@@ -17352,7 +18502,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 decimal: true,
               ),
               decoration: _spDecor(
-                'Boşluk Derinliği  (cm)',
+                l10n.spVoidDepthLabel,
                 Icons.layers_rounded,
                 suffix: 'cm',
               ),
@@ -17365,17 +18515,16 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: const Color(0xFFFCD34D)),
               ),
-              child: const Text(
-                'EN 12845 Md. 5.4: Boşluk derinliği > 80 cm ise gizli boşluğa '
-                'ek sprinkler sistemi kurulması gerekir.',
-                style: TextStyle(fontSize: 11, height: 1.4),
+              child: Text(
+                l10n.spVoidDepthInfo,
+                style: const TextStyle(fontSize: 11, height: 1.4),
               ),
             ),
           ],
 
           // ¦¦ Bina faaliyeti seçimi devam
-          const Text(
-            'Bina Faaliyeti',
+          Text(
+            l10n.buildingActivity,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 8),
@@ -17383,14 +18532,16 @@ class _SprinkleState extends State<SprinkleSistemi> {
             onTap: () => _faaliyetSec(context),
             child: InputDecorator(
               decoration: _spDecor(
-                'Bina Faaliyeti',
+                l10n.spBuildingActivityFieldLabel,
                 Icons.business_center_rounded,
               ),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      _secilenFaaliyet ?? 'Faaliyeti seçiniz…',
+                      _secilenFaaliyet != null
+                          ? _spFaaliyetL10n(l10n, _secilenFaaliyet!)
+                          : l10n.spSelectActivityPlaceholder,
                       style: TextStyle(
                         fontSize: 13,
                         color: _secilenFaaliyet == null ? Colors.grey : null,
@@ -17429,7 +18580,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          'Tehlike Sınıfı: ${_spSiniflar[_sinifIdx!].ad}',
+                          l10n.spHazardClassInline(
+                            _spSinifAdL10n(l10n, _spSiniflar[_sinifIdx!].kod),
+                          ),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
@@ -17441,9 +18594,11 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Yoğunluk: ${_spSiniflar[_sinifIdx!].yogunluk} mm/min  ·  '
-                    'Tasarım alanı: ${_spSiniflar[_sinifIdx!].tasarimAlani.toInt()} m²  ·  '
-                    'Maks. kapsama: ${_spSiniflar[_sinifIdx!].maxKapsama.toInt()} m²/sprinkler',
+                    l10n.spHazardClassDetail(
+                      '${_spSiniflar[_sinifIdx!].yogunluk}',
+                      '${_spSiniflar[_sinifIdx!].tasarimAlani.toInt()}',
+                      '${_spSiniflar[_sinifIdx!].maxKapsama.toInt()}',
+                    ),
                     style: const TextStyle(
                       fontSize: 11,
                       color: Colors.black54,
@@ -17457,21 +18612,21 @@ class _SprinkleState extends State<SprinkleSistemi> {
           const SizedBox(height: 16),
 
           // ¦¦ Gelişmiş Tasarım Seçenekleri
-          const Text(
-            'Gelişmiş Tasarım Seçenekleri',
+          Text(
+            l10n.advancedDesignOptions,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<int>(
             value: _boruMalzemeIdx,
             isExpanded: true,
-            decoration: _spDecor('Boru Malzemesi', Icons.plumbing_rounded),
+            decoration: _spDecor(l10n.pipeMaterial, Icons.plumbing_rounded),
             items: [
               for (int i = 0; i < _spBoruMalzemeleri.length; i++)
                 DropdownMenuItem(
                   value: i,
                   child: Text(
-                    '${_spBoruMalzemeleri[i].$1}  —  C=${_spBoruMalzemeleri[i].$2.toInt()}',
+                    '${_spBoruAdiL10n(l10n, _spBoruMalzemeleri[i].$1)}  —  C=${_spBoruMalzemeleri[i].$2.toInt()}',
                     style: const TextStyle(fontSize: 12),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -17488,7 +18643,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
             value: _sprinklerTipiIdx,
             isExpanded: true,
             decoration: _spDecor(
-              'Sprinkler Tipi (K-Faktör)',
+              l10n.spSprinklerTypeLabel,
               Icons.water_drop_rounded,
             ),
             items: [
@@ -17496,7 +18651,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 DropdownMenuItem(
                   value: i,
                   child: Text(
-                    _spSprinklerTipleri[i].ad,
+                    _spTipiAdL10n(l10n, _spSprinklerTipleri[i].ad),
                     style: const TextStyle(fontSize: 12),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -17511,7 +18666,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
           Padding(
             padding: const EdgeInsets.only(top: 6, left: 4),
             child: Text(
-              _spSprinklerTipleri[_sprinklerTipiIdx].aciklama,
+              _spTipiAciklamaL10n(l10n, _spSprinklerTipleri[_sprinklerTipiIdx].ad),
               style: const TextStyle(
                 fontSize: 11,
                 color: Colors.black54,
@@ -17524,7 +18679,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
             value: _kurulumSinifIdx,
             isExpanded: true,
             decoration: _spDecor(
-              'Kurulum Sınıfı / Pompa Yedekliliği',
+              l10n.spInstallationClassLabel,
               Icons.settings_input_component_rounded,
             ),
             items: [
@@ -17532,7 +18687,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 DropdownMenuItem(
                   value: i,
                   child: Text(
-                    _spKurulumSiniflari[i].ad,
+                    _spKurulumAdL10n(l10n, _spKurulumSiniflari[i].ad),
                     style: const TextStyle(fontSize: 12),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -17547,7 +18702,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
           Padding(
             padding: const EdgeInsets.only(top: 6, left: 4),
             child: Text(
-              _spKurulumSiniflari[_kurulumSinifIdx].aciklama,
+              _spKurulumAciklamaL10n(l10n, _spKurulumSiniflari[_kurulumSinifIdx].ad),
               style: const TextStyle(
                 fontSize: 11,
                 color: Colors.black54,
@@ -17572,10 +18727,10 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     _sonuc = null;
                   }),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Kuru borulu sistem (donma riskli alan)',
-                    style: TextStyle(fontSize: 13),
+                    l10n.spDryPipeCheckbox,
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
               ],
@@ -17591,11 +18746,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: const Color(0xFFFCD34D)),
                 ),
-                child: const Text(
-                  'Kuru borulu sistemlerde şebekeye hava/nitrojen basılır ve tetikleme '
-                  '(trip) süresi, kompresör kapasitesi ve boru eğimi (drenaj) ayrıca '
-                  'tasarlanmalıdır. Donma riski olmayan alanlarda ıslak sistem tercih edilmelidir.',
-                  style: TextStyle(fontSize: 11, height: 1.4),
+                child: Text(
+                  l10n.spDryPipeInfo,
+                  style: const TextStyle(fontSize: 11, height: 1.4),
                 ),
               ),
             ),
@@ -17616,10 +18769,10 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     _sonuc = null;
                   }),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Raf / palet depolama — In-Rack sprinkler (ön tasarım)',
-                    style: TextStyle(fontSize: 13),
+                    l10n.spRackStorageCheckbox,
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
               ],
@@ -17631,9 +18784,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
               controller: _rafKatSayisiCtrl,
               keyboardType: TextInputType.number,
               decoration: _spDecor(
-                'Raf Kat Sayısı (in-rack seviyesi)',
+                l10n.spRackLevelsLabel,
                 Icons.view_agenda_rounded,
-                suffix: 'kat',
+                suffix: l10n.spUnitLevel,
               ),
             ),
             const SizedBox(height: 6),
@@ -17644,11 +18797,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: const Color(0xFFFCD34D)),
               ),
-              child: const Text(
-                'Bu yalnızca ön fikir amaçlı basitleştirilmiş bir tahmindir. Kesin in-rack '
-                'sprinkler sayısı, flue space (boşluk) genişliği ve kat aralığı EN 12845 '
-                'Ek H kapsamında tam tasarımla belirlenmelidir.',
-                style: TextStyle(fontSize: 11, height: 1.4),
+              child: Text(
+                l10n.spRackInfo,
+                style: const TextStyle(fontSize: 11, height: 1.4),
               ),
             ),
           ],
@@ -17656,8 +18807,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
           const SizedBox(height: 16),
 
           // ¦¦ Köpük Sistemi
-          const Text(
-            'Köpük Sistemi',
+          Text(
+            l10n.foamSystem,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 8),
@@ -17677,10 +18828,10 @@ class _SprinkleState extends State<SprinkleSistemi> {
                     _sonuc = null;
                   }),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Köpük söndürme sistemi ekle (EN 13565-2)',
-                    style: TextStyle(fontSize: 13),
+                    l10n.spFoamSystemCheckbox,
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
               ],
@@ -17689,8 +18840,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
           if (_kopukAktif) ...[
             const SizedBox(height: 10),
             // Sıvı kategorisi
-            const Text(
-              'Sıvı Yanıcı Kategorisi',
+            Text(
+              l10n.flammableLiquidCategory,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 6),
@@ -17698,8 +18849,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
               children: [
                 Expanded(
                   child: _KopukRadio(
-                    label: 'Hidrokarbon (B1)',
-                    sub: 'Benzin, motorin,\nakaryakıt, yağ',
+                    label: l10n.hydrocarbon,
+                    sub: l10n.spHydrocarbonSub,
                     value: 'HC',
                     group: _kopukSiviKat,
                     renk: _kC,
@@ -17712,8 +18863,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _KopukRadio(
-                    label: 'Polar Solvent (B2)',
-                    sub: 'Aseton, etanol,\nsolvent, keton',
+                    label: l10n.polarSolvent,
+                    sub: l10n.spPolarSolventSub,
                     value: 'PS',
                     group: _kopukSiviKat,
                     renk: _kC,
@@ -17733,14 +18884,14 @@ class _SprinkleState extends State<SprinkleSistemi> {
             ),
             const SizedBox(height: 12),
             // Köpük tipi
-            const Text(
-              'Köpük Konsantresi Tipi',
+            Text(
+              l10n.foamConcentrateType,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 6),
             DropdownButtonFormField<String>(
               value: _kopukTipKod,
-              decoration: _spDecor('Köpük Tipi', Icons.bubble_chart_rounded),
+              decoration: _spDecor(l10n.foamType, Icons.bubble_chart_rounded),
               items: [
                 for (final t in _kopukTipleri)
                   if (_kopukSiviKat == 'HC' || t.hizPS != null)
@@ -17760,8 +18911,8 @@ class _SprinkleState extends State<SprinkleSistemi> {
             ),
             const SizedBox(height: 10),
             // Uygulama süresi
-            const Text(
-              'Minimum Uygulama Süresi',
+            Text(
+              l10n.minimumApplicationTime,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 6),
@@ -17791,7 +18942,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                           _sonuc = null;
                         }),
                         child: Text(
-                          '$sure dk',
+                          l10n.spFoamDurationMin('$sure'),
                           style: TextStyle(
                             fontSize: 12,
                             color: _kopukSure == sure ? _kC : Colors.black87,
@@ -17813,10 +18964,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: const Color(0xFF7DD3FC)),
               ),
-              child: const Text(
-                'EN 13565-2: Polar solventler için yalnızca AR-AFFF, FFFP veya MF-FFF konsantresi kullanılır. '
-                'Koruma alanı olarak bina alanı (en × boy) baz alınır.',
-                style: TextStyle(
+              child: Text(
+                l10n.spFoamPolarSolventInfo,
+                style: const TextStyle(
                   fontSize: 11,
                   height: 1.4,
                   color: Color(0xFF0369A1),
@@ -17853,9 +19003,9 @@ class _SprinkleState extends State<SprinkleSistemi> {
                 ),
               ),
               icon: const Icon(Icons.calculate_rounded),
-              label: const Text(
-                'Hesapla',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              label: Text(
+                l10n.calculate,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               onPressed: _hesapla,
             ),
@@ -17873,23 +19023,19 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: const Color(0xFFFCA5A5)),
                 ),
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.warning_amber_rounded,
                       color: Color(0xFFDC2626),
                       size: 18,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '⚠  HHP4 — YOĞUN SU SİSTEMİ\n'
-                        'EN 12845 Çizelge 3 Notu: Bu sınıf standart sprinkler kapsamı dışındadır. '
-                        'Özel değerlendirme ve yetkili mühendis onayı zorunludur. '
-                        'Aşağıdaki hesap yalnızca ön fikir vermek amacıyla yapılmıştır; '
-                        'resmi tasarım olarak kullanılamaz.',
-                        style: TextStyle(
+                        l10n.spHHP4Warning,
+                        style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFFDC2626),
                           height: 1.5,
@@ -17917,30 +19063,37 @@ class _SpResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = sonuc;
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // 1. Bina & Tasarım
-        _spHeader('Bina & Tasarım Parametreleri', Icons.domain_rounded, renk),
+        _spHeader(l10n.spRcHeaderBuilding, Icons.domain_rounded, renk),
         _spTable([
           (
-            'Bina Alanı',
+            l10n.spRcBuildingArea,
             '${s.binaAlani.toStringAsFixed(1)} m²   '
                 '(${s.en.toStringAsFixed(1)} m × ${s.boy.toStringAsFixed(1)} m)',
           ),
           (
-            'Tavan Yüksekliği',
+            l10n.spRcCeilingHeight,
             '${s.yuks.toStringAsFixed(1)} m'
-                '${s.maxKapsamaEfektif < s.sinif.maxKapsama ? "  ›  kapsama düzetildi: ${s.maxKapsamaEfektif.toInt()} m² (Yükseklik etkisi)" : ""}',
+                '${s.maxKapsamaEfektif < s.sinif.maxKapsama ? l10n.spRcCoverageAdjustedSuffix('${s.maxKapsamaEfektif.toInt()}') : ""}',
           ),
-          ('Tehlike Sınıfı', '${s.sinif.kod}  —  ${s.sinif.ad}'),
-          ('Tasarım Yoğunluğu', '${s.sinif.yogunluk} mm/min  (= L/min/m²)'),
-          ('Tasarım Alanı', '${s.sinif.tasarimAlani.toInt()} m²'),
           (
-            'Maks. Kapsama / Sprinkler',
+            l10n.spRcHazardClass,
+            '${s.sinif.kod}  —  ${_spSinifAdL10n(l10n, s.sinif.kod)}',
+          ),
+          (
+            l10n.spRcDesignDensity,
+            '${s.sinif.yogunluk} mm/min  (= L/min/m²)',
+          ),
+          (l10n.spRcDesignArea, '${s.sinif.tasarimAlani.toInt()} m²'),
+          (
+            l10n.spRcMaxCoveragePerSprinklerCap,
             s.maxKapsamaEfektif == s.sinif.maxKapsama
                 ? '${s.sinif.maxKapsama.toInt()} m²'
-                : '${s.sinif.maxKapsama.toInt()} m² › ${s.maxKapsamaEfektif.toInt()} m²  (yükseklik düzetmesi)',
+                : '${s.sinif.maxKapsama.toInt()} m² › ${s.maxKapsamaEfektif.toInt()} m²  ${l10n.spRcHeightAdjustSuffix}',
           ),
         ], renk),
         if (s.yuksUyari != null)
@@ -17953,58 +19106,61 @@ class _SpResultCard extends StatelessWidget {
               border: Border.all(color: const Color(0xFFFCD34D)),
             ),
             child: Text(
-              '??  ${s.yuksUyari}',
+              '⚠  ${s.yuksUyari}',
               style: const TextStyle(fontSize: 11, height: 1.4),
             ),
           ),
         const SizedBox(height: 12),
 
         // 2. Sprinkler Yerleşimi
-        _spHeader('Sprinkler Yerleşim Hesabı', Icons.grid_on_rounded, renk),
+        _spHeader(l10n.spRcHeaderLayout, Icons.grid_on_rounded, renk),
         _spTable([
           (
-            'Alan bazlı teorik aralık  √A',
+            l10n.spRcTheoreticalSpacing,
             '${math.sqrt(s.maxKapsamaEfektif).toStringAsFixed(2)} m'
                 '  (${s.maxKapsamaEfektif.toInt()} m² → √ = ${math.sqrt(s.maxKapsamaEfektif).toStringAsFixed(2)} m)',
           ),
           (
-            'Çizelge 19 — Maks. S ve D mesafesi',
+            l10n.spRcTable19MaxDistance,
             '${s.sinif.maxMesafe.toStringAsFixed(1)} m',
           ),
           (
-            'Uygulanan ızgara aralığı',
+            l10n.spRcAppliedGridSpacing,
             '${s.aralik.toStringAsFixed(2)} m'
-                '  ${math.sqrt(s.maxKapsamaEfektif) > s.sinif.maxMesafe ? "⚠ MESAFE KISITI bağlayıcı (√A > maks.mesafe)" : "✓ Alan kısıtı bağlayıcı"}',
+                '  ${math.sqrt(s.maxKapsamaEfektif) > s.sinif.maxMesafe ? l10n.spRcDistanceConstraintBinding : l10n.spRcAreaConstraintBinding}',
           ),
           (
-            'Yatay sıra (en boyunca)',
-            '${s.nX} adet  ›  ${(s.en / s.nX).toStringAsFixed(2)} m aralık',
+            l10n.spRcHorizontalRow,
+            '${s.nX} ${l10n.spUnitAdet}  ›  ${(s.en / s.nX).toStringAsFixed(2)} m ${l10n.spUnitSpacing}',
           ),
           (
-            'Dikey sıra (boy boyunca)',
-            '${s.nY} adet  ›  ${(s.boy / s.nY).toStringAsFixed(2)} m aralık',
+            l10n.spRcVerticalRow,
+            '${s.nY} ${l10n.spUnitAdet}  ›  ${(s.boy / s.nY).toStringAsFixed(2)} m ${l10n.spUnitSpacing}',
           ),
           (
-            'Sprinkler başına gerçek kapsama',
+            l10n.spRcActualCoveragePerHead,
             '${s.gercekKapsama.toStringAsFixed(2)} m²'
                 '  ≤ ${s.maxKapsamaEfektif.toInt()} m²',
           ),
-          ('TOPLAM SPRİNKLER', '${s.nToplam} adet  (ana kat)'),
           (
-            'Tasarım alanındaki sprinklerler',
-            '${s.nTasarim} adet   '
+            l10n.spRcTotalSprinklers,
+            '${s.nToplam} ${l10n.spUnitAdet}  ${l10n.spRcMainFloorSuffix}',
+          ),
+          (
+            l10n.spRcSprinklersInDesignArea,
+            '${s.nTasarim} ${l10n.spUnitAdet}   '
                 '(${s.sinif.tasarimAlani.toInt()} m² ÷ ${s.maxKapsamaEfektif.toInt()} m²)',
           ),
           if (s.asmaTavan)
             (
-              'Asma tavan boşluğu',
+              l10n.spRcSuspendedCeilingVoid,
               '${(s.asmaBosluk * 100).toStringAsFixed(0)} cm  '
-                  '›  ${s.asmaSprinklerGerek ? "⚠ Ek sprinkler zorunlu (> 80 cm)" : "✓ Ek sprinkler gerekmez (≤ 80 cm)"}',
+                  '›  ${s.asmaSprinklerGerek ? l10n.spRcExtraSprinklerRequired : l10n.spRcExtraSprinklerNotRequired}',
             ),
           if (s.asmaSprinklerGerek)
             (
-              'Gizli boşluk sprinkler sayısı',
-              '${s.nAsmaSpr} adet  (aynı ızgara üst kata uygulanır)',
+              l10n.spRcConcealedVoidSprinklerCount,
+              '${s.nAsmaSpr} ${l10n.spUnitAdet}  ${l10n.spRcAppliedToUpperGridSuffix}',
             ),
         ], renk),
         // Çizelge 20 — Yan duvar referans kutusu
@@ -18020,9 +19176,9 @@ class _SpResultCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Çizelge 20 — Yan Duvar Püskürtme Grupları (referans)',
-                  style: TextStyle(
+                Text(
+                  l10n.spRcTable20Title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 11,
                     color: Color(0xFF0369A1),
@@ -18031,15 +19187,15 @@ class _SpResultCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 _spTable([
                   (
-                    'Maks. kapsama / sprinkler',
+                    l10n.spRcMaxCoveragePerSprinklerLow,
                     '${s.sinif.yanKapsama!.toStringAsFixed(1)} m²',
                   ),
                   (
-                    'Gruplar arası maks. mesafe',
-                    '${s.sinif.yanAralik!.toStringAsFixed(1)} m  (Not 2: yangına 120 dk dayanımlı tavanda 3,7 m\'ye çıkabilir)',
+                    l10n.spRcMaxGroupDistance,
+                    '${s.sinif.yanAralik!.toStringAsFixed(1)} m${l10n.spRcNote2Suffix}',
                   ),
                   (
-                    'Duvar sonuna kadar maks.',
+                    l10n.spRcMaxToWallEnd,
                     '${s.sinif.yanSonMesafe!.toStringAsFixed(1)} m',
                   ),
                 ], renk),
@@ -18050,55 +19206,58 @@ class _SpResultCard extends StatelessWidget {
 
         // 3. Kritik Devre Hidrolik
         _spHeader(
-          'Kritik Devre Hidrolik Hesabı',
+          l10n.spRcHeaderHydraulic,
           Icons.water_drop_rounded,
           renk,
         ),
         _spTable([
           (
-            'En uzak sprinkler debisi  q',
+            l10n.spRcFarthestHeadFlow,
             '${s.qHead.toStringAsFixed(1)} L/min   '
                 '(K = ${s.sinif.kFactor.toInt()},  P = ${s.pHead.toStringAsFixed(2)} bar)',
           ),
           (
-            'Tasarım toplam debi  Q',
+            l10n.spRcDesignTotalFlow,
             '${s.qTasarim.toStringAsFixed(1)} L/min   '
                 '= ${(s.qTasarim * 60 / 1000).toStringAsFixed(2)} m³/h',
           ),
           (
-            'Dal boru  DN${s.dnBranch}',
+            l10n.spRcBranchPipeDN('${s.dnBranch}'),
             '${s.nBranch} sprinkler  ·  Q = ${s.qBranch.toStringAsFixed(0)} L/min   '
                 'L = ${s.lBranch.toStringAsFixed(1)} m   '
                 '›  P = ${s.dpBranch.toStringAsFixed(3)} bar',
           ),
           (
-            'Dağıtım boru  DN${s.dnCross}',
+            l10n.spRcCrossPipeDN('${s.dnCross}'),
             '${s.nCross} sprinkler  ·  Q = ${s.qCross.toStringAsFixed(0)} L/min   '
                 'L = ${s.lCross.toStringAsFixed(1)} m   '
                 '›  P = ${s.dpCross.toStringAsFixed(3)} bar',
           ),
           (
-            'Besleme / esas boru  DN${s.dnMain}',
+            l10n.spRcMainPipeDN('${s.dnMain}'),
             '${s.nMain} sprinkler  ·  Q = ${s.qMain.toStringAsFixed(0)} L/min   '
                 'L = ${s.lMain.toStringAsFixed(1)} m   '
                 '›  P = ${s.dpMain.toStringAsFixed(3)} bar',
           ),
-          ('Toplam sürtünme kaybı', '${s.dpToplam.toStringAsFixed(3)} bar'),
           (
-            'Statik yük  (${s.yuks.toStringAsFixed(1)} m × 0.098)',
+            l10n.spRcTotalFrictionLoss,
+            '${s.dpToplam.toStringAsFixed(3)} bar',
+          ),
+          (
+            l10n.spRcStaticHeadFormula(s.yuks.toStringAsFixed(1)),
             '${s.pStatik.toStringAsFixed(3)} bar',
           ),
           (
-            'Uzak sprinkler min. basıncı',
+            l10n.spRcFarthestHeadMinPressure,
             '${s.pHead.toStringAsFixed(2)} bar  (min. ${s.sinif.minBasinc} bar, K=${s.sinif.kFactor.toInt()})',
           ),
-          ('Emniyet marjı', '0.500 bar'),
+          (l10n.spRcSafetyMarginLabel, '0.500 bar'),
         ], renk),
         const SizedBox(height: 8),
 
         // 3b. Kritik Devre — Tam Hidrolik Hesap (Faz 1: dal, Faz 2: tali, Faz 3: ana)
         _spHeader(
-          'Kritik Devre — Tam Hidrolik Hesap',
+          l10n.spRcHeaderFullHydraulic,
           Icons.format_list_numbered_rounded,
           renk,
         ),
@@ -18115,18 +19274,18 @@ class _SpResultCard extends StatelessWidget {
             child: Row(
               children: [
                 _spKDCell('No', 36, isHeader: true, renk: renk),
-                _spKDCell('Mesafe\n(m)', 54, isHeader: true, renk: renk),
-                _spKDCell('Basınç\n(bar)', 60, isHeader: true, renk: renk),
-                _spKDCell('q\n(L/min)', 60, isHeader: true, renk: renk),
+                _spKDCell(l10n.spRcColDistance, 54, isHeader: true, renk: renk),
+                _spKDCell(l10n.spRcColPressure, 60, isHeader: true, renk: renk),
+                _spKDCell(l10n.spRcColFlowLower, 60, isHeader: true, renk: renk),
                 Expanded(
                   child: _spKDCell(
-                    'ΣQ\n(L/min)',
+                    l10n.spRcColCumFlow,
                     0,
                     isHeader: true,
                     renk: renk,
                   ),
                 ),
-                _spKDCell('ΔP sonraki\n(bar)', 72, isHeader: true, renk: renk),
+                _spKDCell(l10n.spRcColNextDeltaP, 72, isHeader: true, renk: renk),
               ],
             ),
           ),
@@ -18147,10 +19306,10 @@ class _SpResultCard extends StatelessWidget {
                   // Faz geçişinde bölüm başlığı ekle
                   if (nd.tip != lastTip) {
                     final sectionLabel = nd.tip == 'dal'
-                        ? '── Dal Boru (Range Pipe) ──'
+                        ? l10n.spRcSectionBranchPipe
                         : nd.tip == 'tali'
-                        ? '── Tali Boru (Distribution Pipe) ──'
-                        : '── Ana Boru (Main Pipe) ──';
+                        ? l10n.spRcSectionDistPipe
+                        : l10n.spRcSectionMainPipe;
                     rows.add(
                       Container(
                         width: double.infinity,
@@ -18270,9 +19429,7 @@ class _SpResultCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
-              'SP1 = en uzak sprinkler  ·  DP1 = tasarım noktası (design point)  ·  MP = esas boru  ·  '
-              'K-orantılama: Q_j = Q_krit×√(P_j/P_DP)  ·  '
-              'Hazen-Williams C=120, fitting payı %20 dahil  (EN 12845 §13.3.2)',
+              l10n.spRcHydraulicFootnote,
               style: TextStyle(
                 fontSize: 10,
                 color: renk.withOpacity(0.65),
@@ -18285,7 +19442,7 @@ class _SpResultCard extends StatelessWidget {
 
         // 4. Pompa
         _spHeader(
-          'Pompa Gereksinimleri',
+          l10n.spRcHeaderPump,
           Icons.settings_input_component_rounded,
           renk,
         ),
@@ -18304,7 +19461,7 @@ class _SpResultCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _SpPompaBox(
-                    label: 'Pompa Debisi',
+                    label: l10n.spRcPumpFlowLabel,
                     value: s.pompaDeb.toStringAsFixed(0),
                     unit: 'L/min',
                     sub: '${(s.pompaDeb * 60 / 1000).toStringAsFixed(2)} m³/h',
@@ -18312,7 +19469,7 @@ class _SpResultCard extends StatelessWidget {
                   ),
                   Container(width: 1, height: 60, color: renk.withOpacity(0.3)),
                   _SpPompaBox(
-                    label: 'Pompa Basıncı',
+                    label: l10n.spRcPumpPressureLabel,
                     value: s.pompaBasinc.toStringAsFixed(2),
                     unit: 'bar',
                     sub: '${(s.pompaBasinc * 10.2).toStringAsFixed(1)} m SSS',
@@ -18363,10 +19520,9 @@ class _SpResultCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'TS EN 12845+A1 Tablo 6 uygulandı — '
-                      'Ön-hesaplı sistemlerde pompa boyutlandırması için bağlayıcı minimum değerler:\n'
-                      '${s.tablo6ZorunluDebi ? '• Debi: iteratif hidrolik debi ${s.qTasarim.toStringAsFixed(0)} L/min < Tablo 6 min. ${_spT6MinDebi(s.sinif.kod).toStringAsFixed(0)} L/min → ${_spT6MinDebi(s.sinif.kod).toStringAsFixed(0)} L/min kullanıldı\n' : ''}'
-                      '${s.tablo6ZorunluBasinc ? '• Basınç: hesaplanan < Tablo 6 min. (${_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1)} + ps) bar → ${s.pompaBasinc.toStringAsFixed(2)} bar uygulandı' : ''}',
+                      '${l10n.spRcTable6AppliedIntro}\n'
+                      '${s.tablo6ZorunluDebi ? '${l10n.spRcTable6FlowLine(s.qTasarim.toStringAsFixed(0), _spT6MinDebi(s.sinif.kod).toStringAsFixed(0))}\n' : ''}'
+                      '${s.tablo6ZorunluBasinc ? l10n.spRcTable6PressureLine(_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1), s.pompaBasinc.toStringAsFixed(2)) : ''}',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.amber.shade900,
@@ -18400,10 +19556,10 @@ class _SpResultCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '⚠ EN 12845 §8.2 — Pompa basıncı ${s.pompaBasinc.toStringAsFixed(2)} bar, '
-                      'sistemdeki herhangi bir sprinkler konumundaki maksimum işletme basıncı '
-                      '12 bar\'ı aşmamalıdır. Basınç düşürücü vana (PRV) ile ${s.zonSayisi} '
-                      'basınç zonuna ayrılması veya sistem yeniden tasarımı değerlendirilmelidir.',
+                      l10n.spRcMaxPressureWarning(
+                        s.pompaBasinc.toStringAsFixed(2),
+                        '${s.zonSayisi}',
+                      ),
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.red.shade800,
@@ -18419,7 +19575,7 @@ class _SpResultCard extends StatelessWidget {
 
         // 4a2. Kurulum Sınıfı & Pompa Yedekliliği
         _spHeader(
-          'Kurulum Sınıfı & Pompa Yedekliliği',
+          l10n.spRcHeaderInstallation,
           Icons.power_settings_new_rounded,
           renk,
         ),
@@ -18434,24 +19590,27 @@ class _SpResultCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _spTable([
-                ('Kurulum Sınıfı', s.kurulum.ad),
                 (
-                  'Pompa Sayısı',
-                  '${s.kurulum.pompaSayisi} adet'
-                      '${s.kurulum.dizelGerekli ? "  (elektrik + dizel)" : ""}',
+                  l10n.spRcInstallationClassLabel,
+                  _spKurulumAdL10n(l10n, s.kurulum.ad),
                 ),
                 (
-                  'Su Kaynağı',
-                  s.kurulum.ciftKaynak ? 'Çiftli (bağımsız)' : 'Tekli',
+                  l10n.spRcPumpCount,
+                  '${s.kurulum.pompaSayisi} ${l10n.spUnitAdet}'
+                      '${s.kurulum.dizelGerekli ? l10n.spRcElectricDieselSuffix : ""}',
                 ),
                 (
-                  'Jokey Pompa',
+                  l10n.spRcWaterSource,
+                  s.kurulum.ciftKaynak ? l10n.spRcDualIndependent : l10n.spRcSingle,
+                ),
+                (
+                  l10n.spRcJockeyPump,
                   '${s.jokeyDebi.toStringAsFixed(1)} L/min @ ${s.jokeyBasinc.toStringAsFixed(2)} bar',
                 ),
               ], renk),
               const SizedBox(height: 8),
               Text(
-                s.kurulum.aciklama,
+                _spKurulumAciklamaL10n(l10n, s.kurulum.ad),
                 style: const TextStyle(
                   fontSize: 11,
                   color: Colors.black54,
@@ -18465,7 +19624,7 @@ class _SpResultCard extends StatelessWidget {
         const SizedBox(height: 12),
 
         // 4b. Su Deposu
-        _spHeader('Su Deposu  —  EN 12845 Tablo 2', Icons.water_rounded, renk),
+        _spHeader(l10n.spRcHeaderWaterTank, Icons.water_rounded, renk),
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -18479,19 +19638,19 @@ class _SpResultCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _SpPompaBox(
-                    label: 'Su Besleme Süresi',
+                    label: l10n.spRcWaterSupplyDuration,
                     value: '${s.sinif.sureDk}',
-                    unit: 'dakika',
+                    unit: l10n.spUnitMinutes,
                     sub: s.sinif.kod == 'LH'
-                        ? 'LH → 30 dk'
+                        ? l10n.spRcSupplyDurationSub('LH', '30')
                         : s.sinif.kod.startsWith('OH')
-                        ? 'OH → 60 dk'
-                        : 'HH → 90 dk',
+                        ? l10n.spRcSupplyDurationSub('OH', '60')
+                        : l10n.spRcSupplyDurationSub('HH', '90'),
                     renk: renk,
                   ),
                   Container(width: 1, height: 60, color: renk.withOpacity(0.3)),
                   _SpPompaBox(
-                    label: 'Min. Su Deposu',
+                    label: l10n.spRcMinWaterTank,
                     value: (s.suDepoHacmi / 1000).toStringAsFixed(1),
                     unit: 'm³',
                     sub: '${s.suDepoHacmi.toStringAsFixed(0)} L',
@@ -18514,10 +19673,9 @@ class _SpResultCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
-                'EN 12845:2015 Tablo 2 — Su beslemesi; depo veya dorudan şebeke bağlantısı ile sağlanabilir. '
-                'Depoda hangi konum seçilirse emniyet payı eklenmesi tavsiye edilir.',
-                style: TextStyle(
+              Text(
+                l10n.spRcWaterSupplyNote,
+                style: const TextStyle(
                   fontSize: 10,
                   color: Colors.black54,
                   fontStyle: FontStyle.italic,
@@ -18533,7 +19691,7 @@ class _SpResultCard extends StatelessWidget {
         // 4c. Kuru Borulu Sistem (isteğe bağlı)
         if (s.kuruBoru) ...[
           _spHeader(
-            'Kuru Borulu Sistem  —  Donma Riski',
+            l10n.spRcHeaderDryPipe,
             Icons.ac_unit_rounded,
             renk,
           ),
@@ -18549,17 +19707,14 @@ class _SpResultCard extends StatelessWidget {
               children: [
                 _spTable([
                   (
-                    'Boru Şebekesi İç Hacmi',
+                    l10n.spRcPipeNetworkVolume,
                     '${(s.kuruBoruHacmi! / 1000).toStringAsFixed(2)} m³  (${s.kuruBoruHacmi!.toStringAsFixed(0)} L)',
                   ),
                 ], renk),
                 const SizedBox(height: 8),
-                const Text(
-                  'Bu hacim yalnızca hava kompresörü / nitrojen jeneratörü ve priming '
-                  'suyu ön boyutlandırması için bir referanstır. Tetikleme (trip) süresi, '
-                  'aksesuar (accelerator/exhauster) ihtiyacı ve boru eğimi ayrıca '
-                  'üretici/tasarım standardına göre kesinleştirilmelidir.',
-                  style: TextStyle(
+                Text(
+                  l10n.spRcDryPipeNote,
+                  style: const TextStyle(
                     fontSize: 11,
                     color: Colors.black54,
                     fontStyle: FontStyle.italic,
@@ -18575,7 +19730,7 @@ class _SpResultCard extends StatelessWidget {
         // 4d. Raf Depolama (In-Rack Sprinkler) — ön tasarım
         if (s.rafDepolama && s.rafEkSprinkler != null) ...[
           _spHeader(
-            'Raf Depolama — In-Rack Sprinkler (Ön Tasarım)',
+            l10n.spRcHeaderRackStorage,
             Icons.view_agenda_rounded,
             renk,
           ),
@@ -18590,20 +19745,23 @@ class _SpResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _spTable([
-                  ('Raf Kat Sayısı', '${s.rafKatSayisi} kat'),
-                  ('Tahmini Ek In-Rack Sprinkler', '${s.rafEkSprinkler} adet'),
                   (
-                    'Tahmini Ek Debi',
+                    l10n.spRcRackLevelCount,
+                    '${s.rafKatSayisi} ${l10n.spUnitLevel}',
+                  ),
+                  (
+                    l10n.spRcEstExtraInRackSprinklers,
+                    '${s.rafEkSprinkler} ${l10n.spUnitAdet}',
+                  ),
+                  (
+                    l10n.spRcEstExtraFlow,
                     '${s.rafEkDebi!.toStringAsFixed(0)} L/min',
                   ),
                 ], renk),
                 const SizedBox(height: 8),
-                const Text(
-                  'Basitleştirilmiş ön tasarım değeridir (3 m yatay aralık varsayımı, K80, '
-                  '1,0 bar). Kesin in-rack yerleşimi — flue space genişliği, kat aralığı ve '
-                  'gerçek hidrolik talep — EN 12845 Ek H kapsamında tam tasarımla '
-                  'belirlenmeli ve pompa/su deposu hesabına ayrıca eklenmelidir.',
-                  style: TextStyle(
+                Text(
+                  l10n.spRcRackNote,
+                  style: const TextStyle(
                     fontSize: 11,
                     color: Colors.black54,
                     fontStyle: FontStyle.italic,
@@ -18618,7 +19776,7 @@ class _SpResultCard extends StatelessWidget {
 
         // 5. Boru Çapı Özeti
         _spHeader(
-          'Boru Çapı Özeti  —  EN 12845 Tablo 14',
+          l10n.spRcHeaderPipeDiameterSummary,
           Icons.plumbing_rounded,
           renk,
         ),
@@ -18631,36 +19789,34 @@ class _SpResultCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: const Color(0xFFFCD34D)),
             ),
-            child: const Text(
-              '⚠  HHP sınıfı: EN 12845 Tablo 14 uygulanmaz. '
-              'Çaplar EN 12845 Ek C kapsamında tam hidrolik hesapla belirlenir. '
-              'Aşağıdaki değerler hız ≤ 5 m/s ön hesap yöntemine göre verilmiştir.',
-              style: TextStyle(fontSize: 11, height: 1.4),
+            child: Text(
+              l10n.spRcHHPTable14Warning,
+              style: const TextStyle(fontSize: 11, height: 1.4),
             ),
           ),
         _spTable([
           (
-            'Boru Malzemesi',
-            '${s.boruMalzeme}  (Hazen-Williams C=${s.boruC.toInt()})',
+            l10n.pipeMaterial,
+            '${_spBoruAdiL10n(l10n, s.boruMalzeme)}  (Hazen-Williams C=${s.boruC.toInt()})',
           ),
           (
-            'Sprinkler Tipi / K-Faktör',
-            '${s.sprinklerTipi.ad}  —  K${s.kFactorEfektif.toInt()}',
+            l10n.spRcSprinklerTypeKFactor,
+            '${_spTipiAdL10n(l10n, s.sprinklerTipi.ad)}  —  K${s.kFactorEfektif.toInt()}',
           ),
           (
-            'Dal boru (branch line)',
+            l10n.spRcBranchPipeRow,
             'DN ${s.dnBranch}  —  ${s.nBranch} spr./dal'
-                '${s.boruTabloHH ? "  (hız yöntemi)" : "  (Tb.14)"}',
+                '${s.boruTabloHH ? l10n.spRcVelocityMethodSuffix : l10n.spRcTable14Suffix}',
           ),
           (
-            'Dağıtım borusu (cross main)',
-            'DN ${s.dnCross}  —  ${s.nBranchPipes} dal kol / ${s.nCross} spr.'
-                '${s.boruTabloHH ? "  (hız yöntemi)" : "  (Tb.14)"}',
+            l10n.spRcCrossMainRow,
+            'DN ${s.dnCross}  —  ${l10n.spRcBranchConnCount('${s.nBranchPipes}', '${s.nCross}')}'
+                '${s.boruTabloHH ? l10n.spRcVelocityMethodSuffix : l10n.spRcTable14Suffix}',
           ),
           (
-            'Esas boru / besleme',
-            'DN ${s.dnMain}  —  ${s.nTasarim} spr. (tasarım alanı)'
-                '${s.boruTabloHH ? "  (hız yöntemi)" : "  (Tb.14)"}',
+            l10n.spRcMainSupplyRow,
+            'DN ${s.dnMain}  —  ${l10n.spRcDesignAreaHeadsSuffix('${s.nTasarim}')}'
+                '${s.boruTabloHH ? l10n.spRcVelocityMethodSuffix : l10n.spRcTable14Suffix}',
           ),
         ], renk),
         if (s.kFactorUyari != null)
@@ -18683,7 +19839,7 @@ class _SpResultCard extends StatelessWidget {
           ),
         const SizedBox(height: 4),
 
-        _spHeader('Boru Metrajı (Yaklaşık)', Icons.straighten_rounded, renk),
+        _spHeader(l10n.spRcHeaderPipeLength, Icons.straighten_rounded, renk),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -18706,14 +19862,14 @@ class _SpResultCard extends StatelessWidget {
                   ),
                 ),
                 children: [
-                  _spTH('Boru Türü'),
+                  _spTH(l10n.spRcColPipeType),
                   _spTH('DN'),
-                  _spTH('Adet × Uzunluk'),
-                  _spTH('Toplam (m)'),
+                  _spTH(l10n.spRcColCountLength),
+                  _spTH(l10n.spRcColTotalM),
                 ],
               ),
               _spTR(
-                'Dal boru (branch)',
+                l10n.spRcRowBranchPipe,
                 'DN ${s.dnBranch}',
                 '${s.nY} × ${(s.nBranch * s.aralik).toStringAsFixed(1)} m × 1.2',
                 s.mBranch.toStringAsFixed(1),
@@ -18721,7 +19877,7 @@ class _SpResultCard extends StatelessWidget {
                 even: true,
               ),
               _spTR(
-                'Dağıtım (cross main)\n[${s.nBranchPipes} dal kol bağlantısı]',
+                l10n.spRcRowCrossMain('${s.nBranchPipes}'),
                 'DN ${s.dnCross}',
                 '${s.nBranchPipes} × ${s.aralik.toStringAsFixed(1)} m × 1.2',
                 s.mCross.toStringAsFixed(1),
@@ -18729,7 +19885,7 @@ class _SpResultCard extends StatelessWidget {
                 even: false,
               ),
               _spTR(
-                'Esas boru (main)\n[pompa + kalan boy]',
+                l10n.spRcRowMainPipe,
                 'DN ${s.dnMain}',
                 'pompa: ${(math.max(s.en, s.boy) / 2).toStringAsFixed(1)} m\n'
                     'kalan: ${math.max(0.0, s.boy - math.sqrt(s.sinif.tasarimAlani)).toStringAsFixed(1)} m  (×1.2)',
@@ -18751,9 +19907,9 @@ class _SpResultCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'TOPLAM BORU METRAJ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              Text(
+                l10n.spRcTotalPipeLength,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
               Text(
                 '${s.mToplam.toStringAsFixed(1)} m',
@@ -18768,9 +19924,8 @@ class _SpResultCard extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          '* Metraj yaklaşık değerdir. %20 bağlantı eklentisi hesaba katılmıştır. '
-          'Gerçek metraj için mimari plan üzerinde tam hesap yapılmalıdır.',
-          style: TextStyle(
+          l10n.spRcPipeLengthFootnote,
+          style: const TextStyle(
             fontSize: 10,
             color: Colors.black45,
             fontStyle: FontStyle.italic,
@@ -18780,7 +19935,7 @@ class _SpResultCard extends StatelessWidget {
 
         // 7. Islak Alarm Vanası
         _spHeader(
-          'Islak Alarm Vanası  —  EN 12845 Md. 11.2',
+          l10n.spRcHeaderAlarmValve,
           Icons.water_damage_rounded,
           renk,
         ),
@@ -18806,12 +19961,12 @@ class _SpResultCard extends StatelessWidget {
                           color: Colors.black87,
                         ),
                         children: [
-                          const TextSpan(
-                            text: 'Gerekli Islak Alarm Vanası:  ',
-                            style: TextStyle(fontSize: 13),
+                          TextSpan(
+                            text: l10n.spRcRequiredAlarmValve,
+                            style: const TextStyle(fontSize: 13),
                           ),
                           TextSpan(
-                            text: '${s.nAlarmVana} adet',
+                            text: '${s.nAlarmVana} ${l10n.spUnitAdet}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -18826,33 +19981,38 @@ class _SpResultCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               _spTable([
-                ('Toplam sprinkler', '${s.nToplam} adet'),
                 (
-                  'Maks. sprinkler / vana',
-                  '${s.maxVanaBasina} adet  '
-                      '(${s.sinif.kod.startsWith("HH") ? "HHP sınıfı" : "LH/OH sınıfı"})',
+                  l10n.spRcTotalSprinklersRow,
+                  '${s.nToplam} ${l10n.spUnitAdet}',
                 ),
                 (
-                  'Maks. alan / vana',
-                  '\ m²  '
-                      '(\)',
+                  l10n.spRcMaxSprinklersPerValve,
+                  '${s.maxVanaBasina} ${l10n.spUnitAdet}  '
+                      '(${s.sinif.kod.startsWith("HH") ? l10n.spRcHHPClassSuffix : l10n.spRcLHOHClassSuffix})',
                 ),
                 (
-                  'Vana başına alan',
-                  '\ m²  '
-                      '(? \ m²)',
+                  l10n.spRcMaxAreaPerValve,
+                  '${s.maxAlanPerVana.toStringAsFixed(0)} m²  '
+                      '(${s.sinif.kod.startsWith("HH") ? l10n.spRcHHPClassSuffix : l10n.spRcLHOHClassSuffix})',
                 ),
                 (
-                  'Her vana için tasarım debisi',
+                  l10n.spRcAreaPerValve,
+                  '${(s.binaAlani / s.nAlarmVana).toStringAsFixed(0)} m²  '
+                      '(≤ ${s.maxAlanPerVana.toStringAsFixed(0)} m²)',
+                ),
+                (
+                  l10n.spRcDesignFlowPerValve,
                   '${s.pompaDeb.toStringAsFixed(0)} L/min  '
-                      '(tüm sistem tek vana üzerinden hesaplanır)',
+                      '${l10n.spRcSingleValveSuffix}',
                 ),
               ], renk),
               const SizedBox(height: 8),
               Text(
-                'EN 12845:2015 Madde 11.2.1: Bir ıslak alarm vanası bölgesi '
-                '${s.sinif.kod.startsWith("HH") ? "HHP sınıflarında en fazla 500 sprinkler ve 2\u202f300 m²" : "LH/OH sınıflarında en fazla 1\u202f000 sprinkler ve 4\u202f800 m²"} '
-                'yüzey alanı koruyabilir.',
+                l10n.spRcAlarmValveNote(
+                  s.sinif.kod.startsWith("HH")
+                      ? l10n.spRcAlarmValveScopeHH
+                      : l10n.spRcAlarmValveScopeLHOH,
+                ),
                 style: const TextStyle(
                   fontSize: 11,
                   color: Colors.black54,
@@ -18868,7 +20028,7 @@ class _SpResultCard extends StatelessWidget {
         // 8. Köpük Sistemi
         if (s.kopuk != null) ...[
           _spHeader(
-            'Köpük Sistemi  —  EN 13565-2',
+            l10n.spRcHeaderFoamSystem,
             Icons.bubble_chart_rounded,
             renk,
           ),
@@ -18884,21 +20044,24 @@ class _SpResultCard extends StatelessWidget {
               children: [
                 _spTable([
                   (
-                    'Konsantre tipi',
-                    '${s.kopuk!.tip.ad}  —  %${s.kopuk!.tip.konsOrani.toInt()} konsantrasyon',
+                    l10n.spRcConcentrateType,
+                    '${s.kopuk!.tip.ad}${l10n.spRcConcentrationSuffix('${s.kopuk!.tip.konsOrani.toInt()}')}',
                   ),
                   (
-                    'Sıvı kategorisi',
+                    l10n.spRcLiquidCategory,
                     s.kopuk!.siviKat == 'PS'
-                        ? 'Polar Solvent (B2) — aseton, etanol, keton, solvent'
-                        : 'Hidrokarbon (B1) — benzin, motorin, yağ',
+                        ? l10n.spRcPolarSolventDetail
+                        : l10n.spRcHydrocarbonDetail,
                   ),
-                  ('Koruma alanı', '${s.kopuk!.alan.toStringAsFixed(0)} m²'),
+                  (l10n.spRcProtectedArea, '${s.kopuk!.alan.toStringAsFixed(0)} m²'),
                   (
-                    'Uygulama hızı',
+                    l10n.spRcApplicationRate,
                     '${s.kopuk!.uygulamaHizi.toStringAsFixed(1)} L/min/m²',
                   ),
-                  ('Uygulama süresi', '${s.kopuk!.sure.toInt()} dakika'),
+                  (
+                    l10n.spRcApplicationDuration,
+                    '${s.kopuk!.sure.toInt()} ${l10n.spUnitMinutes}',
+                  ),
                 ], renk),
                 const SizedBox(height: 10),
                 Container(
@@ -18911,31 +20074,31 @@ class _SpResultCard extends StatelessWidget {
                   child: Column(
                     children: [
                       _spHRow(
-                        'Çözelti debisi (Q)',
+                        l10n.spRcSolutionFlow,
                         '${s.kopuk!.cozeltDebi.toStringAsFixed(0)} L/min',
                         renk,
                       ),
                       const Divider(height: 10),
                       _spHRow(
-                        '  Konsantre debisi',
+                        l10n.spRcConcentrateFlow,
                         '${s.kopuk!.konsDebi.toStringAsFixed(1)} L/min',
                         renk,
                       ),
                       _spHRow(
-                        '  Su debisi',
+                        l10n.spRcWaterFlow,
                         '${s.kopuk!.suDebi.toStringAsFixed(0)} L/min',
                         renk,
                       ),
                       const Divider(height: 10),
                       _spHRow(
-                        'Konsantre tank hacmi',
+                        l10n.spRcConcentrateTankVolume,
                         '${s.kopuk!.konsTankHacmi.toStringAsFixed(0)} L'
                             '  (${(s.kopuk!.konsTankHacmi / 1000).toStringAsFixed(2)} m³)',
                         renk,
                         bold: true,
                       ),
                       _spHRow(
-                        'Su rezervi',
+                        l10n.spRcWaterReserve,
                         '${s.kopuk!.suTankHacmi.toStringAsFixed(0)} L'
                             '  (${(s.kopuk!.suTankHacmi / 1000).toStringAsFixed(2)} m³)',
                         renk,
@@ -18946,8 +20109,7 @@ class _SpResultCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'EN 13565-2 Madde 7: Konsantre tank hacmi ve su rezervi minimum değerlerdir. '
-                  'Gerçek tasarımda emniyet payı ve eş zamanlı kullanım dikkate alınmalıdır.',
+                  l10n.spRcFoamNote7,
                   style: const TextStyle(
                     fontSize: 11,
                     color: Colors.black54,
@@ -18964,12 +20126,9 @@ class _SpResultCard extends StatelessWidget {
         _InfoBox(
           color: const Color(0xFFFEF3C7),
           border: const Color(0xFFFCD34D),
-          child: const Text(
-            '?  Bu yaklaşık ön hesap niteliğindedir. Resmi proje tasarımında '
-            'EN 12845 Ek C kapsamında tam hidrolik hesap ve yetkili mühendis '
-            'onayı zorunludur. Bağlantı elemanı kayıpları için uzunluklara '
-            '+%20 eklentisi hesaba katılmıştır.',
-            style: TextStyle(fontSize: 11, height: 1.5),
+          child: Text(
+            l10n.spRcFinalDisclaimer,
+            style: const TextStyle(fontSize: 11, height: 1.5),
           ),
         ),
       ],

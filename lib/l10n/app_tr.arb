@@ -1,0 +1,1942 @@
+{
+  "@@locale": "tr",
+  "languageLabel": "Dil",
+  "settingsTitle": "Ayarlar",
+  "logout": "Çıkış",
+  "save": "Kaydet",
+  "saved": "Kaydedildi!",
+  "cancel": "Vazgeç",
+  "delete": "Sil",
+  "deletingAccount": "Hesap siliniyor...",
+  "accountDeleteTitle": "Hesabınızı silmeyi onaylıyor musunuz?",
+  "accountDeleteWarning": "Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki üyelik durumu ve kayıt/silinme tarihleri silinen üyeler geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.",
+  "accountManagement": "Hesap Yönetimi",
+  "accountDeleteInfo": "Hesabınızı ve bu cihazda saklanan hesap bilgilerinizi kalıcı olarak silebilirsiniz.",
+  "deleteAccount": "Hesabımı Kalıcı Olarak Sil",
+  "feedbackTitle": "Geri Bildirim",
+  "feedbackSubtitle": "Bir sorun mu buldunuz? Bize bildirin.",
+  "feedbackSelectPage": "Hangi sayfa ile ilgili?",
+  "feedbackSelectPageHint": "Sayfa seçin",
+  "feedbackMessageLabel": "Hata mesajınızı yazın",
+  "feedbackMessageHint": "Karşılaştığınız sorunu buraya yazın...",
+  "feedbackSend": "Gönder",
+  "feedbackSending": "Gönderiliyor...",
+  "feedbackSentSuccess": "Geri bildiriminiz için teşekkürler!",
+  "feedbackSendFailed": "Geri bildirim gönderilemedi. Lütfen tekrar deneyin.",
+  "feedbackMessageRequired": "Lütfen bir mesaj yazın.",
+  "feedbackPageHome": "Ana Sayfa",
+  "feedbackPageOther": "Diğer",
+  "apiKeyTitle": "Gemini API Anahtarı (AI)",
+  "apiKeyInstructions": "aistudio.google.com/apikey adresinden ücretsiz API anahtarı alabilirsiniz.",
+  "getApiKey": "API Anahtarı al",
+  "updateApiKey": "API Anahtarını Güncelle",
+  "add": "Ekle",
+  "done": "Tamam",
+  "smokeReference": "TS EN 54-7:2006 / EN 54-14:2004 — Nokta tipi duman dedektörü yerleşimi\nÖn boyutlandırmadır; kesin tasarım için sistem mühendisinin onayı gerekir.",
+  "buildingType": "Yapı Tipi",
+  "buildingOffice": "Ofis / İdari",
+  "buildingHome": "Konut / Otel",
+  "buildingHospital": "Hastane",
+  "buildingCommercial": "Ticari / AVM",
+  "buildingWarehouseNormal": "Depo (normal ≤ 6 m)",
+  "buildingWarehouseHigh": "Depo (yüksek > 6 m)",
+  "buildingIndustrial": "Endüstriyel",
+  "defaultCeilingHeight": "Varsayılan tavan yüksekliği: {height} m",
+  "@defaultCeilingHeight": {
+    "placeholders": {
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "editablePerRoom": "Her odada ayrıca düzenlenebilir",
+  "addFloorZone": "Kat / Bölge Ekle",
+  "floorZone": "Kat / Bölge",
+  "totalDetectors": "Toplam Dedektör",
+  "detectorCount": "{count} adet",
+  "@detectorCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addRoomArea": "Oda / Alan Ekle",
+  "editRoomArea": "Oda Düzenle",
+  "roomAreaName": "Oda / Alan Adı",
+  "roomAreaExample": "örn. Yemekhane, Sunucu Odası…",
+  "areaType": "Alan Tipi",
+  "validDimensions": "Geçerli ölçüler giriniz.",
+  "roomNameRequired": "Oda adı boş bırakılamaz.",
+  "roomStandard": "Standart Oda",
+  "roomOpenOffice": "Açık Ofis",
+  "roomTechnical": "Teknik / Tesisat",
+  "roomKitchen": "Mutfak / Pişirme",
+  "roomCorridor": "Koridor (G ≤ 3 m)",
+  "roomProduction": "Üretim / Montaj",
+  "roomWarehouseRack": "Depo Rafı",
+  "sourceLabel": "Kaynak",
+  "deleteProjectTitle": "Projeyi Sil",
+  "deleteProjectConfirm": "\"{name}\" projesi silinecek. Emin misiniz?",
+  "@deleteProjectConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noSavedProjects": "Henüz kayıtlı proje yok",
+  "saveProjectPrompt": "Hesabı proje olarak kaydet",
+  "saveProjectTitle": "Projeyi Kaydet",
+  "projectName": "Proje Adı",
+  "projectNameExample": "örn. Ofis Binası Zemin Kat",
+  "projectSaved": "\"{name}\" kaydedildi",
+  "@projectSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "copy": "Kopyala",
+  "edit": "Düzenle",
+  "floorZoneSummary": "{areas} alan · {detectors} det.",
+  "@floorZoneSummary": {
+    "placeholders": {
+      "areas": {
+        "type": "int"
+      },
+      "detectors": {
+        "type": "int"
+      }
+    }
+  },
+  "detectorBadge": "{count} det.",
+  "@detectorBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "highCeilingNotice": "⚠ H > 12 m — Işın tipi / ASD dedektör gereklidir (EN 54-12 / EN 54-20)",
+  "beamRecommendation": "ℹ H = 8–12 m — Işın dedektör de değerlendirilebilir",
+  "widthSpacing": "Genişlik aralığı: {value} m",
+  "lengthSpacing": "Uzunluk aralığı: {value} m",
+  "wallDistanceWidth": "Duvar mesafesi W: {value} m",
+  "wallDistanceLength": "Duvar mesafesi L: {value} m",
+  "corridorSpacing": "Koridor aralığı: {value} m",
+  "wallDistance": "Duvar mesafesi: {value} m",
+  "snAreaPerDetector": "S_n = {value} m²/adet.",
+  "systemLanguage": "Cihaz dili",
+  "turkish": "Türkçe",
+  "english": "English",
+  "german": "Deutsch",
+  "loginSubtitle": "Hesabınıza giriş yapın",
+  "emailAddress": "E-posta adresi",
+  "emailRequired": "E-posta gereklidir",
+  "validEmailRequired": "Geçerli bir e-posta girin",
+  "password": "Şifre",
+  "passwordRequired": "Şifre gereklidir",
+  "loggingIn": "Giriş yapılıyor...",
+  "login": "Giriş Yap",
+  "demoLogin": "Demo ile Gir (Davlumbaz Söndürme)",
+  "accountPrompt": "Henüz hesabınız yok mu? ",
+  "register": "Kayıt olun →",
+  "preliminaryToolDisclaimer": "Ön hesap aracıdır · Resmi proje hesabı değildir",
+  "fireSafetyCalculator": "Yangın Güvenliği Hesap Merkezi",
+  "fireLoadTitle": "Yangın Yükü Hesabı",
+  "fireLoadDescription": "EN 1991-1-2 yangın yükü yoğunluğu ve ISO 14520 / EN 12845 söndürme maddesi hesabı",
+  "kitchenSuppressionTitle": "Davlumbaz Söndürme",
+  "kitchenSuppressionDescription": "Ticari mutfak davlumbaz söndürme sistemi — NFPA 17A / TS EN 15751 / UL 300",
+  "gasSuppressionTitle": "Gazlı Söndürme Sistemi",
+  "gasSuppressionDescription": "Toplam hacim gazlı söndürme ve baskı makineleri — TS EN 15004 / NFPA 2001 · FM-200 · Novec 1230 · CO₂ · inert gazlar",
+  "lithiumFireTitle": "Lityum Pil Yangını",
+  "lithiumFireDescription": "ESS soğutma gereksinimi — ISO 3941:2026 · NFPA 855:2023 · IEC 62619 · FM Global DS 5-33",
+  "sprinklerTitle": "Sprinkler Sistemi",
+  "sprinklerDescription": "EN 12845 tehlike sınıfına dayalı hidrolik hesap, pompa ve boru çapı",
+  "smokeDetectionTitle": "Duman Algılama",
+  "smokeDetectionDescription": "Dedektör yerleşimi ve oda tipleri — TS EN 54-7 / EN 54-14",
+  "smokeControlTitle": "Duman Kontrolü",
+  "smokeControlDescription": "Doğal ve mekanik tahliye, basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6",
+  "demoMode": "DEMO MODU · Yalnızca \"Davlumbaz Söndürme\" modülü açıktır. Diğer modüller için hesap oluşturup abone olun.",
+  "standardSearch": "Standart Arama",
+  "standardSearchDescription": "Yangın ve güvenlik standartları veritabanında numara, ad veya kategori ile arama",
+  "standardGuide": "Standart Rehberi",
+  "standardGuideDescription": "Yangın sistemleri standart kategorileri, kapsam ve referans özeti",
+  "fireAndSuppression": "Yangın Yükü & Söndürme",
+  "kitchenSuppression": "Davlumbaz Söndürme",
+  "gasSuppression": "Gazlı Söndürme Sistemi",
+  "printingSuppression": "Baskı Makinesi Söndürme",
+  "sprinklerSystems": "Sprinkler Sistemi",
+  "fireAlarm": "Yangın Alarm & Algılama",
+  "fireExtinguishers": "Yangın Söndürücüler",
+  "smokeControl": "Duman Kontrolü & Tahliye",
+  "savedProjects": "Kayıtlı Projeler",
+  "savedProjectsDescription": "Kaydettiğiniz tüm hesap projeleri",
+  "addStandard": "Standart Ekle",
+  "allCategories": "Tüm Kategoriler",
+  "standardSearchHint": "Numara, ad veya kategori...",
+  "standardsFound": "{count} standart bulundu",
+  "@standardsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "category": "Kategori: {name}",
+  "@category": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "Kapat",
+  "searchWeb": "Web'de Ara",
+  "askAi": "AI'ya Sor",
+  "moduleDisclaimer": "MEVOS Fire · Yangın güvenliği ön hesap aracıdır, resmi proje hesabı değildir.",
+  "hoodSystemDescription": "Ticari mutfak davlumbaz söndürme sistemi boyutlandırması.\nReferans: NFPA 17A:2021 · TS EN 15751:2016 · UL 300 · Ansul R-102",
+  "hoodEquipmentHeading": "Davlumbaz Altı Ekipmanlar",
+  "hoodEquipmentInstructions": "Ekipman sayısını + / - ile ayarlayın. Seçime göre tehlike sınıfı otomatik hesaplanır.",
+  "hoodHazardClass": "Tehlike Sınıfı: {category}",
+  "hoodEquipmentScore": "Ekipman puanı: {score} · {count} adet seçildi · < 2 › Düşük · 2–5 › Orta · ≥ 5 › Yüksek",
+  "hoodFilterArea": "Davlumbaz Filtre Alanı (iç ölçü)",
+  "singleLength": "Uzunluk",
+  "singleWidth": "Genişlik",
+  "hazardLight": "Hafif",
+  "hazardMedium": "Orta",
+  "hazardMediumHigh": "Orta–Yüksek",
+  "hazardHigh": "Yüksek",
+  "hazardVeryHigh": "Çok Yüksek",
+  "hoodToastSandwichMachine": "Tost / Sandviç Makinesi",
+  "hoodSmallElectricOven": "Küçük Elektrikli Fırın",
+  "hoodConvectionOven": "Konveksiyon Fırın",
+  "hoodSingleBurnerRange": "Ocak (1 gözlü)",
+  "hoodDoubleBurnerRange": "Ocak (2 gözlü)",
+  "hoodFourToSixBurnerRange": "Ocak (4–6 gözlü)",
+  "hoodWokRange": "Wok Ocağı",
+  "hoodDoubleWokRange": "Çift Wok Ocağı",
+  "hoodSalamanderGrill": "Salamander Izgara",
+  "hoodCharbroilerGrill": "Charbroiler / Mangal",
+  "hoodFryerUpTo22L": "Fritöz (≤ 22 L)",
+  "hoodFryerOver22L": "Fritöz (> 22 L)",
+  "hoodTiltingSkillet": "Devrilebilir Tava",
+  "calculate": "Hesapla",
+  "calculateExtinguishingAgent": "Söndürme Maddesini Hesapla",
+  "calculateCooling": "Soğutma Gereksinimini Hesapla",
+  "recalculate": "Yeniden Hesapla",
+  "calculationResults": "Hesap Sonuçları",
+  "noResults": "Sonuç bulunamadı",
+  "extinguishingAgent": "Söndürme Maddesi",
+  "chemicalAgentAmount": "Kimyasal Ajan Miktarı",
+  "minimumNozzleCount": "Min. Nozul Sayısı",
+  "minimumDischargeTime": "Min. Deşarj Süresi",
+  "systemType": "Sistem Türü",
+  "naturalExhaust": "Doğal Tahliye",
+  "mechanicalExhaust": "Mekanik Tahliye",
+  "pressurization": "Basınçlandırma",
+  "roomArea": "Oda Alanı",
+  "ceilingHeight": "Tavan Yüksekliği",
+  "designFirePower": "Tasarım HRR (Yangın Gücü)",
+  "ambientTemperature": "Ortam Sıcaklığı",
+  "doorWidth": "Kapı Genişliği",
+  "doorHeight": "Kapı Yüksekliği",
+  "stairShaftWidth": "Merdiven Şaft Genişliği",
+  "stairShaftDepth": "Merdiven Şaft Derinliği",
+  "floorHeight": "Kat Yüksekliği",
+  "floorCount": "Kat Sayısı",
+  "shaftWallMaterial": "Şaft Duvarı Malzemesi",
+  "extinguishingDesignResult": "Söndürme Boyutlandırma Sonucu",
+  "smokeTemperature": "Duman Sıcaklığı",
+  "temperatureRise": "Sıcaklık Artışı",
+  "effectiveOpening": "Gerekli efektif açıklık",
+  "freshAirInlet": "Min. taze hava girişi",
+  "fanDesignFlow": "Fan tasarım debisi",
+  "calculatedAirChanges": "Hesaplanan hava değişimi",
+  "targetPressureDifference": "Hedef basınç farkı",
+  "openDoorFlow": "Açık kapı geçiş debisi",
+  "closedDoorLeakage": "Kapalı kapı sızıntısı / kat",
+  "wallLeakage": "Duvar sızıntısı (tüm katlar)",
+  "totalFanFlow": "Toplam fan debisi",
+  "sourceStandards": "Referans Standartlar",
+  "unknown": "Bilinmiyor",
+  "smokeControlStandards": "EN 12101-2 Doğal · EN 12101-3 Mekanik · EN 12101-6 Basınçlandırma",
+  "designFirePowerHint": "Tasarım yangın gücü — EN 1991-1-2 Ek E. Örn: orta tehlike ofis ≈ 500 kW",
+  "unknownFirePowerButton": "HRR değerini bilmiyorum — Yangın yükü hesabı yap",
+  "smokeLayerHeight": "Duman Katmanı Taban Yüksekliği z",
+  "smokeLayerHeightHint": "Temiz hava katmanının üst sınırı (zeminden ölçülür). z < H olmalı. Hedef z ≥ 2,5 m",
+  "pressurizationConditions": "Hedef ΔP = 50 Pa, kapı aralığı 10 mm (EN 12101-6 §7.3.3 / Ek F Tablo F.1)",
+  "naturalExhaustResult": "Doğal Tahliye Sonuçları (EN 12101-2)",
+  "mechanicalExhaustResult": "Mekanik Tahliye Sonuçları (EN 12101-3)",
+  "pressurizationResult": "Basınçlandırma Sonuçları (EN 12101-6)",
+  "smokeMassFlow": "Duman kütle debisi",
+  "smokeVolumeFlow": "Hacimsel duman debisi",
+  "minimumFreshAir": "Min. taze hava girişi",
+  "batteryTechnology": "Pil Teknolojisi",
+  "nmcDescription": "Nikel-Manganez-Kobalt · 30 MJ/kWh — Yüksek yoğunluk, orta stabilite",
+  "lfpDescription": "Lityum Demir Fosfat · 12 MJ/kWh — Düşük ısı, yüksek güvenlik",
+  "ncaDescription": "Nikel-Kobalt-Alüminyum · 35 MJ/kWh — En yüksek enerji yoğunluğu",
+  "lcoDescription": "Lityum Kobalt Oksit · 35 MJ/kWh — Tüketici elektroniği",
+  "essLithiumFireInfo": "ISO 3941:2026 · NFPA 855:2023 · IEC 62619:2022 · FM Global DS 5-33\nLityum iyon/polimer pil yangınlarında termik kaçış (thermal runaway) nedeniyle gazlı baskılama değil soğutma esastır. Aşağıdaki hesap ön boyutlandırma amaçlıdır.",
+  "nmcThermalRunawayNote": "NMC/NCM: Nikel-Manganez-Kobalt — 30 MJ/kWh termik kaçış ısısı (IEC 62619)",
+  "lfpThermalRunawayNote": "LFP: Lityum Demir Fosfat — 12 MJ/kWh termik kaçış ısısı (IEC 62619)",
+  "ncaThermalRunawayNote": "NCA: Nikel-Kobalt-Alüminyum — 35 MJ/kWh termik kaçış ısısı (IEC 62619)",
+  "lcoThermalRunawayNote": "LCO: Lityum Kobalt Oksit — 35 MJ/kWh termik kaçış ısısı (IEC 62619)",
+  "hazardClassificationBasisNote": "NFPA 855:2023 §4.4.2 — Tehlike sınıflandırmasına esas",
+  "fmGlobalMinDurationNote": "FM Global DS 5-33 min. süre: 30 dk  —  NFPA 855:2023 §12.4",
+  "essHazardCategoryInfo": "NFPA 855:2023 Tehlike Kategorisi & FM DS 5-33 Uygulama Yoğunluğu:\n  • Düşük  (< 20 kWh)  ›  8,2 L/min/m²\n  • Orta   (20–600 kWh)  ›  12,2 L/min/m²\n  • Yüksek (> 600 kWh)  ›  16,3 L/min/m²",
+  "essResultsFooterNote": "• Isı katsayısı: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n• Tepe HRR katsayısı: NMC 3,0 · LFP 1,5 · NCA/LCO 3,5 kW/kWh  (SP 2022:08)\n• t² büyüme: α=0,0469 kW/s² (hızlı sınıf · ISO 16734 / NFPA 72)\n• F-500 konsantrasyonu: %1,5 (üretici test verisi — Enviro Voraxial)\n• Su sisi alternatif: NFPA 750 / TS EN 14972-1\n• Büyük ESS (> 600 kWh): IEC 63272, UL 9540A testleri zorunludur\n• Bu hesap ön boyutlandırma amaçlıdır. FM Global DS 5-33 onaylı sistem zorunludur.",
+  "evLithiumFireInfo": "ISO 6469 · NFPA 88A:2021 · VdS 3471:2023 · IEC 62619:2022\nElektrikli araç yangınlarında termik kaçış soğutma ile yönetilir; gazlı veya kuru baskılama etkisizdir.",
+  "passengerCarSpecNote": "Otomobil — 30–100 kWh\n400–600 L/min · 60 dk min. (VdS 3471)",
+  "lightCommercialSpecNote": "Van / Minibüs — 60–120 kWh\n600 L/min · 60 dk min.",
+  "heavyCommercialSpecNote": "Elektrikli otobüs/kamyon — 200–600 kWh\n1 000 L/min · 90 dk min.",
+  "nmcHeatValue": "Nikel-Manganez-Kobalt — 30 MJ/kWh",
+  "lfpHeatValue": "Lityum Demir Fosfat — 12 MJ/kWh",
+  "ncaHeatValue": "Nikel-Kobalt-Alüminyum — 35 MJ/kWh",
+  "lcoHeatValue": "Lityum Kobalt Oksit — 35 MJ/kWh",
+  "vehicleBatteryCapacityNote": "Tek araç batarya kapasitesi — IEC 62619 termik kaçış hesabına esas",
+  "maxSimultaneousVehiclesNote": "VdS 3471:2023 — maks. 2 araç eş zamanlı yanma kabul edilir",
+  "vehicleApplicationDurationNote": "Binek / Hafif ticari min. 60 dk · Ağır ticari min. 90 dk  (VdS 3471:2023)",
+  "vdsMinimumFlowInfo": "VdS 3471:2023 Araç Başına Minimum Debi:\n  • Binek araç < 60 kWh  ›  400 L/min\n  • Binek araç ≥ 60 kWh  ›  600 L/min\n  • Hafif ticari           ›  600 L/min\n  • Ağır ticari / Otobüs  ›  1 000 L/min",
+  "evResultsFooterNote": "• Isı katsayısı: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n• Tepe HRR: binek <60kWh›3MW, ?60kWh›6MW · hafif ticari›8MW · ağır›15MW  (SP 2021:11)\n• t² büyüme modeli: ?=0,1876 kW/s² (ultra-fast · ISO 16734 / NFPA 72 Tablo B.2.3)\n• Su debisi: VdS 3471:2023 — 2 araç eş zamanlı (otopark)\n• Container daldırma: 3 000 L/araç (BRE Global / SFPE)\n• Kapalı otopark: NFPA 88A:2021 sprinkler gereklidir\n• Bu hesap ön boyutlandırma amaçlıdır.",
+  "heatPerVehicleMj": "{value} MJ/araç",
+  "@heatPerVehicleMj": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "avgHrrPerVehicleMw": "{value} MW/araç",
+  "@avgHrrPerVehicleMw": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "installedCapacity": "Kurulu Kapasite (ESS)",
+  "protectedArea": "Koruma Alanı (ESS ayak izi)",
+  "applicationDuration": "Uygulama Süresi",
+  "batteryCapacity": "Araç Batarya Kapasitesi",
+  "vehicleCount": "Araç Sayısı (risk bölgesi)",
+  "vehicleType": "Araç Tipi",
+  "passengerCar": "Binek Araç",
+  "lightCommercial": "Hafif Ticari",
+  "heavyCommercialBus": "Ağır Ticari / Otobüs",
+  "essStationary": "ESS / Sabit Depo",
+  "electricVehicleMode": "Elektrikli Araç",
+  "coolingCalculationResult": "Soğutma Hesabı Sonucu",
+  "electricVehicleFireResult": "Elektrikli Araç Yangın Hesabı",
+  "thermalRunawayHeat": "Termik Kaçış Isısı",
+  "estimatedPeakHrr": "Tahmini Tepe HRR",
+  "timeToPeak": "Tepeye Ulaşma Süresi",
+  "minimumFlowRate": "Minimum Debi",
+  "totalWaterVolume": "Toplam Su Hacmi",
+  "f500Amount": "F-500 Miktarı (%1,5 çözelti)",
+  "averageHeatReleaseRate": "Ortalama Isı Salım Hızı (HRR)",
+  "vehicleMinimumFlow": "Araç Başı Minimum Debi",
+  "simultaneousVehicleFlow": "Toplam Debi (en fazla 2 araç eş zamanlı)",
+  "containerImmersion": "Container Daldırma (alternatif)",
+  "fireRiskCategory": "NFPA 855 Tehlike Kategorisi",
+  "netProtectionVolume": "Net Koruma Hacmi",
+  "minimumDesignTemperature": "Min. Tasarım Sıcaklığı",
+  "altitudeCorrection": "Rakım düzeltmesi (TS EN 15004-1 Ek A)",
+  "safetyMargin": "%10 Güvenlik Payı (TS EN 15004-1 §5.5)",
+  "fireClass": "Yangın Sınıfı",
+  "surfaceClassA": "Sınıf A (Yüzey)",
+  "deepClassA": "Sınıf A (Derin)",
+  "classB": "Sınıf B",
+  "classC": "Sınıf C",
+  "gasAgent": "Söndürme Gazı",
+  "designConcentration": "Tasarım Konsantrasyonu (%)",
+  "dischargeDuration": "Deşarj Süresi",
+  "nozzleDiameter": "Nozul Çapı",
+  "automaticNozzle": "Otomatik (alan/hacim bazlı)",
+  "roomDimensions": "Oda Ölçüsü",
+  "directVolume": "Doğrudan Hacim",
+  "gasRoomTab": "Mahal",
+  "gasPrintingTab": "Baskı Makinesi",
+  "gasPanelTab": "Pano İçi",
+  "machineType": "Makine Tipi",
+  "inkSolventType": "Mürekkep / Çözücü Tipi",
+  "measureCabinet": "Kabini Ölç",
+  "unitCabinetVolume": "Ünite Kabini Hacmi",
+  "printingUnitCount": "Baskı Ünitesi Sayısı",
+  "agentPerUnit": "Ünite Başına Ajan",
+  "totalAgent": "Toplam Ajan",
+  "backupCylinderCount": "Yedek Besleme Silindir Sayısı",
+  "totalCylinders": "Toplam Silindir (Ana + Yedek)",
+  "cleanAgent": "Temiz Gaz",
+  "panelDimensions": "Pano Ölçüsü",
+  "panelCabinetVolume": "Pano/Kabin Hacmi",
+  "standard": "Standart",
+  "certification": "Sertifikasyon",
+  "maximumTubingLength": "Maks. Tubing Uzunluğu",
+  "estimatedAgentAmount": "Tahmini Ajan Miktarı",
+  "buildingDimensions": "Bina Boyutları",
+  "buildingActivity": "Bina Faaliyeti",
+  "activitySearch": "Faaliyet ara…",
+  "advancedDesignOptions": "Gelişmiş Tasarım Seçenekleri",
+  "pipeMaterial": "Boru Malzemesi",
+  "spPipeGalvanizedSteel": "Galvanizli Çelik (Sch.40)",
+  "spPipeBlackCarbonSteelWelded": "Siyah Karbon Çelik — kaynaklı",
+  "spPipeCopper": "Bakır Boru",
+  "spPipeStainlessSteel": "Paslanmaz Çelik",
+  "spPipeCpvcPlastic": "CPVC Plastik Boru",
+  "sprinklerType": "Sprinkler Tipi (K-Faktör)",
+  "installationClassPump": "Kurulum Sınıfı / Pompa Yedekliliği",
+  "dryPipeSystem": "Kuru borulu sistem (donma riskli alan)",
+  "rackStorage": "Raf / palet depolama — In-Rack sprinkler (ön tasarım)",
+  "rackLevels": "Raf Kat Sayısı (in-rack seviyesi)",
+  "foamSystem": "Köpük Sistemi",
+  "addFoamSystem": "Köpük söndürme sistemi ekle (EN 13565-2)",
+  "flammableLiquidCategory": "Sıvı Yanıcı Kategorisi",
+  "hydrocarbon": "Hidrokarbon (B1)",
+  "polarSolvent": "Polar Solvent (B2)",
+  "foamConcentrateType": "Köpük Konsantresi Tipi",
+  "foamType": "Köpük Tipi",
+  "minimumApplicationTime": "Minimum Uygulama Süresi",
+  "ceilingSuspended": "Asma Tavan",
+  "suspendedCeilingExists": "Asma tavan mevcut (gizli boşluk)",
+  "voidDepth": "Boşluk Derinliği (cm)",
+  "building": "Bina",
+  "electricalPanel": "Elektrik Panosu",
+  "fuelOrStorage": "Yakıt / Depo",
+  "buildingUseType": "Bina / Kullanım Türü",
+  "chooseBuildingUseType": "Bina / Kullanım Türü Seçiniz",
+  "referenceDensity": "Referans yoğunluk",
+  "growthRate": "Büyüme hızı",
+  "growthRateVerySlow": "Çok Yavaş",
+  "growthRateSlow": "Yavaş",
+  "growthRateMedium": "Orta",
+  "growthRateFast": "Hızlı",
+  "growthRateVeryFast": "Çok Hızlı",
+  "floorArea": "Kat Alanı A (m²)",
+  "cabinetNozzlePressure": "Yangın Dolabı Nozul Basıncı (min 4 bar)",
+  "combustibleMaterials": "Yanıcı Malzemeler",
+  "addMaterial": "Malzeme Ekle",
+  "woodTimber": "Ahşap / Kereste",
+  "savedValues": "Kaydedilen Değerler",
+  "noSavedCalculationResult": "Bu proje için kaydedilmiş hesap sonucu bulunamadı.",
+  "apiKeyEnter": "Gemini API anahtarını girin",
+  "searchBuildingTypes": "Bina türü ara…",
+  "material": "Malzeme",
+  "massKg": "Kütle (kg)",
+  "netCalorificValue": "NCV (MJ/kg)",
+  "capacityTank": "Kapasite / tank",
+  "unit": "Birim",
+  "quantity": "Adet",
+  "standardNumber": "Standart Numarası *",
+  "standardNumberExample": "ör: EN 12345",
+  "description": "Açıklama *",
+  "shortDescriptionHint": "Standardın kısa açıklaması…",
+  "topicKeyword": "Konu veya Anahtar Kelime",
+  "topicKeywordExample": "ör: baca brandası, ofis sprinkler…",
+  "questionHint": "Sorunuzu yazın…",
+  "searchActivity": "Faaliyet ara…",
+  "unitWidth": "G (m)",
+  "unitLength": "U (m)",
+  "unitHeight": "H (m)",
+  "searchMaterials": "Malzeme ara…",
+  "solid": "Katı",
+  "liquid": "Sıvı",
+  "gas": "Gaz",
+  "other": "Diğer",
+  "lowHazardAppendix": "Düşük Tehlike (Ek-1/A)",
+  "ordinaryHazardAppendix": "Orta Tehlike (Ek-1/B)",
+  "highHazardAppendix": "Yüksek Tehlike (Ek-1/C)",
+  "unclassified": "Sınıflandırılmamış",
+  "materialGroupCount": "{category} · {count} malzeme",
+  "materialWoodTimber": "Ahşap / Kereste",
+  "materialPlywoodMdf": "Kontrplak / MDF",
+  "materialPaperCardboard": "Kâğıt / Karton",
+  "materialCottonTextile": "Tekstil (pamuklu)",
+  "materialSyntheticTextile": "Tekstil (sentetik)",
+  "materialWool": "Yün",
+  "materialClothing": "Giysi",
+  "materialLeather": "Deri",
+  "materialPolyethylene": "Polietilen (PE)",
+  "materialPolypropylene": "Polipropilen (PP)",
+  "materialRigidPvc": "PVC (sert)",
+  "materialFlexiblePvc": "PVC (esnek/kablo)",
+  "materialPolystyrene": "Polistiren (PS)",
+  "materialEpsFoam": "EPS köpük",
+  "materialXpsFoam": "XPS köpük",
+  "materialAbsPlastic": "ABS Plastik",
+  "materialPmma": "PMMA (Pleksiglas)",
+  "materialEpoxyResin": "Epoksi Reçine",
+  "materialPolyesterResin": "Polyester Reçine (CTP/FRP)",
+  "materialRigidPolyurethaneFoam": "Poliüretan köpük (sert)",
+  "materialFlexiblePolyurethaneFoam": "Poliüretan köpük (esnek)",
+  "materialNaturalRubber": "Kauçuk (doğal)",
+  "materialVehicleTire": "Lastik (araç)",
+  "materialGasoline": "Benzin",
+  "materialDiesel": "Dizel",
+  "materialLpg": "LPG",
+  "materialPropane": "Propan",
+  "materialNaturalGasCng": "Doğalgaz (CNG)",
+  "materialMethanol": "Metanol",
+  "materialEthanol": "Etanol",
+  "materialAcetoneSolvent": "Aseton / Solvent (genel)",
+  "materialSolventBasedPaint": "Boya / Vernik (solventli)",
+  "materialAsphaltBitumen": "Asfalt / Bitüm",
+  "materialCoal": "Kömür",
+  "materialMineralTransformerOil": "Trafo Yağı (mineral)",
+  "materialHydraulicOil": "Hidrolik Yağ",
+  "materialPvcCable": "Elektrik Kablosu (PVC)",
+  "materialXlpeCable": "Elektrik Kablosu (XLPE)",
+  "materialLithiumIonBattery": "Li-ion Batarya",
+  "materialMixedFurniture": "Mobilya (karma)",
+  "materialOtherManual": "Diğer (manuel)",
+  "@materialGroupCount": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fireLoadFormulaInfo": "q = (m × H) / A\nm = yanıcı malzeme kütlesi (kg)  ·  H = NCV (MJ/kg)  ·  A = kat alanı (m²)",
+  "panelInnerDimensions": "Pano İç Ölçüleri (cm)",
+  "panelWidth": "Genişlik",
+  "panelHeight": "Yükseklik",
+  "panelDepth": "Derinlik",
+  "cableFillRatio": "Kablo dolum oranı: % {value}",
+  "fuelStorageInstructions": "Her tank türü, adedi ve kapasitesini girin.\nLPG için ton, sıvı yakıtlar için m³ veya ton kullanabilirsiniz.\nYangın yükü yoğunluğu için bund/havuz alanı opsiyoneldir.",
+  "fuelChemicalTanks": "Yakıt / Kimyasal Tanklar",
+  "totalApproxMass": "Toplam yaklaşık kütle: {value} ton",
+  "bundPoolArea": "Bund / Havuz Alanı  (m²)  —  opsiyonel",
+  "fireLoadDensityIfEntered": "Girilirse yangın yükü yoğunluğu (MJ/m²) hesaplanır.",
+  "ventilationLimitedQmaxInclude": "Havalandırma sınırlı Q_max hesabına dahil et (opsiyonel)",
+  "ventilationLimitedQmaxNote": "Not: Varsayılan hesap yalnızca yakıt yüzeyi sınırlı Q_max (RHRf×A) kullanır; açıklık (pencere/kapı) sınırlı Q_max hesaba katılmaz (EN 1991-1-2 Ek E).",
+  "openingArea": "Açıklık (Pencere/Kapı) Alanı  Aᵥ",
+  "openingHeight": "Açıklık Yüksekliği  h_eq",
+  "openingAreaHeightExplanation": "Aᵥ: mahaldeki tüm pencere/kapı açıklıklarının toplam alanı  ·  h_eq: bu açıklıkların ortalama yüksekliği (mahal/oda yüksekliği DEĞİL).",
+  "ventilationQmaxFormulaNote": "Q̇ₘₐₓ,ᵥ ≈ 0,09×Aᵥ×√h_eq × Hu_ort × 0,8  —  yaklaşık Kawagoe ventilasyon faktörü (Drysdale / SFPE); kesin tasarım için tam açıklık faktörü hesabı gereklidir.",
+  "totalFireEnergyLabel": "TOPLAM YANGIN ENERJİSİ",
+  "totalEnergy": "Toplam Enerji",
+  "totalEnergyGJ": "Toplam Enerji (GJ)",
+  "totalEnergyMWh": "Toplam Enerji (MWh)",
+  "totalEnergyGWh": "Toplam Enerji (GWh)",
+  "bundAreaIfEnteredNote": "Bund/havuz alanı girilirse yangın yükü yoğunluğu (MJ/m²) hesaplanır.",
+  "calculationResultLabel": "HESAPLAMA SONUCU",
+  "totalFireLoad": "Toplam Yangın Yükü",
+  "fireLoadDensityLabel": "Yangın Yükü Yoğunluğu  q",
+  "exceedsReferenceLabel": "^ +{value} MJ/m² — Referansı AŞIYOR",
+  "belowReferenceLabel": " {value} MJ/m² — Referans Altında",
+  "fireGrowthTimeline": "Yangın Büyüme Takvimi (EN 1991-1-2 E.4)",
+  "growthPhaseEnd": "Büyüme fazı sonu",
+  "decayPhaseStart": "Bozunma başlangıcı (% 70 tüketim)",
+  "totalFireDuration": "Toplam yangın süresi",
+  "peakHeatReleaseLabel": "Tepe Q̇: {value} MW  ·  Sınırlayan faktör: {factor}",
+  "limitingFactorFuelSurface": "Yakıt Yüzeyi (RHRf × A)",
+  "limitingFactorTotalEnergy": "Toplam Enerji (düşük yangın yükü)",
+  "limitingFactorVentilation": "Havalandırma (açıklık — yaklaşık)",
+  "extinguishingAgentCalcTitle": "Söndürme Maddesi Hesabı",
+  "panelVolumeHeight": "Hacim yüksekliği (pano): {value}",
+  "panelAgentRecommendation": "Elektrik panosu için FM-200 (HFC-227ea) veya Novec 1230 önerilir — ISO 14520 / NFPA 2001.",
+  "extinguishingAgentLabel": "Söndürme Maddesi",
+  "altitudeCorrectionLabel": "Rakım düzeltmesi (ISO 14520-1 Ek A)",
+  "altitudeLabel": "Rakım (m)",
+  "requiredAgent": "Gerekli Ajan",
+  "requiredAgentMass": "Gerekli Ajan Kütlesi",
+  "cylinderCountApprox": "Şişe Sayısı (80L/200bar≈16Nm³)",
+  "cylinderContainerCount": "Şişe / Kap Sayısı",
+  "portableExtinguisherTitle": "Taşınabilir Yangın Söndürücü (TS 862-7 EN 3-7)",
+  "fireLoadSourcesFooter": "Kaynak: EN 1991-1-2:2002 Ek E · ISO 14520 · EN 12845 · TS 862-7 EN 3-7+A1",
+  "portableExtinguisherSourceFooter": "Kaynak: TS 862-7 EN 3-7+A1 (2010) · BYKHY Madde 94-96",
+  "fireCabinetSourceFooter": "Kaynak: BYKHY Md. 91-93 · TS EN 671-1 · TS 9811",
+  "fireCabinetTitle": "Yangın Dolabı (BYKHY Md. 91-93 / TS EN 671-1)",
+  "fireCabinetTechSpecs": "DN25 (1\") yarı sert hortumlu makara · TS EN 671-1 · K=50\nQ = K × √P = 50 × √{p} bar = {flow} L/min\nPratik söndürme kapasitesi:\n  {capacity}",
+  "classACapacityPerCabinet": "A sınıfı: 2.0 MW/dolap",
+  "classBCapacityPerCabinet": "B sınıfı: 0.6 MW/dolap",
+  "hazardClassLabel": "Tehlike sınıfı",
+  "hazardClassLow": "Düşük",
+  "hazardClassMedium": "Orta",
+  "hazardClassHigh": "Yüksek",
+  "requiredCabinetCount": "Gerekli dolap adedi",
+  "totalExtinguishingCapacityLabel": "Toplam söndürme kapasitesi",
+  "waterReserveVolumeLabel": "Su rezerv hacmi ({minutes} dk)",
+  "cabinetSufficientLabel": "{count} dolap YETERLİ  —  söndürme {q} MW ≥ yangın yükü {load} MW",
+  "cabinetInsufficientLabel": "{count} dolap YETERSİZ  —  söndürme {q} MW < yangın yükü {load} MW (min {minNeeded} dolap gerekli)",
+  "roomHeightLabel": "Oda Yüksekliği (m)",
+  "fireClassPanel": "Sınıf B/C (elektrik ekipmanı yağı / gaz) — Toz veya CO₂",
+  "fireClassGasStorage": "Sınıf C (sıkıştırılmış yanıcı gaz) — KKP Toz, CO₂ veya Köpük",
+  "fireClassLiquidGasStorage": "Sınıf B + Sınıf C (sıvı/gaz yakıt) — KKP ABC Toz veya Köpük",
+  "fireClassLiquidStorage": "Sınıf B (yanıcı sıvı) — ABC Kuru Kimyevi Toz veya Köpük",
+  "fireClassSolidLiquidStorage": "Sınıf A + Sınıf B (katı/sıvı yanıcı) — ABC Kuru Kimyevi Toz",
+  "fireClassParking": "Sınıf B (sıvı yakıt) — ABC Toz veya Köpük",
+  "fireClassSolidDefault": "Sınıf A (katı yanıcı) — ABC Kuru Kimyevi Toz veya Su",
+  "riskClassLow": "Düşük Risk  (≤ 200 MJ/m²)",
+  "riskClassMedium": "Orta Risk  (200–600 MJ/m²)",
+  "riskClassHigh": "Yüksek Risk  (600–1200 MJ/m²)",
+  "riskClassVeryHigh": "Çok Yüksek Risk  (> 1200 MJ/m²)",
+  "loginServerUnreachable": "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.",
+  "genericErrorWithDetail": "Hata: {detail}",
+  "@genericErrorWithDetail": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "fireModuleSubscriptionMissing": "Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\nSunucudan gelen perms: {perms}",
+  "@fireModuleSubscriptionMissing": {
+    "placeholders": {
+      "perms": {
+        "type": "String"
+      }
+    }
+  },
+  "loginFailed": "Giriş başarısız",
+  "sessionNotFoundRelogin": "Oturum bulunamadı. Lütfen yeniden giriş yapın.",
+  "accountDeleteFailed": "Hesap silinemedi.",
+  "enterPanelInnerDimensionsCm": "Pano iç ölçülerini eksiksiz giriniz (cm).",
+  "addAtLeastOneFuelTank": "En az bir yakıt deposu ekleyiniz.",
+  "enterQuantityForFuel": "\"{name}\" için miktar giriniz.",
+  "@enterQuantityForFuel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enterValidFloorAreaM2": "Geçerli kat alanı giriniz (m²).",
+  "materialMassMissing": "\"{name}\" kütlesi eksik.",
+  "@materialMassMissing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "materialNcvMissing": "\"{name}\" ısıl değeri eksik.",
+  "@materialNcvMissing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "calculateFireLoadFirst": "Önce Yangın Yükü hesaplayınız.",
+  "enterValidArea": "Geçerli alan giriniz.",
+  "enterRoomHeightM": "Oda yüksekliğini giriniz (m).",
+  "enterHoodLengthWidthCm": "Davlumbaz uzunluk ve genişliğini giriniz (cm).",
+  "enterRoomDimensionsFullyM": "Oda ölçülerini eksiksiz giriniz (m).",
+  "enterNetProtectedVolumeM3": "Net koruma hacmini giriniz (m³).",
+  "enterValidConcentrationPercent": "Geçerli bir konsantrasyon değeri giriniz (0–100%).",
+  "enterValidUnitCount1to50": "Geçerli ünite sayısı giriniz (1–50).",
+  "enterMachineCabinDimensionsFullyM": "Makine kabini ölçülerini eksiksiz giriniz (m).",
+  "enterUnitCabinVolumeM3": "Ünite kabini hacmini giriniz (m³).",
+  "enterPanelCabinDimensionsFullyM": "Pano/kabin ölçülerini eksiksiz giriniz (m).",
+  "enterPanelCabinVolumeM3": "Pano/kabin hacmini giriniz (m³).",
+  "enterRoomAreaM2": "Oda alanı giriniz (m²).",
+  "enterCeilingHeightM": "Tavan yüksekliğini giriniz (m).",
+  "enterDesignHrrKw": "Tasarım HRR giriniz (kW).",
+  "smokeLayerHeightRangeError": "Duman katmanı taban yüksekliği: 0 < z < H",
+  "enterInstalledCapacityKwh": "Kurulu kapasiteyi giriniz (kWh).",
+  "enterProtectionAreaM2": "Koruma alanını giriniz (m²).",
+  "enterApplicationDurationMin": "Uygulama süresini giriniz (dk).",
+  "enterVehicleBatteryCapacityKwh": "Araç batarya kapasitesini giriniz (kWh).",
+  "enterVehicleCount": "Araç sayısını giriniz.",
+  "enterValidBuildingWidthM": "Geçerli bina eni giriniz (m).",
+  "enterValidBuildingLengthM": "Geçerli bina boyu giriniz (m).",
+  "selectBuildingActivity": "Lütfen bina faaliyetini seçiniz.",
+  "enterCeilingHeightSimpleM": "Tavan yüksekliği giriniz (m).",
+  "hoodHideComparison": "Karşılaştırmayı Gizle",
+  "hoodCompareAgents": "Maddeleri Karşılaştır",
+  "hoodTableAgentCol": "Madde",
+  "hoodTableEffectivenessCol": "Etkinlik",
+  "hoodColLowAbbr": "D",
+  "hoodColMediumAbbr": "O",
+  "hoodColHighAbbr": "Y",
+  "hoodComparisonLegend": "D = Düşük  ·  O = Orta  ·  Y = Yüksek tehlike sınıfı\nRenkli sütun = hesaplanan tehlike sınıfı",
+  "hoodResultTitleCaps": "SÖNDÜRME BOYUTLANDIRMA SONUCU",
+  "hoodNfpa96RequirementsTitle": "NFPA 96 Zorunlu Gereklilikler",
+  "hoodReqFuelElectric": "Yakıt & Elektrik Kesilmesi (§10.4): Sistem devreye girdiğinde tüm ısı kaynaklarının yakıtı ve elektriği otomatik kesilmelidir. Manuel sıfırlama gerekir.",
+  "hoodReqManualPull": "Manuel Çekme Kolu (§10.5): Yerden 1067–1219 mm yükseklikte, davlumbazdan min. 3 m – maks. 6 m uzaklıkta, kaçış yolu üzerinde konumlandırılmalıdır.",
+  "hoodReqAlarm": "Alarm (§10.6): Sistem aktivasyonunda sesli alarm veya görsel gösterge zorunludur.",
+  "hoodReqFanMakeupAir": "Fan & Takviye Hava (§8.2.3 / §8.3.2): Egzoz fanı aktivasyon sonrası çalışmaya devam eder. Hood içi takviye hava (makeup air) sistem aktivasyonunda kesilir.",
+  "hoodReqClassKExtinguisher": "Sınıf K Söndürücü (§10.10.2): Bitkisel / hayvansal yağ kullanan ekipmanlar için Sınıf K yangın söndürücü zorunludur.",
+  "hoodReqFilterDistance": "Filtre Mesafesi (§6.2.1): Filtre alt kenarı – pişirme yüzeyi arası en az 457 mm (18 in.).{warning}",
+  "@hoodReqFilterDistance": {
+    "placeholders": {
+      "warning": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodFilterDistanceWarning": "Charbroiler/mangal mevcut → Filtre alt kenarı ile pişirme yüzeyi arası en az 1220 mm (4 ft) (NFPA 96 §6.2.1.2)",
+  "hoodReqMaintenance": "Bakım (§11.2.1): Sertifikalı teknisyen tarafından en az 6 ayda bir bakım. Ergitme bağlantıları (fusible link) 6 ayda bir değiştirilir (§11.2.4).",
+  "hoodReqCleaningFrequency": "Temizlik Sıklığı (Tablo 11.4): {frequency}.",
+  "@hoodReqCleaningFrequency": {
+    "placeholders": {
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodCleaningFreqHighVolume": "3 ayda bir (wok / charbroiler / büyük fritöz)",
+  "hoodCleaningFreqLow": "Yıllık (düşük hacimli)",
+  "hoodCleaningFreqMedium": "6 ayda bir (orta hacimli)",
+  "hoodReqSimultaneousOperation": "Eşzamanlı Çalışma (§10.3): Tek tehlike bölgesindeki tüm sabit söndürme sistemleri aynı anda devreye girmelidir.",
+  "hoodReqFryerDistance": "Fritöz Mesafesi (§12.1.2.4): Fritöz, açık alev kaynaklarından yatayda min. 406 mm (16 in.) uzakta olmalıdır. Ara plaka (baffle) kullanıldığında min. 203 mm (8 in.) yükseklik yeterlidir (§12.1.2.5).{warning}",
+  "@hoodReqFryerDistance": {
+    "placeholders": {
+      "warning": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodFryerDistanceWarning": "Fritöz mevcut → Açık alev kaynaklarından yatayda min. 406 mm (16 in.) uzakta konumlandırılmalıdır (§12.1.2.4). Ara plaka (baffle) kullanılıyorsa min. 203 mm (8 in.) yükseklik yeterlidir (§12.1.2.5).",
+  "hoodReqFryerHighTempLimiter": "Fritöz Yüksek Sıcaklık Sınırlayıcısı (§12.2): Derin yağda kızartma ekipmanında otomatik sıcaklık sınırlayıcı zorunludur. Yağ yüzeyinden 25,4 mm (1 in.) aşağıda 246°C (475°F) sıcaklığa ulaştığında ısı kaynağını otomatik olarak keser.",
+  "hoodReqHoodDuctClearance": "Davlumbaz / Kanal Mesafeleri (§4.2.1): Yanıcı yüzeylere min. 457 mm (18 in.), sınırlı yanıcı yüzeylere min. 76 mm (3 in.), yanmaz yüzeylere 0 mm boşluk bırakılabilir.",
+  "hoodReqDuctSlope": "Kanal Eğimi (§7.1.4): Yatay kanal uzunluğu ≤ 22,86 m (75 ft) ise min. %2, > 22,86 m (75 ft) ise min. %8 eğim uygulanmalıdır (gres birikiminin tahliyesi için).",
+  "hoodReqDuctFireBarrier": "Kanal Yangın Bölmesi Direnci (§7.7.2.1): Kanal geçişleri için yangın bölmesi: < 4 katlı yapılar → min. 1 saatlik yangına dayanıklı bölme; ≥ 4 katlı yapılar → min. 2 saatlik yangına dayanıklı bölme.",
+  "hoodNotesText": "NFPA 17A §7.3 — {agent} uygulaması.\nTehlike sınıfı: {hazardClass}  ·  Ekipman puanı: {score}  ·  Min. deşarj: 30 s  ·  Filtre alanı: {area} m².\nEk baca / kanallar için ek nozul hesabı yapılmalıdır.",
+  "@hoodNotesText": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      },
+      "hazardClass": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodAgentPotassiumCarbonateName": "Potasyum Karbonat",
+  "hoodAgentPotassiumAcetateName": "Potasyum Asetat",
+  "hoodAgentPotassiumCitrateName": "Potasyum Sitrat",
+  "hoodAgentSodiumBicarbonateName": "Sodyum Bikarbonat",
+  "hoodAgentPotassiumCarbonateDesc": "En yaygın. Yağ/yüzey yangınlarına karşı etkili.",
+  "hoodAgentPotassiumAcetateDesc": "Yüksek verimli. Ansul R-102, Amerex B500 sistemleri.",
+  "hoodAgentPotassiumCitrateDesc": "Paslanmaz çelik ekipmanlara uyumlu. Korozyon riski düşük.",
+  "hoodAgentSodiumBicarbonateDesc": "Eski nesil. Düşük maliyetli, sınırlı etkinlik.",
+  "hoodAgentPotassiumCarbonateReco": "Genel amaçlı. Her tehlike sınıfı için uygundur.",
+  "hoodAgentPotassiumAcetateReco": "Yüksek tehlike için birinci tercih. En iyi söndürme verimi.",
+  "hoodAgentPotassiumCitrateReco": "Paslanmaz çelik mutfak / gıda endüstrisi. Düşük–Orta tehlike.",
+  "hoodAgentSodiumBicarbonateReco": "Yalnızca düşük tehlike. Yüksek yağ yangınlarında yeterli değil.",
+  "hoodStdNfpa96Desc": "Ticari yemek pişirme operasyonları için havalandırma kontrolü ve yangın koruması. Davlumbaz boyutlandırma, filtre mesafeleri, söndürme sistemi gereklilikleri, manuel çekme kolu, yakıt kesme, bakım ve temizlik sıklıkları.",
+  "hoodStdNfpa17aDesc": "Islak kimyasal söndürme sistemleri standardı. Deşarj süresi, ajan miktarı, nozul aralıkları.",
+  "hoodStdTsEn15751Desc": "Avrupa standardı — Ticari yemek pişirme ekipmanı söndürme sistemleri.",
+  "hoodStdUl300Desc": "ABD — Mutfak söndürme sistemleri için ürün onay standardı (Ansul R-102, Amerex B500 vb.).",
+  "hoodStdTsEn1825Desc": "Mutfak davlumbazı için gres filtre sistemleri ve yangın kapakları.",
+  "calculationResultCaps": "HESAPLAMA SONUCU",
+  "gasInfoBoxText": "TS EN 15004-1:2019 · NFPA 2001:2022\nToplam taşkın gazlı söndürme sistemi ajan miktarı ön hesap aracı.",
+  "gasNetVolumeHint": "Net koruma hacmi — sabit mobilya/ekipman varsa brüt hacimden çıkarınız.",
+  "gasMinDesignTempHint": "Hacimdeki minimum hava sıcaklığı — TS EN 15004-1 §A.2  (varsayılan: 20 °C)",
+  "gasClassAMaterial1": "PMMA (polimetilmetakrilat / pleksiglas) ",
+  "gasClassAMaterial2": "PP (polipropilen)",
+  "gasClassAMaterial3": "ABS (akrilonitril bütadien stiren) ",
+  "gasClassAMaterial4": "Ahşap, mobilya ve döşeme malzemeleri",
+  "gasClassAMaterial5": "Kağıt ve karton",
+  "gasClassAMaterial6": "Tekstil / kumaş",
+  "gasClassAMaterial7": "Kauçuk (lastik)",
+  "gasClassAMaterial8": "Diğer termoplastikler (PE, PS, PVC vb.)",
+  "gasClassASource": "TS EN 15004-1:2019 Ek C.6.3.2 (polimerik test yakıtı levha dizisi) · ISO 14520-1 Sınıf A tanımı (genel örnekler)",
+  "gasClassADTitle": "Higher Hazard Class A  —  Yüksek Tehlikeli Yangınlar",
+  "gasClassADMaterial1": "Yığın/istifli plastik depolama (raf/palet, derin yerleşik — yüzey Sınıf A'daki tekil/açık plastik parçalardan farklıdır)",
+  "gasClassADMaterial2": "Yoğun kablo demetleri > 100 mm",
+  "gasClassADMaterial3": "Kablo tavası doluluk > %20",
+  "gasClassADMaterial4": "Kablo tavaları arası < 250 mm",
+  "gasClassADMaterial5": "Söndürme sırasında enerjili ekipman > 5 kW",
+  "gasClassADMaterial6": "Telekomünikasyon",
+  "gasClassADMaterial7": "Kontrol odaları",
+  "gasClassADMaterial8": "Elektrik/elektronik ekipman yoğun alanlar",
+  "gasClassADSource": "TS EN 15004-1:2019 Tablo 4",
+  "gasClassBTitle": "Class B  —  Sıvı ve Eriyebilir Katı Madde Yangınları",
+  "gasClassBMaterial1": "Benzin, dizel, fuel-oil",
+  "gasClassBMaterial2": "Solvent, alkol, aseton",
+  "gasClassBMaterial3": "Yağlı trafo",
+  "gasClassBMaterial4": "Boya, vernik, reçine",
+  "gasClassBMaterial5": "Mum, parafin gibi eriyebilir katılar",
+  "gasClassCMaterial1": "Elektrik panoları (lokal)",
+  "gasClassCMaterial2": "Motor kontrol üniteleri",
+  "gasClassCMaterial3": "UPS ve akü sistemleri",
+  "gasClassCMaterial4": "Aydınlatma ve güç dağıtım ekipmanı",
+  "gasClassCSource": "Telekomünikasyon / kontrol odaları / yoğun kablo için → Sınıf A (Derin)\nISO 3941 / NFPA 2001",
+  "gasStandardDefaultInfo": "Standart varsayılan — {className}: {percent}%  ·  Silindir: {capacity} {unit}",
+  "@gasStandardDefaultInfo": {
+    "placeholders": {
+      "className": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      },
+      "capacity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "gasConcentrationHint": "TS EN 15004-1 kapsamı dışı değer kullanıyorsanız düzenleyebilirsiniz. Standart değer için ajan/sınıf seçiminde otomatik güncellenir.",
+  "gasDischargeDurationHintClassB": "Sınıf B: maks. 10 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli",
+  "gasDischargeDurationHintOther": "Sınıf A/A(Derin)/C: maks. 60 s  (TS EN 15004-1 §8.3)  —  boru çapı hesabı için gerekli",
+  "gasNozzleFlowRange": "{mm} mm  ({min}–{max} kg/s)",
+  "@gasNozzleFlowRange": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzleHint": "Nozul çapı seçilirse hesap kütle debisi bazlı yapılır; otomatik modda alan/hacim kuralı uygulanır.",
+  "gasRequiredAgentVolume": "Gerekli Ajan Hacmi",
+  "gasSafetyMarginSuffix": "  (+%10 pay)",
+  "gasExcludingMarginLabel": "Pay Hariç Hesap",
+  "gasDischargeRequirementsTitle": "Deşarj Süresi Gereklilikleri — TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1",
+  "gasDischargeReqInert": "• Maks. deşarj süresi: ≤ 60 s  (NFPA 2001:2022 §6.7.1)\n• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n• Boru akış hızı: Tam hidrolik hesap gereklidir (TS EN 15004-1 Ek E)\n• Silindir dep. sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)",
+  "gasDischargeReqCo2": "• Maks. deşarj süresi: ≤ 60 s  (TS EN 15004-2 §8.3 / NFPA 12 §5.4.1)\n• Min. bekleme süresi (soak): ≥ 20 dakika\n• YALNIZCA insan bulunmayan hacimler — tahliye zorunludur",
+  "gasMaxDischargeClassB": "10 s  (Sınıf B)",
+  "gasMaxDischargeClassOther": "60 s  (Sınıf A/C)",
+  "gasDischargeReqFm200": "• Maks. deşarj süresi: ≤ {maxDischarge}  (EN 15004-5:2020 §8.3 / NFPA 2001:2022 §6.7.1)\n• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n• Silindir depolama sıcaklığı: −20 °C – +54 °C\n• Özgül hacim: S = 0,1269 + 0,000513×T m³/kg  (EN 15004-5 §6.3 Tablo 3)",
+  "@gasDischargeReqFm200": {
+    "placeholders": {
+      "maxDischarge": {
+        "type": "String"
+      }
+    }
+  },
+  "gasDischargeReqDefault": "• Maks. deşarj süresi: ≤ {maxDischarge}  (TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1)\n• Min. bekleme süresi (soak): ≥ 10 dakika  (NFPA 2001:2022 §6.7.4)\n• Silindir depolama sıcaklığı: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)",
+  "@gasDischargeReqDefault": {
+    "placeholders": {
+      "maxDischarge": {
+        "type": "String"
+      }
+    }
+  },
+  "gasIg01SpecsTitle": "IG-01 Silindir Özellikleri  —  TS EN 15004-7:2009 §6.1",
+  "gasTablePropertyHeader": "Özellik",
+  "gasFillPressureLabel": "Doldurma basıncı @15°C (bar)",
+  "gasMaxOperatingPressureLabel": "Maks. çalışma basıncı @50°C (bar)",
+  "gasOverpressurizationLabel": "Aşırı basınçlandırma",
+  "gasNotApplicable": "Uygulanmaz",
+  "gasIg01Note": "IG-01 tanklar aşırı basınçlandırılmaz (TS EN 15004-7 §6.2). Tasarım sıcaklığında S = 0,56119 + 0,002055×T m³/kg formülü kullanılır.",
+  "gasFm200SpecsTitle": "HFC-227ea Silindir Özellikleri  —  EN 15004-5:2020 §6.1",
+  "gasMaxFillDensityLabel": "Maks. dolum yoğunluğu (kg/m³)",
+  "gasN2FillingPressureLabel": "N₂ şişeleme basıncı @21°C (bar)",
+  "gasFm200Note": "Maks. dolum yoğunluğu aşılması durumunda küçük sıcaklık artışlarında çok yüksek basınç oluşur; silindir bütünlüğü tehlikeye girer. (EN 15004-5:2020 §6.1)",
+  "gasNfpa2001RequirementsTitle": "NFPA 2001:2022 Zorunlu Gereklilikler",
+  "gasReqPreDischargeAlarm": "§6.6.1 — Ön Deşarj Alarmı: Dolu alanlarda ajan devreye girmeden önce sesli/ışıklı uyarı verilmeli; tahliye için yeterli süre tanınmalıdır.",
+  "gasReqAbortSwitch": "§6.6.6 — Abort Anahtarı: Dolu alanlarda el ile iptal (abort) düğmesi zorunludur; sistemi en az 30 saniye geciktirir.",
+  "gasReqVolumeIntegrity": "§6.5.4 — Koruma Hacmi Bütünlüğü: Hacim, soak süresi boyunca tasarım konsantrasyonunu koruyacak sızdırmazlığa sahip olmalıdır. Kapı fan testi (door fan test) tavsiye edilir.",
+  "gasReqCylinderStorage": "§4.4.1 — Silindir Depolama: −20 °C ile +54 °C arasında muhafaza; dolum basıncı üretici listesine uygun olmalıdır.",
+  "gasReqPostDischargeVentilation": "§6.9 — Deşarj Sonrası Havalandırma: Ortama girişten önce O₂ seviyesi ≥ %19,5'e ulaşana dek zorlamalı havalandırma yapılmalıdır.",
+  "gasReqInterlockedSystems": "§6.1.2 — Bağlantılı Sistemler: Deşarj anında HVAC ve tüm hava sağlayan damperler otomatik kapanmalıdır.",
+  "gasReqSafetyMargin": "§5.4.1.3 — Güvenlik Payı: Min. %10 güvenlik payı zorunludur; bu hesapta {status}",
+  "@gasReqSafetyMargin": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasSafetyMarginApplied": "uygulandı.",
+  "gasSafetyMarginNotApplied": "⚠ uygulanmadı!",
+  "gasReqPeriodicInspection": "§7.2.2 — Periyodik Muayene: Silindirler yılda bir ağırlık/basınç ile kontrol edilmeli; halokarbon dolum miktarı çiçek valf ölçümü ile doğrulanmalıdır.",
+  "gasMainPipeSizeTitle": "Boru Çapı — Ana Hat",
+  "gasMinInnerDiameterLabel": "Min. iç çap",
+  "gasStandardDnLabel": "Standart DN",
+  "gasDnOver150": "DN > 150",
+  "gasVolumetricFlowLabel": "Hacimsel debi (Q): {ls} L/s  ({m3s} m³/s)",
+  "@gasVolumetricFlowLabel": {
+    "placeholders": {
+      "ls": {
+        "type": "String"
+      },
+      "m3s": {
+        "type": "String"
+      }
+    }
+  },
+  "gasPipeActualSpeedLabel": "DN {dn} için gerçek hız: {speed} m/s{status}",
+  "@gasPipeActualSpeedLabel": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      },
+      "speed": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasSpeedOkSuffix": " ✓",
+  "gasSpeedOverLimitSuffix": "  ? 30 m/s üstünde",
+  "gasMainPipeSizingNote": "Ana hat ön boyutlandırmadır — Q = gaz miktarı ÷ boşalma süresi. Dağıtım boruları ve nozul hatları ayrıca hesaplanmalıdır. Kesin tasarım için TS EN 15004-1 Ek E akış hesabı yapınız.",
+  "gasNozzleDistributionTitle": "Nozul & Dağıtım Borusu",
+  "gasNozzleCountLabel": "Nozul Sayısı",
+  "gasNozzleAltMassBased": "{mm} mm nozul\n(kütle debisi bazlı)",
+  "@gasNozzleAltMassBased": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzleAltAreaBased": "maks. 50 m²/nozul\n(alan bazlı)",
+  "gasNozzleAltVolumeBased": "maks. 150 m³/nozul\n(hacim bazlı — tahmini)",
+  "gasBranchPipeLabel": "Şube Boru",
+  "gasBranchMinInnerDiameter": "min. iç çap:\n{mm} mm",
+  "@gasBranchMinInnerDiameter": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      }
+    }
+  },
+  "gasFlowPerNozzleLabel": "Nozul başına: {flow} kg/s  (izin verilen: {min}–{max} kg/s)  {status}",
+  "@gasFlowPerNozzleLabel": {
+    "placeholders": {
+      "flow": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasFlowOk": "✓",
+  "gasFlowOutOfRange": "⚠ Aralık dışı — farklı çap seçin",
+  "gasBranchSpeedLabel": "Şube hız: {speed} m/s  (nozul başına Q: {ls} L/s){status}",
+  "@gasBranchSpeedLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      },
+      "ls": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasBranchSpeedWarning": "  ⚠ 30 m/s üstünde!",
+  "gasBranchSpeedOk": "  ✓",
+  "gasEstimatedPipeLengthLabel": "Tahmini boru metrajı: ≈ {m} m (ana hat + dağıtım + nozul düşeyleri)",
+  "@gasEstimatedPipeLengthLabel": {
+    "placeholders": {
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzlePlacementNote": "Nozul yerleşimi: TS EN 15004-1 / NFPA 2001 üretici listesi şartlarına uygun olarak tavan düzeyine, eşit aralıklı konumlandırılmalıdır.\nBoru metrajı tahminidir — gerçek proje metrajı mekan planına göre değişir.",
+  "gasSourceFooter": "Kaynak: TS EN 15004-1:2019 · NFPA 2001:2022 · NFPA 12:2022",
+  "baskiOffsetName": "Ofset Baskı",
+  "baskiFlexoName": "Flexo Baskı",
+  "baskiGravureName": "Gravür / Rotogravür",
+  "baskiUvOffsetName": "UV Ofset / UV Flex",
+  "baskiDigitalName": "Dijital (Inkjet/Toner)",
+  "baskiPadName": "Şilte / Tampon Baskı",
+  "baskiOffsetDesc": "Islak ofset — IPA/alkol bazlı çözücü",
+  "baskiFlexoDesc": "Solvent veya su bazlı mürekkep",
+  "baskiGravureDesc": "Toluen/etil asetat bazlı — yüksek solvent riski",
+  "baskiUvOffsetDesc": "UV kürleme — fotoinitiator bazlı",
+  "baskiDigitalDesc": "Sıvı mürekkep veya toner — düşük solvent",
+  "baskiPadDesc": "Solvent bazlı mürekkep — kapalı kap",
+  "baskiIpaName": "IPA (İzopropil Alkol)",
+  "baskiIpaDesc": "Ofset baskı çeşme solüsyonu — patlama riski",
+  "baskiTolueneName": "Toluen",
+  "baskiTolueneDesc": "Gravür baskı — yüksek risk, GWP 0",
+  "baskiEthylAcetateName": "Etil Asetat",
+  "baskiEthylAcetateDesc": "Flexo/gravür — düşük tutuşma noktası",
+  "baskiMethanolName": "Metanol",
+  "baskiMethanolDesc": "Ağaç işleme ve özel uygulamalar",
+  "baskiNPropylName": "n-Propil Alkol",
+  "baskiNPropylDesc": "UV ofset ek solvent",
+  "baskiSolventMixName": "Solvent Karışımı (genel)",
+  "baskiSolventMixDesc": "Üretici veri sayfasına göre belirleyin",
+  "baskiWaterBasedInkName": "Su Bazlı Mürekkep",
+  "baskiWaterBasedInkDesc": "Yanıcı solvent yok — Sınıf A uygulaması",
+  "baskiInfoBoxText": "NFPA 34:2024 §10.6 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019\nMatbaa / baskı makinesi kabini gazlı söndürme ön hesap aracı.",
+  "baskiIgnitionPointLabel": "Tutuşma noktası: {temp} °C  ·  {desc}",
+  "@baskiIgnitionPointLabel": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiUnitCountHint": "Aynı hacimdeki her ünite için ayrı silindir hesaplanır. Farklı hacimliyse birden fazla hesap yapınız.",
+  "baskiLengthDepthLabel": "Uzunluk / Derinlik",
+  "baskiCabinetDimensionsHint": "Bir ünite kabininin iç boyutları — brüt değil, net iç hacim.",
+  "baskiUnitNetVolumeLabel": "Ünite Kabini Net Hacmi",
+  "baskiMinTempHint": "Makine kabin içi minimum sıcaklık — TS EN 15004-1 §A.2 (varsayılan: 20 °C)",
+  "baskiLocalApplicationLabel": "Lokal Uygulama +%30 (NFPA 2001 §6.4) — Açık makine kabinleri için",
+  "baskiDischargeModeTitle": "Tahliye Şekli (Birden Fazla Ünite)",
+  "baskiSimultaneousLabel": "Eşzamanlı (Toplam)",
+  "baskiSelectiveValveLabel": "Seçici Vana (Bağımsız)",
+  "baskiSimultaneousHint": "Tüm üniteler ortak alanda ve tek seferde tahliye olacaksa seçin — ana besleme = tüm ünitelerin toplam ihtiyacı.",
+  "baskiSelectiveValveHint": "Her ünite bağımsız algılama + seçici vana ile korunuyorsa seçin — ana besleme yalnızca tek ünite ihtiyacına göre boyutlandırılır (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).",
+  "baskiBackupSupplyLabel": "Yedek (%100) Besleme Grubu (NFPA 12 §4.5.3) — normal işgal edilen alanlar için önerilir",
+  "baskiClassAPlain": "Sınıf A",
+  "baskiClassSummaryLabel": "Yangın sınıfı: {cls}  ·  Standart min.: {value} %  ·  NOAEL: {noael}",
+  "@baskiClassSummaryLabel": {
+    "placeholders": {
+      "cls": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiDischargeHint": "Sınıf B makineler: maks. 10 s  ·  Sınıf A makineler: maks. 60 s  (TS EN 15004-1 §8.3)",
+  "baskiMainSupplySimultaneous": "Ana Besleme İhtiyacı (eşzamanlı — toplam)",
+  "baskiMainSupplySelective": "Ana Besleme İhtiyacı (seçici vana — tek ünite)",
+  "baskiMainSupplyCylinderCount": "Ana Besleme Silindir Sayısı ({capacity} {unit}/silindir)",
+  "@baskiMainSupplyCylinderCount": {
+    "placeholders": {
+      "capacity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiSelectiveValveInfo": "Seçici vana tasarımı: her ünite kabini bağımsız algılama devresine sahip olmalı; yalnızca yangın algılanan ünitenin vanası açılır. Ana besleme tek ünite ihtiyacına göre boyutlandırılmıştır — birden fazla ünitede eşzamanlı yangın riski varsa \"Eşzamanlı\" seçilmelidir (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).",
+  "baskiLocalApplicationInfo": "Lokal uygulama +%30 faktörü uygulandı (NFPA 2001 §6.4).\nAçık makinelerde veya tam kapalı olmayan kabinlerde uygulanır.",
+  "baskiApplicationNotesTitle": "Uygulama Notları",
+  "baskiAppNotesBody": "• Her baskı ünitesi kabini ayrı ayrı korunmalıdır.\n• Makine içi nozul yerleşimi üretici onayına tabidir.\n• Deşarj öncesi mürekkep/solvent kaynağı otomatik kesilmelidir.\n• {ignitionNote}\n• Silindir sayısı, seçilen tahliye şekli (eşzamanlı/seçici vana) ve yedek besleme kararına göre değişir — üretici tipine göre kesinleştirilmelidir.",
+  "@baskiAppNotesBody": {
+    "placeholders": {
+      "ignitionNote": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiIgnitionNoteAtex": "Tutuşma noktası < 23 °C — ATEX bölgesi değerlendirmesi zorunludur.",
+  "baskiIgnitionNoteExplosionRisk": "Solvent tipi için patlama riski analizi yapılmalıdır.",
+  "baskiSourceFooter": "Kaynak: NFPA 34:2024 §10 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019 · EN 1010-2",
+  "panoAgentGroupClean": "Temiz Gaz (FK-5-1-12(Novec 1230)/HFC-227ea)",
+  "panoAgentGroupCo2": "CO₂ (Karbondioksit)",
+  "panoDlpName": "DLP — Doğrudan Düşük Basınç",
+  "panoIlpName": "ILP — Dolaylı Düşük Basınç",
+  "panoDhpName": "DHP — Doğrudan Yüksek Basınç (CO₂)",
+  "panoIhpName": "IHP — Dolaylı Yüksek Basınç (CO₂)",
+  "panoDlpDesarjNotu": "Tubing hattı hem algılama hem doğrudan boşaltma görevi görür — hesap gerektirmez.",
+  "panoIlpDesarjNotu": "Tubing algılama yapar; boşaltma ayrı nozul(lar) üzerinden gerçekleşir.",
+  "panoDhpDesarjNotu": "Sabit deşarj süresi ≈ 60 sn @ 60 bar — kullanıcı girdisi gerekmez.",
+  "panoIhpDesarjNotu": "Deşarj süresi standarda göre sabittir; üretici onaylı tabloya bakınız.",
+  "panoDlpAciklama": "En yaygın kullanılan pano içi söndürme tipidir. Kırmızı algılama tubingi doğrudan söndürme hattı olarak işlev görür; ek boru hattına ve nozula gerek yoktur. Tubing yangın noktasında patladığında ajan o noktadan boşalır. Hidrolik akış hesabı gerektirmeyen pre-engineered bir sistemdir.",
+  "panoIlpAciklama": "Algılama tubingi yalnızca tetikleyici işlev görür; söndürücü ajan paslanmaz çelik boru hattı ve nozullar aracılığıyla panoya boşaltılır. Çok bölmeli ve büyük hacimli panolarda nozullar stratejik noktalara yerleştirilerek homojen söndürme konsantrasyonu sağlanır. Manuel boşaltma butonu bulunur; panonun tam sızdırmaz olması zorunludur.",
+  "panoDhpAciklama": "CO₂ ajanı kullanan ve algılama tubinginin hem dedektör hem de boşaltma hattı olarak işlev gördüğü sistemdir. CO₂ yüksek basınçta depolandığından tubing uzunluğu ve maksimum hacim açısından DLP'ye göre avantajlıdır. Nozul deliği açılması istenmeyen ve DLP'ye göre daha büyük havalandırma açıklığına sahip panolarda tercih edilir.",
+  "panoIhpAciklama": "CO₂ kullanılan en kapsamlı pano içi söndürme çözümüdür. Büyük hacimli, birden fazla bölmesi olan ve bölmeler arası geçişlerin bulunduğu panolarda tercih edilir. Paslanmaz çelik boru hattı, esnek bağlantı hortumları ve nozullardan oluşan dağıtım sistemi ile geniş alanlarda homojen söndürme sağlanır.",
+  "panoInfoBoxText": "LPS 1666 · UL 2166 / FM 5600 · VdS 2093\nElektrik/telekom pano ve kabinleri için önceden mühendislik hesabı yapılmış (pre-engineered) pnömatik tubing söndürme sistemi tipi öneri aracı — hidrolik hesap değildir.",
+  "panoNoOpeningLabel": "Kapatılamayan açıklık yok (kablo geçişi, havalandırma vb. sızdırmaz)",
+  "panoOpeningWarning": "Kapatılamayan açıklık varsa ajan tutulamaz ve sistem etkisiz kalabilir. Açıklıklar kapatılmalı veya devreye girişte havalandırma/damper otomatik olarak kesilmelidir.",
+  "panoTubingLengthLabel": "İhtiyaç Duyulan Tubing Uzunluğu (opsiyonel)",
+  "panoRecommendedSystemCaps": "ÖNERİLEN SİSTEM",
+  "panoVolumeExceededWarning": "Hacim, pre-engineered pano içi sistem sınırlarını aşıyor ({detail}). Bu hacim için mühendislik hesaplı toplam taşkın sistemi gereklidir — \"{roomTab}\" sekmesini kullanınız.",
+  "@panoVolumeExceededWarning": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "roomTab": {
+        "type": "String"
+      }
+    }
+  },
+  "panoIlpMaxVolume": "ILP maks. {v} m³",
+  "@panoIlpMaxVolume": {
+    "placeholders": {
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "panoIhpMaxVolume": "IHP maks. {v} m³",
+  "@panoIhpMaxVolume": {
+    "placeholders": {
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "panoAgentAmountNote": "Bu miktar, %{percent} tasarım konsantrasyonu ve 20°C referans alınarak yapılan bir yaklaşık hesaptır. Kesin silindir dolum miktarı üretici onaylı pre-engineered sistem tablosundan seçilmelidir.",
+  "@panoAgentAmountNote": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "panoTubingExceededWarning": "Girilen tubing uzunluğu ({len} m), {kod} sisteminin {max} m sınırını aşıyor. Bir üst sistem tipine geçilmeli veya birden fazla bağımsız sistem kullanılmalıdır.",
+  "@panoTubingExceededWarning": {
+    "placeholders": {
+      "len": {
+        "type": "String"
+      },
+      "kod": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "panoSealingWarning": "ILP sistemi tam sızdırmaz kabin gerektirir (UL/FM test şartı). İşaretli kapatılamayan açıklık nedeniyle bu sistem güvenilir değildir — panoyu sızdırmaz hâle getiriniz ya da CO₂ ajan grubuna (DHP/IHP, sızdırmazlık gerekmez) geçiniz.",
+  "panoCo2ToxicityWarning": "CO₂ toksiktir: pano çevresinde sürekli insan bulunmamalıdır. Komşu/bitişik alanlara sızıntı riski varsa %5 LOAEL sınırı gözetilmeli, gerekirse tahliye ve havalandırma planlanmalıdır.",
+  "panoNoSealingRequiredNote": "Sızdırmazlık şart değildir ancak kapatılamayan açıklık miktarı üreticiye bildirilmeli; VdS 2093 hesabında ek ajan miktarı olarak dikkate alınmalıdır.",
+  "panoDesignRequirementsTitle": "Tasarım Gereklilikleri",
+  "panoManualReleaseNote": "• Manuel boşaltma butonu: {kod} sistemlerinde tubing hattı ayrı olduğundan, otomatik tetiklemeye ek olarak acil manuel boşaltma butonu bulunmalıdır.\n",
+  "@panoManualReleaseNote": {
+    "placeholders": {
+      "kod": {
+        "type": "String"
+      }
+    }
+  },
+  "panoDesignRequirementsBody": "• Alarm entegrasyonu: sistem aktivasyonunda sesli/ışıklı ön deşarj alarmı ve bina yangın alarm paneline sinyal aktarımı sağlanmalıdır.\n• Silindir seti CE/TPED (Taşınabilir Basınçlı Ekipman Yönetmeliği) uygunluğuna sahip olmalıdır.\n• Satın alma öncesi bağımsız sistem sertifikası (LPCB/UL/FM/VdS) aranmalı; sadece bileşen (silindir, nozul) sertifikası yeterli değildir. Kurulum yetkili/onaylı partner tarafından yapılmalıdır.",
+  "panoMaintenanceScheduleTitle": "Bakım Takvimi",
+  "panoMaintenanceScheduleBody": "• Aylık: görsel kontrol (basınç göstergesi, tubing hasarı/korozyonu).\n• 6 ayda bir: basınç anahtarı, conta ve bağlantı kontrolü.\n• 5 yılda bir: silindir hidrostatik testi.\n• 10 yılda bir: sistem revizyonu / bileşen ömür sonu değerlendirmesi.\n• Her dolumda üretici dolum sertifikası alınmalı; sistem devre dışıysa (impaired) en kısa sürede (üretici/otorite talimatına göre azami 48 saat) devreye alınmalı veya yangın gözcüsü tahsis edilmelidir.",
+  "panoSourceFooter": "Kaynak: LPS 1666 · UL 2166 · FM 5600 · VdS 2093",
+  "gasAltitudeFieldLabel": "Rakım",
+  "gasNoaelCo2Warning": "⚠ CO² yüksek konsantrasyonlarda hayati tehlike oluşturur. Yalnızca insan bulunmayan hacimler için kullanılmalıdır. TS EN 15004-2 / NFPA 12.",
+  "gasNoaelLoaelExceeded": "⚠ Tasarım konsantrasyonu ({percent}%) LOAEL sınırını ({loael}%) ASIYOR — tahliye zorunludur, yüksek risk!  (NFPA 2001:2022 Tablo 5.6.2.1)",
+  "@gasNoaelLoaelExceeded": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "loael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNoaelReached": "⚠ Tasarım konsantrasyonu ({percent}%) NOAEL sınırına ({noael}%) ulaşıyor veya aşıyor — kullanım öncesi tahliye şarttır.  (NFPA 2001:2022 Tablo 5.6.2.1)",
+  "@gasNoaelReached": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNoaelOk": "✓ Tasarım konsantrasyonu ({percent}%) NOAEL ({noael}%) altında. NFPA 2001:2022 kapsamında insan varlığında kullanılabilir.  LOAEL: {loael}%",
+  "@gasNoaelOk": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      },
+      "loael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasAgentHfc227Desc": "Sıvılaşmış halokarbon. 25/42/50 bar N₂ şişeleme. Maks. dolum yoğunluğu 1150 kg/m³. Elektrik/elektronik odalar için idealdir. (EN 15004-5 Tablo 6-8)",
+  "gasAgentFk512Desc": "Düşük GWP. Hassas ekipman odaları, arşivler, müzeler.",
+  "gasAgentCo2Desc": "Toplam taşkın — YALNIZCA insan bulunmayan hacimler. Sınıf B konsantrasyonu yakıta özel: heptan %34, toluen/benzen %37, etil asetat %38, MEK %40, IPA/etanol/metanol %53 (NFPA 12 Tablo A.5.3.2.1).",
+  "gasAgentIg541Desc": "N²/Ar/CO² (52/40/8) karışımı. Oksijen seyreltme. İnsan varlığında kullanılabilir.",
+  "gasAgentIg55Desc": "N²/Ar (50/50) karışımı. Çevre dostu. İnsan varlığında kullanılabilir.",
+  "gasAgentIg100Desc": "Saf azot. Oksijen seyreltme. Kolay temin edilebilir.",
+  "gasAgentIg01Desc": "Saf argon. Oksijen seyreltme ile söndürme. 160 / 200 / 300 bar şişeleme. Kimyasal kalıntı bırakmaz. İnsan varlığında kullanılabilir. (TS EN 15004-7 Çizelge 6-8)",
+  "wallMaterialConcrete": "Beton / Kagir",
+  "wallMaterialLightBlock": "Hafif Beton Blok",
+  "wallMaterialGypsum": "Alçıpan (Çift)",
+  "smokeLayerHeightError": "Hata: z ≥ H — duman katmanı oluşamaz. z < {height} m olmalı.",
+  "@smokeLayerHeightError": {
+    "placeholders": {
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeLayerLowWarning": "Uyarı: z = {z} m < 2.5 m — tahliye güvenliği yetersiz.  d (duman derinliği) = {d} m",
+  "@smokeLayerLowWarning": {
+    "placeholders": {
+      "z": {
+        "type": "String"
+      },
+      "d": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeLayerDepthInfo": "z = {z} m  →  d (duman derinliği) = {d} m  (H − z = {height} − {z})",
+  "@smokeLayerDepthInfo": {
+    "placeholders": {
+      "z": {
+        "type": "String"
+      },
+      "d": {
+        "type": "String"
+      },
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeNoteNaturalPlume": "Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Kütle debisi (Thomas formülü, EN 12101-2 Ek B): ṁₚ = 0.071×Qc¹³×z⁵³ + 0.0018×Qc",
+  "smokeNoteNaturalCd": "Cd = 0.5 (çatı menfezi, EN 12101-2 §6.4)",
+  "smokeNoteNaturalFreshAir": "Taze hava girişi alt bölgeden; açıklıklar eşit dağıtılmalı",
+  "smokeNoteMinimumAreaCaveat": "Hesap minimum alandır; sektörleme ve güvenlik payı ayrıca eklenmeli",
+  "smokeNoteResponsibilityNatural": "Sorumluluk: Bu hesap gerçekleştirilen ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.",
+  "smokeNoteMechanicalPlume": "Plume: Yangın üzerine yükselen sıcak gaz/duman sütunu. Fan kapasitesi plume debisini karşılayacak büyüklükte seçilir.",
+  "smokeNoteMinAirChange": "Min. hava değişimi ≥ 10/h (EN 12101-3 §5.2)",
+  "smokeNoteFanTempRating": "Fan sıcaklık dayanımı ≥ 400 °C / 120 dk (F400) — EN 12101-3",
+  "smokeNoteFreshAirPercent": "Taze hava girişi duman tahliye debisinin en az %70'i olmalı",
+  "smokeNoteResponsibility": "Sorumluluk: Bu hesap ön tasarım amaçlıdır. Kesin tasarım yetkili yangın mühendisi tarafından onaylanmalıdır.",
+  "smokeNoteDoorFlowExplain": "Açık kapı geçiş debisi: tahliye sırasında bir kat kapısı açıkken merdivenden akan hava — fanın karşılaması gereken en büyük ani yük",
+  "smokeNoteDoorFlowFormula": "Hesap: Q = A_kapı × √(2ΔP/ρ)  — kapı tam açık, tam ΔP geçerli kabulü (güvenli taraf)",
+  "smokeNoteWallLeakageConcrete": "Duvar sızıntısı: beton/kagir şaft için 1.3×10⁻⁴ m²/m²  (EN 12101-6 Ek F Tablo F.1)",
+  "smokeNoteDoorGapCd": "Kapı aralık genişliği 10 mm, Cd = 0.83  (EN 12101-6 Ek F)",
+  "smokeNoteDoorForceCheck": "Açık kapı koşulunda kapı itme kuvveti ≤ 100 N kontrol edilmeli",
+  "smokeNotePressureLimit": "ΔP sınır: ≥ 50 Pa (yangın katında) / ≤ 60 Pa (diğer katlar)",
+  "fanCriterionMinAirChange": "min. hava değişimi kriteri",
+  "fanCriterionPlumeFlow": "plume debisi kriteri",
+  "spFormulaInfo": "EN 12845 / TS EN 12845 — Sabit Söndürücü Sistemler · Otomatik Sprinkler\nTehlike sınıfına göre kritik devre hidrolik hesabı  ·  Hazen–Williams (seçilebilir boru malzemesi C katsayısı)",
+  "spFieldWidthM": "En  (m)",
+  "spFieldLengthM": "Boy  (m)",
+  "spFieldCeilingM": "Tavan  (m)",
+  "spSuspendedCeilingCheckbox": "Asma tavan mevcut (gizli boşluk)",
+  "spVoidDepthLabel": "Boşluk Derinliği  (cm)",
+  "spVoidDepthInfo": "EN 12845 Md. 5.4: Boşluk derinliği > 80 cm ise gizli boşluğa ek sprinkler sistemi kurulması gerekir.",
+  "spBuildingActivityFieldLabel": "Bina Faaliyeti",
+  "spSelectActivityPlaceholder": "Faaliyeti seçiniz…",
+  "spHazardClassInline": "Tehlike Sınıfı: {name}",
+  "@spHazardClassInline": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spHazardClassDetail": "Yoğunluk: {density} mm/min  ·  Tasarım alanı: {area} m²  ·  Maks. kapsama: {coverage} m²/sprinkler",
+  "@spHazardClassDetail": {
+    "placeholders": {
+      "density": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      },
+      "coverage": {
+        "type": "String"
+      }
+    }
+  },
+  "spSprinklerTypeLabel": "Sprinkler Tipi (K-Faktör)",
+  "spInstallationClassLabel": "Kurulum Sınıfı / Pompa Yedekliliği",
+  "spDryPipeCheckbox": "Kuru borulu sistem (donma riskli alan)",
+  "spDryPipeInfo": "Kuru borulu sistemlerde şebekeye hava/nitrojen basılır ve tetikleme (trip) süresi, kompresör kapasitesi ve boru eğimi (drenaj) ayrıca tasarlanmalıdır. Donma riski olmayan alanlarda ıslak sistem tercih edilmelidir.",
+  "spRackStorageCheckbox": "Raf / palet depolama — In-Rack sprinkler (ön tasarım)",
+  "spRackLevelsLabel": "Raf Kat Sayısı (in-rack seviyesi)",
+  "spUnitLevel": "kat",
+  "spRackInfo": "Bu yalnızca ön fikir amaçlı basitleştirilmiş bir tahmindir. Kesin in-rack sprinkler sayısı, flue space (boşluk) genişliği ve kat aralığı EN 12845 Ek H kapsamında tam tasarımla belirlenmelidir.",
+  "spFoamSystemCheckbox": "Köpük söndürme sistemi ekle (EN 13565-2)",
+  "spHydrocarbonSub": "Benzin, motorin,\nakaryakıt, yağ",
+  "spPolarSolventSub": "Aseton, etanol,\nsolvent, keton",
+  "spFoamDurationMin": "{minutes} dk",
+  "@spFoamDurationMin": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "spFoamPolarSolventInfo": "EN 13565-2: Polar solventler için yalnızca AR-AFFF, FFFP veya MF-FFF konsantresi kullanılır. Koruma alanı olarak bina alanı (en × boy) baz alınır.",
+  "spHHP4Warning": "⚠  HHP4 — YOĞUN SU SİSTEMİ\nEN 12845 Çizelge 3 Notu: Bu sınıf standart sprinkler kapsamı dışındadır. Özel değerlendirme ve yetkili mühendis onayı zorunludur. Aşağıdaki hesap yalnızca ön fikir vermek amacıyla yapılmıştır; resmi tasarım olarak kullanılamaz.",
+  "spActivityDialogTitle": "Faaliyet Alanı Seç",
+  "spNoResultsFound": "Sonuç bulunamadı",
+  "spKFactorWarning": "Seçilen K-Faktör (K{selected}), {sinifKod} sınıfının gerektirdiği minimum K{minK} değerinin altındadır — üretici onayı ve tam hidrolik hesap doğrulaması zorunludur.",
+  "@spKFactorWarning": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "sinifKod": {
+        "type": "String"
+      },
+      "minK": {
+        "type": "String"
+      }
+    }
+  },
+  "spCeilingWarningLH": "LH — Tavan yüksekliği > 6 m: Standart sprinkler performansı yetersiz kalabilir. ESFR veya yüksek hacim tipi özel tasarım önerilir.",
+  "spCeilingWarningOH": "OH — Tavan yüksekliği > 6 m: Standart sprinkler etkinliği düşebilir. Tasarım öncesinde yetkili merciyle görüşülmesi tavsiye edilir.",
+  "spCeilingWarningHH": "HHP/HHS — Tavan yüksekliği > 6 m: §7.2.2.3 kapsamında boşluk > 4 m ise yoğunluk artırımı (her ilave metre için +1 mm/dk) ve min. K115 sprinkler gereklidir.",
+  "spSinifAdLH": "Düşük Tehlike (LH)",
+  "spSinifAdOH1": "Orta Tehlike Grup 1 (OH1)",
+  "spSinifAdOH2": "Orta Tehlike Grup 2 (OH2)",
+  "spSinifAdOH3": "Orta Tehlike Grup 3 (OH3)",
+  "spSinifAdOH4": "Orta Tehlike Grup 4 (OH4)",
+  "spSinifAdHHP1": "Yüksek Tehlike Püskürtme Grup 1 (HHP1)",
+  "spSinifAdHHP2": "Yüksek Tehlike Püskürtme Grup 2 (HHP2)",
+  "spSinifAdHHP3": "Yüksek Tehlike Püskürtme Grup 3 (HHP3)",
+  "spSinifAdHHP4": "Yüksek Tehlike Püskürtme Grup 4 (HHP4) — ⚠ Yoğun Su / Özel Sistem",
+  "spSinifAdSF1": "Depolama Kat. I — Serbest Döşeme (≤ 3 m)",
+  "spSinifAdSF2": "Depolama Kat. II — Serbest Döşeme (≤ 3,5 m)",
+  "spSinifAdSF3": "Depolama Kat. III — Serbest Döşeme (≤ 3,5 m)",
+  "spSinifAdSF4": "Depolama Kat. IV — Serbest Döşeme (≤ 3,5 m)",
+  "spSinifAdRS1": "Depolama Kat. I — Raf / Palet Depolama",
+  "spSinifAdRS2": "Depolama Kat. II — Raf / Palet Depolama",
+  "spSinifAdRS3": "Depolama Kat. III — Raf / Palet Depolama",
+  "spSinifAdRS4": "Depolama Kat. IV — Raf / Palet Depolama",
+  "spTipAdAuto": "Sınıfa Göre Otomatik",
+  "spTipDescAuto": "Standart K80 (LH/OH) veya K115 (HH) — varsayılan",
+  "spTipAdK57": "Standart K57",
+  "spTipDescK57": "Yalnızca özel onaylı düşük debili uygulamalarda",
+  "spTipAdK80": "Standart K80",
+  "spTipDescK80": "LH/OH sınıfları için standart",
+  "spTipAdK115": "Yüksek Debili K115",
+  "spTipDescK115": "HH sınıfları için standart",
+  "spTipAdK161": "Büyük Damla K161",
+  "spTipDescK161": "Yüksek depolama / raf sistemleri — üretici onayı gerekir",
+  "spTipAdK200": "Ekstra Büyük Damla K200",
+  "spTipDescK200": "Özel yüksek debili uygulamalar — üretici onayı gerekir",
+  "spTipAdEsfr": "ESFR K242 (bilgi amaçlı)",
+  "spTipDescEsfr": "Erken bastırma hızlı tepki — EN 12845 kapsamı dışıdır; NFPA 13 / listeleme verisi esas alınmalıdır",
+  "spKurulumAdSingle": "Tekli Kaynak + Tek Pompa",
+  "spKurulumDescSingle": "Yedekliliği yoktur — yalnızca LH ve düşük riskli, tek kaynaklı tesislerde kabul edilebilir.",
+  "spKurulumAdDual": "Çiftli Pompa (Elektrik + Dizel)",
+  "spKurulumDescDual": "OH ve çoğu HH tesisinde yaygın çözüm — elektrik kesintisinde dizel pompa otomatik devreye girer.",
+  "spKurulumAdSuperior": "Çiftli Kaynak + Çiftli Pompa (Superior)",
+  "spKurulumDescSuperior": "En yüksek güvenilirlik — kritik tesisler, HH sınıfları ve yüksek riskli depolarda önerilir; iki bağımsız su kaynağı ve pompa seti.",
+  "spUnitAdet": "adet",
+  "spUnitSpacing": "aralık",
+  "spUnitMinutes": "dakika",
+  "spRcHeaderBuilding": "Bina & Tasarım Parametreleri",
+  "spRcHeaderLayout": "Sprinkler Yerleşim Hesabı",
+  "spRcHeaderHydraulic": "Kritik Devre Hidrolik Hesabı",
+  "spRcHeaderFullHydraulic": "Kritik Devre — Tam Hidrolik Hesap",
+  "spRcHeaderPump": "Pompa Gereksinimleri",
+  "spRcHeaderInstallation": "Kurulum Sınıfı & Pompa Yedekliliği",
+  "spRcHeaderWaterTank": "Su Deposu  —  EN 12845 Tablo 2",
+  "spRcHeaderDryPipe": "Kuru Borulu Sistem  —  Donma Riski",
+  "spRcHeaderRackStorage": "Raf Depolama — In-Rack Sprinkler (Ön Tasarım)",
+  "spRcHeaderPipeDiameterSummary": "Boru Çapı Özeti  —  EN 12845 Tablo 14",
+  "spRcHeaderPipeLength": "Boru Metrajı (Yaklaşık)",
+  "spRcHeaderAlarmValve": "Islak Alarm Vanası  —  EN 12845 Md. 11.2",
+  "spRcHeaderFoamSystem": "Köpük Sistemi  —  EN 13565-2",
+  "spRcBuildingArea": "Bina Alanı",
+  "spRcCeilingHeight": "Tavan Yüksekliği",
+  "spRcCoverageAdjustedSuffix": "  ›  kapsama düzetildi: {value} m² (Yükseklik etkisi)",
+  "@spRcCoverageAdjustedSuffix": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcHazardClass": "Tehlike Sınıfı",
+  "spRcDesignDensity": "Tasarım Yoğunluğu",
+  "spRcDesignArea": "Tasarım Alanı",
+  "spRcMaxCoveragePerSprinklerCap": "Maks. Kapsama / Sprinkler",
+  "spRcMaxCoveragePerSprinklerLow": "Maks. kapsama / sprinkler",
+  "spRcHeightAdjustSuffix": "(yükseklik düzetmesi)",
+  "spRcTable20Title": "Çizelge 20 — Yan Duvar Püskürtme Grupları (referans)",
+  "spRcMaxGroupDistance": "Gruplar arası maks. mesafe",
+  "spRcNote2Suffix": "  (Not 2: yangına 120 dk dayanımlı tavanda 3,7 m'ye çıkabilir)",
+  "spRcMaxToWallEnd": "Duvar sonuna kadar maks.",
+  "spRcTheoreticalSpacing": "Alan bazlı teorik aralık  √A",
+  "spRcTable19MaxDistance": "Çizelge 19 — Maks. S ve D mesafesi",
+  "spRcAppliedGridSpacing": "Uygulanan ızgara aralığı",
+  "spRcDistanceConstraintBinding": "⚠ MESAFE KISITI bağlayıcı (√A > maks.mesafe)",
+  "spRcAreaConstraintBinding": "✓ Alan kısıtı bağlayıcı",
+  "spRcHorizontalRow": "Yatay sıra (en boyunca)",
+  "spRcVerticalRow": "Dikey sıra (boy boyunca)",
+  "spRcActualCoveragePerHead": "Sprinkler başına gerçek kapsama",
+  "spRcTotalSprinklers": "TOPLAM SPRİNKLER",
+  "spRcMainFloorSuffix": "(ana kat)",
+  "spRcSprinklersInDesignArea": "Tasarım alanındaki sprinklerler",
+  "spRcSuspendedCeilingVoid": "Asma tavan boşluğu",
+  "spRcExtraSprinklerRequired": "⚠ Ek sprinkler zorunlu (> 80 cm)",
+  "spRcExtraSprinklerNotRequired": "✓ Ek sprinkler gerekmez (≤ 80 cm)",
+  "spRcConcealedVoidSprinklerCount": "Gizli boşluk sprinkler sayısı",
+  "spRcAppliedToUpperGridSuffix": "(aynı ızgara üst kata uygulanır)",
+  "spRcFarthestHeadFlow": "En uzak sprinkler debisi  q",
+  "spRcDesignTotalFlow": "Tasarım toplam debi  Q",
+  "spRcBranchPipeDN": "Dal boru  DN{dn}",
+  "@spRcBranchPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcCrossPipeDN": "Dağıtım boru  DN{dn}",
+  "@spRcCrossPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMainPipeDN": "Besleme / esas boru  DN{dn}",
+  "@spRcMainPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcTotalFrictionLoss": "Toplam sürtünme kaybı",
+  "spRcStaticHeadFormula": "Statik yük  ({height} m × 0.098)",
+  "@spRcStaticHeadFormula": {
+    "placeholders": {
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcFarthestHeadMinPressure": "Uzak sprinkler min. basıncı",
+  "spRcSafetyMarginLabel": "Emniyet marjı",
+  "spRcColDistance": "Mesafe\n(m)",
+  "spRcColPressure": "Basınç\n(bar)",
+  "spRcColFlowLower": "q\n(L/min)",
+  "spRcColCumFlow": "ΣQ\n(L/min)",
+  "spRcColNextDeltaP": "ΔP sonraki\n(bar)",
+  "spRcSectionBranchPipe": "── Dal Boru (Range Pipe) ──",
+  "spRcSectionDistPipe": "── Tali Boru (Distribution Pipe) ──",
+  "spRcSectionMainPipe": "── Ana Boru (Main Pipe) ──",
+  "spRcHydraulicFootnote": "SP1 = en uzak sprinkler  ·  DP1 = tasarım noktası (design point)  ·  MP = esas boru  ·  K-orantılama: Q_j = Q_krit×√(P_j/P_DP)  ·  Hazen-Williams C=120, fitting payı %20 dahil  (EN 12845 §13.3.2)",
+  "spRcPumpFlowLabel": "Pompa Debisi",
+  "spRcPumpPressureLabel": "Pompa Basıncı",
+  "spRcTable6AppliedIntro": "TS EN 12845+A1 Tablo 6 uygulandı — Ön-hesaplı sistemlerde pompa boyutlandırması için bağlayıcı minimum değerler:",
+  "spRcTable6FlowLine": "• Debi: iteratif hidrolik debi {calc} L/min < Tablo 6 min. {min} L/min → {min} L/min kullanıldı",
+  "@spRcTable6FlowLine": {
+    "placeholders": {
+      "calc": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcTable6PressureLine": "• Basınç: hesaplanan < Tablo 6 min. ({min} + ps) bar → {applied} bar uygulandı",
+  "@spRcTable6PressureLine": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "applied": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMaxPressureWarning": "⚠ EN 12845 §8.2 — Pompa basıncı {pressure} bar, sistemdeki herhangi bir sprinkler konumundaki maksimum işletme basıncı 12 bar'ı aşmamalıdır. Basınç düşürücü vana (PRV) ile {zones} basınç zonuna ayrılması veya sistem yeniden tasarımı değerlendirilmelidir.",
+  "@spRcMaxPressureWarning": {
+    "placeholders": {
+      "pressure": {
+        "type": "String"
+      },
+      "zones": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcInstallationClassLabel": "Kurulum Sınıfı",
+  "spRcPumpCount": "Pompa Sayısı",
+  "spRcElectricDieselSuffix": "  (elektrik + dizel)",
+  "spRcWaterSource": "Su Kaynağı",
+  "spRcDualIndependent": "Çiftli (bağımsız)",
+  "spRcSingle": "Tekli",
+  "spRcJockeyPump": "Jokey Pompa",
+  "spRcWaterSupplyDuration": "Su Besleme Süresi",
+  "spRcSupplyDurationSub": "{cls} → {minutes} dk",
+  "@spRcSupplyDurationSub": {
+    "placeholders": {
+      "cls": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMinWaterTank": "Min. Su Deposu",
+  "spRcWaterSupplyNote": "EN 12845:2015 Tablo 2 — Su beslemesi; depo veya dorudan şebeke bağlantısı ile sağlanabilir. Depoda hangi konum seçilirse emniyet payı eklenmesi tavsiye edilir.",
+  "spRcPipeNetworkVolume": "Boru Şebekesi İç Hacmi",
+  "spRcDryPipeNote": "Bu hacim yalnızca hava kompresörü / nitrojen jeneratörü ve priming suyu ön boyutlandırması için bir referanstır. Tetikleme (trip) süresi, aksesuar (accelerator/exhauster) ihtiyacı ve boru eğimi ayrıca üretici/tasarım standardına göre kesinleştirilmelidir.",
+  "spRcRackLevelCount": "Raf Kat Sayısı",
+  "spRcEstExtraInRackSprinklers": "Tahmini Ek In-Rack Sprinkler",
+  "spRcEstExtraFlow": "Tahmini Ek Debi",
+  "spRcRackNote": "Basitleştirilmiş ön tasarım değeridir (3 m yatay aralık varsayımı, K80, 1,0 bar). Kesin in-rack yerleşimi — flue space genişliği, kat aralığı ve gerçek hidrolik talep — EN 12845 Ek H kapsamında tam tasarımla belirlenmeli ve pompa/su deposu hesabına ayrıca eklenmelidir.",
+  "spRcHHPTable14Warning": "⚠  HHP sınıfı: EN 12845 Tablo 14 uygulanmaz. Çaplar EN 12845 Ek C kapsamında tam hidrolik hesapla belirlenir. Aşağıdaki değerler hız ≤ 5 m/s ön hesap yöntemine göre verilmiştir.",
+  "spRcSprinklerTypeKFactor": "Sprinkler Tipi / K-Faktör",
+  "spRcBranchPipeRow": "Dal boru (branch line)",
+  "spRcVelocityMethodSuffix": "  (hız yöntemi)",
+  "spRcTable14Suffix": "  (Tb.14)",
+  "spRcCrossMainRow": "Dağıtım borusu (cross main)",
+  "spRcBranchConnCount": "{branches} dal kol / {heads} spr.",
+  "@spRcBranchConnCount": {
+    "placeholders": {
+      "branches": {
+        "type": "String"
+      },
+      "heads": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMainSupplyRow": "Esas boru / besleme",
+  "spRcDesignAreaHeadsSuffix": "{n} spr. (tasarım alanı)",
+  "@spRcDesignAreaHeadsSuffix": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcColPipeType": "Boru Türü",
+  "spRcColCountLength": "Adet × Uzunluk",
+  "spRcColTotalM": "Toplam (m)",
+  "spRcRowBranchPipe": "Dal boru (branch)",
+  "spRcRowCrossMain": "Dağıtım (cross main)\n[{n} dal kol bağlantısı]",
+  "@spRcRowCrossMain": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcRowMainPipe": "Esas boru (main)\n[pompa + kalan boy]",
+  "spRcTotalPipeLength": "TOPLAM BORU METRAJ",
+  "spRcPipeLengthFootnote": "* Metraj yaklaşık değerdir. %20 bağlantı eklentisi hesaba katılmıştır. Gerçek metraj için mimari plan üzerinde tam hesap yapılmalıdır.",
+  "spRcRequiredAlarmValve": "Gerekli Islak Alarm Vanası:  ",
+  "spRcTotalSprinklersRow": "Toplam sprinkler",
+  "spRcMaxSprinklersPerValve": "Maks. sprinkler / vana",
+  "spRcHHPClassSuffix": "HHP sınıfı",
+  "spRcLHOHClassSuffix": "LH/OH sınıfı",
+  "spRcMaxAreaPerValve": "Maks. alan / vana",
+  "spRcAreaPerValve": "Vana başına alan",
+  "spRcDesignFlowPerValve": "Her vana için tasarım debisi",
+  "spRcSingleValveSuffix": "  (tüm sistem tek vana üzerinden hesaplanır)",
+  "spRcAlarmValveNote": "EN 12845:2015 Madde 11.2.1: Bir ıslak alarm vanası bölgesi {scope} yüzey alanı koruyabilir.",
+  "@spRcAlarmValveNote": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcAlarmValveScopeHH": "HHP sınıflarında en fazla 500 sprinkler ve 2 300 m²",
+  "spRcAlarmValveScopeLHOH": "LH/OH sınıflarında en fazla 1 000 sprinkler ve 4 800 m²",
+  "spRcConcentrateType": "Konsantre tipi",
+  "spRcConcentrationSuffix": "  —  %{pct} konsantrasyon",
+  "@spRcConcentrationSuffix": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcLiquidCategory": "Sıvı kategorisi",
+  "spRcPolarSolventDetail": "Polar Solvent (B2) — aseton, etanol, keton, solvent",
+  "spRcHydrocarbonDetail": "Hidrokarbon (B1) — benzin, motorin, yağ",
+  "spRcProtectedArea": "Koruma alanı",
+  "spRcApplicationRate": "Uygulama hızı",
+  "spRcApplicationDuration": "Uygulama süresi",
+  "spRcSolutionFlow": "Çözelti debisi (Q)",
+  "spRcConcentrateFlow": "  Konsantre debisi",
+  "spRcWaterFlow": "  Su debisi",
+  "spRcConcentrateTankVolume": "Konsantre tank hacmi",
+  "spRcWaterReserve": "Su rezervi",
+  "spRcFoamNote7": "EN 13565-2 Madde 7: Konsantre tank hacmi ve su rezervi minimum değerlerdir. Gerçek tasarımda emniyet payı ve eş zamanlı kullanım dikkate alınmalıdır.",
+  "spRcFinalDisclaimer": "⚠  Bu yaklaşık ön hesap niteliğindedir. Resmi proje tasarımında EN 12845 Ek C kapsamında tam hidrolik hesap ve yetkili mühendis onayı zorunludur. Bağlantı elemanı kayıpları için uzunluklara +%20 eklentisi hesaba katılmıştır.",
+  "updateAvailableTitle": "Yeni Sürüm Mevcut",
+  "updateAvailableMessage": "Uygulama v{version} sürümüne güncellendi.\nEn yeni özellikleri kullanmak için güncelleyiniz.",
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateLaterButton": "Sonra",
+  "updateNowButton": "Güncelle",
+  "loginRateLimitMessage": "Çok fazla hatalı giriş denemesi. {time} sonra tekrar deneyin.",
+  "@loginRateLimitMessage": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "savedOnLabel": "Kaydedilme: {date}",
+  "@savedOnLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "upgradeRequiredTitle": "Sürüm Yükselt",
+  "upgradeRequiredMessage": "Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.",
+  "upgradeSignUpButton": "Kayıt Ol",
+  "geminiApiKeyRequiredInfo": "Yapay zeka için ücretsiz Google Gemini API anahtarı gereklidir.",
+  "enterStandardNumberFirst": "Önce standart numarasını girin.",
+  "apiKeyRequiredError": "API anahtarı gerekli.",
+  "standardNotFoundError": "Standart bulunamadı.",
+  "enterTopicOrKeywordFirst": "Önce konu veya anahtar kelime girin.",
+  "relatedStandardNotFound": "İlgili standart bulunamadı.",
+  "addCustomStandardTitle": "Özel Standart Ekle",
+  "byNumberTab": "Numara ile",
+  "byTopicTab": "Konuya Göre",
+  "findDescriptionWithAiTooltip": "AI ile açıklamayı bul",
+  "searchStandardsWithAiTooltip": "AI ile standartları ara",
+  "selectAllButton": "Tümünü Seç",
+  "deselectAllButton": "Tümünü Kaldır",
+  "addSelectedButton": "Seçilenleri Ekle ({count})",
+  "@addSelectedButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customAddedStandardsHeader": "Özel Eklenmiş Standartlar",
+  "deleteStandardTitle": "Standardı Sil",
+  "deleteStandardConfirm": "\"{number}\" standardını listeden kaldırmak istiyor musunuz?",
+  "@deleteStandardConfirm": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAssistantTitle": "YZ Asistan",
+  "aiChatGreeting": "{standard} standardı hakkında sorularınızı alabilir, açıklayabilirim.",
+  "@aiChatGreeting": {
+    "placeholders": {
+      "standard": {
+        "type": "String"
+      }
+    }
+  },
+  "rehberFireLoadScenario": "Yangın Yükü & Yangın Senaryosu",
+  "rehberGasSuppressionSystems": "Gazlı Söndürme Sistemleri",
+  "rehberWaterBasedSuppression": "Su Bazlı Söndürme Sistemleri",
+  "rehberFoamSuppressionSystems": "Köpüklü Söndürme Sistemleri",
+  "rehberKitchenHoodSuppression": "Davlumbaz & Mutfak Söndürme",
+  "rehberFireExtinguishersPortable": "Yangın Söndürücüler & Taşınabilir Donanım",
+  "rehberStructuralFireResistance": "Yapısal Yangına Direnç",
+  "rehberRiskAssessmentSafety": "Risk Değerlendirme & Güvenlik Yönetimi",
+  "rehberIndustrialSpecialRisk": "Endüstriyel & Özel Risk Sistemleri",
+  "stdDescEn1991FireLoad": "Eurocode 1 Bölüm 1-2: Yapılara etkiyen yükler — Yangın etkileri. Yangın yükü yoğunluğu, büyüme hızı ve yangın senaryosu hesabı.",
+  "stdDescIso1716Ncv": "Yapı malzemeleri ve ürünlerinin yanma ısısının tayini — Net ısıl değer (NCV) belirleme yöntemi.",
+  "stdDescIso5660ConeCalorimeter": "Yangın tepkisi deneyleri — Isı salım hızı, duman üretim hızı ve kütle kaybı hızı. Koni kalorimetre yöntemi.",
+  "stdDescNfpa557FireLoadDensity": "Yangın yükü yoğunluğu hesabı standardı — Bina kullanım tipine göre referans yoğunluk tabloları.",
+  "stdDescIso24679FireBehaviour": "Yangın güvenliği mühendisliği — Yapıda yangın davranışının değerlendirilmesi.",
+  "stdDescIso16733FireScenario": "Yangın güvenliği mühendisliği — Yangın senaryosu ve yangın modellemesi seçimi.",
+  "stdDescSfpeHandbook": "Yangın koruma mühendisliği başvuru kitabı — Hesap yöntemleri, yangın dinamiği, duman hareketi.",
+  "stdDescPd7974FireInitiation": "BSI — Yapılarda yangın güvenliği mühendisliği uygulaması: Yangın başlangıcı ve gelişimi.",
+  "stdDescIso145201GeneralRules": "Gazlı söndürme sistemleri — Genel kurallar: tasarım, kurulum, devreye alma, bakım ve güvenlik.",
+  "stdDescIso145202Co2": "CO² söndürme sistemleri — Toplam taşkın ve yerel uygulama yöntemleri.",
+  "stdDescIso145205Hfc227": "HFC-227ea (FM-200) gazlı söndürme sistemleri — Konsantrasyon ve hacim hesabı.",
+  "stdDescIso145208Hcfc": "HCFC Blend A (Halotron I) söndürme sistemleri.",
+  "stdDescIso145209Hfc23": "HFC 23 (Triflorometan) söndürme sistemleri.",
+  "stdDescIso1452010Ig55": "IG-55 (Argonite) sistemleri — N²/Ar karışımı, inert gaz.",
+  "stdDescIso1452011Ig541": "IG-541 (Inergen) — N²/Ar/CO² karışımı, inert gazlı söndürme.",
+  "stdDescIso1452012Ig01": "IG-01 (Argon) söndürme sistemleri.",
+  "stdDescIso1452013Ig100": "IG-100 (Azot) söndürme sistemleri.",
+  "stdDescIso1452015Novec": "FK-5-1-12 (Novec 1230) — Düşük GWP değeri, hassas ekipman odaları.",
+  "stdDescNfpa2001CleanAgent": "ABD — Temiz ajan (clean agent) söndürme sistemleri standardı.",
+  "stdDescNfpa12Co2Us": "CO² söndürme sistemleri — ABD standardı, toplam taşkın ve yerel uygulama.",
+  "stdDescNfpa12aHalon": "Halon 1301 söndürme sistemleri — ABD, mevcut sistemler.",
+  "stdDescTsEn150041GeneralReq": "Sabit yangın söndürme sistemleri — Gazlı söndürme sistemleri, genel gereksinimler.",
+  "stdDescVds2380Design": "Almanya — Gazlı söndürme sistemleri tasarım ve kurulum yönergeleri.",
+  "stdDescNfpa34DippingCoating": "Yanıcı/tutuşabilir sıvı kullanan daldırma, kaplama ve baskı prosesleri — temel güvenlik standardı.",
+  "stdDescNfpa34Sec10PrintingOps": "Printing Operations: baskı alanı yapısı, havalandırma, elektrik sınıflandırması ve yangın koruma.",
+  "stdDescNfpa34Sec106AutoSuppression": "Otomatik yangın söndürme zorunluluğu — Sınıf I sıvı için sprinkler; kurutucu bölmeler için yerel CO₂/temiz ajan.",
+  "stdDescNfpa12PrintingPressLocal": "CO₂ söndürme — baskı makinesi ve kurutucu bölme yerel uygulama sistemleri.",
+  "stdDescNfpa2001PrintingCabin": "Temiz ajan söndürme — baskı makinesi kabin koruma, insan varlığında tercih edilir.",
+  "stdDescNfpa30PrintingSolvent": "Yanıcı ve tutuşabilir sıvılar kodu — baskı tesisinde solvent depolama ve kullanım.",
+  "stdDescNfpa70Article516": "Baskı alanı ATEX/NEC patlayıcı atmosfer sınıflandırması ve elektrik ekipmanı.",
+  "stdDescEn10101PrintingSafetyGeneral": "Baskı makinelerinin güvenliği — Genel gereksinimler.",
+  "stdDescEn10102PrintingSafetyMachines": "Baskı makinelerinin güvenliği — Baskı ve baskı lakı uygulama makineleri (ofset, flexo, gravür).",
+  "stdDescEn13463AtexEquipment": "ATEX ekipmanlar — Potansiyel patlayıcı ortamda kullanılacak ekipmanlar için güvenlik kriterleri.",
+  "stdDescTsEn150041PrintingCabinet": "Gazlı söndürme sistemleri — Genel şartlar (baskı kabini için temiz ajan hesabı).",
+  "stdDescTsEn12845Sprinkler": "Sabit sprinkler sistemleri — Tasarım, tesis ve bakım. Tehlike sınıfı, yoğunluk, debi ve depo hacmi.",
+  "stdDescNfpa13SprinklerInstallation": "Sprinkler sistemi kurulumu standardı — ABD, tüm bina tipleri.",
+  "stdDescNfpa13rResidential": "Konut binalarında sprinkler sistemleri — 4 kata kadar yapılar.",
+  "stdDescNfpa13dOneTwoFamily": "Tek ve iki ailelik konutlarda sprinkler sistemleri.",
+  "stdDescNfpa15WaterSpray": "Sabit su spreyi söndürme sistemleri — Ekipman ve risk koruma.",
+  "stdDescNfpa16FoamWaterSpray": "Köpük-su sprey ve köpük-su sprinkler sistemleri.",
+  "stdDescEn14339UndergroundHydrant": "Yeraltı yangın hidranti sistemleri — Tasarım ve kurulum.",
+  "stdDescEn14384AboveGroundHydrant": "Yerüstü yangın hidranti sistemleri.",
+  "stdDescEn6711SemiRigidHose": "Sabit yangın söndürme donanımı — Yarı sert hortumlu makara sistemleri.",
+  "stdDescEn6712FlatHoseHydrant": "Sabit yangın söndürme donanımı — Düz hortumlu hidrant sistemleri.",
+  "stdDescEn6713Maintenance": "Sabit yangın söndürme donanımı — Bakım, Bölüm 3.",
+  "stdDescEn122591Components": "Sabit yangın söndürme sistemleri — Sprinkler ve su spreyi bileşenleri.",
+  "stdDescTsEn149721WaterMistDesign": "Sabit söndürme sistemleri — Su sisi sistemleri, Bölüm 1: Tasarım ve kurulum.",
+  "stdDescNfpa750WaterMist": "Su sisi (water mist) söndürme sistemleri standardı — ABD.",
+  "stdDescNfpa11ExpansionFoam": "Düşük, orta ve yüksek genleşmeli köpük söndürme sistemleri — ABD standardı.",
+  "stdDescEn135651FoamRequirements": "Sabit köpük söndürme sistemleri — Bölüm 1: Gereksinimler ve test yöntemleri.",
+  "stdDescEn135652FoamDesignInstall": "Sabit köpük söndürme sistemleri — Bölüm 2: Tasarım, kurulum ve bakım.",
+  "stdDescIso72031FoamConcentrates": "Yangın söndürücü maddeler — Sıvı akaryakıt yangınları için köpük konsantreleri.",
+  "stdDescNfpa30StorageTransfer": "Yanıcı ve tutuşabilir sıvılar kodu — Depolama ve taşıma.",
+  "stdDescApi2021TankFirePrevention": "Petrol endüstrisi — Depo tankları yangın önleme ve söndürme.",
+  "stdDescNfpa17aWetChemical": "Islak kimyasal (wet chemical) söndürme sistemleri — Ticari mutfak uygulamaları.",
+  "stdDescNfpa17DryChemical": "Kuru kimyasal söndürme sistemleri — Genel sanayi uygulamaları.",
+  "stdDescTsEn15751CommercialKitchen": "Avrupa — Ticari mutfak ekipmanı için sabit yangın söndürme sistemleri.",
+  "stdDescUl300CookingSuppression": "ABD ürün onay standardı — Yemek pişirme alanları söndürme sistemleri (Ansul, Amerex vb.).",
+  "stdDescUl300aAutoSuppressionCooking": "Otomatik söndürme sistemleri — Pişirme aleti üstü yangın tehlikesi.",
+  "stdDescTsEn18251GreaseSeparators": "Mutfak davlumbazı gres tutucular ve filtreler.",
+  "stdDescTsEn18252GreaseSelection": "Mutfak davlumbazı gres tutucular — Seçim, kurulum ve bakım.",
+  "stdDescNfpa96VentilationCooking": "Ticari mutfak havalandırma sistemi standardı — Kanal, davlumbaz ve yangın önleme.",
+  "stdDescEn541Introduction": "Yangın algılama ve alarm sistemleri — Bölüm 1: Sisteme genel bakış.",
+  "stdDescEn542ControlIndicating": "Yangın alarm kontrol ve gösterge paneli.",
+  "stdDescEn543SoundersDevices": "Yangın alarm sesli uyarı cihazları.",
+  "stdDescEn544PowerSupply": "Güç besleme donanımı.",
+  "stdDescEn545HeatDetectors": "Isı detektörleri — Noktasal.",
+  "stdDescEn547SmokeDetectorsOptical": "Duman detektörleri — Dağılım tipi optik detektörler.",
+  "stdDescEn5410FlameDetectors": "Alev detektörleri — Noktasal.",
+  "stdDescEn5411ManualCallPoint": "Manuel yangın alarm butonu (kırılır camlı).",
+  "stdDescEn5412SmokeDetectorsLinear": "Duman detektörleri — Doğrusal ışın tipi.",
+  "stdDescEn5413SystemCompatibility": "Sistem bileşenlerinin uyumluluğu ve bağlanabilirliği değerlendirmesi.",
+  "stdDescEn5414PlanningGuide": "Yangın algılama ve alarm sistemleri — Planlama, tasarım, kurulum, devreye alma, kullanım ve bakım kılavuzu.",
+  "stdDescEn5416VoiceAlarm": "Sesli alarm kontrol ve gösterge donanımı.",
+  "stdDescEn5417ShortCircuitIsolators": "Kısa devre izolatörleri.",
+  "stdDescEn5418InputOutputDevices": "Giriş/çıkış cihazları.",
+  "stdDescEn5420AspiratingSmoke": "Duman detektörleri — Aspirasyonlu tip.",
+  "stdDescEn5421AlarmTransmission": "Alarm iletim ve arıza uyarı yönlendirme donanımı.",
+  "stdDescEn5423VisualAlarm": "Yangın alarm görsel uyarı cihazları.",
+  "stdDescEn5425RadioComponents": "Radyo bağlantılı (kablosuz) sistem bileşenleri.",
+  "stdDescNfpa72NationalCode": "ABD — Ulusal yangın alarm ve sinyalizasyon kodu. Adresleme, bildirim, altyapı.",
+  "stdDescVds2095PlanningInstall": "Almanya — Yangın alarm sistemleri planlama ve kurulum yönergeleri.",
+  "stdDescEn121011SmokeCurtains": "Duman ve ısı tahliye sistemleri — Bölüm 1: Duman ve ısı kontrol perdelerinin özellikleri.",
+  "stdDescEn121012NaturalVentilators": "Doğal duman ve ısı tahliye ventilatörleri — Performans gereksinimleri.",
+  "stdDescEn121013PoweredExhaust": "Mekanik duman tahliye sistemleri — Motorlu duman egzoz fanları.",
+  "stdDescEn121014InstallCommission": "Kurulum, kabul testi, rutin bakım ve onarım kılavuzu.",
+  "stdDescEn121016PressureDifferential": "Basınçlı duman kontrol sistemleri — Kit özellikleri.",
+  "stdDescEn121017DuctlessNaturalVent": "Duman ve ısı tahliye ventilatörleri — Kanalsız doğal duman tahliyesi.",
+  "stdDescEn121018TunnelControlPanels": "Tünel için doğal duman tahliye sistemi kontrol panelleri.",
+  "stdDescEn121019FireDamperControl": "Yangın kontrol damperlerinin kontrolü.",
+  "stdDescEn1210110PowerSupplyKits": "Güç besleme kitleri.",
+  "stdDescNfpa92SmokeControlUs": "ABD — Duman kontrol sistemleri standardı. Basınçlı merdivenler, atrium duman yönetimi.",
+  "stdDescNfpa101LifeSafety": "ABD — Can güvenliği kodu, tahliye yolları, çıkış gereksinimleri.",
+  "stdDescEn16341DoorFireResistance": "Yangın ve duman kontrol kapı ve pencere takımları — Yangına direnç deneyi.",
+  "stdDescEn16343SmokeControl": "Yangın kapıları — Yangın ve duman geçirgenliği deneyi.",
+  "stdDescEn15650FireDampers": "Havalandırma sistemleri için yangın damperleri.",
+  "stdDescEn158821ExtendedApplication": "Yangın kontrol damperlerinin genişletilmiş uygulama.",
+  "stdDescEn37PortableExtPerformance": "Taşınabilir yangın söndürücüler — Performans, test yöntemleri ve yapı.",
+  "stdDescEn38PortableExtAdditional": "Taşınabilir yangın söndürücüler — Ek gereksinimler ve testler.",
+  "stdDescEn39PortableExtCo2": "Taşınabilir yangın söndürücüler — CO² söndürücüler.",
+  "stdDescEn310PortableExtSpecial": "Taşınabilir yangın söndürücüler — Özel gereksinimler.",
+  "stdDescNfpa10PortableUs": "ABD — Taşınabilir yangın söndürücüler standardı.",
+  "stdDescEn18661MobileCo2": "Taşınabilir CO² söndürücüler.",
+  "stdDescTsEn615DryChemicalPowder": "Yangın söndürücü maddeler — Kuru kimyasal toz özellikleri.",
+  "stdDescTsEn15683FoamConcentrates": "Yangın söndürücü maddeler — Köpük konsantreleri.",
+  "stdDescEn1992Eurocode2": "Betonarme yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 2).",
+  "stdDescEn1993Eurocode3": "Çelik yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 3).",
+  "stdDescEn1994Eurocode4": "Kompozit çelik-beton yapılar — Yangın etkisi altında tasarım (Eurocode 4).",
+  "stdDescEn1995Eurocode5": "Ahşap yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 5).",
+  "stdDescEn1996Eurocode6": "Yığma yapılar — Yangın etkisi altında yapısal tasarım (Eurocode 6).",
+  "stdDescIso8341StandardFireCurve": "Standart yangın eğrisi — Yapı elemanlarının yangına direnç deneyi.",
+  "stdDescIso8342AlternativeCurves": "Alternatif ve parametrik yangın eğrileri.",
+  "stdDescEn135011ReactionToFire": "Yapı malzemeleri ve ürünlerinin yangın performansı sınıflandırması.",
+  "stdDescEn135012FireResistanceClass": "Yapı elemanlarının yangına direnç sınıflandırması.",
+  "stdDescEn135013VentilationServices": "Yangın durumundaki havalandırma servis ürünleri sınıflandırması.",
+  "stdDescEn135014SmokeControlDoors": "Duman kontrol kapılar ve yapı elemanları sınıflandırması.",
+  "stdDescEn135015Roofs": "Çatılar — Dışarıdan gelen yangına maruz kalma sınıflandırması.",
+  "stdDescNfpa220ConstructionTypes": "ABD — Yapı inşaat tipleri standardı.",
+  "stdDescUl263FireResistanceTests": "ABD — Yapı elemanlarının yangına direnç deneyleri.",
+  "stdDescAstmE119FireEndurance": "ABD — Yapı malzemeleri ve sistemlerinin yangın dayanımı deneyleri.",
+  "stdDescIso31000RiskManagement": "Risk yönetimi — Kılavuz ilkeler ve genel çerçeve.",
+  "stdDescIso45001Ohs": "İSG yönetim sistemleri — Gereksinimler ve kullanım kılavuzu.",
+  "stdDescIso16069SafetyWayGuidance": "Güvenlik işaret sistemleri — Acil kaçış aydınlatması ve yönlendirmesi.",
+  "stdDescEn50172EmergencyLighting": "Acil kaçış aydınlatma sistemleri — Kurulum ve işletme.",
+  "stdDescNfpa1FireCode": "ABD — Yangın kodu. Bina kullanımı, çıkış, tahliye ve risk.",
+  "stdDescNfpa25InspectionTesting": "Su bazlı söndürme sistemleri — Denetim, test ve bakım.",
+  "stdDescEnIso7010SafetySigns": "Güvenlik işaretleri — Acil çıkış, yangın teçhizatı ve tehlike işaretleri.",
+  "stdDescTs9811FireSafetySigns": "Türkiye — Yangın İçin Güvenlik İşaretleri.",
+  "stdDescTbdy2018SeismicSteelFire": "Türkiye Bina Deprem Yönetmeliği — Bölüm 3: Yapısal çelik, yangın etkisi.",
+  "stdDescTrFireRegulation2015": "Türkiye — Yapılarda yangından korunma, tahliye, söndürme ve alarm sistemleri gereksinimleri.",
+  "stdDescNfpa850PowerGeneration": "Elektrik santrallerinde yangın koruması — Türbin sahaları, trafo ve kablo güzergâhları.",
+  "stdDescNfpa804NuclearPlants": "Nükleer santraller için yangın koruma standardı.",
+  "stdDescNfpa409AircraftHangars": "Uçak hangarları yangın koruma standardı.",
+  "stdDescNfpa415AircraftFueling": "Uçak yakıt ikmal sistemleri ve çalışma alanları.",
+  "stdDescEn11271ExplosivePrevention": "Patlayıcı ortamlar — Patlamadan korunma, temel kavramlar.",
+  "stdDescEn6007910ZoneClassification": "Patlayıcı ortamlar — Tehlikeli bölgelerin sınıflandırılması (gaz).",
+  "stdDescIec61511FunctionalSafety": "İşlevsel güvenlik — Proses endüstrisi güvenlik enstrüman sistemleri.",
+  "stdDescApi610PetrochemPumps": "Petrokimya tesislerinde pompalar — Yangın güvenliği gereksinimleri.",
+  "stdDescNfpa654CombustibleDust": "Yanıcı toz yangını ve patlamasına karşı koruma.",
+  "stdDescNfpa68ExplosionVenting": "Patlama basıncı tahliyesi standardı.",
+  "stdDescNfpa69ExplosionPrevention": "Patlama önleme sistemleri standardı.",
+  "spActOfficesAdmin": "Ofisler ve yönetim binaları",
+  "spActHotelsHostelsGuesthouses": "Oteller, misafirhaneler, pansiyonlar",
+  "spActHospitalsClinics": "Hastaneler, klinikler, sağlık merkezleri",
+  "spActSchoolsUniversities": "Okullar, üniversiteler ve eğitim binaları",
+  "spActResidentialApartments": "Konutlar ve apartmanlar",
+  "spActPrisonsReformatories": "Cezaevleri ve ıslahevleri",
+  "spActChurchesMosquesWorship": "Kiliseler, camiler ve ibadethaneler",
+  "spActTheatresCinemaSeating": "Tiyatrolar / sinema (yalnızca seyirci oturma alanları)",
+  "spActMuseumsGalleries": "Müzeler ve sanat galerileri",
+  "spActBreweriesExclDistilleries": "Bira fabrikaları (damıtma tesisleri hariç)",
+  "spActMultiStoreyBasementCarParks": "Çok katlı ve bodrum katlı kapalı otoparklar",
+  "spActCeramicsProduction": "Seramik ürünleri üretimi",
+  "spActGlassGlasswareExclFibre": "Cam ve cam eşya üretimi (cam elyafı hariç)",
+  "spActChemResearchLabs": "Kimya araştırma laboratuvarları",
+  "spActDairyProcessing": "Süt ve süt ürünleri işleme tesisleri (mandıralar)",
+  "spActElectronicsAssembly": "Elektronik ekipman montaj atölyeleri",
+  "spActFoodProcessingPackaging": "Gıda işleme ve paketleme tesisleri",
+  "spActHotelsKitchenLaundryService": "Oteller — mutfak, çamaşırhane ve servis alanları",
+  "spActInstitutionalCommercialLaundries": "Kurumsal ve ticari çamaşırhaneler",
+  "spActLeatherProductsProduction": "Deri ve deri ürünleri üretimi",
+  "spActLightMetalworkingWorkshops": "Hafif metal işleme atölyeleri",
+  "spActPharmaceuticalProduction": "Farmasötik (ilaç) üretim tesisleri",
+  "spActResearchLabsNonflamLiquids": "Araştırma laboratuvarları (yanmaz sıvı kullanımı)",
+  "spActTextileWeavingNaturalFibresUntreated": "Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)",
+  "spActTobaccoProcessingPackaging": "Tütün işleme ve paketleme",
+  "spActAgriIndustrialMachineryAssembly": "Tarım ve iş makinesi montaj tesisleri",
+  "spActGrainFlourMillFoodProcessing": "Tahıl, un değirmeni ve benzeri gıda işleme",
+  "spActChemProductionNonflamLiquidsOnly": "Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)",
+  "spActDeptStoresShoppingCentresSingleStorey": "Büyük mağazalar ve alışveriş merkezleri (tek katlı)",
+  "spActElectricalEquipmentFactories": "Elektrikli ekipman üretim fabrikaları",
+  "spActComputerDataProcessingRooms": "Bilgisayar ve elektronik veri işleme odaları",
+  "spActGeneralEngineeringWorkshopsFactories": "Genel mühendislik atölyeleri ve fabrikalar",
+  "spActFruitVegCanningFacilities": "Meyve, sebze ve konserve işleme tesisleri",
+  "spActVehicleMaintenanceRepairGarages": "Araç bakım-onarım garajları",
+  "spActFibreglassProductionAssembly": "Cam elyafı (fiberglas) üretimi ve montajı",
+  "spActHardwareIronmongeryStores": "Hırdavat ve demir-çelik ürünleri mağazaları",
+  "spActHospitalsTreatmentSurgeryAreas": "Hastaneler — tedavi ve ameliyat alanları",
+  "spActKnittingHosieryFactories": "Örme (triko/hosiery) fabrikaları",
+  "spActLibrariesOpenShelfAreas": "Kütüphaneler — genel açık raf alanları",
+  "spActGeneralMetalworkingFactories": "Genel metal işleme fabrikaları",
+  "spActPaperBoardProductionFacilities": "Kâğıt ve karton üretim tesisleri",
+  "spActPlasticsManufNonflamOnly": "Plastik ürün imalatı (yalnızca yanmaz plastikler)",
+  "spActGeneralPrintingWaterBasedInk": "Genel baskı / matbaa (su bazlı mürekkep)",
+  "spActSupermarketsHypermarkets": "Süpermarketler ve hipermarketler",
+  "spActTailoringGarmentManufacture": "Terzilik, konfeksiyon ve giyim üretimi",
+  "spActTextileSpinningWeavingSynthetic": "Tekstil eğirme ve dokuma (sentetik elyaf)",
+  "spActLoadingShippingDocks": "Yükleme-boşaltma, sevkiyat/nakliye rampaları",
+  "spActGeneralStorageUpTo4m": "Genel depolama (istiflenmiş yükseklik ≤ 4 m)",
+  "spActAircraftHangarsMaintenance": "Uçak hangarları — bakım ve onarım alanları",
+  "spActOilclothTarpaulinCanvasProduction": "Muşamba, branda, çadır bezi ve branda üretimi",
+  "spActChemProductionFpAbove55": "Kimyasal üretim (parlama noktası > 55 °C ürünler)",
+  "spActColdStores": "Soğuk hava depoları",
+  "spActFilmTvStudiosProduction": "Film ve televizyon stüdyoları (üretim alanı)",
+  "spActFurnitureUpholsteryProduction": "Mobilya ve döşeme üretimi (sünger, kumaş)",
+  "spActJoineryWoodworkingWorkshops": "Marangoz / doğrama — ahşap işleme atölyeleri",
+  "spActMatchProductionFacilities": "Kibrit üretim tesisleri",
+  "spActOfficesLargePaperArchives": "Büyük kâğıt arşiv alanları olan ofisler",
+  "spActWaterBasedPaintVarnishProduction": "Su bazlı boya ve vernik üretimi",
+  "spActPaperCorrugatedBoxProduction": "Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi",
+  "spActThermoplasticsManufShaping": "Termoplastik plastik imalat ve şekillendirme",
+  "spActHighSpeedOffsetPrintingOilInk": "Yüksek hızlı ofset baskı (petrol bazlı mürekkep)",
+  "spActRubberProductsProduction": "Kauçuk ürünleri üretim tesisleri",
+  "spActTextileDyeingFinishingFacilities": "Tekstil boyama ve terbiye işleme tesisleri",
+  "spActGeneralStorage4to8m": "Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)",
+  "spActChemProductionClosedProcessFp55": "Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)",
+  "spActPlasticRubberPartsClosedMoulding": "Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)",
+  "spActTextileDyeingFinishingWaterBased": "Tekstil boyama ve terbiye tesisleri (su bazlı)",
+  "spActPharmacyCosmeticsDetergentProduction": "Eczane, kozmetik ve deterjan üretim tesisleri",
+  "spActFoodBeverageProductionHighVolume": "Gıda ve içecek üretim tesisleri (yüksek hacimli)",
+  "spActPaperProductionDryCuttingSorting": "Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)",
+  "spActPaintShopsWaterUvCuring": "Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler",
+  "spActMetalworkingMachineryHeavySwarfOilMist": "Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)",
+  "spActFlammableLiquidProcessFp55Plus": "Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri",
+  "spActFoamRubberFoamPlasticProduction": "Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri",
+  "spActFlowCoatingMetalPlasticParts": "Metal ve plastik parçalar için akış kaplama (flow coating)",
+  "spActIndustrialPrintingFlammableInkSolvent": "Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri",
+  "spActAerosolSprayPackagingFilling": "Aerosol ve sprey ürünleri paketleme/dolum tesisleri",
+  "spActFlammableLiquidProcessFpBelow55Open": "Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)",
+  "spActChemProductionContainingFp55Liquids": "Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)",
+  "spActSolventBasedPaintVarnishProduction": "Solvent bazlı boya ve vernik üretim tesisleri",
+  "spActSpraySolventPaintApplication": "Sprey boyahane — yanıcı solvent bazlı boya uygulaması",
+  "spActDryCleaningPerchloroethyleneSolvent": "Kuru temizleme tesisleri (perkloretilen / solvent bazlı)",
+  "spActSolventExtractionFacilities": "Solvent ekstraksiyon tesisleri",
+  "spActPrintingGravureFlammableInk": "Yanıcı mürekkep kullanan baskı / gravür tesisleri",
+  "spActSprayCoatingBoothsFlammableLiquid": "Yanıcı sıvı ile sprey kaplama / boyama kabinleri",
+  "spActRubberMasticFlammableRawMaterialProcessing": "Kauçuk mastik ve yanıcı hammadde işleme tesisleri",
+  "spActPaintInkVarnishPackagingFilling": "Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri",
+  "spActHighRackPalletStorageSolidAbove4m": "Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m",
+  "spActTyresRubberProductsStorage": "Araç lastikleri ve kauçuk ürün depolaması",
+  "spActPaperRollsReelsStorage": "Rulo kâğıt ve kâğıt topu depolaması",
+  "spActSolidPlasticRawProductStoragePalletRack": "Katı plastik hammadde ve ürün depolaması (paletli/raflı)",
+  "spActBaledCottonTextileSyntheticFibreStorage": "Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması",
+  "spActHighRackPalletStorageFlammableLiquidAbove4m": "Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi",
+  "spActAerosolStoreFlammablePropellantHighRack": "Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir",
+  "spActFlammableLiquidPackagedProductStorage": "Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem",
+  "spActHighDensityStorageWaterSensitiveHighCalorific": "Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması",
+  "spActNoncombustibleStorageMetalGlassCeramicConcrete": "Yanmaz ürün depolama — metal, cam, seramik, beton ürünler",
+  "spActFrozenFoodColdChainStorage": "Dondurulmuş gıda ve soğuk zincir ürün depolama",
+  "spActNoncombustibleInSealedMetalCansDrums": "Kapalı metal kutu / bidon içindeki yanmaz ürünler",
+  "spActWetFoodFreshProduceCannedStorage": "Islak gıda (taze meyve-sebze, konserve) depoları",
+  "spActPorcelainSanitarywareStorage": "Porselen ve sıhhi tesisat ürünleri depolama",
+  "spActEmptyGlassBottlesMetalCansStorage": "Boş cam şişe / boş metal kutu depolama",
+  "spActNoncombustibleCartonPackagedStorage": "Karton ambalajlı yanmaz ürün depolama",
+  "spActNoncombustibleGoodsWoodenCratesStorage": "Tahta kutu / kasalarda yanmaz mal depolama",
+  "spActNoncombustibleLiquidGlassPlasticContainersStorage": "Cam şişe / plastik kaplar içinde yanmaz sıvı depolama",
+  "spActMixedProductsLowCombustibleContentStorage": "Küçük oranda yanabilir içerikli karışık ürün depolama",
+  "spActGlassCeramicWrappedStorage": "Boya bezlerinde cam ve seramik ürün depolama",
+  "spActPaperBoardCorrugatedProductStorage": "Kâğıt, karton ve oluklu mukavva ürün depolama",
+  "spActTextileYarnFabricGarmentStorage": "Tekstil, iplik, kumaş ve hazır giyim depolama",
+  "spActWoodWoodBasedProductStorage": "Ahşap ve ahşap esaslı ürün depolama",
+  "spActFurnitureUpholsteryMaterialsStorage": "Mobilya ve döşeme malzemeleri depolama",
+  "spActMixedPackagedGoodsPaperPlastic": "Karışık ambalajlı mallar (kağıt + plastik kombine)",
+  "spActDryFoodAgriculturalProductsStorage": "Kuru gıda ve tarım ürünleri (dökme olmayan) depolama",
+  "spActLeatherProductsStorage": "Deri ve deri ürünleri depolama",
+  "spActSmallElectricalApplianceStoragePackaged": "Küçük elektrikli ev aletleri (ambalajlı) depolama",
+  "spActExpandedPlasticProductStorageFloor": "Ekspande plastik (EPS, PU, XPS) ürün depolama (döşeme)",
+  "spActRubberTyreProductStorageFloor": "Kauçuk ve lastik ürün depolama (döşeme)",
+  "spActFlammableLiquidPlasticContainersStorageFloor": "Yanıcı sıvı içeren plastik kaplar depolama (döşeme)",
+  "spActAerosolProductStorageFloor35m": "Aerosol ürün depolama — döşeme, ≤ 3,5 m",
+  "spActPolystyreneFoamPackagedProductStorage": "Polistiren köpük ambalajlı ürün depolama",
+  "spActHighCalorificCombustibleGoodsStorageFloor": "Yüksek kalorili yanabilir mal depolama (döşeme)",
+  "spActRackPalletCategoryIGoods": "Raf / palet sistemi — Kategori I mallar (metal, cam, seramik)",
+  "spActHighRackNoncombustibleStorageAbove3m": "Yüksek raflı depo — yanmaz ürünler, istif > 3 m",
+  "spActPalletSealedMetalGlassStorage": "Palet üzeri kapalı metal / cam ürün depolama",
+  "spActColdStoreHighRackSystem": "Soğuk hava deposu yüksek raf sistemi",
+  "spActRackPalletCategoryIIGoods": "Raf / palet sistemi — Kategori II mallar (karton ambalajlı)",
+  "spActHighRackCartonBoxedNoncombustibleStorage": "Yüksek raflı depo — karton kutu içinde yanmaz ürünler",
+  "spActPalletCartonPackagedStorageAbove3m": "Palet üzeri karton ambalajlı ürün depolama, > 3 m",
+  "spActWoodenCrateStorageHighRack": "Tahta kasalarda depolama, yüksek raf sistemi",
+  "spActRackPalletCategoryIIIGoods": "Raf / palet sistemi — Kategori III mallar (kâğıt, tekstil, ahşap)",
+  "spActHighRackFurnitureWoodProductsStorage": "Yüksek raflı depo — mobilya, ahşap ürünler",
+  "spActBaledCottonTextileRackStorageAbove3m": "Balya (pamuk, tekstil) raf depolama, > 3 m",
+  "spActPaperRollsRackStorageAbove3m": "Rulo kâğıt ve kâğıt topu raf depolama, > 3 m",
+  "spActMixedPackagedHighRackStorage": "Karışık ambalajlı (kağıt + plastik) yüksek raf depolama",
+  "spActRackPalletCategoryIVGoods": "Raf / palet sistemi — Kategori IV mallar (plastik, kauçuk, köpük)",
+  "spActExpandedPlasticFoamHighRackStorage": "Ekspande plastik ve köpük ürün yüksek raf depolama",
+  "spActAerosolRackStorageFlammablePropellantAbove3m": "Aerosol ürün raf depolama — yanıcı itici gazlı, > 3 m",
+  "spActSolidPlasticRawProductHighRackStorage": "Katı plastik hammadde ve ürün yüksek raf depolama",
+  "spActFlammablePackagedProductHighRackStorage": "Yanıcı ambalajlı ürün yüksek raf depolama (boya, vernik, solvent)",
+  "spActRubberTyreProductHighRackStorageAbove3m": "Kauçuk ve lastik ürün yüksek raf depolama, > 3 m"
+}

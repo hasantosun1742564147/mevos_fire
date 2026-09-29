@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.3
   url_launcher: ^6.3.0
@@ -21,7 +24,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/standartlar_db.json
+    - assets/standartlar_en.json
+    - assets/standartlar_de.json
     - assets/logo.png
     - assets/mevos_logo.png

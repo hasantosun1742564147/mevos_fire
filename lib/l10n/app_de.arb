@@ -1,0 +1,1847 @@
+{
+  "languageLabel": "Sprache",
+  "settingsTitle": "Einstellungen",
+  "logout": "Abmelden",
+  "save": "Speichern",
+  "saved": "Gespeichert!",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "deletingAccount": "Konto wird gelöscht ...",
+  "accountDeleteTitle": "Möchten Sie Ihr Konto löschen?",
+  "accountDeleteWarning": "Ihr Konto wird aus dem aktiven System entfernt. Name, E-Mail-Adresse, vorheriger Mitgliedsstatus sowie Registrierungs- und Löschdatum bleiben für Administratoren im Verlauf gelöschter Mitglieder gespeichert. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+  "accountManagement": "Kontoverwaltung",
+  "accountDeleteInfo": "Sie können Ihr Konto und die auf diesem Gerät gespeicherten Kontoinformationen dauerhaft löschen.",
+  "deleteAccount": "Mein Konto dauerhaft löschen",
+  "feedbackTitle": "Feedback",
+  "feedbackSubtitle": "Ein Problem gefunden? Lassen Sie es uns wissen.",
+  "feedbackSelectPage": "Um welche Seite geht es?",
+  "feedbackSelectPageHint": "Seite auswählen",
+  "feedbackMessageLabel": "Beschreiben Sie das Problem",
+  "feedbackMessageHint": "Schreiben Sie hier das aufgetretene Problem...",
+  "feedbackSend": "Senden",
+  "feedbackSending": "Wird gesendet...",
+  "feedbackSentSuccess": "Danke für Ihr Feedback!",
+  "feedbackSendFailed": "Feedback konnte nicht gesendet werden. Bitte erneut versuchen.",
+  "feedbackMessageRequired": "Bitte schreiben Sie eine Nachricht.",
+  "feedbackPageHome": "Startseite",
+  "feedbackPageOther": "Sonstiges",
+  "apiKeyTitle": "Gemini-API-Schlüssel (KI)",
+  "apiKeyInstructions": "Unter aistudio.google.com/apikey erhalten Sie einen kostenlosen API-Schlüssel.",
+  "getApiKey": "API-Schlüssel abrufen",
+  "updateApiKey": "API-Schlüssel aktualisieren",
+  "add": "Hinzufügen",
+  "done": "Fertig",
+  "smokeReference": "TS EN 54-7:2006 / EN 54-14:2004 — Anordnung punktförmiger Rauchmelder\nNur Vorbemessung; der endgültige Entwurf muss von einem Systemingenieur freigegeben werden.",
+  "buildingType": "Gebäudetyp",
+  "buildingOffice": "Büro / Verwaltung",
+  "buildingHome": "Wohngebäude / Hotel",
+  "buildingHospital": "Krankenhaus",
+  "buildingCommercial": "Gewerbe / Einkaufszentrum",
+  "buildingWarehouseNormal": "Lager (normal â‰¤ 6 m)",
+  "buildingWarehouseHigh": "Lager (Hochregal > 6 m)",
+  "buildingIndustrial": "Industrie",
+  "defaultCeilingHeight": "Standard-Deckenhöhe: {height} m",
+  "editablePerRoom": "Für jeden Raum separat anpassbar",
+  "addFloorZone": "Geschoss / Bereich hinzufügen",
+  "floorZone": "Geschoss / Bereich",
+  "totalDetectors": "Melder gesamt",
+  "detectorCount": "{count}",
+  "addRoomArea": "Raum / Bereich hinzufügen",
+  "editRoomArea": "Raum bearbeiten",
+  "roomAreaName": "Raum- / Bereichsname",
+  "roomAreaExample": "z. B. Kantine, Serverraum …",
+  "areaType": "Bereichstyp",
+  "validDimensions": "Gültige Maße eingeben.",
+  "roomNameRequired": "Der Raumname darf nicht leer sein.",
+  "roomStandard": "Standardraum",
+  "roomOpenOffice": "Großraumbüro",
+  "roomTechnical": "Technik / Versorgungsraum",
+  "roomKitchen": "Küche / Kochbereich",
+  "roomCorridor": "Flur (B â‰¤ 3 m)",
+  "roomProduction": "Produktion / Montage",
+  "roomWarehouseRack": "Hochregallager",
+  "sourceLabel": "Quelle",
+  "deleteProjectTitle": "Projekt löschen",
+  "deleteProjectConfirm": "Projekt „{name}“ löschen?",
+  "noSavedProjects": "Noch keine gespeicherten Projekte",
+  "saveProjectPrompt": "Berechnung als Projekt speichern",
+  "saveProjectTitle": "Projekt speichern",
+  "projectName": "Projektname",
+  "projectNameExample": "z. B. Bürogebäude Erdgeschoss",
+  "projectSaved": "„{name}“ gespeichert",
+  "copy": "Kopieren",
+  "edit": "Bearbeiten",
+  "floorZoneSummary": "{areas} Bereiche · {detectors} Melder",
+  "detectorBadge": "{count} Melder",
+  "highCeilingNotice": "⚠ H > 12 m — Linienförmige Rauchmelder / ASD erforderlich (EN 54-12 / EN 54-20)",
+  "beamRecommendation": "ℹ H = 8–12 m — Linienförmige Melder können ebenfalls geprüft werden",
+  "widthSpacing": "Abstand in der Breite: {value} m",
+  "lengthSpacing": "Abstand in der Länge: {value} m",
+  "wallDistanceWidth": "Wandabstand W: {value} m",
+  "wallDistanceLength": "Wandabstand L: {value} m",
+  "corridorSpacing": "Flurabstand: {value} m",
+  "wallDistance": "Wandabstand: {value} m",
+  "snAreaPerDetector": "S_n = {value} m²/Melder.",
+  "systemLanguage": "Gerätesprache",
+  "turkish": "Türkçe",
+  "english": "English",
+  "german": "Deutsch",
+  "loginSubtitle": "Melden Sie sich bei Ihrem Konto an",
+  "emailAddress": "E-Mail-Adresse",
+  "emailRequired": "E-Mail-Adresse ist erforderlich",
+  "validEmailRequired": "Geben Sie eine gültige E-Mail-Adresse ein",
+  "password": "Passwort",
+  "passwordRequired": "Passwort ist erforderlich",
+  "loggingIn": "Anmeldung läuft ...",
+  "login": "Anmelden",
+  "demoLogin": "Demo öffnen (Küchenhaubenlöschung)",
+  "accountPrompt": "Sie haben noch kein Konto? ",
+  "register": "Konto erstellen â†’",
+  "preliminaryToolDisclaimer": "Vorläufiges Berechnungstool · Keine offizielle Projektberechnung",
+  "fireSafetyCalculator": "Berechnungszentrum für Brandschutz",
+  "fireLoadTitle": "Berechnung der Brandlast",
+  "fireLoadDescription": "Brandlastdichte nach EN 1991-1-2 und Löschmittelberechnung nach ISO 14520 / EN 12845",
+  "kitchenSuppressionTitle": "Küchenhaubenlöschanlage",
+  "kitchenSuppressionDescription": "Löschanlage für gewerbliche Küchenhauben — NFPA 17A / TS EN 15751 / UL 300",
+  "gasSuppressionTitle": "Gaslöschanlage",
+  "gasSuppressionDescription": "Raumflutung und Druckmaschinen — EN 15004 / NFPA 2001 · FM-200 · Novec 1230 · CO₂ · Inertgase",
+  "lithiumFireTitle": "Brand von Lithiumbatterien",
+  "lithiumFireDescription": "Kühlungsanforderungen für ESS — ISO 3941:2026 · NFPA 855:2023 · IEC 62619 · FM Global DS 5-33",
+  "sprinklerTitle": "Sprinkleranlage",
+  "sprinklerDescription": "Hydraulische Berechnung, Pumpenauslegung und Rohrdurchmesser nach Gefahrenklasse gemäß EN 12845",
+  "smokeDetectionTitle": "Rauchdetektion",
+  "smokeDetectionDescription": "Melderanordnung und Raumtypen — EN 54-7 / EN 54-14",
+  "smokeControlTitle": "Rauchschutz",
+  "smokeControlDescription": "Natürliche und maschinelle Entrauchung, Druckbelüftung — EN 12101-2 / EN 12101-3 / EN 12101-6",
+  "demoMode": "DEMOMODUS · Nur das Modul „Küchenhaubenlöschanlage“ ist verfügbar. Erstellen Sie ein Konto und schließen Sie ein Abonnement ab, um weitere Module zu nutzen.",
+  "standardSearch": "Normensuche",
+  "standardSearchDescription": "Brand- und Sicherheitsnormen nach Nummer, Titel oder Kategorie durchsuchen",
+  "standardGuide": "Normenleitfaden",
+  "standardGuideDescription": "Kategorien, Geltungsbereiche und Referenzübersicht für Brandschutzsystemnormen",
+  "fireAndSuppression": "Brandlast und Löschung",
+  "kitchenSuppression": "Küchenhaubenlöschung",
+  "gasSuppression": "Gaslöschanlage",
+  "printingSuppression": "Löschanlage für Druckmaschinen",
+  "sprinklerSystems": "Sprinkleranlage",
+  "fireAlarm": "Brandmeldung und Detektion",
+  "fireExtinguishers": "Feuerlöscher",
+  "smokeControl": "Rauchschutz und Evakuierung",
+  "savedProjects": "Gespeicherte Projekte",
+  "savedProjectsDescription": "Alle gespeicherten Berechnungsprojekte",
+  "addStandard": "Norm hinzufügen",
+  "allCategories": "Alle Kategorien",
+  "standardSearchHint": "Nummer, Titel oder Kategorie ...",
+  "standardsFound": "{count} Normen gefunden",
+  "category": "Kategorie: {name}",
+  "close": "Schließen",
+  "searchWeb": "Im Web suchen",
+  "askAi": "KI fragen",
+  "moduleDisclaimer": "MEVOS Fire · Vorläufiges Brandschutz-Berechnungstool, keine offizielle Projektberechnung.",
+  "hoodSystemDescription": "Dimensionierung einer gewerblichen Küchenlöschanlage.\nReferenzen: NFPA 17A:2021 · TS EN 15751:2016 · UL 300 · Ansul R-102",
+  "hoodEquipmentHeading": "Geräte unter der Haube",
+  "hoodEquipmentInstructions": "Passen Sie die Geräteanzahl mit + / - an. Die Gefahrenklasse wird anhand Ihrer Auswahl automatisch berechnet.",
+  "hoodHazardClass": "Gefahrenklasse: {category}",
+  "hoodEquipmentScore": "Gerätebewertung: {score} · {count} ausgewählt · < 2 › Niedrig · 2–5 › Mittel · ≥ 5 › Hoch",
+  "hoodFilterArea": "Filterfläche der Haube (Innenmaß)",
+  "singleLength": "Länge",
+  "singleWidth": "Breite",
+  "hazardLight": "Niedrig",
+  "hazardMedium": "Mittel",
+  "hazardMediumHigh": "Mittel–Hoch",
+  "hazardHigh": "Hoch",
+  "hazardVeryHigh": "Sehr hoch",
+  "hoodToastSandwichMachine": "Toaster / Sandwichgerät",
+  "hoodSmallElectricOven": "Kleiner Elektroofen",
+  "hoodConvectionOven": "Umluftofen",
+  "hoodSingleBurnerRange": "Herd (1 Kochstelle)",
+  "hoodDoubleBurnerRange": "Herd (2 Kochstellen)",
+  "hoodFourToSixBurnerRange": "Herd (4–6 Kochstellen)",
+  "hoodWokRange": "Wokherd",
+  "hoodDoubleWokRange": "Doppel-Wokherd",
+  "hoodSalamanderGrill": "Salamandergrill",
+  "hoodCharbroilerGrill": "Charbroiler / Grill",
+  "hoodFryerUpTo22L": "Fritteuse (≤ 22 L)",
+  "hoodFryerOver22L": "Fritteuse (> 22 L)",
+  "hoodTiltingSkillet": "Kippbratpfanne",
+  "calculate": "Berechnen",
+  "calculateExtinguishingAgent": "Löschmittel berechnen",
+  "calculateCooling": "Kühlbedarf berechnen",
+  "recalculate": "Neu berechnen",
+  "calculationResults": "Berechnungsergebnisse",
+  "noResults": "Keine Ergebnisse gefunden",
+  "extinguishingAgent": "Löschmittel",
+  "chemicalAgentAmount": "Menge des chemischen Löschmittels",
+  "minimumNozzleCount": "Mindestanzahl der Düsen",
+  "minimumDischargeTime": "Mindest-Austrittszeit",
+  "systemType": "Systemtyp",
+  "naturalExhaust": "Natürliche Entrauchung",
+  "mechanicalExhaust": "Maschinelle Entrauchung",
+  "pressurization": "Druckbelüftung",
+  "roomArea": "Raumfläche",
+  "ceilingHeight": "Deckenhöhe",
+  "designFirePower": "Bemessungs-HRR (Brandlastleistung)",
+  "ambientTemperature": "Umgebungstemperatur",
+  "doorWidth": "Türbreite",
+  "doorHeight": "Türhöhe",
+  "stairShaftWidth": "Breite des Treppenraums",
+  "stairShaftDepth": "Tiefe des Treppenraums",
+  "floorHeight": "Geschosshöhe",
+  "floorCount": "Anzahl der Geschosse",
+  "shaftWallMaterial": "Material der Schachtwand",
+  "extinguishingDesignResult": "Ergebnis der Löschanlagen-Auslegung",
+  "smokeTemperature": "Rauchgastemperatur",
+  "temperatureRise": "Temperaturanstieg",
+  "effectiveOpening": "Erforderliche freie Öffnungsfläche",
+  "freshAirInlet": "Mindest-Zuluftöffnung",
+  "fanDesignFlow": "Auslegungsvolumenstrom des Ventilators",
+  "calculatedAirChanges": "Berechneter Luftwechsel",
+  "targetPressureDifference": "Soll-Druckdifferenz",
+  "openDoorFlow": "Volumenstrom bei offener Tür",
+  "closedDoorLeakage": "Leckage bei geschlossener Tür / Geschoss",
+  "wallLeakage": "Wandleckage (alle Geschosse)",
+  "totalFanFlow": "Gesamtvolumenstrom des Ventilators",
+  "sourceStandards": "Referenznormen",
+  "unknown": "Unbekannt",
+  "smokeControlStandards": "EN 12101-2 Natürlich · EN 12101-3 Maschinell · EN 12101-6 Druckbelüftung",
+  "designFirePowerHint": "Bemessungsbrandlast — EN 1991-1-2 Anhang E. Beispiel: Büro mit mittlerem Risiko ≈ 500 kW",
+  "unknownFirePowerButton": "HRR unbekannt — Brandlast berechnen",
+  "smokeLayerHeight": "Höhe der Rauchschichtgrenze z",
+  "smokeLayerHeightHint": "Obergrenze der klaren Luftschicht, gemessen ab Fußboden. z muss < H sein. Ziel z ≥ 2,5 m",
+  "pressurizationConditions": "Soll-ΔP = 50 Pa, Türspalt 10 mm (EN 12101-6 §7.3.3 / Anhang F Tabelle F.1)",
+  "naturalExhaustResult": "Ergebnisse natürliche Entrauchung (EN 12101-2)",
+  "mechanicalExhaustResult": "Ergebnisse maschinelle Entrauchung (EN 12101-3)",
+  "pressurizationResult": "Ergebnisse Druckbelüftung (EN 12101-6)",
+  "smokeMassFlow": "Rauchmassenstrom",
+  "smokeVolumeFlow": "Rauchvolumenstrom",
+  "minimumFreshAir": "Mindest-Zuluftöffnung",
+  "batteryTechnology": "Batterietechnologie",
+  "nmcDescription": "Nickel-Mangan-Kobalt · 30 MJ/kWh — Hohe Energiedichte, mittlere Stabilität",
+  "lfpDescription": "Lithium-Eisenphosphat · 12 MJ/kWh — Geringere Wärmefreisetzung, hohe Sicherheit",
+  "ncaDescription": "Nickel-Kobalt-Aluminium · 35 MJ/kWh — Höchste Energiedichte",
+  "lcoDescription": "Lithium-Kobaltoxid · 35 MJ/kWh — Unterhaltungselektronik",
+  "essLithiumFireInfo": "ISO 3941:2026 · NFPA 855:2023 · IEC 62619:2022 · FM Global DS 5-33\nBei Lithium-Ionen-/Polymer-Batteriebränden ist aufgrund des thermischen Durchgehens (Thermal Runaway) Kühlung – nicht die Gaslöschung – maßgeblich. Die folgende Berechnung dient nur der Vorauslegung.",
+  "nmcThermalRunawayNote": "NMC/NCM: Nickel-Mangan-Kobalt — 30 MJ/kWh Wärmeenergie beim thermischen Durchgehen (IEC 62619)",
+  "lfpThermalRunawayNote": "LFP: Lithium-Eisenphosphat — 12 MJ/kWh Wärmeenergie beim thermischen Durchgehen (IEC 62619)",
+  "ncaThermalRunawayNote": "NCA: Nickel-Kobalt-Aluminium — 35 MJ/kWh Wärmeenergie beim thermischen Durchgehen (IEC 62619)",
+  "lcoThermalRunawayNote": "LCO: Lithium-Kobaltoxid — 35 MJ/kWh Wärmeenergie beim thermischen Durchgehen (IEC 62619)",
+  "hazardClassificationBasisNote": "NFPA 855:2023 §4.4.2 — Grundlage der Gefahrenklassifizierung",
+  "fmGlobalMinDurationNote": "FM Global DS 5-33 Mindestdauer: 30 min  —  NFPA 855:2023 §12.4",
+  "essHazardCategoryInfo": "NFPA 855:2023 Gefahrenkategorie & FM DS 5-33 Anwendungsdichte:\n  • Niedrig  (< 20 kWh)  ›  8,2 L/min/m²\n  • Mittel   (20–600 kWh)  ›  12,2 L/min/m²\n  • Hoch (> 600 kWh)  ›  16,3 L/min/m²",
+  "essResultsFooterNote": "• Wärmekoeffizient: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n• Spitzen-HRR-Koeffizient: NMC 3,0 · LFP 1,5 · NCA/LCO 3,5 kW/kWh  (SP 2022:08)\n• t²-Wachstum: α=0,0469 kW/s² (schnelle Klasse · ISO 16734 / NFPA 72)\n• F-500-Konzentration: 1,5 % (Herstellertestdaten — Enviro Voraxial)\n• Alternative Wassernebel: NFPA 750 / TS EN 14972-1\n• Große ESS (> 600 kWh): IEC 63272-, UL 9540A-Tests zwingend erforderlich\n• Diese Berechnung dient nur der Vorauslegung. Ein von FM Global DS 5-33 zugelassenes System ist erforderlich.",
+  "evLithiumFireInfo": "ISO 6469 · NFPA 88A:2021 · VdS 3471:2023 · IEC 62619:2022\nBei Elektrofahrzeugbränden wird das thermische Durchgehen durch Kühlung beherrscht; Gas- oder Pulverlöschung ist wirkungslos.",
+  "passengerCarSpecNote": "PKW — 30–100 kWh\n400–600 L/min · 60 min Mindestdauer (VdS 3471)",
+  "lightCommercialSpecNote": "Transporter / Kleinbus — 60–120 kWh\n600 L/min · 60 min Mindestdauer",
+  "heavyCommercialSpecNote": "Elektrobus/-lkw — 200–600 kWh\n1.000 L/min · 90 min Mindestdauer",
+  "nmcHeatValue": "Nickel-Mangan-Kobalt — 30 MJ/kWh",
+  "lfpHeatValue": "Lithium-Eisenphosphat — 12 MJ/kWh",
+  "ncaHeatValue": "Nickel-Kobalt-Aluminium — 35 MJ/kWh",
+  "lcoHeatValue": "Lithium-Kobaltoxid — 35 MJ/kWh",
+  "vehicleBatteryCapacityNote": "Batteriekapazität eines einzelnen Fahrzeugs — Grundlage der Berechnung des thermischen Durchgehens nach IEC 62619",
+  "maxSimultaneousVehiclesNote": "VdS 3471:2023 — max. 2 gleichzeitig brennende Fahrzeuge angenommen",
+  "vehicleApplicationDurationNote": "PKW / leichte Nutzfahrzeuge min. 60 min · schwere Nutzfahrzeuge min. 90 min  (VdS 3471:2023)",
+  "vdsMinimumFlowInfo": "VdS 3471:2023 Mindestdurchfluss pro Fahrzeug:\n  • PKW < 60 kWh  ›  400 L/min\n  • PKW ? 60 kWh  ›  600 L/min\n  • Leichtes Nutzfahrzeug           ›  600 L/min\n  • Schweres Nutzfahrzeug / Bus  ›  1.000 L/min",
+  "evResultsFooterNote": "• Wärmekoeffizient: NMC 30 · LFP 12 · NCA/LCO 35 MJ/kWh  (IEC 62619:2022)\n• Spitzen-HRR: PKW <60kWh›3MW, ?60kWh›6MW · leichtes Nutzfahrzeug›8MW · schwer›15MW  (SP 2021:11)\n• t²-Wachstumsmodell: ?=0,1876 kW/s² (ultra-fast · ISO 16734 / NFPA 72 Tabelle B.2.3)\n• Wasserdurchfluss: VdS 3471:2023 — 2 Fahrzeuge gleichzeitig (Parkgarage)\n• Container-Eintauchung: 3.000 L/Fahrzeug (BRE Global / SFPE)\n• Geschlossene Parkgarage: NFPA 88A:2021 Sprinkler erforderlich\n• Diese Berechnung dient nur der Vorauslegung.",
+  "heatPerVehicleMj": "{value} MJ/Fahrzeug",
+  "@heatPerVehicleMj": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "avgHrrPerVehicleMw": "{value} MW/Fahrzeug",
+  "@avgHrrPerVehicleMw": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "installedCapacity": "Installierte Kapazität (ESS)",
+  "protectedArea": "Geschützte Fläche (ESS-Aufstellfläche)",
+  "applicationDuration": "Anwendungsdauer",
+  "batteryCapacity": "Fahrzeug-Batteriekapazität",
+  "vehicleCount": "Anzahl Fahrzeuge (Risikobereich)",
+  "vehicleType": "Fahrzeugtyp",
+  "passengerCar": "Pkw",
+  "lightCommercial": "Leichtes Nutzfahrzeug",
+  "heavyCommercialBus": "Schweres Nutzfahrzeug / Bus",
+  "essStationary": "ESS / Stationärer Speicher",
+  "electricVehicleMode": "Elektrofahrzeug",
+  "coolingCalculationResult": "Ergebnis der Kühlberechnung",
+  "electricVehicleFireResult": "Brandberechnung für Elektrofahrzeuge",
+  "thermalRunawayHeat": "Wärmefreisetzung beim thermischen Durchgehen",
+  "estimatedPeakHrr": "Geschätzte HRR-Spitze",
+  "timeToPeak": "Zeit bis zur Spitze",
+  "minimumFlowRate": "Mindestvolumenstrom",
+  "totalWaterVolume": "Gesamtwasservolumen",
+  "f500Amount": "F-500-Menge (1,5-%-Lösung)",
+  "averageHeatReleaseRate": "Mittlere Wärmefreisetzungsrate (HRR)",
+  "vehicleMinimumFlow": "Mindestvolumenstrom je Fahrzeug",
+  "simultaneousVehicleFlow": "Gesamtvolumenstrom (max. 2 Fahrzeuge gleichzeitig)",
+  "containerImmersion": "Container-Eintauchung (Alternative)",
+  "fireRiskCategory": "Gefahrenkategorie nach NFPA 855",
+  "netProtectionVolume": "Netto-Schutzvolumen",
+  "minimumDesignTemperature": "Mindest-Auslegungstemperatur",
+  "altitudeCorrection": "Höhenkorrektur (TS EN 15004-1 Anhang A)",
+  "safetyMargin": "10 % Sicherheitszuschlag (TS EN 15004-1 §5.5)",
+  "fireClass": "Brandklasse",
+  "surfaceClassA": "Klasse A (Oberflächenbrand)",
+  "deepClassA": "Klasse A (Tiefenbrand)",
+  "classB": "Klasse B",
+  "classC": "Klasse C",
+  "gasAgent": "Löschgas",
+  "designConcentration": "Auslegungskonzentration (%)",
+  "dischargeDuration": "Austrittszeit",
+  "nozzleDiameter": "Düsendurchmesser",
+  "automaticNozzle": "Automatisch (flächen-/volumenbasiert)",
+  "roomDimensions": "Raummaße",
+  "directVolume": "Direkte Volumeneingabe",
+  "gasRoomTab": "Raum",
+  "gasPrintingTab": "Druckmaschine",
+  "gasPanelTab": "Im Schaltschrank",
+  "machineType": "Maschinentyp",
+  "inkSolventType": "Tinte / Lösungsmitteltyp",
+  "measureCabinet": "Schrank ausmessen",
+  "unitCabinetVolume": "Schrankvolumen je Einheit",
+  "printingUnitCount": "Anzahl der Druckeinheiten",
+  "agentPerUnit": "Löschmittel je Einheit",
+  "totalAgent": "Gesamtmenge des Löschmittels",
+  "backupCylinderCount": "Anzahl Reserveflaschen",
+  "totalCylinders": "Gesamtzahl Flaschen (Haupt + Reserve)",
+  "cleanAgent": "Sauberes Löschmittel",
+  "panelDimensions": "Schaltschrankmaße",
+  "panelCabinetVolume": "Schaltschrankvolumen",
+  "standard": "Norm",
+  "certification": "Zertifizierung",
+  "maximumTubingLength": "Maximale Schlauchlänge",
+  "estimatedAgentAmount": "Geschätzte Löschmittelmenge",
+  "buildingDimensions": "Gebäudeabmessungen",
+  "buildingActivity": "Gebäudenutzung",
+  "activitySearch": "Nutzungsart suchen…",
+  "advancedDesignOptions": "Erweiterte Auslegungsoptionen",
+  "pipeMaterial": "Rohrmaterial",
+  "spPipeGalvanizedSteel": "Verzinkter Stahl (Sch.40)",
+  "spPipeBlackCarbonSteelWelded": "Schwarzer Kohlenstoffstahl — geschweißt",
+  "spPipeCopper": "Kupferrohr",
+  "spPipeStainlessSteel": "Edelstahl",
+  "spPipeCpvcPlastic": "CPVC-Kunststoffrohr",
+  "sprinklerType": "Sprinklertyp (K-Faktor)",
+  "installationClassPump": "Anlagenklasse / Pumpenredundanz",
+  "dryPipeSystem": "Trockenrohrsystem (frostgefährdete Bereiche)",
+  "rackStorage": "Regal- / Palettenlagerung — In-Rack-Sprinkler (Vorplanung)",
+  "rackLevels": "Regalebenen (In-Rack-Ebenen)",
+  "foamSystem": "Schaumlöschanlage",
+  "addFoamSystem": "Schaumlöschanlage hinzufügen (EN 13565-2)",
+  "flammableLiquidCategory": "Kategorie der brennbaren Flüssigkeit",
+  "hydrocarbon": "Kohlenwasserstoff (B1)",
+  "polarSolvent": "Polar-Lösemittel (B2)",
+  "foamConcentrateType": "Schaummittelkonzentrat",
+  "foamType": "Schaumtyp",
+  "minimumApplicationTime": "Mindest-Anwendungsdauer",
+  "ceilingSuspended": "Abgehängte Decke",
+  "suspendedCeilingExists": "Abgehängte Decke vorhanden (Hohlraum)",
+  "voidDepth": "Hohlraumtiefe (cm)",
+  "building": "Gebäude",
+  "electricalPanel": "Schaltschrank",
+  "fuelOrStorage": "Brennstoff / Lager",
+  "buildingUseType": "Gebäude- / Nutzungsart",
+  "chooseBuildingUseType": "Gebäude- / Nutzungsart auswählen",
+  "referenceDensity": "Referenz-Brandlastdichte",
+  "growthRate": "Brandwachstumsrate",
+  "growthRateVerySlow": "Sehr Langsam",
+  "growthRateSlow": "Langsam",
+  "growthRateMedium": "Mittel",
+  "growthRateFast": "Schnell",
+  "growthRateVeryFast": "Sehr Schnell",
+  "floorArea": "Geschossfläche A (m²)",
+  "cabinetNozzlePressure": "Druck am Wandhydranten (mind. 4 bar)",
+  "combustibleMaterials": "Brennbare Materialien",
+  "addMaterial": "Material hinzufügen",
+  "woodTimber": "Holz / Bauholz",
+  "savedValues": "Gespeicherte Werte",
+  "noSavedCalculationResult": "Für dieses Projekt ist kein gespeichertes Berechnungsergebnis vorhanden.",
+  "apiKeyEnter": "Gemini-API-Schlüssel eingeben",
+  "searchBuildingTypes": "Gebäudearten suchen…",
+  "material": "Material",
+  "massKg": "Masse (kg)",
+  "netCalorificValue": "Heizwert (MJ/kg)",
+  "capacityTank": "Kapazität / Tank",
+  "unit": "Einheit",
+  "quantity": "Anzahl",
+  "standardNumber": "Normnummer *",
+  "standardNumberExample": "z. B. EN 12345",
+  "description": "Beschreibung *",
+  "shortDescriptionHint": "Kurze Beschreibung der Norm…",
+  "topicKeyword": "Thema oder Stichwort",
+  "topicKeywordExample": "z. B. Rauchschürze, Bürosprinkler…",
+  "questionHint": "Frage eingeben…",
+  "searchActivity": "Nutzungsarten suchen…",
+  "unitWidth": "B (m)",
+  "unitLength": "L (m)",
+  "unitHeight": "H (m)",
+  "searchMaterials": "Materialien suchen…",
+  "solid": "Feststoffe",
+  "liquid": "Flüssigkeiten",
+  "gas": "Gase",
+  "other": "Sonstiges",
+  "lowHazardAppendix": "Geringe Gefahr (Anhang 1/A)",
+  "ordinaryHazardAppendix": "Mittlere Gefahr (Anhang 1/B)",
+  "highHazardAppendix": "Hohe Gefahr (Anhang 1/C)",
+  "unclassified": "Nicht klassifiziert",
+  "materialGroupCount": "{category} · {count} Materialien",
+  "materialWoodTimber": "Holz / Bauholz",
+  "materialPlywoodMdf": "Sperrholz / MDF",
+  "materialPaperCardboard": "Papier / Karton",
+  "materialCottonTextile": "Textilien (Baumwolle)",
+  "materialSyntheticTextile": "Textilien (Kunstfaser)",
+  "materialWool": "Wolle",
+  "materialClothing": "Kleidung",
+  "materialLeather": "Leder",
+  "materialPolyethylene": "Polyethylen (PE)",
+  "materialPolypropylene": "Polypropylen (PP)",
+  "materialRigidPvc": "PVC (hart)",
+  "materialFlexiblePvc": "PVC (flexibel/Kabel)",
+  "materialPolystyrene": "Polystyrol (PS)",
+  "materialEpsFoam": "EPS-Schaum",
+  "materialXpsFoam": "XPS-Schaum",
+  "materialAbsPlastic": "ABS-Kunststoff",
+  "materialPmma": "PMMA (Acrylglas)",
+  "materialEpoxyResin": "Epoxidharz",
+  "materialPolyesterResin": "Polyesterharz (GFK/CFK)",
+  "materialRigidPolyurethaneFoam": "Polyurethanschaum (hart)",
+  "materialFlexiblePolyurethaneFoam": "Polyurethanschaum (flexibel)",
+  "materialNaturalRubber": "Kautschuk (Natur)",
+  "materialVehicleTire": "Reifen (Fahrzeug)",
+  "materialGasoline": "Benzin",
+  "materialDiesel": "Diesel",
+  "materialLpg": "LPG",
+  "materialPropane": "Propan",
+  "materialNaturalGasCng": "Erdgas (CNG)",
+  "materialMethanol": "Methanol",
+  "materialEthanol": "Ethanol",
+  "materialAcetoneSolvent": "Aceton / Lösemittel (allgemein)",
+  "materialSolventBasedPaint": "Farbe / Lack (lösemittelhaltig)",
+  "materialAsphaltBitumen": "Asphalt / Bitumen",
+  "materialCoal": "Kohle",
+  "materialMineralTransformerOil": "Transformatorenöl (mineralisch)",
+  "materialHydraulicOil": "Hydrauliköl",
+  "materialPvcCable": "Elektrokabel (PVC)",
+  "materialXlpeCable": "Elektrokabel (XLPE)",
+  "materialLithiumIonBattery": "Li-Ionen-Batterie",
+  "materialMixedFurniture": "Möbel (gemischt)",
+  "materialOtherManual": "Sonstiges (manuell)",
+  "@materialGroupCount": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fireLoadFormulaInfo": "q = (m × H) / A\nm = Masse des brennbaren Materials (kg)  ·  H = NCV (MJ/kg)  ·  A = Grundfläche (m²)",
+  "panelInnerDimensions": "Innenmaße des Schaltschranks (cm)",
+  "panelWidth": "Breite",
+  "panelHeight": "Höhe",
+  "panelDepth": "Tiefe",
+  "cableFillRatio": "Kabelfüllgrad: % {value}",
+  "fuelStorageInstructions": "Geben Sie für jeden Tanktyp die Menge und Kapazität ein.\nFür LPG können Sie Tonnen verwenden, für Flüssigbrennstoffe m³ oder Tonnen.\nDie Auffangwannen-/Beckenfläche ist für die Brandlastdichte optional.",
+  "fuelChemicalTanks": "Kraftstoff-/Chemikalientanks",
+  "totalApproxMass": "Ungefähre Gesamtmasse: {value} t",
+  "bundPoolArea": "Auffangwannen-/Beckenfläche  (m²)  —  optional",
+  "fireLoadDensityIfEntered": "Wenn eingegeben, wird die Brandlastdichte (MJ/m²) berechnet.",
+  "ventilationLimitedQmaxInclude": "Lüftungsbegrenztes Q_max in die Berechnung einbeziehen (optional)",
+  "ventilationLimitedQmaxNote": "Hinweis: Die Standardberechnung verwendet nur das brennstoffflächenbegrenzte Q_max (RHRf×A); das öffnungsbegrenzte (Fenster/Tür) Q_max wird nicht berücksichtigt (EN 1991-1-2 Anhang E).",
+  "openingArea": "Öffnungsfläche (Fenster/Tür)  Aᵥ",
+  "openingHeight": "Öffnungshöhe  h_eq",
+  "openingAreaHeightExplanation": "Aᵥ: Gesamtfläche aller Fenster-/Türöffnungen im Raum  ·  h_eq: durchschnittliche Höhe dieser Öffnungen (NICHT die Raumhöhe).",
+  "ventilationQmaxFormulaNote": "Q̇ₘₐₓ,ᵥ ≈ 0,09×Aᵥ×√h_eq × Hu_Durchschnitt × 0,8  —  ungefährer Kawagoe-Lüftungsfaktor (Drysdale / SFPE); für die exakte Auslegung ist eine vollständige Öffnungsfaktorberechnung erforderlich.",
+  "totalFireEnergyLabel": "GESAMTE BRANDENERGIE",
+  "totalEnergy": "Gesamtenergie",
+  "totalEnergyGJ": "Gesamtenergie (GJ)",
+  "totalEnergyMWh": "Gesamtenergie (MWh)",
+  "totalEnergyGWh": "Gesamtenergie (GWh)",
+  "bundAreaIfEnteredNote": "Wenn die Auffangwannen-/Beckenfläche eingegeben wird, wird die Brandlastdichte (MJ/m²) berechnet.",
+  "calculationResultLabel": "BERECHNUNGSERGEBNIS",
+  "totalFireLoad": "Gesamtbrandlast",
+  "fireLoadDensityLabel": "Brandlastdichte  q",
+  "exceedsReferenceLabel": "^ +{value} MJ/m² — ÜBERSCHREITET Referenz",
+  "belowReferenceLabel": " {value} MJ/m² — Unter Referenz",
+  "fireGrowthTimeline": "Brandwachstumszeitplan (EN 1991-1-2 E.4)",
+  "growthPhaseEnd": "Ende der Wachstumsphase",
+  "decayPhaseStart": "Beginn der Abklingphase (% 70 Verbrauch)",
+  "totalFireDuration": "Gesamtbranddauer",
+  "peakHeatReleaseLabel": "Spitzen-Q̇: {value} MW  ·  Begrenzender Faktor: {factor}",
+  "limitingFactorFuelSurface": "Brennstofffläche (RHRf × A)",
+  "limitingFactorTotalEnergy": "Gesamtenergie (niedrige Brandlast)",
+  "limitingFactorVentilation": "Lüftung (Öffnung — näherungsweise)",
+  "extinguishingAgentCalcTitle": "Berechnung des Löschmittels",
+  "panelVolumeHeight": "Rauminnenhöhe (Schaltschrank): {value}",
+  "panelAgentRecommendation": "Für Schaltschränke wird FM-200 (HFC-227ea) oder Novec 1230 empfohlen — ISO 14520 / NFPA 2001.",
+  "extinguishingAgentLabel": "Löschmittel",
+  "altitudeCorrectionLabel": "Höhenkorrektur (ISO 14520-1 Anhang A)",
+  "altitudeLabel": "Höhe über NN (m)",
+  "requiredAgent": "Erforderliches Löschmittel",
+  "requiredAgentMass": "Erforderliche Löschmittelmasse",
+  "cylinderCountApprox": "Flaschenanzahl (80L/200bar≈16Nm³)",
+  "cylinderContainerCount": "Flaschen-/Behälteranzahl",
+  "portableExtinguisherTitle": "Tragbarer Feuerlöscher (TS 862-7 EN 3-7)",
+  "fireLoadSourcesFooter": "Quelle: EN 1991-1-2:2002 Anhang E · ISO 14520 · EN 12845 · TS 862-7 EN 3-7+A1",
+  "portableExtinguisherSourceFooter": "Quelle: TS 862-7 EN 3-7+A1 (2010) · BYKHY Artikel 94-96",
+  "fireCabinetSourceFooter": "Quelle: BYKHY Art. 91-93 · TS EN 671-1 · TS 9811",
+  "fireCabinetTitle": "Wandhydrant (BYKHY Art. 91-93 / TS EN 671-1)",
+  "fireCabinetTechSpecs": "DN25 (1\") halbstarre Schlauchhaspel · TS EN 671-1 · K=50\nQ = K × √P = 50 × √{p} bar = {flow} L/min\nPraktische Löschkapazität:\n  {capacity}",
+  "classACapacityPerCabinet": "Klasse A: 2,0 MW/Schrank",
+  "classBCapacityPerCabinet": "Klasse B: 0,6 MW/Schrank",
+  "hazardClassLabel": "Gefahrenklasse",
+  "hazardClassLow": "Niedrig",
+  "hazardClassMedium": "Mittel",
+  "hazardClassHigh": "Hoch",
+  "requiredCabinetCount": "Erforderliche Anzahl Wandhydranten",
+  "totalExtinguishingCapacityLabel": "Gesamtlöschkapazität",
+  "waterReserveVolumeLabel": "Wasserreservevolumen ({minutes} Min)",
+  "cabinetSufficientLabel": "{count} Wandhydrant(e) AUSREICHEND  —  Löschleistung {q} MW ≥ Brandlast {load} MW",
+  "cabinetInsufficientLabel": "{count} Wandhydrant(e) NICHT AUSREICHEND  —  Löschleistung {q} MW < Brandlast {load} MW (mind. {minNeeded} erforderlich)",
+  "roomHeightLabel": "Raumhöhe (m)",
+  "fireClassPanel": "Klasse B/C (Öl/Gas elektrischer Anlagen) — Pulver oder CO₂",
+  "fireClassGasStorage": "Klasse C (komprimiertes brennbares Gas) — ABC-Pulver, CO₂ oder Schaum",
+  "fireClassLiquidGasStorage": "Klasse B + Klasse C (Flüssig-/Gaskraftstoff) — ABC-Pulver oder Schaum",
+  "fireClassLiquidStorage": "Klasse B (brennbare Flüssigkeit) — ABC-Pulverlöscher oder Schaum",
+  "fireClassSolidLiquidStorage": "Klasse A + Klasse B (fester/flüssiger brennbarer Stoff) — ABC-Pulverlöscher",
+  "fireClassParking": "Klasse B (Flüssigkraftstoff) — ABC-Pulver oder Schaum",
+  "fireClassSolidDefault": "Klasse A (fester brennbarer Stoff) — ABC-Pulverlöscher oder Wasser",
+  "riskClassLow": "Niedriges Risiko  (≤ 200 MJ/m²)",
+  "riskClassMedium": "Mittleres Risiko  (200–600 MJ/m²)",
+  "riskClassHigh": "Hohes Risiko  (600–1200 MJ/m²)",
+  "riskClassVeryHigh": "Sehr hohes Risiko  (> 1200 MJ/m²)",
+  "loginServerUnreachable": "Verbindung zum Server nicht möglich. Überprüfen Sie Ihre Internetverbindung.",
+  "genericErrorWithDetail": "Fehler: {detail}",
+  "fireModuleSubscriptionMissing": "Sie haben kein aktives Abonnement für das Brandschutzmodul. Starten Sie ein Abonnement über Ihr Konto.\nVom Server erhaltene Berechtigungen: {perms}",
+  "loginFailed": "Anmeldung fehlgeschlagen",
+  "sessionNotFoundRelogin": "Sitzung nicht gefunden. Bitte melden Sie sich erneut an.",
+  "accountDeleteFailed": "Konto konnte nicht gelöscht werden.",
+  "enterPanelInnerDimensionsCm": "Geben Sie die vollständigen Innenmaße des Schaltschranks ein (cm).",
+  "addAtLeastOneFuelTank": "Fügen Sie mindestens einen Brennstofftank hinzu.",
+  "enterQuantityForFuel": "Geben Sie eine Menge für „{name}“ ein.",
+  "enterValidFloorAreaM2": "Geben Sie eine gültige Geschossfläche ein (m²).",
+  "materialMassMissing": "Für „{name}“ fehlt die Masse.",
+  "materialNcvMissing": "Für „{name}“ fehlt der Heizwert.",
+  "calculateFireLoadFirst": "Berechnen Sie zuerst die Brandlast.",
+  "enterValidArea": "Geben Sie eine gültige Fläche ein.",
+  "enterRoomHeightM": "Geben Sie die Raumhöhe ein (m).",
+  "enterHoodLengthWidthCm": "Geben Sie Länge und Breite der Dunstabzugshaube ein (cm).",
+  "enterRoomDimensionsFullyM": "Geben Sie die vollständigen Raummaße ein (m).",
+  "enterNetProtectedVolumeM3": "Geben Sie das Netto-Schutzvolumen ein (m³).",
+  "enterValidConcentrationPercent": "Geben Sie einen gültigen Konzentrationswert ein (0–100 %).",
+  "enterValidUnitCount1to50": "Geben Sie eine gültige Anzahl an Einheiten ein (1–50).",
+  "enterMachineCabinDimensionsFullyM": "Geben Sie die vollständigen Maße des Maschinengehäuses ein (m).",
+  "enterUnitCabinVolumeM3": "Geben Sie das Volumen des Einheitengehäuses ein (m³).",
+  "enterPanelCabinDimensionsFullyM": "Geben Sie die vollständigen Maße des Schaltschranks/Gehäuses ein (m).",
+  "enterPanelCabinVolumeM3": "Geben Sie das Volumen des Schaltschranks/Gehäuses ein (m³).",
+  "enterRoomAreaM2": "Geben Sie die Raumfläche ein (m²).",
+  "enterCeilingHeightM": "Geben Sie die Deckenhöhe ein (m).",
+  "enterDesignHrrKw": "Geben Sie die Bemessungs-HRR ein (kW).",
+  "smokeLayerHeightRangeError": "Basishöhe der Rauchschicht: 0 < z < H",
+  "enterInstalledCapacityKwh": "Geben Sie die installierte Kapazität ein (kWh).",
+  "enterProtectionAreaM2": "Geben Sie die Schutzfläche ein (m²).",
+  "enterApplicationDurationMin": "Geben Sie die Anwendungsdauer ein (min).",
+  "enterVehicleBatteryCapacityKwh": "Geben Sie die Fahrzeugbatteriekapazität ein (kWh).",
+  "enterVehicleCount": "Geben Sie die Anzahl der Fahrzeuge ein.",
+  "enterValidBuildingWidthM": "Geben Sie eine gültige Gebäudebreite ein (m).",
+  "enterValidBuildingLengthM": "Geben Sie eine gültige Gebäudelänge ein (m).",
+  "selectBuildingActivity": "Bitte wählen Sie die Gebäudenutzung aus.",
+  "enterCeilingHeightSimpleM": "Geben Sie die Deckenhöhe ein (m).",
+  "hoodHideComparison": "Vergleich ausblenden",
+  "hoodCompareAgents": "Löschmittel vergleichen",
+  "hoodTableAgentCol": "Löschmittel",
+  "hoodTableEffectivenessCol": "Wirksamkeit",
+  "hoodColLowAbbr": "N",
+  "hoodColMediumAbbr": "M",
+  "hoodColHighAbbr": "H",
+  "hoodComparisonLegend": "N = Niedrig  ·  M = Mittel  ·  H = Hohe Gefährdungsklasse\nFarbige Spalte = berechnete Gefährdungsklasse",
+  "hoodResultTitleCaps": "LÖSCHAUSLEGUNG – ERGEBNIS",
+  "hoodNfpa96RequirementsTitle": "NFPA 96 – Zwingende Anforderungen",
+  "hoodReqFuelElectric": "Kraftstoff- & Stromabschaltung (§10.4): Bei Aktivierung des Systems müssen Kraftstoffzufuhr und Stromversorgung aller Wärmequellen automatisch unterbrochen werden. Manueller Reset erforderlich.",
+  "hoodReqManualPull": "Manuelle Auslösestation (§10.5): In 1067–1219 mm Höhe über dem Boden, min. 3 m – max. 6 m von der Haube entfernt, entlang des Fluchtwegs anzuordnen.",
+  "hoodReqAlarm": "Alarm (§10.6): Bei Systemaktivierung ist ein akustischer Alarm oder eine optische Anzeige zwingend erforderlich.",
+  "hoodReqFanMakeupAir": "Lüfter & Zuluft (§8.2.3 / §8.3.2): Der Abluftventilator läuft nach der Aktivierung weiter. Die Zuluft (Makeup Air) in die Haube wird bei Systemaktivierung abgeschaltet.",
+  "hoodReqClassKExtinguisher": "Feuerlöscher Klasse K (§10.10.2): Für Geräte mit pflanzlichem/tierischem Fett ist ein Feuerlöscher der Klasse K zwingend erforderlich.",
+  "hoodReqFilterDistance": "Filterabstand (§6.2.1): Mindestens 457 mm (18 in.) zwischen Filterunterkante und Kochfläche.{warning}",
+  "@hoodReqFilterDistance": {
+    "placeholders": {
+      "warning": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodFilterDistanceWarning": "Chargrill/Grill vorhanden → mindestens 1220 mm (4 ft) zwischen Filterunterkante und Kochfläche (NFPA 96 §6.2.1.2)",
+  "hoodReqMaintenance": "Wartung (§11.2.1): Wartung durch zertifizierten Techniker mindestens alle 6 Monate. Schmelzlotverbindungen (Fusible Links) werden alle 6 Monate ausgetauscht (§11.2.4).",
+  "hoodReqCleaningFrequency": "Reinigungshäufigkeit (Tabelle 11.4): {frequency}.",
+  "@hoodReqCleaningFrequency": {
+    "placeholders": {
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodCleaningFreqHighVolume": "Alle 3 Monate (Wok / Chargrill / großer Fritteuse)",
+  "hoodCleaningFreqLow": "Jährlich (geringes Volumen)",
+  "hoodCleaningFreqMedium": "Alle 6 Monate (mittleres Volumen)",
+  "hoodReqSimultaneousOperation": "Gleichzeitiger Betrieb (§10.3): Alle stationären Löschanlagen innerhalb einer Gefahrenzone müssen gleichzeitig auslösen.",
+  "hoodReqFryerDistance": "Fritteusenabstand (§12.1.2.4): Die Fritteuse muss horizontal mindestens 406 mm (16 in.) von offenen Flammenquellen entfernt sein. Bei Verwendung einer Prallplatte (Baffle) genügt eine Mindesthöhe von 203 mm (8 in.) (§12.1.2.5).{warning}",
+  "@hoodReqFryerDistance": {
+    "placeholders": {
+      "warning": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodFryerDistanceWarning": "Fritteuse vorhanden → muss horizontal mindestens 406 mm (16 in.) von offenen Flammenquellen entfernt positioniert werden (§12.1.2.4). Bei Verwendung einer Prallplatte (Baffle) genügt eine Mindesthöhe von 203 mm (8 in.) (§12.1.2.5).",
+  "hoodReqFryerHighTempLimiter": "Übertemperaturbegrenzer für Fritteusen (§12.2): Ein automatischer Temperaturbegrenzer ist bei Fritteusen zwingend erforderlich. Er schaltet die Wärmequelle automatisch ab, sobald die Temperatur 25,4 mm (1 in.) unter der Ölfläche 246 °C (475 °F) erreicht.",
+  "hoodReqHoodDuctClearance": "Haube-/Kanalabstände (§4.2.1): Mindestens 457 mm (18 in.) zu brennbaren Oberflächen, mindestens 76 mm (3 in.) zu bedingt brennbaren Oberflächen; zu nichtbrennbaren Oberflächen ist 0 mm Abstand zulässig.",
+  "hoodReqDuctSlope": "Kanalneigung (§7.1.4): Bei horizontaler Kanallänge ≤ 22,86 m (75 ft) ist ein Mindestgefälle von 2 % anzuwenden, bei > 22,86 m (75 ft) ein Mindestgefälle von 8 % (zur Ableitung von Fettablagerungen).",
+  "hoodReqDuctFireBarrier": "Feuerwiderstand der Kanaldurchführung (§7.7.2.1): Für Kanaldurchführungen: Gebäude < 4 Geschosse → mindestens 1-stündige Feuerwiderstandsklasse; Gebäude ≥ 4 Geschosse → mindestens 2-stündige Feuerwiderstandsklasse.",
+  "hoodNotesText": "NFPA 17A §7.3 — Anwendung {agent}.\nGefährdungsklasse: {hazardClass}  ·  Gerätepunktzahl: {score}  ·  Min. Auslösezeit: 30 s  ·  Filterfläche: {area} m².\nFür zusätzliche Kanäle/Abzüge ist eine zusätzliche Düsenberechnung erforderlich.",
+  "@hoodNotesText": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      },
+      "hazardClass": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "hoodAgentPotassiumCarbonateName": "Kaliumkarbonat",
+  "hoodAgentPotassiumAcetateName": "Kaliumacetat",
+  "hoodAgentPotassiumCitrateName": "Kaliumcitrat",
+  "hoodAgentSodiumBicarbonateName": "Natriumbicarbonat",
+  "hoodAgentPotassiumCarbonateDesc": "Am weitesten verbreitet. Wirksam gegen Fett-/Oberflächenbrände.",
+  "hoodAgentPotassiumAcetateDesc": "Hocheffizient. Ansul R-102, Amerex B500 Systeme.",
+  "hoodAgentPotassiumCitrateDesc": "Verträglich mit Edelstahlgeräten. Geringes Korrosionsrisiko.",
+  "hoodAgentSodiumBicarbonateDesc": "Ältere Generation. Kostengünstig, begrenzte Wirksamkeit.",
+  "hoodAgentPotassiumCarbonateReco": "Universell einsetzbar. Für jede Gefährdungsklasse geeignet.",
+  "hoodAgentPotassiumAcetateReco": "Erste Wahl bei hoher Gefährdung. Beste Löschleistung.",
+  "hoodAgentPotassiumCitrateReco": "Edelstahlküchen / Lebensmittelindustrie. Niedrige–mittlere Gefährdung.",
+  "hoodAgentSodiumBicarbonateReco": "Nur für geringe Gefährdung. Bei großvolumigen Fettbränden unzureichend.",
+  "hoodStdNfpa96Desc": "Lüftungskontrolle und Brandschutz für gewerbliche Kochbetriebe. Haubenauslegung, Filterabstände, Anforderungen an Löschanlagen, manuelle Auslösestation, Kraftstoffabschaltung, Wartungs- und Reinigungsintervalle.",
+  "hoodStdNfpa17aDesc": "Norm für nasschemische Löschanlagen. Auslösezeit, Löschmittelmenge, Düsenabstände.",
+  "hoodStdTsEn15751Desc": "Europäische Norm — Löschanlagen für gewerbliche Kochgeräte.",
+  "hoodStdUl300Desc": "USA — Produktzulassungsnorm für Küchenlöschanlagen (Ansul R-102, Amerex B500 usw.).",
+  "hoodStdTsEn1825Desc": "Fettfiltersysteme und Brandschutzklappen für Küchenhauben.",
+  "calculationResultCaps": "BERECHNUNGSERGEBNIS",
+  "gasInfoBoxText": "TS EN 15004-1:2019 · NFPA 2001:2022\nVorauslegungswerkzeug für die Löschmittelmenge einer Gaslöschanlage mit Vollflutung.",
+  "gasNetVolumeHint": "Netto-Schutzvolumen — bei vorhandenen fest eingebauten Möbeln/Geräten vom Bruttovolumen abziehen.",
+  "gasMinDesignTempHint": "Minimale Lufttemperatur im Raum — TS EN 15004-1 §A.2  (Standard: 20 °C)",
+  "gasClassAMaterial1": "PMMA (Polymethylmethacrylat / Plexiglas) ",
+  "gasClassAMaterial2": "PP (Polypropylen)",
+  "gasClassAMaterial3": "ABS (Acrylnitril-Butadien-Styrol) ",
+  "gasClassAMaterial4": "Holz, Möbel und Polstermaterialien",
+  "gasClassAMaterial5": "Papier und Karton",
+  "gasClassAMaterial6": "Textilien / Stoffe",
+  "gasClassAMaterial7": "Kautschuk (Gummi)",
+  "gasClassAMaterial8": "Weitere Thermoplaste (PE, PS, PVC usw.)",
+  "gasClassASource": "TS EN 15004-1:2019 Anhang C.6.3.2 (Prüfbrennstoff-Plattenanordnung aus Polymer) · ISO 14520-1 Definition Klasse A (allgemeine Beispiele)",
+  "gasClassADTitle": "Higher Hazard Class A  —  Brände mit hoher Gefährdung",
+  "gasClassADMaterial1": "Schüttgut-/gestapelte Kunststofflagerung (Regal/Palette, tief liegend — unterscheidet sich von einzelnen/offenen Kunststoffteilen der Oberflächenklasse A)",
+  "gasClassADMaterial2": "Dichte Kabelbündel > 100 mm",
+  "gasClassADMaterial3": "Kabelpritschen-Füllgrad > 20 %",
+  "gasClassADMaterial4": "Abstand der Kabelpritschen < 250 mm",
+  "gasClassADMaterial5": "Unter Spannung stehende Geräte > 5 kW während der Löschung",
+  "gasClassADMaterial6": "Telekommunikation",
+  "gasClassADMaterial7": "Leitwarten",
+  "gasClassADMaterial8": "Bereiche mit dichter Elektro-/Elektronikausstattung",
+  "gasClassADSource": "TS EN 15004-1:2019 Tabelle 4",
+  "gasClassBTitle": "Class B  —  Brände von Flüssigkeiten und schmelzbaren Feststoffen",
+  "gasClassBMaterial1": "Benzin, Diesel, Heizöl",
+  "gasClassBMaterial2": "Lösungsmittel, Alkohol, Aceton",
+  "gasClassBMaterial3": "Ölgefüllter Transformator",
+  "gasClassBMaterial4": "Farbe, Lack, Harz",
+  "gasClassBMaterial5": "Schmelzbare Feststoffe wie Kerzenwachs, Paraffin",
+  "gasClassCMaterial1": "Elektrische Schaltschränke (lokal)",
+  "gasClassCMaterial2": "Motorsteuergeräte",
+  "gasClassCMaterial3": "USV- und Batteriesysteme",
+  "gasClassCMaterial4": "Beleuchtungs- und Stromverteilungsanlagen",
+  "gasClassCSource": "Für Telekommunikation / Leitwarten / dichte Verkabelung → Higher Hazard Class A\nISO 3941 / NFPA 2001",
+  "gasStandardDefaultInfo": "Standardvorgabe — {className}: {percent} %  ·  Zylinder: {capacity} {unit}",
+  "@gasStandardDefaultInfo": {
+    "placeholders": {
+      "className": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      },
+      "capacity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "gasConcentrationHint": "Sie können diesen Wert anpassen, wenn Sie einen Wert außerhalb des Geltungsbereichs von TS EN 15004-1 verwenden. Bei Auswahl von Löschmittel/Klasse wird er automatisch aktualisiert.",
+  "gasDischargeDurationHintClassB": "Klasse B: max. 10 s  (TS EN 15004-1 §8.3)  —  für die Rohrauslegung erforderlich",
+  "gasDischargeDurationHintOther": "Klasse A/A(Tief)/C: max. 60 s  (TS EN 15004-1 §8.3)  —  für die Rohrauslegung erforderlich",
+  "gasNozzleFlowRange": "{mm} mm  ({min}–{max} kg/s)",
+  "@gasNozzleFlowRange": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzleHint": "Wird ein Düsendurchmesser gewählt, erfolgt die Berechnung massenstrombasiert; im Automatikmodus gilt die Flächen-/Volumenregel.",
+  "gasRequiredAgentVolume": "Erforderliches Löschmittelvolumen",
+  "gasSafetyMarginSuffix": "  (+10 % Zuschlag)",
+  "gasExcludingMarginLabel": "Berechnung ohne Zuschlag",
+  "gasDischargeRequirementsTitle": "Anforderungen an die Auslösezeit — TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1",
+  "gasDischargeReqInert": "• Max. Auslösezeit: ≤ 60 s  (NFPA 2001:2022 §6.7.1)\n• Min. Haltezeit (Soak): ≥ 10 Minuten  (NFPA 2001:2022 §6.7.4)\n• Rohrströmungsgeschwindigkeit: vollständige hydraulische Berechnung erforderlich (TS EN 15004-1 Anhang E)\n• Zylinderlagertemperatur: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)",
+  "gasDischargeReqCo2": "• Max. Auslösezeit: ≤ 60 s  (TS EN 15004-2 §8.3 / NFPA 12 §5.4.1)\n• Min. Haltezeit (Soak): ≥ 20 Minuten\n• NUR für Räume ohne Personenbelegung — Evakuierung zwingend erforderlich",
+  "gasMaxDischargeClassB": "10 s  (Klasse B)",
+  "gasMaxDischargeClassOther": "60 s  (Klasse A/C)",
+  "gasDischargeReqFm200": "• Max. Auslösezeit: ≤ {maxDischarge}  (EN 15004-5:2020 §8.3 / NFPA 2001:2022 §6.7.1)\n• Min. Haltezeit (Soak): ≥ 10 Minuten  (NFPA 2001:2022 §6.7.4)\n• Zylinderlagertemperatur: −20 °C – +54 °C\n• Spezifisches Volumen: S = 0,1269 + 0,000513×T m³/kg  (EN 15004-5 §6.3 Tabelle 3)",
+  "@gasDischargeReqFm200": {
+    "placeholders": {
+      "maxDischarge": {
+        "type": "String"
+      }
+    }
+  },
+  "gasDischargeReqDefault": "• Max. Auslösezeit: ≤ {maxDischarge}  (TS EN 15004-1:2019 §8.3 / NFPA 2001:2022 §6.7.1)\n• Min. Haltezeit (Soak): ≥ 10 Minuten  (NFPA 2001:2022 §6.7.4)\n• Zylinderlagertemperatur: −20 °C – +54 °C  (NFPA 2001:2022 §4.4.1)",
+  "@gasDischargeReqDefault": {
+    "placeholders": {
+      "maxDischarge": {
+        "type": "String"
+      }
+    }
+  },
+  "gasIg01SpecsTitle": "IG-01 Zylindereigenschaften  —  TS EN 15004-7:2009 §6.1",
+  "gasTablePropertyHeader": "Eigenschaft",
+  "gasFillPressureLabel": "Fülldruck @15 °C (bar)",
+  "gasMaxOperatingPressureLabel": "Max. Betriebsdruck @50 °C (bar)",
+  "gasOverpressurizationLabel": "Überdruckbeaufschlagung",
+  "gasNotApplicable": "Nicht zutreffend",
+  "gasIg01Note": "IG-01-Zylinder werden nicht überdruckbeaufschlagt (TS EN 15004-7 §6.2). Bei der Auslegungstemperatur gilt die Formel S = 0,56119 + 0,002055×T m³/kg.",
+  "gasFm200SpecsTitle": "HFC-227ea Zylindereigenschaften  —  EN 15004-5:2020 §6.1",
+  "gasMaxFillDensityLabel": "Max. Fülldichte (kg/m³)",
+  "gasN2FillingPressureLabel": "N₂-Überdruckfüllung @21 °C (bar)",
+  "gasFm200Note": "Bei Überschreitung der maximalen Fülldichte führen bereits geringe Temperaturanstiege zu sehr hohem Druck; die Zylinderintegrität wird gefährdet. (EN 15004-5:2020 §6.1)",
+  "gasNfpa2001RequirementsTitle": "NFPA 2001:2022 – Zwingende Anforderungen",
+  "gasReqPreDischargeAlarm": "§6.6.1 — Voralarm: In belegten Bereichen muss vor der Löschmittelauslösung ein akustisch/optisches Warnsignal ertönen; es muss ausreichend Zeit für die Evakuierung eingeräumt werden.",
+  "gasReqAbortSwitch": "§6.6.6 — Abbruchschalter: In belegten Bereichen ist ein manueller Abbruchschalter zwingend erforderlich; er verzögert das System um mindestens 30 Sekunden.",
+  "gasReqVolumeIntegrity": "§6.5.4 — Raumdichtheit: Der Raum muss während der Haltezeit ausreichend dicht sein, um die Auslegungskonzentration zu halten. Ein Door-Fan-Test wird empfohlen.",
+  "gasReqCylinderStorage": "§4.4.1 — Zylinderlagerung: Aufbewahrung zwischen −20 °C und +54 °C; der Fülldruck muss der Herstellerliste entsprechen.",
+  "gasReqPostDischargeVentilation": "§6.9 — Belüftung nach der Auslösung: Vor dem Betreten muss zwangsbelüftet werden, bis der O₂-Gehalt ≥ 19,5 % erreicht.",
+  "gasReqInterlockedSystems": "§6.1.2 — Verriegelte Systeme: HVAC und alle Zuluftklappen müssen bei Auslösung automatisch schließen.",
+  "gasReqSafetyMargin": "§5.4.1.3 — Sicherheitszuschlag: Ein Sicherheitszuschlag von mindestens 10 % ist zwingend erforderlich; in dieser Berechnung wurde er {status}",
+  "@gasReqSafetyMargin": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasSafetyMarginApplied": "berücksichtigt.",
+  "gasSafetyMarginNotApplied": "⚠ nicht berücksichtigt!",
+  "gasReqPeriodicInspection": "§7.2.2 — Regelmäßige Prüfung: Zylinder müssen jährlich durch Gewichts-/Druckkontrolle geprüft werden; die Halogenkohlenwasserstoff-Füllmenge ist durch Steigrohrmessung zu verifizieren.",
+  "gasMainPipeSizeTitle": "Rohrdurchmesser — Hauptleitung",
+  "gasMinInnerDiameterLabel": "Min. Innendurchmesser",
+  "gasStandardDnLabel": "Standard-DN",
+  "gasDnOver150": "DN > 150",
+  "gasVolumetricFlowLabel": "Volumenstrom (Q): {ls} l/s  ({m3s} m³/s)",
+  "@gasVolumetricFlowLabel": {
+    "placeholders": {
+      "ls": {
+        "type": "String"
+      },
+      "m3s": {
+        "type": "String"
+      }
+    }
+  },
+  "gasPipeActualSpeedLabel": "Tatsächliche Geschwindigkeit bei DN {dn}: {speed} m/s{status}",
+  "@gasPipeActualSpeedLabel": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      },
+      "speed": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasSpeedOkSuffix": " ✓",
+  "gasSpeedOverLimitSuffix": "  ⚠ über 30 m/s",
+  "gasMainPipeSizingNote": "Die Hauptleitung ist eine Vorauslegung — Q = Löschmittelmenge ÷ Auslösezeit. Verteilerrohre und Düsenleitungen sind separat zu berechnen. Für die endgültige Auslegung eine vollständige Strömungsberechnung nach TS EN 15004-1 Anhang E durchführen.",
+  "gasNozzleDistributionTitle": "Düsen & Verteilerrohr",
+  "gasNozzleCountLabel": "Düsenanzahl",
+  "gasNozzleAltMassBased": "{mm} mm Düse\n(massenstrombasiert)",
+  "@gasNozzleAltMassBased": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzleAltAreaBased": "max. 50 m²/Düse\n(flächenbasiert)",
+  "gasNozzleAltVolumeBased": "max. 150 m³/Düse\n(volumenbasiert — Schätzwert)",
+  "gasBranchPipeLabel": "Verteilerrohr",
+  "gasBranchMinInnerDiameter": "min. Innendurchmesser:\n{mm} mm",
+  "@gasBranchMinInnerDiameter": {
+    "placeholders": {
+      "mm": {
+        "type": "String"
+      }
+    }
+  },
+  "gasFlowPerNozzleLabel": "Je Düse: {flow} kg/s  (zulässig: {min}–{max} kg/s)  {status}",
+  "@gasFlowPerNozzleLabel": {
+    "placeholders": {
+      "flow": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasFlowOk": "✓",
+  "gasFlowOutOfRange": "⚠ Außerhalb des Bereichs — anderen Durchmesser wählen",
+  "gasBranchSpeedLabel": "Verteilergeschwindigkeit: {speed} m/s  (Q je Düse: {ls} l/s){status}",
+  "@gasBranchSpeedLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      },
+      "ls": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gasBranchSpeedWarning": "  ⚠ über 30 m/s!",
+  "gasBranchSpeedOk": "  ✓",
+  "gasEstimatedPipeLengthLabel": "Geschätzte Rohrlänge: ≈ {m} m (Hauptleitung + Verteilung + Düsensteigleitungen)",
+  "@gasEstimatedPipeLengthLabel": {
+    "placeholders": {
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNozzlePlacementNote": "Düsenanordnung: gemäß den Anforderungen der Herstellerliste nach TS EN 15004-1 / NFPA 2001 auf Deckenebene, gleichmäßig verteilt anzuordnen.\nDie Rohrlänge ist ein Schätzwert — die tatsächliche Projektlänge hängt vom Raumlayout ab.",
+  "gasSourceFooter": "Quelle: TS EN 15004-1:2019 · NFPA 2001:2022 · NFPA 12:2022",
+  "baskiOffsetName": "Offsetdruck",
+  "baskiFlexoName": "Flexodruck",
+  "baskiGravureName": "Tiefdruck / Rotogravur",
+  "baskiUvOffsetName": "UV-Offset / UV-Flexo",
+  "baskiDigitalName": "Digital (Inkjet/Toner)",
+  "baskiPadName": "Tampondruck",
+  "baskiOffsetDesc": "Nassoffset — IPA-/alkoholbasierte Feuchtlösung",
+  "baskiFlexoDesc": "Lösungsmittel- oder wasserbasierte Farbe",
+  "baskiGravureDesc": "Toluol-/Ethylacetat-basiert — hohes Lösungsmittelrisiko",
+  "baskiUvOffsetDesc": "UV-Härtung — photoinitiatorbasiert",
+  "baskiDigitalDesc": "Flüssige Tinte oder Toner — geringer Lösungsmittelanteil",
+  "baskiPadDesc": "Lösungsmittelbasierte Farbe — geschlossener Napf",
+  "baskiIpaName": "IPA (Isopropylalkohol)",
+  "baskiIpaDesc": "Feuchtlösung im Offsetdruck — Explosionsrisiko",
+  "baskiTolueneName": "Toluol",
+  "baskiTolueneDesc": "Tiefdruck — hohes Risiko, GWP 0",
+  "baskiEthylAcetateName": "Ethylacetat",
+  "baskiEthylAcetateDesc": "Flexo/Tiefdruck — niedriger Flammpunkt",
+  "baskiMethanolName": "Methanol",
+  "baskiMethanolDesc": "Holzbearbeitung und Sonderanwendungen",
+  "baskiNPropylName": "n-Propylalkohol",
+  "baskiNPropylDesc": "Zusätzliches Lösungsmittel für UV-Offset",
+  "baskiSolventMixName": "Lösungsmittelgemisch (allgemein)",
+  "baskiSolventMixDesc": "Nach Herstellerdatenblatt bestimmen",
+  "baskiWaterBasedInkName": "Wasserbasierte Farbe",
+  "baskiWaterBasedInkDesc": "Kein brennbares Lösungsmittel — Anwendung Klasse A",
+  "baskiInfoBoxText": "NFPA 34:2024 §10.6 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019\nVorauslegungswerkzeug für die Gaslöschung von Druckmaschinengehäusen.",
+  "baskiIgnitionPointLabel": "Flammpunkt: {temp} °C  ·  {desc}",
+  "@baskiIgnitionPointLabel": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiUnitCountHint": "Für jede Einheit gleichen Volumens wird ein separater Zylinder berechnet. Bei unterschiedlichen Volumina mehrere Berechnungen durchführen.",
+  "baskiLengthDepthLabel": "Länge / Tiefe",
+  "baskiCabinetDimensionsHint": "Innenmaße eines Einheitengehäuses — Netto-Innenvolumen, nicht brutto.",
+  "baskiUnitNetVolumeLabel": "Netto-Volumen des Einheitengehäuses",
+  "baskiMinTempHint": "Minimale Temperatur im Maschinengehäuse — TS EN 15004-1 §A.2 (Standard: 20 °C)",
+  "baskiLocalApplicationLabel": "Lokale Anwendung +30 % (NFPA 2001 §6.4) — für offene Maschinengehäuse",
+  "baskiDischargeModeTitle": "Auslösemodus (mehrere Einheiten)",
+  "baskiSimultaneousLabel": "Gleichzeitig (Gesamt)",
+  "baskiSelectiveValveLabel": "Selektivventil (unabhängig)",
+  "baskiSimultaneousHint": "Wählen Sie dies, wenn alle Einheiten in einem gemeinsamen Bereich gleichzeitig auslösen können — die Hauptversorgung entspricht dem Gesamtbedarf aller Einheiten.",
+  "baskiSelectiveValveHint": "Wählen Sie dies, wenn jede Einheit über eine unabhängige Erkennung und ein Selektivventil verfügt — die Hauptversorgung wird nur für den Bedarf einer einzelnen Einheit ausgelegt (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).",
+  "baskiBackupSupplyLabel": "Reserve-(100 %-)Versorgungsgruppe (NFPA 12 §4.5.3) — empfohlen für ständig belegte Bereiche",
+  "baskiClassAPlain": "Klasse A",
+  "baskiClassSummaryLabel": "Brandklasse: {cls}  ·  Standardmin.: {value} %  ·  NOAEL: {noael}",
+  "@baskiClassSummaryLabel": {
+    "placeholders": {
+      "cls": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiDischargeHint": "Klasse-B-Maschinen: max. 10 s  ·  Klasse-A-Maschinen: max. 60 s  (TS EN 15004-1 §8.3)",
+  "baskiMainSupplySimultaneous": "Hauptversorgungsbedarf (gleichzeitig — gesamt)",
+  "baskiMainSupplySelective": "Hauptversorgungsbedarf (Selektivventil — einzelne Einheit)",
+  "baskiMainSupplyCylinderCount": "Anzahl Hauptversorgungszylinder ({capacity} {unit}/Zylinder)",
+  "@baskiMainSupplyCylinderCount": {
+    "placeholders": {
+      "capacity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiSelectiveValveInfo": "Auslegung mit Selektivventil: Jedes Einheitengehäuse muss über einen unabhängigen Erkennungsstromkreis verfügen; es öffnet nur das Ventil der Einheit, in der ein Brand erkannt wird. Die Hauptversorgung ist für den Bedarf einer einzelnen Einheit ausgelegt — bei Risiko gleichzeitiger Brände in mehreren Einheiten ist \"Gleichzeitig\" zu wählen (NFPA 2001 §7.5.2 / NFPA 12 §4.3.4.2).",
+  "baskiLocalApplicationInfo": "Es wurde ein Faktor für lokale Anwendung von +30 % angewendet (NFPA 2001 §6.4).\nGilt für offene Maschinen oder nicht vollständig geschlossene Gehäuse.",
+  "baskiApplicationNotesTitle": "Anwendungshinweise",
+  "baskiAppNotesBody": "• Jedes Druckwerkgehäuse muss einzeln geschützt werden.\n• Die Düsenanordnung innerhalb der Maschine unterliegt der Herstellerfreigabe.\n• Die Farb-/Lösungsmittelzufuhr muss vor der Auslösung automatisch abgeschaltet werden.\n• {ignitionNote}\n• Die Zylinderanzahl hängt vom gewählten Auslösemodus (gleichzeitig/Selektivventil) und der Entscheidung zur Reserveversorgung ab — sie ist herstellerspezifisch endgültig festzulegen.",
+  "@baskiAppNotesBody": {
+    "placeholders": {
+      "ignitionNote": {
+        "type": "String"
+      }
+    }
+  },
+  "baskiIgnitionNoteAtex": "Flammpunkt < 23 °C — eine ATEX-Zonenbewertung ist zwingend erforderlich.",
+  "baskiIgnitionNoteExplosionRisk": "Für diesen Lösungsmitteltyp ist eine Explosionsrisikoanalyse durchzuführen.",
+  "baskiSourceFooter": "Quelle: NFPA 34:2024 §10 · NFPA 2001:2022 · NFPA 12:2022 · TS EN 15004-1:2019 · EN 1010-2",
+  "panoAgentGroupClean": "Sauberlöschmittel (FK-5-1-12(Novec 1230)/HFC-227ea)",
+  "panoAgentGroupCo2": "CO₂ (Kohlendioxid)",
+  "panoDlpName": "DLP — Direkt-Niederdruck",
+  "panoIlpName": "ILP — Indirekt-Niederdruck",
+  "panoDhpName": "DHP — Direkt-Hochdruck (CO₂)",
+  "panoIhpName": "IHP — Indirekt-Hochdruck (CO₂)",
+  "panoDlpDesarjNotu": "Die Tubing-Leitung dient zugleich der Erkennung und der direkten Löschmittelabgabe — keine Berechnung erforderlich.",
+  "panoIlpDesarjNotu": "Das Tubing übernimmt nur die Erkennung; die Abgabe erfolgt über separate Düse(n).",
+  "panoDhpDesarjNotu": "Feste Auslösezeit ≈ 60 s @ 60 bar — keine Benutzereingabe erforderlich.",
+  "panoIhpDesarjNotu": "Die Auslösezeit ist normativ festgelegt; siehe die vom Hersteller freigegebene Tabelle.",
+  "panoDlpAciklama": "Der am häufigsten verwendete Typ der Schaltschrank-Löschung. Das rote Erkennungs-Tubing fungiert selbst als direkte Löschleitung; zusätzliche Rohrleitungen und Düsen sind nicht erforderlich. Platzt das Tubing am Brandort, tritt dort das Löschmittel aus. Ein pre-engineered System, das keine hydraulische Strömungsberechnung erfordert.",
+  "panoIlpAciklama": "Das Erkennungs-Tubing dient nur als Auslöser; das Löschmittel wird über Edelstahlrohrleitungen und Düsen in den Schaltschrank abgegeben. Bei mehrfach unterteilten, großvolumigen Schaltschränken werden Düsen an strategischen Punkten platziert, um eine homogene Löschkonzentration zu erreichen. Ein manueller Auslöseknopf ist vorhanden; der Schaltschrank muss vollständig dicht sein.",
+  "panoDhpAciklama": "Ein System mit CO₂-Löschmittel, bei dem das Erkennungs-Tubing sowohl als Detektor als auch als Abgabeleitung fungiert. Da CO₂ unter hohem Druck gespeichert wird, bietet dies gegenüber DLP Vorteile bei Tubing-Länge und Höchstvolumen. Bevorzugt, wenn keine Düsenöffnung gewünscht ist und bei Schaltschränken mit größeren Lüftungsöffnungen als bei DLP.",
+  "panoIhpAciklama": "Die umfassendste Schaltschrank-Löschlösung mit CO₂. Bevorzugt bei großvolumigen Schaltschränken mit mehreren Abteilen und Verbindungsöffnungen zwischen den Abteilen. Ein Verteilsystem aus Edelstahlrohrleitungen, flexiblen Verbindungsschläuchen und Düsen sorgt für eine homogene Löschung über große Flächen.",
+  "panoInfoBoxText": "LPS 1666 · UL 2166 / FM 5600 · VdS 2093\nEmpfehlungswerkzeug für vorkonfigurierte (pre-engineered) pneumatische Tubing-Löschanlagentypen für Elektro-/Telekom-Schaltschränke und -Gehäuse — keine hydraulische Berechnung.",
+  "panoNoOpeningLabel": "Keine nicht verschließbare Öffnung (Kabeldurchführungen, Lüftung usw. sind abgedichtet)",
+  "panoOpeningWarning": "Bei einer nicht verschließbaren Öffnung kann das Löschmittel nicht gehalten werden und das System kann wirkungslos bleiben. Öffnungen müssen abgedichtet werden, oder Lüftung/Klappen müssen bei Aktivierung automatisch schließen.",
+  "panoTubingLengthLabel": "Benötigte Tubing-Länge (optional)",
+  "panoRecommendedSystemCaps": "EMPFOHLENES SYSTEM",
+  "panoVolumeExceededWarning": "Das Volumen überschreitet die Grenzen vorkonfigurierter Schaltschrank-Löschsysteme ({detail}). Für dieses Volumen ist ein technisch berechnetes Vollflutungssystem erforderlich — verwenden Sie den Tab \"{roomTab}\".",
+  "@panoVolumeExceededWarning": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "roomTab": {
+        "type": "String"
+      }
+    }
+  },
+  "panoIlpMaxVolume": "ILP max. {v} m³",
+  "@panoIlpMaxVolume": {
+    "placeholders": {
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "panoIhpMaxVolume": "IHP max. {v} m³",
+  "@panoIhpMaxVolume": {
+    "placeholders": {
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "panoAgentAmountNote": "Diese Menge ist eine Näherungsberechnung auf Basis einer Auslegungskonzentration von {percent} % und einer Referenztemperatur von 20 °C. Die genaue Zylinderfüllmenge ist der vom Hersteller freigegebenen Tabelle des vorkonfigurierten Systems zu entnehmen.",
+  "@panoAgentAmountNote": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "panoTubingExceededWarning": "Die eingegebene Tubing-Länge ({len} m) überschreitet die Grenze von {max} m des Systems {kod}. Es muss auf einen leistungsfähigeren Systemtyp gewechselt oder es müssen mehrere unabhängige Systeme eingesetzt werden.",
+  "@panoTubingExceededWarning": {
+    "placeholders": {
+      "len": {
+        "type": "String"
+      },
+      "kod": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "panoSealingWarning": "Das ILP-System erfordert einen vollständig dichten Schaltschrank (UL/FM-Prüfanforderung). Aufgrund der markierten nicht verschließbaren Öffnung ist dieses System nicht zuverlässig — dichten Sie den Schaltschrank ab oder wechseln Sie zur CO₂-Löschmittelgruppe (DHP/IHP, keine Dichtheit erforderlich).",
+  "panoCo2ToxicityWarning": "CO₂ ist toxisch: Im Umfeld des Schaltschranks dürfen sich keine Personen dauerhaft aufhalten. Bei Leckagerisiko in angrenzende Bereiche ist die 5-%-LOAEL-Grenze zu beachten; ggf. sind Evakuierung und Belüftung zu planen.",
+  "panoNoSealingRequiredNote": "Dichtheit ist nicht zwingend erforderlich, jedoch muss die Menge der nicht verschließbaren Öffnung dem Hersteller mitgeteilt werden; sie ist in der VdS-2093-Berechnung als zusätzliche Löschmittelmenge zu berücksichtigen.",
+  "panoDesignRequirementsTitle": "Auslegungsanforderungen",
+  "panoManualReleaseNote": "• Manueller Auslöseknopf: Da die Tubing-Leitung bei {kod}-Systemen separat ist, ist zusätzlich zur automatischen Auslösung ein manueller Notauslöseknopf erforderlich.\n",
+  "@panoManualReleaseNote": {
+    "placeholders": {
+      "kod": {
+        "type": "String"
+      }
+    }
+  },
+  "panoDesignRequirementsBody": "• Alarmintegration: Bei Systemaktivierung müssen ein akustisch/optischer Voralarm sowie eine Signalübertragung an die Brandmeldezentrale des Gebäudes erfolgen.\n• Der Zylindersatz muss CE/TPED (Richtlinie für ortsbewegliche Druckgeräte) entsprechen.\n• Vor dem Kauf ist eine unabhängige Systemzertifizierung (LPCB/UL/FM/VdS) zu verlangen; eine reine Komponentenzertifizierung (Zylinder, Düse) reicht nicht aus. Die Installation muss durch einen autorisierten/zugelassenen Partner erfolgen.",
+  "panoMaintenanceScheduleTitle": "Wartungsplan",
+  "panoMaintenanceScheduleBody": "• Monatlich: Sichtkontrolle (Druckanzeige, Tubing-Beschädigung/Korrosion).\n• Alle 6 Monate: Kontrolle von Druckschalter, Dichtung und Anschlüssen.\n• Alle 5 Jahre: hydrostatische Zylinderprüfung.\n• Alle 10 Jahre: Systemüberholung / Bewertung des Lebensendes der Komponenten.\n• Bei jeder Füllung ist ein Füllzertifikat des Herstellers einzuholen; ist das System außer Betrieb (impaired), ist es schnellstmöglich (gemäß Hersteller-/Behördenvorgabe innerhalb von max. 48 Stunden) wieder in Betrieb zu nehmen oder eine Brandwache einzuteilen.",
+  "panoSourceFooter": "Quelle: LPS 1666 · UL 2166 · FM 5600 · VdS 2093",
+  "gasAltitudeFieldLabel": "Höhenlage",
+  "gasNoaelCo2Warning": "⚠ CO₂ stellt bei hohen Konzentrationen eine Lebensgefahr dar. Es darf nur für Räume ohne Personenbelegung verwendet werden. TS EN 15004-2 / NFPA 12.",
+  "gasNoaelLoaelExceeded": "⚠ Die Auslegungskonzentration ({percent} %) ÜBERSCHREITET den LOAEL-Grenzwert ({loael} %) — Evakuierung zwingend erforderlich, hohes Risiko!  (NFPA 2001:2022 Tabelle 5.6.2.1)",
+  "@gasNoaelLoaelExceeded": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "loael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNoaelReached": "⚠ Die Auslegungskonzentration ({percent} %) erreicht oder überschreitet den NOAEL-Grenzwert ({noael} %) — vor der Nutzung ist eine Evakuierung erforderlich.  (NFPA 2001:2022 Tabelle 5.6.2.1)",
+  "@gasNoaelReached": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasNoaelOk": "✓ Die Auslegungskonzentration ({percent} %) liegt unter dem NOAEL ({noael} %). Nach NFPA 2001:2022 in belegten Bereichen einsetzbar.  LOAEL: {loael} %",
+  "@gasNoaelOk": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "noael": {
+        "type": "String"
+      },
+      "loael": {
+        "type": "String"
+      }
+    }
+  },
+  "gasAgentHfc227Desc": "Verflüssigtes Halogenkohlenwasserstoff. 25/42/50 bar N₂-Überdruckfüllung. Max. Fülldichte 1150 kg/m³. Ideal für Elektro-/Elektronikräume. (EN 15004-5 Tabelle 6-8)",
+  "gasAgentFk512Desc": "Niedriges GWP. Empfindliche Geräteräume, Archive, Museen.",
+  "gasAgentCo2Desc": "Vollflutung — NUR für Räume ohne Personenbelegung. Die Klasse-B-Konzentration ist brennstoffspezifisch: Heptan 34 %, Toluol/Benzol 37 %, Ethylacetat 38 %, MEK 40 %, IPA/Ethanol/Methanol 53 % (NFPA 12 Tabelle A.5.3.2.1).",
+  "gasAgentIg541Desc": "N₂/Ar/CO₂-Gemisch (52/40/8). Sauerstoffverdrängung. In belegten Bereichen einsetzbar.",
+  "gasAgentIg55Desc": "N₂/Ar-Gemisch (50/50). Umweltfreundlich. In belegten Bereichen einsetzbar.",
+  "gasAgentIg100Desc": "Reiner Stickstoff. Sauerstoffverdrängung. Leicht verfügbar.",
+  "gasAgentIg01Desc": "Reines Argon. Löscht durch Sauerstoffverdrängung. 160 / 200 / 300 bar Befüllung. Hinterlässt keine chemischen Rückstände. In belegten Bereichen einsetzbar. (TS EN 15004-7 Tabelle 6-8)",
+  "wallMaterialConcrete": "Beton / Mauerwerk",
+  "wallMaterialLightBlock": "Leichtbeton-Blockstein",
+  "wallMaterialGypsum": "Gipskarton (doppelt)",
+  "smokeLayerHeightError": "Fehler: z ≥ H — es kann sich keine Rauchschicht bilden. z muss < {height} m sein.",
+  "@smokeLayerHeightError": {
+    "placeholders": {
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeLayerLowWarning": "Warnung: z = {z} m < 2,5 m — unzureichende Evakuierungssicherheit.  d (Rauchschichtdicke) = {d} m",
+  "@smokeLayerLowWarning": {
+    "placeholders": {
+      "z": {
+        "type": "String"
+      },
+      "d": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeLayerDepthInfo": "z = {z} m  →  d (Rauchschichtdicke) = {d} m  (H − z = {height} − {z})",
+  "@smokeLayerDepthInfo": {
+    "placeholders": {
+      "z": {
+        "type": "String"
+      },
+      "d": {
+        "type": "String"
+      },
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "smokeNoteNaturalPlume": "Plume: die über dem Brand aufsteigende heiße Gas-/Rauchsäule. Massenstrom (Thomas-Formel, EN 12101-2 Anhang B): ṁₚ = 0.071×Qc¹³×z⁵³ + 0.0018×Qc",
+  "smokeNoteNaturalCd": "Cd = 0,5 (Dachöffnung, EN 12101-2 §6.4)",
+  "smokeNoteNaturalFreshAir": "Zuluft aus dem unteren Bereich; Öffnungen sollten gleichmäßig verteilt werden",
+  "smokeNoteMinimumAreaCaveat": "Die berechnete Fläche ist ein Minimum; Sektorierung und ein Sicherheitszuschlag müssen zusätzlich berücksichtigt werden",
+  "smokeNoteResponsibilityNatural": "Haftungsausschluss: Diese Berechnung dient Vorentwurfszwecken. Die endgültige Auslegung muss von einem qualifizierten Brandschutzingenieur genehmigt werden.",
+  "smokeNoteMechanicalPlume": "Plume: die über dem Brand aufsteigende heiße Gas-/Rauchsäule. Die Ventilatorkapazität wird so gewählt, dass sie den Plume-Volumenstrom deckt.",
+  "smokeNoteMinAirChange": "Min. Luftwechselrate ≥ 10/h (EN 12101-3 §5.2)",
+  "smokeNoteFanTempRating": "Ventilator-Temperaturbeständigkeit ≥ 400 °C / 120 min (F400) — EN 12101-3",
+  "smokeNoteFreshAirPercent": "Die Zuluft muss mindestens 70 % des Rauchabführstroms betragen",
+  "smokeNoteResponsibility": "Haftungsausschluss: Diese Berechnung dient Vorentwurfszwecken. Die endgültige Auslegung muss von einem qualifizierten Brandschutzingenieur genehmigt werden.",
+  "smokeNoteDoorFlowExplain": "Offentür-Übertrittsstrom: die Luft, die bei der Evakuierung durch das Treppenhaus strömt, während eine Geschosstür offen ist — die größte momentane Last, die der Ventilator abdecken muss",
+  "smokeNoteDoorFlowFormula": "Berechnung: Q = A_Tür × √(2ΔP/ρ)  — Annahme: Tür vollständig offen, volle ΔP wirksam (sichere Seite)",
+  "smokeNoteWallLeakageConcrete": "Wandleckage: 1,3×10⁻⁴ m²/m² für einen Beton-/Mauerwerksschacht  (EN 12101-6 Anhang F Tabelle F.1)",
+  "smokeNoteDoorGapCd": "Türspaltbreite 10 mm, Cd = 0,83  (EN 12101-6 Anhang F)",
+  "smokeNoteDoorForceCheck": "Türöffnungskraft ≤ 100 N muss bei offener Tür geprüft werden",
+  "smokeNotePressureLimit": "ΔP-Grenze: ≥ 50 Pa (auf der Brandetage) / ≤ 60 Pa (andere Etagen)",
+  "fanCriterionMinAirChange": "Kriterium min. Luftwechsel",
+  "fanCriterionPlumeFlow": "Kriterium Plume-Volumenstrom",
+  "spFormulaInfo": "EN 12845 / TS EN 12845 — Ortsfeste Feuerlöschanlagen · Automatische Sprinkler\nHydraulische Berechnung des kritischen Kreises nach Gefahrenklasse  ·  Hazen–Williams (wählbarer C-Koeffizient des Rohrmaterials)",
+  "spFieldWidthM": "Breite  (m)",
+  "spFieldLengthM": "Länge  (m)",
+  "spFieldCeilingM": "Decke  (m)",
+  "spSuspendedCeilingCheckbox": "Abgehängte Decke vorhanden (verdeckter Hohlraum)",
+  "spVoidDepthLabel": "Hohlraumtiefe  (cm)",
+  "spVoidDepthInfo": "EN 12845 Abschn. 5.4: Beträgt die Hohlraumtiefe > 80 cm, muss im verdeckten Hohlraum eine zusätzliche Sprinkleranlage installiert werden.",
+  "spBuildingActivityFieldLabel": "Gebäudenutzung",
+  "spSelectActivityPlaceholder": "Nutzung auswählen…",
+  "spHazardClassInline": "Gefahrenklasse: {name}",
+  "@spHazardClassInline": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spHazardClassDetail": "Dichte: {density} mm/min  ·  Bemessungsfläche: {area} m²  ·  Max. Abdeckung: {coverage} m²/Sprinkler",
+  "@spHazardClassDetail": {
+    "placeholders": {
+      "density": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      },
+      "coverage": {
+        "type": "String"
+      }
+    }
+  },
+  "spSprinklerTypeLabel": "Sprinklertyp (K-Faktor)",
+  "spInstallationClassLabel": "Installationsklasse / Pumpenredundanz",
+  "spDryPipeCheckbox": "Trockenrohrsystem (frostgefährdeter Bereich)",
+  "spDryPipeInfo": "Bei Trockenrohrsystemen wird das Rohrnetz mit Luft/Stickstoff beaufschlagt; Auslösezeit, Kompressorkapazität und Rohrgefälle (Entwässerung) müssen gesondert ausgelegt werden. In Bereichen ohne Frostrisiko ist ein Nasssystem vorzuziehen.",
+  "spRackStorageCheckbox": "Regal-/Palettenlagerung — In-Rack-Sprinkler (Vorentwurf)",
+  "spRackLevelsLabel": "Anzahl Regalebenen (In-Rack-Stufen)",
+  "spUnitLevel": "Ebene",
+  "spRackInfo": "Dies ist nur eine vereinfachte Vorabschätzung. Die genaue Anzahl der In-Rack-Sprinkler, die Flue-Space-Breite und der Ebenenabstand müssen durch eine vollständige Auslegung nach EN 12845 Anhang H bestimmt werden.",
+  "spFoamSystemCheckbox": "Schaumlöschanlage hinzufügen (EN 13565-2)",
+  "spHydrocarbonSub": "Benzin, Diesel,\nKraftstoff, Öl",
+  "spPolarSolventSub": "Aceton, Ethanol,\nLösemittel, Keton",
+  "spFoamDurationMin": "{minutes} Min.",
+  "@spFoamDurationMin": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "spFoamPolarSolventInfo": "EN 13565-2: Für polare Lösemittel darf nur AR-AFFF-, FFFP- oder MF-FFF-Konzentrat verwendet werden. Als Schutzfläche wird die Gebäudefläche (Breite × Länge) zugrunde gelegt.",
+  "spHHP4Warning": "⚠  HHP4 — HOCHDICHTE-WASSERSYSTEM\nEN 12845 Tabelle 3 Anmerkung: Diese Klasse liegt außerhalb des Anwendungsbereichs von Standardsprinklern. Eine gesonderte Bewertung und Freigabe durch einen befähigten Ingenieur sind zwingend erforderlich. Die nachfolgende Berechnung dient nur der Vorabinformation und darf nicht als offizielle Auslegung verwendet werden.",
+  "spActivityDialogTitle": "Nutzungsbereich auswählen",
+  "spNoResultsFound": "Keine Ergebnisse gefunden",
+  "spKFactorWarning": "Der gewählte K-Faktor (K{selected}) liegt unter dem für die Klasse {sinifKod} erforderlichen Mindestwert K{minK} — eine Herstellerfreigabe und Überprüfung durch eine vollständige hydraulische Berechnung sind zwingend erforderlich.",
+  "@spKFactorWarning": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "sinifKod": {
+        "type": "String"
+      },
+      "minK": {
+        "type": "String"
+      }
+    }
+  },
+  "spCeilingWarningLH": "LH — Deckenhöhe > 6 m: Die Leistung von Standardsprinklern kann unzureichend sein. Eine ESFR- oder hochvolumige Sonderauslegung wird empfohlen.",
+  "spCeilingWarningOH": "OH — Deckenhöhe > 6 m: Die Wirksamkeit von Standardsprinklern kann abnehmen. Eine Abstimmung mit der zuständigen Behörde vor der Auslegung wird empfohlen.",
+  "spCeilingWarningHH": "HHP/HHS — Deckenhöhe > 6 m: Beträgt der Abstand nach §7.2.2.3 > 4 m, sind eine Erhöhung der Berieselungsdichte (+1 mm/min je zusätzlichem Meter) und mindestens K115-Sprinkler erforderlich.",
+  "spSinifAdLH": "Niedrige Gefährdung (LH)",
+  "spSinifAdOH1": "Mittlere Gefährdung Gruppe 1 (OH1)",
+  "spSinifAdOH2": "Mittlere Gefährdung Gruppe 2 (OH2)",
+  "spSinifAdOH3": "Mittlere Gefährdung Gruppe 3 (OH3)",
+  "spSinifAdOH4": "Mittlere Gefährdung Gruppe 4 (OH4)",
+  "spSinifAdHHP1": "Hohe Gefährdung Prozess Gruppe 1 (HHP1)",
+  "spSinifAdHHP2": "Hohe Gefährdung Prozess Gruppe 2 (HHP2)",
+  "spSinifAdHHP3": "Hohe Gefährdung Prozess Gruppe 3 (HHP3)",
+  "spSinifAdHHP4": "Hohe Gefährdung Prozess Gruppe 4 (HHP4) — ⚠ Hochdichte-Wasser / Sondersystem",
+  "spSinifAdSF1": "Lagerkategorie I — Freie Bodenlagerung (≤ 3 m)",
+  "spSinifAdSF2": "Lagerkategorie II — Freie Bodenlagerung (≤ 3,5 m)",
+  "spSinifAdSF3": "Lagerkategorie III — Freie Bodenlagerung (≤ 3,5 m)",
+  "spSinifAdSF4": "Lagerkategorie IV — Freie Bodenlagerung (≤ 3,5 m)",
+  "spSinifAdRS1": "Lagerkategorie I — Regal-/Palettenlagerung",
+  "spSinifAdRS2": "Lagerkategorie II — Regal-/Palettenlagerung",
+  "spSinifAdRS3": "Lagerkategorie III — Regal-/Palettenlagerung",
+  "spSinifAdRS4": "Lagerkategorie IV — Regal-/Palettenlagerung",
+  "spTipAdAuto": "Automatisch nach Klasse",
+  "spTipDescAuto": "Standard K80 (LH/OH) oder K115 (HH) — Standardeinstellung",
+  "spTipAdK57": "Standard K57",
+  "spTipDescK57": "Nur bei speziell freigegebenen Anwendungen mit geringem Durchfluss",
+  "spTipAdK80": "Standard K80",
+  "spTipDescK80": "Standard für LH/OH-Klassen",
+  "spTipAdK115": "Hochdurchfluss K115",
+  "spTipDescK115": "Standard für HH-Klassen",
+  "spTipAdK161": "Großtropfen K161",
+  "spTipDescK161": "Hochregal-/Regalsysteme — Herstellerfreigabe erforderlich",
+  "spTipAdK200": "Extra-Großtropfen K200",
+  "spTipDescK200": "Spezielle Hochdurchfluss-Anwendungen — Herstellerfreigabe erforderlich",
+  "spTipAdEsfr": "ESFR K242 (informativ)",
+  "spTipDescEsfr": "Schnelle Unterdrückung (Early Suppression Fast Response) — außerhalb des Anwendungsbereichs von EN 12845; NFPA 13 / Listungsdaten sind maßgeblich",
+  "spKurulumAdSingle": "Einzelquelle + Einzelpumpe",
+  "spKurulumDescSingle": "Keine Redundanz — nur für LH und Objekte mit geringem Risiko und einer Wasserquelle akzeptabel.",
+  "spKurulumAdDual": "Doppelpumpe (Elektro + Diesel)",
+  "spKurulumDescDual": "Gängige Lösung für OH- und die meisten HH-Objekte — bei Stromausfall startet die Dieselpumpe automatisch.",
+  "spKurulumAdSuperior": "Doppelquelle + Doppelpumpe (Superior)",
+  "spKurulumDescSuperior": "Höchste Zuverlässigkeit — empfohlen für kritische Objekte, HH-Klassen und Hochrisikolager; zwei unabhängige Wasserquellen und Pumpensätze.",
+  "spUnitAdet": "Stück",
+  "spUnitSpacing": "Abstand",
+  "spUnitMinutes": "Minuten",
+  "spRcHeaderBuilding": "Gebäude- & Bemessungsparameter",
+  "spRcHeaderLayout": "Sprinkler-Layoutberechnung",
+  "spRcHeaderHydraulic": "Hydraulische Berechnung des kritischen Kreises",
+  "spRcHeaderFullHydraulic": "Kritischer Kreis — Vollständige hydraulische Berechnung",
+  "spRcHeaderPump": "Pumpenanforderungen",
+  "spRcHeaderInstallation": "Installationsklasse & Pumpenredundanz",
+  "spRcHeaderWaterTank": "Wasserbehälter  —  EN 12845 Tabelle 2",
+  "spRcHeaderDryPipe": "Trockenrohrsystem  —  Frostrisiko",
+  "spRcHeaderRackStorage": "Regallagerung — In-Rack-Sprinkler (Vorentwurf)",
+  "spRcHeaderPipeDiameterSummary": "Rohrdurchmesser-Übersicht  —  EN 12845 Tabelle 14",
+  "spRcHeaderPipeLength": "Rohrlänge (ungefähr)",
+  "spRcHeaderAlarmValve": "Nassalarmventil  —  EN 12845 Abschn. 11.2",
+  "spRcHeaderFoamSystem": "Schaumsystem  —  EN 13565-2",
+  "spRcBuildingArea": "Gebäudefläche",
+  "spRcCeilingHeight": "Deckenhöhe",
+  "spRcCoverageAdjustedSuffix": "  ›  Abdeckung angepasst: {value} m² (Höheneinfluss)",
+  "@spRcCoverageAdjustedSuffix": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcHazardClass": "Gefahrenklasse",
+  "spRcDesignDensity": "Bemessungsdichte",
+  "spRcDesignArea": "Bemessungsfläche",
+  "spRcMaxCoveragePerSprinklerCap": "Max. Abdeckung / Sprinkler",
+  "spRcMaxCoveragePerSprinklerLow": "Max. Abdeckung / Sprinkler",
+  "spRcHeightAdjustSuffix": "(Höhenanpassung)",
+  "spRcTable20Title": "Tabelle 20 — Seitenwand-Sprühgruppen (Referenz)",
+  "spRcMaxGroupDistance": "Max. Abstand zwischen Gruppen",
+  "spRcNote2Suffix": "  (Anmerkung 2: kann bei 120-minütiger feuerwiderstandsfähiger Decke auf 3,7 m erhöht werden)",
+  "spRcMaxToWallEnd": "Max. bis Wandende",
+  "spRcTheoreticalSpacing": "Flächenbasierter theoretischer Abstand  √A",
+  "spRcTable19MaxDistance": "Tabelle 19 — Max. S- und D-Abstand",
+  "spRcAppliedGridSpacing": "Angewendeter Rasterabstand",
+  "spRcDistanceConstraintBinding": "⚠ ABSTANDSGRENZE maßgeblich (√A > max. Abstand)",
+  "spRcAreaConstraintBinding": "✓ Flächengrenze maßgeblich",
+  "spRcHorizontalRow": "Horizontale Reihe (entlang der Breite)",
+  "spRcVerticalRow": "Vertikale Reihe (entlang der Länge)",
+  "spRcActualCoveragePerHead": "Tatsächliche Abdeckung je Sprinkler",
+  "spRcTotalSprinklers": "SPRINKLER GESAMT",
+  "spRcMainFloorSuffix": "(Hauptgeschoss)",
+  "spRcSprinklersInDesignArea": "Sprinkler in der Bemessungsfläche",
+  "spRcSuspendedCeilingVoid": "Hohlraum der abgehängten Decke",
+  "spRcExtraSprinklerRequired": "⚠ Zusätzliche Sprinkler erforderlich (> 80 cm)",
+  "spRcExtraSprinklerNotRequired": "✓ Zusätzliche Sprinkler nicht erforderlich (≤ 80 cm)",
+  "spRcConcealedVoidSprinklerCount": "Anzahl Sprinkler im verdeckten Hohlraum",
+  "spRcAppliedToUpperGridSuffix": "(auf dasselbe Raster der oberen Ebene angewendet)",
+  "spRcFarthestHeadFlow": "Durchfluss des am weitesten entfernten Sprinklers  q",
+  "spRcDesignTotalFlow": "Gesamt-Bemessungsdurchfluss  Q",
+  "spRcBranchPipeDN": "Zweigrohr  DN{dn}",
+  "@spRcBranchPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcCrossPipeDN": "Verteilerrohr  DN{dn}",
+  "@spRcCrossPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMainPipeDN": "Versorgungs-/Hauptrohr  DN{dn}",
+  "@spRcMainPipeDN": {
+    "placeholders": {
+      "dn": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcTotalFrictionLoss": "Gesamter Reibungsverlust",
+  "spRcStaticHeadFormula": "Statische Förderhöhe  ({height} m × 0,098)",
+  "@spRcStaticHeadFormula": {
+    "placeholders": {
+      "height": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcFarthestHeadMinPressure": "Mindestdruck am entferntesten Sprinkler",
+  "spRcSafetyMarginLabel": "Sicherheitsmarge",
+  "spRcColDistance": "Abstand\n(m)",
+  "spRcColPressure": "Druck\n(bar)",
+  "spRcColFlowLower": "q\n(L/min)",
+  "spRcColCumFlow": "ΣQ\n(L/min)",
+  "spRcColNextDeltaP": "ΔP nächst.\n(bar)",
+  "spRcSectionBranchPipe": "── Zweigrohr (Range Pipe) ──",
+  "spRcSectionDistPipe": "── Verteilerrohr (Distribution Pipe) ──",
+  "spRcSectionMainPipe": "── Hauptrohr (Main Pipe) ──",
+  "spRcHydraulicFootnote": "SP1 = am weitesten entfernter Sprinkler  ·  DP1 = Bemessungspunkt (Design Point)  ·  MP = Hauptrohr  ·  K-Proportionierung: Q_j = Q_krit×√(P_j/P_DP)  ·  Hazen-Williams C=120, 20 % Fitting-Zuschlag enthalten  (EN 12845 §13.3.2)",
+  "spRcPumpFlowLabel": "Pumpendurchfluss",
+  "spRcPumpPressureLabel": "Pumpendruck",
+  "spRcTable6AppliedIntro": "TS EN 12845+A1 Tabelle 6 angewendet — bindende Mindestwerte für die Pumpenauslegung bei vorberechneten Systemen:",
+  "spRcTable6FlowLine": "• Durchfluss: iterativer hydraulischer Durchfluss {calc} L/min < Tabelle-6-Min. {min} L/min → {min} L/min verwendet",
+  "@spRcTable6FlowLine": {
+    "placeholders": {
+      "calc": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcTable6PressureLine": "• Druck: berechnet < Tabelle-6-Min. ({min} + ps) bar → {applied} bar angewendet",
+  "@spRcTable6PressureLine": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "applied": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMaxPressureWarning": "⚠ EN 12845 §8.2 — Pumpendruck {pressure} bar; der maximale Betriebsdruck an jeder Sprinklerposition im System darf 12 bar nicht überschreiten. Eine Aufteilung mittels Druckminderventil (PRV) in {zones} Druckzonen oder eine Neuauslegung des Systems sollte in Betracht gezogen werden.",
+  "@spRcMaxPressureWarning": {
+    "placeholders": {
+      "pressure": {
+        "type": "String"
+      },
+      "zones": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcInstallationClassLabel": "Installationsklasse",
+  "spRcPumpCount": "Anzahl Pumpen",
+  "spRcElectricDieselSuffix": "  (elektrisch + Diesel)",
+  "spRcWaterSource": "Wasserquelle",
+  "spRcDualIndependent": "Doppelt (unabhängig)",
+  "spRcSingle": "Einzeln",
+  "spRcJockeyPump": "Druckhaltepumpe",
+  "spRcWaterSupplyDuration": "Wasserversorgungsdauer",
+  "spRcSupplyDurationSub": "{cls} → {minutes} Min.",
+  "@spRcSupplyDurationSub": {
+    "placeholders": {
+      "cls": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMinWaterTank": "Min. Wasserbehälter",
+  "spRcWaterSupplyNote": "EN 12845:2015 Tabelle 2 — Die Wasserversorgung kann über einen Behälter oder einen direkten Netzanschluss erfolgen. Unabhängig von der gewählten Option wird empfohlen, dem Behälter eine Sicherheitsmarge hinzuzufügen.",
+  "spRcPipeNetworkVolume": "Innenvolumen des Rohrnetzes",
+  "spRcDryPipeNote": "Dieses Volumen dient nur als Referenz für die Vorauslegung des Luftkompressors / Stickstoffgenerators und des Füllwassers. Auslösezeit, Zubehörbedarf (Accelerator/Exhauster) und Rohrgefälle müssen gesondert nach den Vorgaben des Herstellers bzw. der Auslegungsnorm festgelegt werden.",
+  "spRcRackLevelCount": "Anzahl Regalebenen",
+  "spRcEstExtraInRackSprinklers": "Geschätzte zusätzliche In-Rack-Sprinkler",
+  "spRcEstExtraFlow": "Geschätzter Zusatzdurchfluss",
+  "spRcRackNote": "Dies ist ein vereinfachter Vorentwurfswert (Annahme: 3 m horizontaler Abstand, K80, 1,0 bar). Die genaue In-Rack-Anordnung — Flue-Space-Breite, Ebenenabstand und tatsächlicher hydraulischer Bedarf — muss durch eine vollständige Auslegung nach EN 12845 Anhang H bestimmt und der Pumpen-/Wasserbehälterberechnung gesondert hinzugefügt werden.",
+  "spRcHHPTable14Warning": "⚠  HHP-Klasse: EN 12845 Tabelle 14 gilt nicht. Die Durchmesser werden durch eine vollständige hydraulische Berechnung nach EN 12845 Anhang C bestimmt. Die nachstehenden Werte basieren auf einer vorläufigen Geschwindigkeitsmethode ≤ 5 m/s.",
+  "spRcSprinklerTypeKFactor": "Sprinklertyp / K-Faktor",
+  "spRcBranchPipeRow": "Zweigrohr (Branch Line)",
+  "spRcVelocityMethodSuffix": "  (Geschwindigkeitsmethode)",
+  "spRcTable14Suffix": "  (Tab.14)",
+  "spRcCrossMainRow": "Verteilerrohr (Cross Main)",
+  "spRcBranchConnCount": "{branches} Zweigleitungen / {heads} Spr.",
+  "@spRcBranchConnCount": {
+    "placeholders": {
+      "branches": {
+        "type": "String"
+      },
+      "heads": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcMainSupplyRow": "Hauptrohr / Versorgung",
+  "spRcDesignAreaHeadsSuffix": "{n} Spr. (Bemessungsfläche)",
+  "@spRcDesignAreaHeadsSuffix": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcColPipeType": "Rohrtyp",
+  "spRcColCountLength": "Anzahl × Länge",
+  "spRcColTotalM": "Gesamt (m)",
+  "spRcRowBranchPipe": "Zweigrohr (Branch)",
+  "spRcRowCrossMain": "Verteiler (Cross Main)\n[{n} Zweigleitungsanschlüsse]",
+  "@spRcRowCrossMain": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcRowMainPipe": "Hauptrohr (Main)\n[Pumpenstrecke + Restlänge]",
+  "spRcTotalPipeLength": "ROHRLÄNGE GESAMT",
+  "spRcPipeLengthFootnote": "* Die Rohrlänge ist ungefähr. Ein 20 % Fitting-Zuschlag wurde berücksichtigt. Die genaue Länge muss auf dem Architekturplan berechnet werden.",
+  "spRcRequiredAlarmValve": "Erforderliche Nassalarmventile:  ",
+  "spRcTotalSprinklersRow": "Sprinkler gesamt",
+  "spRcMaxSprinklersPerValve": "Max. Sprinkler / Ventil",
+  "spRcHHPClassSuffix": "HHP-Klasse",
+  "spRcLHOHClassSuffix": "LH/OH-Klasse",
+  "spRcMaxAreaPerValve": "Max. Fläche / Ventil",
+  "spRcAreaPerValve": "Fläche je Ventil",
+  "spRcDesignFlowPerValve": "Bemessungsdurchfluss je Ventil",
+  "spRcSingleValveSuffix": "  (das gesamte System wird über ein einziges Ventil berechnet)",
+  "spRcAlarmValveNote": "EN 12845:2015 Abschnitt 11.2.1: Eine Nassalarmventilzone kann {scope} Nutzfläche schützen.",
+  "@spRcAlarmValveNote": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcAlarmValveScopeHH": "in HHP-Klassen höchstens 500 Sprinkler und 2 300 m²",
+  "spRcAlarmValveScopeLHOH": "in LH/OH-Klassen höchstens 1 000 Sprinkler und 4 800 m²",
+  "spRcConcentrateType": "Konzentrattyp",
+  "spRcConcentrationSuffix": "  —  {pct} % Konzentration",
+  "@spRcConcentrationSuffix": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "spRcLiquidCategory": "Flüssigkeitskategorie",
+  "spRcPolarSolventDetail": "Polares Lösemittel (B2) — Aceton, Ethanol, Keton, Lösemittel",
+  "spRcHydrocarbonDetail": "Kohlenwasserstoff (B1) — Benzin, Diesel, Öl",
+  "spRcProtectedArea": "Schutzfläche",
+  "spRcApplicationRate": "Aufbringungsrate",
+  "spRcApplicationDuration": "Aufbringungsdauer",
+  "spRcSolutionFlow": "Lösungsdurchfluss (Q)",
+  "spRcConcentrateFlow": "  Konzentratdurchfluss",
+  "spRcWaterFlow": "  Wasserdurchfluss",
+  "spRcConcentrateTankVolume": "Konzentrattankvolumen",
+  "spRcWaterReserve": "Wasserreserve",
+  "spRcFoamNote7": "EN 13565-2 Abschnitt 7: Konzentrattankvolumen und Wasserreserve sind Mindestwerte. Bei der tatsächlichen Auslegung müssen eine Sicherheitsmarge und die gleichzeitige Nutzung berücksichtigt werden.",
+  "spRcFinalDisclaimer": "⚠  Dies ist eine überschlägige Vorabberechnung. Für die offizielle Projektauslegung sind eine vollständige hydraulische Berechnung nach EN 12845 Anhang C und die Freigabe durch einen befähigten Ingenieur zwingend erforderlich. Für Verbindungsverluste wurde den Längen ein Zuschlag von +20 % hinzugefügt.",
+  "updateAvailableTitle": "Neue Version verfügbar",
+  "updateAvailableMessage": "Die App wurde auf Version v{version} aktualisiert.\nAktualisieren Sie, um die neuesten Funktionen zu nutzen.",
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateLaterButton": "Später",
+  "updateNowButton": "Aktualisieren",
+  "loginRateLimitMessage": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {time} erneut.",
+  "@loginRateLimitMessage": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "savedOnLabel": "Gespeichert: {date}",
+  "@savedOnLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "upgradeRequiredTitle": "Upgrade erforderlich",
+  "upgradeRequiredMessage": "Dieses Modul ist in der Demoversion nicht verfügbar. Erstellen Sie Ihr MEVOS-Konto und starten Sie das Fire-Modul-Abonnement, um auf alle Module zuzugreifen.",
+  "upgradeSignUpButton": "Registrieren",
+  "geminiApiKeyRequiredInfo": "Für die KI-Funktion ist ein kostenloser Google Gemini API-Schlüssel erforderlich.",
+  "enterStandardNumberFirst": "Geben Sie zuerst die Standardnummer ein.",
+  "apiKeyRequiredError": "API-Schlüssel erforderlich.",
+  "standardNotFoundError": "Standard nicht gefunden.",
+  "enterTopicOrKeywordFirst": "Geben Sie zuerst ein Thema oder Stichwort ein.",
+  "relatedStandardNotFound": "Kein zugehöriger Standard gefunden.",
+  "addCustomStandardTitle": "Benutzerdefinierten Standard hinzufügen",
+  "byNumberTab": "Nach Nummer",
+  "byTopicTab": "Nach Thema",
+  "findDescriptionWithAiTooltip": "Beschreibung mit KI finden",
+  "searchStandardsWithAiTooltip": "Standards mit KI suchen",
+  "selectAllButton": "Alle auswählen",
+  "deselectAllButton": "Alle abwählen",
+  "addSelectedButton": "Ausgewählte hinzufügen ({count})",
+  "@addSelectedButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customAddedStandardsHeader": "Benutzerdefiniert hinzugefügte Standards",
+  "deleteStandardTitle": "Standard löschen",
+  "deleteStandardConfirm": "„{number}“ aus der Liste entfernen?",
+  "@deleteStandardConfirm": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAssistantTitle": "KI-Assistent",
+  "aiChatGreeting": "Ich kann Ihre Fragen zum Standard {standard} beantworten.",
+  "@aiChatGreeting": {
+    "placeholders": {
+      "standard": {
+        "type": "String"
+      }
+    }
+  },
+  "rehberFireLoadScenario": "Brandlast & Brandszenario",
+  "rehberGasSuppressionSystems": "Gaslöschanlagen",
+  "rehberWaterBasedSuppression": "Wasserbasierte Löschanlagen",
+  "rehberFoamSuppressionSystems": "Schaumlöschanlagen",
+  "rehberKitchenHoodSuppression": "Küchenhauben- & Kochlöschung",
+  "rehberFireExtinguishersPortable": "Feuerlöscher & tragbare Ausrüstung",
+  "rehberStructuralFireResistance": "Bauteilbrandwiderstand",
+  "rehberRiskAssessmentSafety": "Risikobewertung & Sicherheitsmanagement",
+  "rehberIndustrialSpecialRisk": "Industrielle & Sondergefahrenanlagen",
+  "stdDescEn1991FireLoad": "Eurocode 1 Teil 1-2: Einwirkungen auf Tragwerke — Brandeinwirkungen. Berechnung der Brandlastdichte, Wachstumsrate und des Brandszenarios.",
+  "stdDescIso1716Ncv": "Bestimmung der Verbrennungswärme von Baustoffen und -produkten — Verfahren zur Bestimmung des Netto-Heizwerts (NCV).",
+  "stdDescIso5660ConeCalorimeter": "Prüfungen zum Brandverhalten — Wärmefreisetzungsrate, Rauchentwicklungsrate und Massenverlustrate. Cone-Kalorimeter-Verfahren.",
+  "stdDescNfpa557FireLoadDensity": "Standard zur Ermittlung der Brandlast für den baulichen Brandschutz — Referenztabellen für die Dichte nach Gebäudenutzungsart.",
+  "stdDescIso24679FireBehaviour": "Brandschutzingenieurwesen — Bewertung des Brandverhaltens von Tragwerken.",
+  "stdDescIso16733FireScenario": "Brandschutzingenieurwesen — Auswahl von Bemessungsbrandszenarien und Bemessungsbränden.",
+  "stdDescSfpeHandbook": "Nachschlagewerk für Brandschutzingenieurwesen — Berechnungsmethoden, Branddynamik, Rauchbewegung.",
+  "stdDescPd7974FireInitiation": "BSI — Anwendung von Brandschutzingenieurprinzipien bei der Gebäudeplanung: Brandentstehung und -entwicklung.",
+  "stdDescIso145201GeneralRules": "Gaslöschanlagen — Allgemeine Anforderungen: Auslegung, Installation, Inbetriebnahme, Wartung und Sicherheit.",
+  "stdDescIso145202Co2": "CO2-Löschanlagen — Verfahren für Totalflutung und örtliche Anwendung.",
+  "stdDescIso145205Hfc227": "HFC-227ea (FM-200) Gaslöschanlagen — Konzentrations- und Volumenberechnung.",
+  "stdDescIso145208Hcfc": "HCFC-Mischung A (Halotron I) Löschanlagen.",
+  "stdDescIso145209Hfc23": "HFC 23 (Trifluormethan) Löschanlagen.",
+  "stdDescIso1452010Ig55": "IG-55 (Argonite) Anlagen — N2/Ar-Gemisch, Inertgas.",
+  "stdDescIso1452011Ig541": "IG-541 (Inergen) — N2/Ar/CO2-Gemisch, Inertgaslöschung.",
+  "stdDescIso1452012Ig01": "IG-01 (Argon) Löschanlagen.",
+  "stdDescIso1452013Ig100": "IG-100 (Stickstoff) Löschanlagen.",
+  "stdDescIso1452015Novec": "FK-5-1-12 (Novec 1230) — Niedriger GWP-Wert, für empfindliche Geräteräume.",
+  "stdDescNfpa2001CleanAgent": "USA — Standard für Feuerlöschanlagen mit sauberen Löschmitteln (Clean Agent).",
+  "stdDescNfpa12Co2Us": "CO2-Löschanlagen — US-Standard, Totalflutung und örtliche Anwendung.",
+  "stdDescNfpa12aHalon": "Halon-1301-Löschanlagen — USA, Bestandsanlagen.",
+  "stdDescTsEn150041GeneralReq": "Ortsfeste Feuerlöschanlagen — Gaslöschanlagen, allgemeine Anforderungen.",
+  "stdDescVds2380Design": "Deutschland — Richtlinien für Planung und Einbau von Gaslöschanlagen.",
+  "stdDescNfpa34DippingCoating": "Tauch-, Beschichtungs- und Druckprozesse mit brennbaren Flüssigkeiten — grundlegender Sicherheitsstandard.",
+  "stdDescNfpa34Sec10PrintingOps": "Printing Operations: Bauweise des Druckbereichs, Belüftung, elektrische Klassifizierung und Brandschutz.",
+  "stdDescNfpa34Sec106AutoSuppression": "Pflicht zur automatischen Brandbekämpfung — Sprinkler für Flüssigkeiten der Klasse I; örtliches CO2/Clean Agent für Trocknerkammern.",
+  "stdDescNfpa12PrintingPressLocal": "CO2-Löschung — örtliche Löschanlagen für Druckmaschine und Trocknerkammer.",
+  "stdDescNfpa2001PrintingCabin": "Clean-Agent-Löschung — Schutz der Druckmaschinenkabine, bevorzugt bei Personalanwesenheit.",
+  "stdDescNfpa30PrintingSolvent": "Code für brennbare und entzündliche Flüssigkeiten — Lagerung und Verwendung von Lösemitteln in Druckereien.",
+  "stdDescNfpa70Article516": "ATEX/NEC-Einstufung explosionsgefährdeter Bereiche und elektrische Ausrüstung im Druckbereich.",
+  "stdDescEn10101PrintingSafetyGeneral": "Sicherheit von Druck- und Papierverarbeitungsmaschinen — Allgemeine Anforderungen.",
+  "stdDescEn10102PrintingSafetyMachines": "Sicherheit von Druckmaschinen — Druck- und Lackiermaschinen (Offset, Flexo, Tiefdruck).",
+  "stdDescEn13463AtexEquipment": "ATEX-Geräte — Sicherheitskriterien für Geräte zur Verwendung in explosionsgefährdeten Bereichen.",
+  "stdDescTsEn150041PrintingCabinet": "Gaslöschanlagen — Allgemeine Anforderungen (Clean-Agent-Berechnung für Druckkabinen).",
+  "stdDescTsEn12845Sprinkler": "Ortsfeste Sprinkleranlagen — Planung, Einbau und Instandhaltung. Gefahrenklasse, Berieselungsdichte, Durchfluss und Speichervolumen.",
+  "stdDescNfpa13SprinklerInstallation": "Standard für die Installation von Sprinkleranlagen — USA, alle Gebäudetypen.",
+  "stdDescNfpa13rResidential": "Sprinkleranlagen in Wohngebäuden — Gebäude bis zu vier Geschossen.",
+  "stdDescNfpa13dOneTwoFamily": "Sprinkleranlagen in Ein- und Zweifamilienhäusern.",
+  "stdDescNfpa15WaterSpray": "Ortsfeste Wassersprühlöschanlagen — Schutz von Anlagen und Gefahrenbereichen.",
+  "stdDescNfpa16FoamWaterSpray": "Schaum-Wasser-Sprüh- und Schaum-Wasser-Sprinkleranlagen.",
+  "stdDescEn14339UndergroundHydrant": "Unterflurhydrantenanlagen — Planung und Einbau.",
+  "stdDescEn14384AboveGroundHydrant": "Überflurhydrantenanlagen.",
+  "stdDescEn6711SemiRigidHose": "Ortsfeste Feuerlöscheinrichtungen — Wandhydranten mit formstabilem Schlauch.",
+  "stdDescEn6712FlatHoseHydrant": "Ortsfeste Feuerlöscheinrichtungen — Wandhydranten mit Flachschlauch.",
+  "stdDescEn6713Maintenance": "Ortsfeste Feuerlöscheinrichtungen — Instandhaltung, Teil 3.",
+  "stdDescEn122591Components": "Ortsfeste Feuerlöschanlagen — Komponenten für Sprinkler- und Sprühwasseranlagen.",
+  "stdDescTsEn149721WaterMistDesign": "Ortsfeste Feuerlöschanlagen — Wassernebelanlagen, Teil 1: Planung und Einbau.",
+  "stdDescNfpa750WaterMist": "Standard für Wassernebel-Feuerlöschanlagen — USA.",
+  "stdDescNfpa11ExpansionFoam": "Schwer-, Mittel- und Leichtschaumlöschanlagen — US-Standard.",
+  "stdDescEn135651FoamRequirements": "Ortsfeste Schaumlöschanlagen — Teil 1: Anforderungen und Prüfverfahren.",
+  "stdDescEn135652FoamDesignInstall": "Ortsfeste Schaumlöschanlagen — Teil 2: Planung, Einbau und Instandhaltung.",
+  "stdDescIso72031FoamConcentrates": "Feuerlöschmittel — Schaummittel für Flüssigbrandstoffbrände.",
+  "stdDescNfpa30StorageTransfer": "Code für brennbare und entzündliche Flüssigkeiten — Lagerung und Umschlag.",
+  "stdDescApi2021TankFirePrevention": "Erdölindustrie — Brandverhütung und -bekämpfung bei Lagertanks.",
+  "stdDescNfpa17aWetChemical": "Nasschemische Löschanlagen (Wet Chemical) — Anwendungen in Gewerbeküchen.",
+  "stdDescNfpa17DryChemical": "Trockenchemische Löschanlagen — Allgemeine industrielle Anwendungen.",
+  "stdDescTsEn15751CommercialKitchen": "Europa — Ortsfeste Feuerlöschanlagen für gewerbliche Küchengeräte.",
+  "stdDescUl300CookingSuppression": "US-Produktzulassungsstandard — Feuerlöschanlagen für Kochbereiche (Ansul, Amerex u. a.).",
+  "stdDescUl300aAutoSuppressionCooking": "Automatische Löschanlagen — Brandgefahr oberhalb von Kochgeräten.",
+  "stdDescTsEn18251GreaseSeparators": "Fettabscheider und Filter für Küchenabzugshauben.",
+  "stdDescTsEn18252GreaseSelection": "Fettabscheider für Küchenabzugshauben — Auswahl, Einbau und Wartung.",
+  "stdDescNfpa96VentilationCooking": "Standard für Lüftungskontrolle und Brandschutz gewerblicher Kochbetriebe — Kanäle, Abzugshauben und Brandverhütung.",
+  "stdDescEn541Introduction": "Brandmeldeanlagen — Teil 1: Einführung.",
+  "stdDescEn542ControlIndicating": "Brandmelderzentralen.",
+  "stdDescEn543SoundersDevices": "Feuerwehr-Signalgeber — Akustische Signalgeber.",
+  "stdDescEn544PowerSupply": "Energieversorgungseinrichtungen.",
+  "stdDescEn545HeatDetectors": "Wärmemelder — Punktförmige Melder.",
+  "stdDescEn547SmokeDetectorsOptical": "Rauchmelder — Punktförmige Melder nach dem Streulicht-, Durchlicht- oder Ionisationsprinzip.",
+  "stdDescEn5410FlameDetectors": "Flammenmelder — Punktförmige Melder.",
+  "stdDescEn5411ManualCallPoint": "Handfeuermelder (mit Glasscheibe).",
+  "stdDescEn5412SmokeDetectorsLinear": "Rauchmelder — Linienförmige Melder nach dem Lichtstrahlprinzip.",
+  "stdDescEn5413SystemCompatibility": "Bewertung der Kompatibilität und Verbindbarkeit von Systembestandteilen.",
+  "stdDescEn5414PlanningGuide": "Brandmeldeanlagen — Leitfaden für Planung, Projektierung, Einbau, Abnahme, Betrieb und Instandhaltung.",
+  "stdDescEn5416VoiceAlarm": "Sprachalarmzentralen.",
+  "stdDescEn5417ShortCircuitIsolators": "Kurzschlussisolatoren.",
+  "stdDescEn5418InputOutputDevices": "Ein-/Ausgabegeräte.",
+  "stdDescEn5420AspiratingSmoke": "Rauchmelder — Ansaugrauchmelder.",
+  "stdDescEn5421AlarmTransmission": "Alarmübertragungs- und Störungsmeldeeinrichtungen.",
+  "stdDescEn5423VisualAlarm": "Feueralarmeinrichtungen — Optische Signalgeber.",
+  "stdDescEn5425RadioComponents": "Komponenten mit Funkverbindung (drahtlose Systemkomponenten).",
+  "stdDescNfpa72NationalCode": "USA — Nationaler Code für Brandmelde- und Signalanlagen. Adressierung, Alarmierung, Infrastruktur.",
+  "stdDescVds2095PlanningInstall": "Deutschland — Richtlinien für Planung und Einbau von Brandmeldeanlagen.",
+  "stdDescEn121011SmokeCurtains": "Rauch- und Wärmefreihaltung — Teil 1: Festlegungen für Rauchschürzen.",
+  "stdDescEn121012NaturalVentilators": "Natürliche Rauch- und Wärmeabzugsgeräte — Anforderungen.",
+  "stdDescEn121013PoweredExhaust": "Maschinelle Rauchabzugsanlagen — Maschinelle Rauch- und Wärmeabzugsventilatoren.",
+  "stdDescEn121014InstallCommission": "Leitfaden für Einbau, Abnahmeprüfung, regelmäßige Wartung und Instandsetzung.",
+  "stdDescEn121016PressureDifferential": "Differenzdruck-Rauchschutzanlagen — Festlegungen für Bausätze.",
+  "stdDescEn121017DuctlessNaturalVent": "Rauch- und Wärmeabzugsgeräte — Kanallose natürliche Rauchabführung.",
+  "stdDescEn121018TunnelControlPanels": "Steuertafeln für natürliche Rauch- und Wärmeabzugsanlagen in Tunneln.",
+  "stdDescEn121019FireDamperControl": "Steuereinrichtungen für Rauchschutzklappen.",
+  "stdDescEn1210110PowerSupplyKits": "Energieversorgungs-Bausätze.",
+  "stdDescNfpa92SmokeControlUs": "USA — Standard für Rauchschutzanlagen. Druckbelüftete Treppenhäuser, Rauchmanagement in Atrien.",
+  "stdDescNfpa101LifeSafety": "USA — Life-Safety-Code, Fluchtwege, Ausgangsanforderungen.",
+  "stdDescEn16341DoorFireResistance": "Feuer- und Rauchschutzabschlüsse — Feuerwiderstandsprüfung.",
+  "stdDescEn16343SmokeControl": "Feuerschutzabschlüsse — Rauchschutzprüfung.",
+  "stdDescEn15650FireDampers": "Brandschutzklappen für Lüftungsanlagen.",
+  "stdDescEn158821ExtendedApplication": "Erweiterte Anwendung der Ergebnisse von Feuerwiderstandsprüfungen für Rauchschutzklappen.",
+  "stdDescEn37PortableExtPerformance": "Tragbare Feuerlöscher — Leistung, Prüfverfahren und Bauart.",
+  "stdDescEn38PortableExtAdditional": "Tragbare Feuerlöscher — Zusätzliche Anforderungen und Prüfungen.",
+  "stdDescEn39PortableExtCo2": "Tragbare Feuerlöscher — CO2-Feuerlöscher.",
+  "stdDescEn310PortableExtSpecial": "Tragbare Feuerlöscher — Besondere Anforderungen.",
+  "stdDescNfpa10PortableUs": "USA — Standard für tragbare Feuerlöscher.",
+  "stdDescEn18661MobileCo2": "Fahrbare CO2-Feuerlöscher.",
+  "stdDescTsEn615DryChemicalPowder": "Feuerlöschmittel — Anforderungen an Pulverlöschmittel.",
+  "stdDescTsEn15683FoamConcentrates": "Feuerlöschmittel — Schaummittel.",
+  "stdDescEn1992Eurocode2": "Stahlbetontragwerke — Tragwerksbemessung für den Brandfall (Eurocode 2).",
+  "stdDescEn1993Eurocode3": "Stahltragwerke — Tragwerksbemessung für den Brandfall (Eurocode 3).",
+  "stdDescEn1994Eurocode4": "Verbundtragwerke aus Stahl und Beton — Bemessung für den Brandfall (Eurocode 4).",
+  "stdDescEn1995Eurocode5": "Holztragwerke — Tragwerksbemessung für den Brandfall (Eurocode 5).",
+  "stdDescEn1996Eurocode6": "Mauerwerksbauten — Tragwerksbemessung für den Brandfall (Eurocode 6).",
+  "stdDescIso8341StandardFireCurve": "Einheitstemperaturkurve — Feuerwiderstandsprüfung für Bauteile.",
+  "stdDescIso8342AlternativeCurves": "Alternative und parametrische Brandkurven.",
+  "stdDescEn135011ReactionToFire": "Klassifizierung von Bauprodukten und Bauarten zu ihrem Brandverhalten.",
+  "stdDescEn135012FireResistanceClass": "Klassifizierung von Bauteilen nach ihrem Feuerwiderstand.",
+  "stdDescEn135013VentilationServices": "Klassifizierung des Feuerwiderstands von Lüftungsanlagen-Bauprodukten.",
+  "stdDescEn135014SmokeControlDoors": "Klassifizierung von Rauchschutztüren und Bauteilen.",
+  "stdDescEn135015Roofs": "Dächer — Klassifizierung anhand von Prüfungen zur Beanspruchung durch ein Feuer von außen.",
+  "stdDescNfpa220ConstructionTypes": "USA — Standard für Bauarten von Gebäuden.",
+  "stdDescUl263FireResistanceTests": "USA — Feuerwiderstandsprüfungen für Bauteile und Baustoffe.",
+  "stdDescAstmE119FireEndurance": "USA — Prüfverfahren für die Feuerbeständigkeit von Baustoffen und Bausystemen.",
+  "stdDescIso31000RiskManagement": "Risikomanagement — Leitlinien und allgemeiner Rahmen.",
+  "stdDescIso45001Ohs": "Managementsysteme für Sicherheit und Gesundheit bei der Arbeit — Anforderungen mit Anleitung zur Anwendung.",
+  "stdDescIso16069SafetyWayGuidance": "Grafische Symbole — Sicherheitszeichen — Sicherheitsleitsysteme (Notbeleuchtung und Fluchtwegkennzeichnung).",
+  "stdDescEn50172EmergencyLighting": "Sicherheitsbeleuchtungsanlagen für Rettungswege — Einbau und Betrieb.",
+  "stdDescNfpa1FireCode": "USA — Fire Code. Gebäudenutzung, Ausgänge, Evakuierung und Gefahren.",
+  "stdDescNfpa25InspectionTesting": "Wasserbasierte Feuerlöschanlagen — Inspektion, Prüfung und Instandhaltung.",
+  "stdDescEnIso7010SafetySigns": "Sicherheitszeichen — Registrierte Sicherheitszeichen für Notausgänge, Brandschutzeinrichtungen und Gefahrenwarnungen.",
+  "stdDescTs9811FireSafetySigns": "Türkei — Sicherheitszeichen für den Brandschutz.",
+  "stdDescTbdy2018SeismicSteelFire": "Türkische Erdbebenbauverordnung — Abschnitt 3: Stahltragwerke, Brandeinwirkung.",
+  "stdDescTrFireRegulation2015": "Türkei — Anforderungen an Brandschutz, Evakuierung, Löschanlagen und Alarmsysteme in Gebäuden.",
+  "stdDescNfpa850PowerGeneration": "Brandschutz für Kraftwerke — Turbinenhallen, Transformatoren und Kabeltrassen.",
+  "stdDescNfpa804NuclearPlants": "Standard für den Brandschutz von Kernkraftwerken.",
+  "stdDescNfpa409AircraftHangars": "Standard für den Brandschutz von Flugzeughangars.",
+  "stdDescNfpa415AircraftFueling": "Flugzeugbetankungsanlagen und Arbeitsbereiche.",
+  "stdDescEn11271ExplosivePrevention": "Explosionsfähige Atmosphären — Explosionsschutz, Grundlagen und Methodik.",
+  "stdDescEn6007910ZoneClassification": "Explosionsfähige Atmosphären — Einteilung der Bereiche (Gase).",
+  "stdDescIec61511FunctionalSafety": "Funktionale Sicherheit — Sicherheitstechnische Systeme für die Prozessindustrie.",
+  "stdDescApi610PetrochemPumps": "Pumpen in petrochemischen Anlagen — Brandschutzanforderungen.",
+  "stdDescNfpa654CombustibleDust": "Schutz vor Brand und Explosion durch brennbaren Staub.",
+  "stdDescNfpa68ExplosionVenting": "Standard für Explosionsschutz durch Druckentlastung.",
+  "stdDescNfpa69ExplosionPrevention": "Standard für Explosionsschutzsysteme.",
+  "spActOfficesAdmin": "Büros und Verwaltungsgebäude",
+  "spActHotelsHostelsGuesthouses": "Hotels, Herbergen, Pensionen",
+  "spActHospitalsClinics": "Krankenhäuser, Kliniken, Gesundheitszentren",
+  "spActSchoolsUniversities": "Schulen, Universitäten und Bildungseinrichtungen",
+  "spActResidentialApartments": "Wohnhäuser und Apartmentgebäude",
+  "spActPrisonsReformatories": "Gefängnisse und Besserungsanstalten",
+  "spActChurchesMosquesWorship": "Kirchen, Moscheen und Gotteshäuser",
+  "spActTheatresCinemaSeating": "Theater / Kinos (nur Zuschauersitzbereiche)",
+  "spActMuseumsGalleries": "Museen und Kunstgalerien",
+  "spActBreweriesExclDistilleries": "Brauereien (ohne Brennereien)",
+  "spActMultiStoreyBasementCarParks": "Mehrgeschossige und Tiefgaragen (geschlossen)",
+  "spActCeramicsProduction": "Herstellung von Keramikprodukten",
+  "spActGlassGlasswareExclFibre": "Glas- und Glaswarenherstellung (ohne Glasfasern)",
+  "spActChemResearchLabs": "Chemische Forschungslabore",
+  "spActDairyProcessing": "Molkereien und Milchverarbeitungsbetriebe",
+  "spActElectronicsAssembly": "Montagewerkstätten für elektronische Geräte",
+  "spActFoodProcessingPackaging": "Lebensmittelverarbeitungs- und Verpackungsbetriebe",
+  "spActHotelsKitchenLaundryService": "Hotels — Küchen-, Wäscherei- und Servicebereiche",
+  "spActInstitutionalCommercialLaundries": "Institutionelle und gewerbliche Wäschereien",
+  "spActLeatherProductsProduction": "Herstellung von Leder und Lederwaren",
+  "spActLightMetalworkingWorkshops": "Leichte Metallverarbeitungswerkstätten",
+  "spActPharmaceuticalProduction": "Pharmazeutische Produktionsanlagen",
+  "spActResearchLabsNonflamLiquids": "Forschungslabore (Einsatz nicht brennbarer Flüssigkeiten)",
+  "spActTextileWeavingNaturalFibresUntreated": "Textilweberei — Baumwolle/Wolle/Naturfaser (unbehandelt)",
+  "spActTobaccoProcessingPackaging": "Tabakverarbeitung und -verpackung",
+  "spActAgriIndustrialMachineryAssembly": "Montagebetriebe für Landmaschinen und Industriemaschinen",
+  "spActGrainFlourMillFoodProcessing": "Getreide-, Mehlmühlen und ähnliche Lebensmittelverarbeitung",
+  "spActChemProductionNonflamLiquidsOnly": "Chemische Produktion (nur nicht brennbare Flüssigprodukte)",
+  "spActDeptStoresShoppingCentresSingleStorey": "Kaufhäuser und Einkaufszentren (eingeschossig)",
+  "spActElectricalEquipmentFactories": "Fabriken für elektrische Ausrüstung",
+  "spActComputerDataProcessingRooms": "Computer- und elektronische Datenverarbeitungsräume",
+  "spActGeneralEngineeringWorkshopsFactories": "Allgemeine Maschinenbauwerkstätten und -fabriken",
+  "spActFruitVegCanningFacilities": "Obst-, Gemüse- und Konservenverarbeitungsbetriebe",
+  "spActVehicleMaintenanceRepairGarages": "Kfz-Wartungs- und Reparaturwerkstätten",
+  "spActFibreglassProductionAssembly": "Herstellung und Montage von Glasfaserprodukten",
+  "spActHardwareIronmongeryStores": "Eisenwaren- und Baumarktgeschäfte",
+  "spActHospitalsTreatmentSurgeryAreas": "Krankenhäuser — Behandlungs- und Operationsbereiche",
+  "spActKnittingHosieryFactories": "Strickwarenfabriken (Hosiery)",
+  "spActLibrariesOpenShelfAreas": "Bibliotheken — allgemeine Freihandbereiche",
+  "spActGeneralMetalworkingFactories": "Allgemeine Metallverarbeitungsfabriken",
+  "spActPaperBoardProductionFacilities": "Papier- und Kartonproduktionsanlagen",
+  "spActPlasticsManufNonflamOnly": "Kunststoffherstellung (nur nicht brennbare Kunststoffe)",
+  "spActGeneralPrintingWaterBasedInk": "Allgemeiner Druck (Farbe auf Wasserbasis)",
+  "spActSupermarketsHypermarkets": "Supermärkte und Hypermärkte",
+  "spActTailoringGarmentManufacture": "Schneiderei, Bekleidungs- und Konfektionsherstellung",
+  "spActTextileSpinningWeavingSynthetic": "Textilspinnerei und -weberei (Synthetikfaser)",
+  "spActLoadingShippingDocks": "Lade-, Versand- und Verladerampen",
+  "spActGeneralStorageUpTo4m": "Allgemeine Lagerung (Stapelhöhe ≤ 4 m)",
+  "spActAircraftHangarsMaintenance": "Flugzeughangars — Wartungs- und Reparaturbereiche",
+  "spActOilclothTarpaulinCanvasProduction": "Herstellung von Wachstuch, Planen und Segeltuch",
+  "spActChemProductionFpAbove55": "Chemische Produktion (Produkte mit Flammpunkt > 55 °C)",
+  "spActColdStores": "Kühllager",
+  "spActFilmTvStudiosProduction": "Film- und Fernsehstudios (Produktionsbereiche)",
+  "spActFurnitureUpholsteryProduction": "Möbel- und Polsterherstellung (Schaumstoff, Stoff)",
+  "spActJoineryWoodworkingWorkshops": "Schreinerei — Holzverarbeitungswerkstätten",
+  "spActMatchProductionFacilities": "Zündholzherstellungsbetriebe",
+  "spActOfficesLargePaperArchives": "Büros mit großen Papierarchivbereichen",
+  "spActWaterBasedPaintVarnishProduction": "Herstellung von Farben und Lacken auf Wasserbasis",
+  "spActPaperCorrugatedBoxProduction": "Verarbeitung/Herstellung von Papier, Karton und Wellpappkartons",
+  "spActThermoplasticsManufShaping": "Herstellung und Formgebung von Thermoplasten",
+  "spActHighSpeedOffsetPrintingOilInk": "Hochgeschwindigkeits-Offsetdruck (Farbe auf Ölbasis)",
+  "spActRubberProductsProduction": "Produktionsanlagen für Gummiprodukte",
+  "spActTextileDyeingFinishingFacilities": "Textilfärberei- und Veredelungsbetriebe",
+  "spActGeneralStorage4to8m": "Allgemeine Lagerung (Stapelhöhe > 4 m – 8 m)",
+  "spActChemProductionClosedProcessFp55": "Chemische Produktion (geschlossener Prozess, Flammpunkt > 55 °C)",
+  "spActPlasticRubberPartsClosedMoulding": "Herstellung von Kunststoff- und Gummiteilen (geschlossene Extrusion/Formgebung)",
+  "spActTextileDyeingFinishingWaterBased": "Textilfärbe- und Veredelungsbetriebe (wasserbasiert)",
+  "spActPharmacyCosmeticsDetergentProduction": "Produktionsanlagen für Pharmazeutika, Kosmetika und Waschmittel",
+  "spActFoodBeverageProductionHighVolume": "Lebensmittel- und Getränkeproduktionsanlagen (hohes Volumen)",
+  "spActPaperProductionDryCuttingSorting": "Papierproduktions- und Verarbeitungsanlagen (Trockenschneiden/-sortieren)",
+  "spActPaintShopsWaterUvCuring": "Lackierbetriebe mit Wasser- oder UV-härtender Farbe",
+  "spActMetalworkingMachineryHeavySwarfOilMist": "Metallverarbeitungs- und Maschinenbaubetriebe (starker Späneanfall, Ölnebel)",
+  "spActFlammableLiquidProcessFp55Plus": "Verarbeitungs-/Lagerungsprozesse brennbarer Flüssigkeiten (Flammpunkt ≥ 55 °C)",
+  "spActFoamRubberFoamPlasticProduction": "Produktionsanlagen für Schaumgummi und Schaumkunststoff (PU, EPS/XPS)",
+  "spActFlowCoatingMetalPlasticParts": "Flutlackierung (Flow Coating) von Metall- und Kunststoffteilen",
+  "spActIndustrialPrintingFlammableInkSolvent": "Industriedruckbetriebe mit brennbarer Farbe/Lösungsmittel",
+  "spActAerosolSprayPackagingFilling": "Verpackungs-/Abfüllanlagen für Aerosol- und Sprühprodukte",
+  "spActFlammableLiquidProcessFpBelow55Open": "Verarbeitung brennbarer Flüssigkeiten (Flammpunkt < 55 °C, offene Behälter)",
+  "spActChemProductionContainingFp55Liquids": "Chemische Produktion (Produkte mit brennbarer Flüssigkeit, Flammpunkt ≥ 55 °C)",
+  "spActSolventBasedPaintVarnishProduction": "Produktionsanlagen für lösungsmittelbasierte Farben und Lacke",
+  "spActSpraySolventPaintApplication": "Sprühlackierbetrieb — Anwendung lösungsmittelbasierter brennbarer Farbe",
+  "spActDryCleaningPerchloroethyleneSolvent": "Chemische Reinigungsbetriebe (Perchlorethylen / lösungsmittelbasiert)",
+  "spActSolventExtractionFacilities": "Lösungsmittelextraktionsanlagen",
+  "spActPrintingGravureFlammableInk": "Druck-/Tiefdruckbetriebe mit brennbarer Farbe",
+  "spActSprayCoatingBoothsFlammableLiquid": "Sprühbeschichtungs-/Lackierkabinen mit brennbarer Flüssigkeit",
+  "spActRubberMasticFlammableRawMaterialProcessing": "Verarbeitungsanlagen für Gummimastix und brennbare Rohstoffe",
+  "spActPaintInkVarnishPackagingFilling": "Verpackungs- und Abfüllanlagen für Farbe, Druckfarbe oder Lack",
+  "spActHighRackPalletStorageSolidAbove4m": "Hochregal-Palettenlagerung — feste Materialien, Stapelhöhe > 4 m",
+  "spActTyresRubberProductsStorage": "Lagerung von Fahrzeugreifen und Gummiprodukten",
+  "spActPaperRollsReelsStorage": "Lagerung von Papierrollen",
+  "spActSolidPlasticRawProductStoragePalletRack": "Lagerung fester Kunststoffrohstoffe und -produkte (palettiert/im Regal)",
+  "spActBaledCottonTextileSyntheticFibreStorage": "Lagerung von Baumwollballen, Textilrohstoffen und Synthetikfasern",
+  "spActHighRackPalletStorageFlammableLiquidAbove4m": "Hochregal-Palettenlagerung — Produkte mit brennbarer Flüssigkeit, > 4 m  ⚠ Wasserintensives Sondersystem",
+  "spActAerosolStoreFlammablePropellantHighRack": "Aerosolproduktlager (brennbares Treibgas, Hochregal)  ⚠ Sondersystem erforderlich",
+  "spActFlammableLiquidPackagedProductStorage": "Lagerung verpackter Produkte mit brennbarer Flüssigkeit (Farbe, Lösungsmittel, Lack)  ⚠ Sondersystem",
+  "spActHighDensityStorageWaterSensitiveHighCalorific": "Hochdichte Lagerung wasserempfindlicher oder hochkalorischer Produkte",
+  "spActNoncombustibleStorageMetalGlassCeramicConcrete": "Lagerung nicht brennbarer Produkte — Metall-, Glas-, Keramik-, Betonprodukte",
+  "spActFrozenFoodColdChainStorage": "Lagerung von Tiefkühlkost und Kühlkettenprodukten",
+  "spActNoncombustibleInSealedMetalCansDrums": "Nicht brennbare Produkte in verschlossenen Metalldosen/-fässern",
+  "spActWetFoodFreshProduceCannedStorage": "Lager für feuchte Lebensmittel (Frischwaren, Konserven)",
+  "spActPorcelainSanitarywareStorage": "Lagerung von Porzellan- und Sanitärkeramikprodukten",
+  "spActEmptyGlassBottlesMetalCansStorage": "Lagerung leerer Glasflaschen/leerer Metalldosen",
+  "spActNoncombustibleCartonPackagedStorage": "Lagerung nicht brennbarer Produkte in Kartonverpackung",
+  "spActNoncombustibleGoodsWoodenCratesStorage": "Lagerung nicht brennbarer Güter in Holzkisten",
+  "spActNoncombustibleLiquidGlassPlasticContainersStorage": "Lagerung nicht brennbarer Flüssigkeiten in Glasflaschen/Kunststoffbehältern",
+  "spActMixedProductsLowCombustibleContentStorage": "Lagerung gemischter Produkte mit geringem brennbarem Anteil",
+  "spActGlassCeramicWrappedStorage": "Lagerung von in Packmaterial gewickelten Glas- und Keramikprodukten",
+  "spActPaperBoardCorrugatedProductStorage": "Lagerung von Papier-, Karton- und Wellpappprodukten",
+  "spActTextileYarnFabricGarmentStorage": "Lagerung von Textilien, Garn, Stoff und Bekleidung",
+  "spActWoodWoodBasedProductStorage": "Lagerung von Holz- und Holzwerkstoffprodukten",
+  "spActFurnitureUpholsteryMaterialsStorage": "Lagerung von Möbeln und Polstermaterialien",
+  "spActMixedPackagedGoodsPaperPlastic": "Lagerung gemischt verpackter Güter (Papier + Kunststoff kombiniert)",
+  "spActDryFoodAgriculturalProductsStorage": "Lagerung von Trockenlebensmitteln und Agrarprodukten (nicht lose)",
+  "spActLeatherProductsStorage": "Lagerung von Leder und Lederwaren",
+  "spActSmallElectricalApplianceStoragePackaged": "Lagerung kleiner elektrischer Haushaltsgeräte (verpackt)",
+  "spActExpandedPlasticProductStorageFloor": "Lagerung von Schaumkunststoffprodukten (EPS, PU, XPS) (bodengestapelt)",
+  "spActRubberTyreProductStorageFloor": "Lagerung von Gummi- und Reifenprodukten (bodengestapelt)",
+  "spActFlammableLiquidPlasticContainersStorageFloor": "Lagerung von Kunststoffbehältern mit brennbarer Flüssigkeit (bodengestapelt)",
+  "spActAerosolProductStorageFloor35m": "Lagerung von Aerosolprodukten — bodengestapelt, ≤ 3,5 m",
+  "spActPolystyreneFoamPackagedProductStorage": "Lagerung von Polystyrolschaum-verpackten Produkten",
+  "spActHighCalorificCombustibleGoodsStorageFloor": "Lagerung brennbarer Güter mit hohem Heizwert (bodengestapelt)",
+  "spActRackPalletCategoryIGoods": "Regal-/Palettensystem — Güter der Kategorie I (Metall, Glas, Keramik)",
+  "spActHighRackNoncombustibleStorageAbove3m": "Hochregallagerung — nicht brennbare Produkte, Stapelhöhe > 3 m",
+  "spActPalletSealedMetalGlassStorage": "Palettierte Lagerung verschlossener Metall-/Glasprodukte",
+  "spActColdStoreHighRackSystem": "Kühllager mit Hochregalsystem",
+  "spActRackPalletCategoryIIGoods": "Regal-/Palettensystem — Güter der Kategorie II (kartonverpackt)",
+  "spActHighRackCartonBoxedNoncombustibleStorage": "Hochregallagerung — nicht brennbare Produkte in Kartons",
+  "spActPalletCartonPackagedStorageAbove3m": "Palettierte Lagerung kartonverpackter Produkte, > 3 m",
+  "spActWoodenCrateStorageHighRack": "Lagerung in Holzkisten, Hochregalsystem",
+  "spActRackPalletCategoryIIIGoods": "Regal-/Palettensystem — Güter der Kategorie III (Papier, Textil, Holz)",
+  "spActHighRackFurnitureWoodProductsStorage": "Hochregallagerung — Möbel, Holzprodukte",
+  "spActBaledCottonTextileRackStorageAbove3m": "Regallagerung von Baumwoll-/Textilballen, > 3 m",
+  "spActPaperRollsRackStorageAbove3m": "Regallagerung von Papierrollen, > 3 m",
+  "spActMixedPackagedHighRackStorage": "Hochregallagerung gemischt verpackter Güter (Papier + Kunststoff)",
+  "spActRackPalletCategoryIVGoods": "Regal-/Palettensystem — Güter der Kategorie IV (Kunststoff, Gummi, Schaumstoff)",
+  "spActExpandedPlasticFoamHighRackStorage": "Hochregallagerung von Schaumkunststoff- und Schaumprodukten",
+  "spActAerosolRackStorageFlammablePropellantAbove3m": "Regallagerung von Aerosolprodukten — brennbares Treibgas, > 3 m",
+  "spActSolidPlasticRawProductHighRackStorage": "Hochregallagerung fester Kunststoffrohstoffe und -produkte",
+  "spActFlammablePackagedProductHighRackStorage": "Hochregallagerung verpackter brennbarer Produkte (Farbe, Lack, Lösungsmittel)",
+  "spActRubberTyreProductHighRackStorageAbove3m": "Hochregallagerung von Gummi- und Reifenprodukten, > 3 m"
+}
