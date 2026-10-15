@@ -1352,6 +1352,91 @@ class AppLocalizationsTr extends AppLocalizations {
   String get materialMixedFurniture => 'Mobilya (karma)';
 
   @override
+  String get materialTobaccoLeaf => 'Tütün yaprağı (kuru)';
+
+  @override
+  String get materialCutTobacco => 'Kıyılmış tütün';
+
+  @override
+  String get materialCigarettes => 'Sigara (mamul)';
+
+  @override
+  String get materialFilterTow => 'Filtre tow (selüloz asetat)';
+
+  @override
+  String get materialBoppFilm => 'BOPP / OPP ambalaj filmi';
+
+  @override
+  String get materialGlycerin => 'Gliserin (nemlendirici)';
+
+  @override
+  String get materialStrawHay => 'Saman / Kuru ot';
+
+  @override
+  String get materialSawdustPellets => 'Talaş / Ahşap pelet';
+
+  @override
+  String get materialCarpetFloor => 'Halı / Yer döşemesi';
+
+  @override
+  String get materialLinoleum => 'Linolyum';
+
+  @override
+  String get materialPolyamide => 'Poliamid (Naylon)';
+
+  @override
+  String get materialPet => 'PET';
+
+  @override
+  String get materialPolycarbonate => 'Polikarbonat (PC)';
+
+  @override
+  String get materialWaxParaffin => 'Mum / Parafin';
+
+  @override
+  String get materialSugar => 'Şeker';
+
+  @override
+  String get materialFlourGrain => 'Un / Tahıl';
+
+  @override
+  String get materialSulfur => 'Kükürt';
+
+  @override
+  String get materialVegetableOil => 'Bitkisel yağ';
+
+  @override
+  String get materialKerosene => 'Gazyağı / Jet yakıtı';
+
+  @override
+  String get materialFuelOil => 'Fuel Oil (Akaryakıt)';
+
+  @override
+  String get materialEngineOil => 'Motor yağı';
+
+  @override
+  String get materialIsopropanol => 'İzopropanol (IPA)';
+
+  @override
+  String get materialTolueneXylene => 'Toluen / Ksilen';
+
+  @override
+  String get materialHexane => 'Hekzan';
+
+  @override
+  String get materialButane => 'Bütan';
+
+  @override
+  String get materialAcetylene => 'Asetilen';
+
+  @override
+  String get materialHydrogen => 'Hidrojen';
+
+  @override
+  String get explosiveMaterialWarning =>
+      'Patlayıcı/aşırı yanıcı malzeme seçildi (hidrojen, asetilen, bütan, hekzan vb.). Yangın yükü hesabı patlama riskini kapsamaz; ATEX / patlamadan korunma değerlendirmesi ayrıca yapılmalıdır.';
+
+  @override
   String get materialOtherManual => 'Diğer (manuel)';
 
   @override
@@ -3184,6 +3269,109 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get spRcSectionMainPipe => '── Ana Boru (Main Pipe) ──';
+
+  @override
+  String get spExpHeader => 'Hidrolik Hesap Tablosu (Dışa Aktar)';
+
+  @override
+  String get spExpSaved => 'Kaydedildi:';
+
+  @override
+  String get spExpPdf => 'PDF';
+
+  @override
+  String get spExpExcel => 'Excel';
+
+  @override
+  String get spExpTitle => 'YANGIN SÖNDÜRME SPRİNKLER SİSTEMİ HİDROLİK HESABI';
+
+  @override
+  String get spExpBuilding => 'Bina';
+
+  @override
+  String get spExpHazardClass => 'Tehlike sınıfı';
+
+  @override
+  String get spExpDensity => 'Debi (mm/dk)';
+
+  @override
+  String get spExpDesignArea => 'Uygulama hesap alanı';
+
+  @override
+  String get spExpCoverage => 'Sprinkler koruma alanı';
+
+  @override
+  String get spExpSprinklerCount => 'Sprinkler sayısı';
+
+  @override
+  String get spExpKFactor => 'K-faktör';
+
+  @override
+  String get spExpPipeMaterial => 'Boru malzemesi';
+
+  @override
+  String get spExpColNo => 'No';
+
+  @override
+  String get spExpColPart => 'Parça';
+
+  @override
+  String get spExpColQ => 'q (L/dk)';
+
+  @override
+  String get spExpColQCum => 'Q (L/dk)';
+
+  @override
+  String get spExpColDn => 'Çap';
+
+  @override
+  String get spExpColStraight => 'Düz boru L (m)';
+
+  @override
+  String get spExpColFittings => 'Fitting F (m)';
+
+  @override
+  String get spExpColTotalLen => 'Toplam T (m)';
+
+  @override
+  String get spExpColLoss => 'Kayıp (bar/m)';
+
+  @override
+  String get spExpColPt => 'Pt (bar)';
+
+  @override
+  String get spExpColPe => 'Pe (bar)';
+
+  @override
+  String get spExpColPf => 'Pf (bar)';
+
+  @override
+  String get spExpColNote => 'Açıklama';
+
+  @override
+  String get spExpSumFlow => 'Toplam debi (Q)';
+
+  @override
+  String get spExpSumHead => 'En uzak sprinkler basıncı';
+
+  @override
+  String get spExpSumFriction => 'Toplam sürtünme kaybı (Pf)';
+
+  @override
+  String get spExpSumStatic => 'Statik yük (Pe)';
+
+  @override
+  String get spExpSumAlarm => 'Alarm vanası kaybı';
+
+  @override
+  String get spExpSumCalc => 'Hesaplanan toplam basınç';
+
+  @override
+  String get spExpSumPump => 'Pompa basıncı (Tablo 6 dahil)';
+
+  @override
+  String get spExpFootNote =>
+      'Fitting eşdeğer boyu düz boru uzunluğunun %20\'si olarak alınmıştır. Hazen-Williams formülü kullanılmıştır. Ön tasarım amaçlıdır; sonuçlar proje mühendisi tarafından doğrulanmalıdır.';
 
   @override
   String get spRcHydraulicFootnote =>

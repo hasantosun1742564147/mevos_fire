@@ -1358,6 +1358,91 @@ class AppLocalizationsDe extends AppLocalizations {
   String get materialMixedFurniture => 'Möbel (gemischt)';
 
   @override
+  String get materialTobaccoLeaf => 'Tabakblatt (trocken)';
+
+  @override
+  String get materialCutTobacco => 'Schnitttabak';
+
+  @override
+  String get materialCigarettes => 'Zigaretten (Fertigware)';
+
+  @override
+  String get materialFilterTow => 'Filtertow (Celluloseacetat)';
+
+  @override
+  String get materialBoppFilm => 'BOPP-/OPP-Verpackungsfolie';
+
+  @override
+  String get materialGlycerin => 'Glycerin (Feuchthaltemittel)';
+
+  @override
+  String get materialStrawHay => 'Stroh / Heu (trocken)';
+
+  @override
+  String get materialSawdustPellets => 'Sägemehl / Holzpellets';
+
+  @override
+  String get materialCarpetFloor => 'Teppich / Bodenbelag';
+
+  @override
+  String get materialLinoleum => 'Linoleum';
+
+  @override
+  String get materialPolyamide => 'Polyamid (Nylon)';
+
+  @override
+  String get materialPet => 'PET';
+
+  @override
+  String get materialPolycarbonate => 'Polycarbonat (PC)';
+
+  @override
+  String get materialWaxParaffin => 'Wachs / Paraffin';
+
+  @override
+  String get materialSugar => 'Zucker';
+
+  @override
+  String get materialFlourGrain => 'Mehl / Getreide';
+
+  @override
+  String get materialSulfur => 'Schwefel';
+
+  @override
+  String get materialVegetableOil => 'Pflanzenöl';
+
+  @override
+  String get materialKerosene => 'Kerosin / Jet-Kraftstoff';
+
+  @override
+  String get materialFuelOil => 'Heizöl (schwer)';
+
+  @override
+  String get materialEngineOil => 'Motoröl';
+
+  @override
+  String get materialIsopropanol => 'Isopropanol (IPA)';
+
+  @override
+  String get materialTolueneXylene => 'Toluol / Xylol';
+
+  @override
+  String get materialHexane => 'Hexan';
+
+  @override
+  String get materialButane => 'Butan';
+
+  @override
+  String get materialAcetylene => 'Acetylen';
+
+  @override
+  String get materialHydrogen => 'Wasserstoff';
+
+  @override
+  String get explosiveMaterialWarning =>
+      'Es wurde ein explosionsgefährlicher / hochentzündlicher Stoff gewählt (Wasserstoff, Acetylen, Butan, Hexan usw.). Die Brandlastberechnung deckt das Explosionsrisiko nicht ab; eine separate ATEX-/Explosionsschutzbewertung ist erforderlich.';
+
+  @override
   String get materialOtherManual => 'Sonstiges (manuell)';
 
   @override
@@ -3221,6 +3306,109 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get spRcSectionMainPipe => '── Hauptrohr (Main Pipe) ──';
+
+  @override
+  String get spExpHeader => 'Hydraulische Berechnungstabelle (Export)';
+
+  @override
+  String get spExpSaved => 'Gespeichert:';
+
+  @override
+  String get spExpPdf => 'PDF';
+
+  @override
+  String get spExpExcel => 'Excel';
+
+  @override
+  String get spExpTitle => 'HYDRAULISCHE BERECHNUNG DER SPRINKLERANLAGE';
+
+  @override
+  String get spExpBuilding => 'Gebäude';
+
+  @override
+  String get spExpHazardClass => 'Gefahrenklasse';
+
+  @override
+  String get spExpDensity => 'Beaufschlagung (mm/min)';
+
+  @override
+  String get spExpDesignArea => 'Bemessungsfläche';
+
+  @override
+  String get spExpCoverage => 'Sprinkler-Schutzfläche';
+
+  @override
+  String get spExpSprinklerCount => 'Anzahl Sprinkler';
+
+  @override
+  String get spExpKFactor => 'K-Faktor';
+
+  @override
+  String get spExpPipeMaterial => 'Rohrwerkstoff';
+
+  @override
+  String get spExpColNo => 'Nr.';
+
+  @override
+  String get spExpColPart => 'Abschnitt';
+
+  @override
+  String get spExpColQ => 'q (L/min)';
+
+  @override
+  String get spExpColQCum => 'Q (L/min)';
+
+  @override
+  String get spExpColDn => 'Durchmesser';
+
+  @override
+  String get spExpColStraight => 'Gerades Rohr L (m)';
+
+  @override
+  String get spExpColFittings => 'Formstücke F (m)';
+
+  @override
+  String get spExpColTotalLen => 'Gesamt T (m)';
+
+  @override
+  String get spExpColLoss => 'Verlust (bar/m)';
+
+  @override
+  String get spExpColPt => 'Pt (bar)';
+
+  @override
+  String get spExpColPe => 'Pe (bar)';
+
+  @override
+  String get spExpColPf => 'Pf (bar)';
+
+  @override
+  String get spExpColNote => 'Hinweis';
+
+  @override
+  String get spExpSumFlow => 'Gesamtvolumenstrom (Q)';
+
+  @override
+  String get spExpSumHead => 'Druck am ungünstigsten Sprinkler';
+
+  @override
+  String get spExpSumFriction => 'Gesamter Reibungsverlust (Pf)';
+
+  @override
+  String get spExpSumStatic => 'Statische Höhe (Pe)';
+
+  @override
+  String get spExpSumAlarm => 'Druckverlust Alarmventil';
+
+  @override
+  String get spExpSumCalc => 'Berechneter Gesamtdruck';
+
+  @override
+  String get spExpSumPump => 'Pumpendruck (inkl. Tabelle 6)';
+
+  @override
+  String get spExpFootNote =>
+      'Die Ersatzlänge der Formstücke wird mit 20 % der geraden Rohrlänge angesetzt. Hazen-Williams-Formel verwendet. Nur für die Vorplanung; Ergebnisse müssen vom Projektingenieur geprüft werden.';
 
   @override
   String get spRcHydraulicFootnote =>

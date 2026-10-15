@@ -1356,6 +1356,91 @@ class AppLocalizationsEn extends AppLocalizations {
   String get materialMixedFurniture => 'Furniture (mixed)';
 
   @override
+  String get materialTobaccoLeaf => 'Tobacco leaf (dry)';
+
+  @override
+  String get materialCutTobacco => 'Cut tobacco';
+
+  @override
+  String get materialCigarettes => 'Cigarettes (finished)';
+
+  @override
+  String get materialFilterTow => 'Filter tow (cellulose acetate)';
+
+  @override
+  String get materialBoppFilm => 'BOPP / OPP packaging film';
+
+  @override
+  String get materialGlycerin => 'Glycerin (humectant)';
+
+  @override
+  String get materialStrawHay => 'Straw / dry hay';
+
+  @override
+  String get materialSawdustPellets => 'Sawdust / wood pellets';
+
+  @override
+  String get materialCarpetFloor => 'Carpet / floor covering';
+
+  @override
+  String get materialLinoleum => 'Linoleum';
+
+  @override
+  String get materialPolyamide => 'Polyamide (nylon)';
+
+  @override
+  String get materialPet => 'PET';
+
+  @override
+  String get materialPolycarbonate => 'Polycarbonate (PC)';
+
+  @override
+  String get materialWaxParaffin => 'Wax / paraffin';
+
+  @override
+  String get materialSugar => 'Sugar';
+
+  @override
+  String get materialFlourGrain => 'Flour / grain';
+
+  @override
+  String get materialSulfur => 'Sulfur';
+
+  @override
+  String get materialVegetableOil => 'Vegetable oil';
+
+  @override
+  String get materialKerosene => 'Kerosene / jet fuel';
+
+  @override
+  String get materialFuelOil => 'Fuel oil';
+
+  @override
+  String get materialEngineOil => 'Engine oil';
+
+  @override
+  String get materialIsopropanol => 'Isopropanol (IPA)';
+
+  @override
+  String get materialTolueneXylene => 'Toluene / xylene';
+
+  @override
+  String get materialHexane => 'Hexane';
+
+  @override
+  String get materialButane => 'Butane';
+
+  @override
+  String get materialAcetylene => 'Acetylene';
+
+  @override
+  String get materialHydrogen => 'Hydrogen';
+
+  @override
+  String get explosiveMaterialWarning =>
+      'An explosive / highly flammable material is selected (hydrogen, acetylene, butane, hexane, etc.). The fire load calculation does not cover explosion risk; a separate ATEX / explosion protection assessment is required.';
+
+  @override
   String get materialOtherManual => 'Other (manual)';
 
   @override
@@ -3195,6 +3280,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spRcSectionMainPipe => '── Main Pipe ──';
+
+  @override
+  String get spExpHeader => 'Hydraulic calculation table (export)';
+
+  @override
+  String get spExpSaved => 'Saved:';
+
+  @override
+  String get spExpPdf => 'PDF';
+
+  @override
+  String get spExpExcel => 'Excel';
+
+  @override
+  String get spExpTitle => 'FIRE SPRINKLER SYSTEM HYDRAULIC CALCULATION';
+
+  @override
+  String get spExpBuilding => 'Building';
+
+  @override
+  String get spExpHazardClass => 'Hazard class';
+
+  @override
+  String get spExpDensity => 'Density (mm/min)';
+
+  @override
+  String get spExpDesignArea => 'Design area';
+
+  @override
+  String get spExpCoverage => 'Sprinkler coverage area';
+
+  @override
+  String get spExpSprinklerCount => 'Number of sprinklers';
+
+  @override
+  String get spExpKFactor => 'K-factor';
+
+  @override
+  String get spExpPipeMaterial => 'Pipe material';
+
+  @override
+  String get spExpColNo => 'No';
+
+  @override
+  String get spExpColPart => 'Section';
+
+  @override
+  String get spExpColQ => 'q (L/min)';
+
+  @override
+  String get spExpColQCum => 'Q (L/min)';
+
+  @override
+  String get spExpColDn => 'Diameter';
+
+  @override
+  String get spExpColStraight => 'Straight pipe L (m)';
+
+  @override
+  String get spExpColFittings => 'Fittings F (m)';
+
+  @override
+  String get spExpColTotalLen => 'Total T (m)';
+
+  @override
+  String get spExpColLoss => 'Loss (bar/m)';
+
+  @override
+  String get spExpColPt => 'Pt (bar)';
+
+  @override
+  String get spExpColPe => 'Pe (bar)';
+
+  @override
+  String get spExpColPf => 'Pf (bar)';
+
+  @override
+  String get spExpColNote => 'Note';
+
+  @override
+  String get spExpSumFlow => 'Total flow (Q)';
+
+  @override
+  String get spExpSumHead => 'Most remote sprinkler pressure';
+
+  @override
+  String get spExpSumFriction => 'Total friction loss (Pf)';
+
+  @override
+  String get spExpSumStatic => 'Static head (Pe)';
+
+  @override
+  String get spExpSumAlarm => 'Alarm valve loss';
+
+  @override
+  String get spExpSumCalc => 'Calculated total pressure';
+
+  @override
+  String get spExpSumPump => 'Pump pressure (incl. Table 6)';
+
+  @override
+  String get spExpFootNote =>
+      'Equivalent length of fittings is taken as 20% of the straight pipe length. Hazen-Williams formula used. For preliminary design only; results must be verified by the project engineer.';
 
   @override
   String get spRcHydraulicFootnote =>

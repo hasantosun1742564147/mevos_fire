@@ -2602,6 +2602,174 @@ abstract class AppLocalizations {
   /// **'Mobilya (karma)'**
   String get materialMixedFurniture;
 
+  /// No description provided for @materialTobaccoLeaf.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tütün yaprağı (kuru)'**
+  String get materialTobaccoLeaf;
+
+  /// No description provided for @materialCutTobacco.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıyılmış tütün'**
+  String get materialCutTobacco;
+
+  /// No description provided for @materialCigarettes.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sigara (mamul)'**
+  String get materialCigarettes;
+
+  /// No description provided for @materialFilterTow.
+  ///
+  /// In tr, this message translates to:
+  /// **'Filtre tow (selüloz asetat)'**
+  String get materialFilterTow;
+
+  /// No description provided for @materialBoppFilm.
+  ///
+  /// In tr, this message translates to:
+  /// **'BOPP / OPP ambalaj filmi'**
+  String get materialBoppFilm;
+
+  /// No description provided for @materialGlycerin.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gliserin (nemlendirici)'**
+  String get materialGlycerin;
+
+  /// No description provided for @materialStrawHay.
+  ///
+  /// In tr, this message translates to:
+  /// **'Saman / Kuru ot'**
+  String get materialStrawHay;
+
+  /// No description provided for @materialSawdustPellets.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talaş / Ahşap pelet'**
+  String get materialSawdustPellets;
+
+  /// No description provided for @materialCarpetFloor.
+  ///
+  /// In tr, this message translates to:
+  /// **'Halı / Yer döşemesi'**
+  String get materialCarpetFloor;
+
+  /// No description provided for @materialLinoleum.
+  ///
+  /// In tr, this message translates to:
+  /// **'Linolyum'**
+  String get materialLinoleum;
+
+  /// No description provided for @materialPolyamide.
+  ///
+  /// In tr, this message translates to:
+  /// **'Poliamid (Naylon)'**
+  String get materialPolyamide;
+
+  /// No description provided for @materialPet.
+  ///
+  /// In tr, this message translates to:
+  /// **'PET'**
+  String get materialPet;
+
+  /// No description provided for @materialPolycarbonate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Polikarbonat (PC)'**
+  String get materialPolycarbonate;
+
+  /// No description provided for @materialWaxParaffin.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mum / Parafin'**
+  String get materialWaxParaffin;
+
+  /// No description provided for @materialSugar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şeker'**
+  String get materialSugar;
+
+  /// No description provided for @materialFlourGrain.
+  ///
+  /// In tr, this message translates to:
+  /// **'Un / Tahıl'**
+  String get materialFlourGrain;
+
+  /// No description provided for @materialSulfur.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kükürt'**
+  String get materialSulfur;
+
+  /// No description provided for @materialVegetableOil.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitkisel yağ'**
+  String get materialVegetableOil;
+
+  /// No description provided for @materialKerosene.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gazyağı / Jet yakıtı'**
+  String get materialKerosene;
+
+  /// No description provided for @materialFuelOil.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fuel Oil (Akaryakıt)'**
+  String get materialFuelOil;
+
+  /// No description provided for @materialEngineOil.
+  ///
+  /// In tr, this message translates to:
+  /// **'Motor yağı'**
+  String get materialEngineOil;
+
+  /// No description provided for @materialIsopropanol.
+  ///
+  /// In tr, this message translates to:
+  /// **'İzopropanol (IPA)'**
+  String get materialIsopropanol;
+
+  /// No description provided for @materialTolueneXylene.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toluen / Ksilen'**
+  String get materialTolueneXylene;
+
+  /// No description provided for @materialHexane.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hekzan'**
+  String get materialHexane;
+
+  /// No description provided for @materialButane.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bütan'**
+  String get materialButane;
+
+  /// No description provided for @materialAcetylene.
+  ///
+  /// In tr, this message translates to:
+  /// **'Asetilen'**
+  String get materialAcetylene;
+
+  /// No description provided for @materialHydrogen.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hidrojen'**
+  String get materialHydrogen;
+
+  /// No description provided for @explosiveMaterialWarning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Patlayıcı/aşırı yanıcı malzeme seçildi (hidrojen, asetilen, bütan, hekzan vb.). Yangın yükü hesabı patlama riskini kapsamaz; ATEX / patlamadan korunma değerlendirmesi ayrıca yapılmalıdır.'**
+  String get explosiveMaterialWarning;
+
   /// No description provided for @materialOtherManual.
   ///
   /// In tr, this message translates to:
@@ -5675,6 +5843,210 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'── Ana Boru (Main Pipe) ──'**
   String get spRcSectionMainPipe;
+
+  /// No description provided for @spExpHeader.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hidrolik Hesap Tablosu (Dışa Aktar)'**
+  String get spExpHeader;
+
+  /// No description provided for @spExpSaved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaydedildi:'**
+  String get spExpSaved;
+
+  /// No description provided for @spExpPdf.
+  ///
+  /// In tr, this message translates to:
+  /// **'PDF'**
+  String get spExpPdf;
+
+  /// No description provided for @spExpExcel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Excel'**
+  String get spExpExcel;
+
+  /// No description provided for @spExpTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'YANGIN SÖNDÜRME SPRİNKLER SİSTEMİ HİDROLİK HESABI'**
+  String get spExpTitle;
+
+  /// No description provided for @spExpBuilding.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bina'**
+  String get spExpBuilding;
+
+  /// No description provided for @spExpHazardClass.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tehlike sınıfı'**
+  String get spExpHazardClass;
+
+  /// No description provided for @spExpDensity.
+  ///
+  /// In tr, this message translates to:
+  /// **'Debi (mm/dk)'**
+  String get spExpDensity;
+
+  /// No description provided for @spExpDesignArea.
+  ///
+  /// In tr, this message translates to:
+  /// **'Uygulama hesap alanı'**
+  String get spExpDesignArea;
+
+  /// No description provided for @spExpCoverage.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sprinkler koruma alanı'**
+  String get spExpCoverage;
+
+  /// No description provided for @spExpSprinklerCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sprinkler sayısı'**
+  String get spExpSprinklerCount;
+
+  /// No description provided for @spExpKFactor.
+  ///
+  /// In tr, this message translates to:
+  /// **'K-faktör'**
+  String get spExpKFactor;
+
+  /// No description provided for @spExpPipeMaterial.
+  ///
+  /// In tr, this message translates to:
+  /// **'Boru malzemesi'**
+  String get spExpPipeMaterial;
+
+  /// No description provided for @spExpColNo.
+  ///
+  /// In tr, this message translates to:
+  /// **'No'**
+  String get spExpColNo;
+
+  /// No description provided for @spExpColPart.
+  ///
+  /// In tr, this message translates to:
+  /// **'Parça'**
+  String get spExpColPart;
+
+  /// No description provided for @spExpColQ.
+  ///
+  /// In tr, this message translates to:
+  /// **'q (L/dk)'**
+  String get spExpColQ;
+
+  /// No description provided for @spExpColQCum.
+  ///
+  /// In tr, this message translates to:
+  /// **'Q (L/dk)'**
+  String get spExpColQCum;
+
+  /// No description provided for @spExpColDn.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çap'**
+  String get spExpColDn;
+
+  /// No description provided for @spExpColStraight.
+  ///
+  /// In tr, this message translates to:
+  /// **'Düz boru L (m)'**
+  String get spExpColStraight;
+
+  /// No description provided for @spExpColFittings.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fitting F (m)'**
+  String get spExpColFittings;
+
+  /// No description provided for @spExpColTotalLen.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam T (m)'**
+  String get spExpColTotalLen;
+
+  /// No description provided for @spExpColLoss.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kayıp (bar/m)'**
+  String get spExpColLoss;
+
+  /// No description provided for @spExpColPt.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pt (bar)'**
+  String get spExpColPt;
+
+  /// No description provided for @spExpColPe.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pe (bar)'**
+  String get spExpColPe;
+
+  /// No description provided for @spExpColPf.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pf (bar)'**
+  String get spExpColPf;
+
+  /// No description provided for @spExpColNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açıklama'**
+  String get spExpColNote;
+
+  /// No description provided for @spExpSumFlow.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam debi (Q)'**
+  String get spExpSumFlow;
+
+  /// No description provided for @spExpSumHead.
+  ///
+  /// In tr, this message translates to:
+  /// **'En uzak sprinkler basıncı'**
+  String get spExpSumHead;
+
+  /// No description provided for @spExpSumFriction.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam sürtünme kaybı (Pf)'**
+  String get spExpSumFriction;
+
+  /// No description provided for @spExpSumStatic.
+  ///
+  /// In tr, this message translates to:
+  /// **'Statik yük (Pe)'**
+  String get spExpSumStatic;
+
+  /// No description provided for @spExpSumAlarm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Alarm vanası kaybı'**
+  String get spExpSumAlarm;
+
+  /// No description provided for @spExpSumCalc.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesaplanan toplam basınç'**
+  String get spExpSumCalc;
+
+  /// No description provided for @spExpSumPump.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pompa basıncı (Tablo 6 dahil)'**
+  String get spExpSumPump;
+
+  /// No description provided for @spExpFootNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fitting eşdeğer boyu düz boru uzunluğunun %20\'si olarak alınmıştır. Hazen-Williams formülü kullanılmıştır. Ön tasarım amaçlıdır; sonuçlar proje mühendisi tarafından doğrulanmalıdır.'**
+  String get spExpFootNote;
 
   /// No description provided for @spRcHydraulicFootnote.
   ///

@@ -1,7 +1,7 @@
 ﻿name: mevos_fire
 description: "MEVOS Fire - Yangin Hesap ve Standart Rehberi"
 publish_to: 'none'
-version: 2.0.0+3
+version: 2.0.0+11
 
 environment:
   sdk: ^3.11.0
@@ -16,6 +16,9 @@ dependencies:
   shared_preferences: ^2.2.3
   url_launcher: ^6.3.0
   http: ^1.2.2
+  pdf: ^3.11.1
+  excel: ^4.0.6
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +34,5 @@ flutter:
     - assets/standartlar_de.json
     - assets/logo.png
     - assets/mevos_logo.png
+    - assets/fonts/NotoSans-Regular.ttf
+    - assets/fonts/NotoSans-Bold.ttf

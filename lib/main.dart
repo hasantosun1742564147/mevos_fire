@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/building_type_translations.dart';
+import 'sprinkler_report.dart';
 
 final ValueNotifier<Locale?> _localeNotifier = ValueNotifier(null);
 final Map<String, Map<String, String>> _buildingTypeNameCache = {};
@@ -185,7 +186,7 @@ Future<String?> _geminiApiDiyaloguGoster(
             onPressed: () async {
               final uri = Uri.parse('https://aistudio.google.com/apikey');
               if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
               }
             },
           ),
@@ -904,7 +905,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                           Uri.parse(
                             'https://www.mevos.com.tr/pages/kayit.html',
                           ),
-                          mode: LaunchMode.externalApplication,
+                          mode: LaunchMode.inAppBrowserView,
                         ),
                         child: RichText(
                           text: TextSpan(
@@ -1177,32 +1178,42 @@ class _ProjeKaydetBant extends StatelessWidget {
         color: Colors.white,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
       ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.bookmark_border_rounded,
-            size: 18,
-            color: Color(0xFFB91C1C),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              l10n.saveProjectPrompt,
-              style: const TextStyle(fontSize: 12, color: Colors.black54),
+      // Sistem navigasyon çubuğunun altında kalmasın
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            const Icon(
+              Icons.bookmark_border_rounded,
+              size: 18,
+              color: Color(0xFFB91C1C),
             ),
-          ),
-          TextButton(
-            onPressed: () => _kaydetDiyalog(context),
-            style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFFB91C1C),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                l10n.saveProjectPrompt,
+                style: const TextStyle(fontSize: 12, color: Colors.black54),
+              ),
             ),
-            child: Text(
-              l10n.save,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            TextButton(
+              onPressed: () => _kaydetDiyalog(context),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFFB91C1C),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+              ),
+              child: Text(
+                l10n.save,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1772,7 +1783,7 @@ class AnaSayfa extends StatelessWidget {
               Navigator.pop(ctx);
               launchUrl(
                 Uri.parse('https://www.mevos.com.tr/pages/kayit.html'),
-                mode: LaunchMode.externalApplication,
+                mode: LaunchMode.inAppBrowserView,
               );
             },
             child: Text(l10n.upgradeSignUpButton),
@@ -2204,6 +2215,11 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Metanol': _YakitSpec(19.9, 0.79),
     'Etanol': _YakitSpec(26.8, 0.79),
     'Tiner / Solvent': _YakitSpec(33.0, 0.87),
+    'Hekzan': _YakitSpec(44.7, 0.66),
+    'Toluen / Ksilen': _YakitSpec(40.5, 0.87),
+    'İzopropanol (IPA)': _YakitSpec(30.5, 0.785),
+    'Aseton': _YakitSpec(29.0, 0.79),
+    'Bitkisel Yağ': _YakitSpec(37.0, 0.92),
   };
 
   // Sık kullanılan tank kapasiteleri (birim: ton veya m³)
@@ -2218,6 +2234,11 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Metanol': [5, 10, 20, 50, 100],
     'Etanol': [5, 10, 20, 50, 100],
     'Tiner / Solvent': [1, 2, 5, 10, 20, 50],
+    'Hekzan': [1, 2, 5, 10, 20, 50],
+    'Toluen / Ksilen': [1, 2, 5, 10, 20, 50],
+    'İzopropanol (IPA)': [1, 2, 5, 10, 20, 50],
+    'Aseton': [1, 2, 5, 10, 20, 50],
+    'Bitkisel Yağ': [1, 5, 10, 20, 50, 100],
   };
 
   // Varsayılan birim (LPG → ton, sıvılar → m³)
@@ -2665,7 +2686,50 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Elektrik Kablosu (XLPE)': 32.0,
     'Li-ion Batarya': 10.0,
     'Mobilya (karma)': 20.0,
+    'Tütün yaprağı (kuru)': 16.0,
+    'Kıyılmış tütün': 16.0,
+    'Sigara (mamul)': 16.5,
+    'Filtre tow (selüloz asetat)': 17.8,
+    'BOPP / OPP ambalaj filmi': 39.6,
+    'Gliserin (nemlendirici)': 16.0,
+    'Saman / Kuru ot': 16.0,
+    'Talaş / Ahşap pelet': 17.0,
+    'Halı / Yer döşemesi': 20.0,
+    'Linolyum': 20.0,
+    'Poliamid (Naylon)': 31.0,
+    'PET': 22.0,
+    'Polikarbonat (PC)': 29.0,
+    'Mum / Parafin': 41.0,
+    'Şeker': 16.5,
+    'Un / Tahıl': 16.0,
+    'Kükürt': 9.0,
+    'Bitkisel yağ': 37.0,
+    'Gazyağı / Jet yakıtı': 43.0,
+    'Fuel Oil (Akaryakıt)': 40.0,
+    'Motor yağı': 42.0,
+    'İzopropanol (IPA)': 30.5,
+    'Toluen / Ksilen': 40.5,
+    'Hekzan': 44.7,
+    'Bütan': 45.7,
+    'Asetilen': 48.2,
+    'Hidrojen': 120.0,
     'Diğer (manuel)': 0.0,
+  };
+
+  static const Set<String> _patlayiciMalzemeler = {
+    'Hidrojen',
+    'Asetilen',
+    'Bütan',
+    'Hekzan',
+    'Propan',
+    'LPG',
+    'Doğalgaz (CNG)',
+    'Metanol',
+    'Etanol',
+    'Benzin',
+    'Aseton / Solvent (genel)',
+    'Toluen / Ksilen',
+    'İzopropanol (IPA)',
   };
 
   // Fiziksel hal: 'K' = Katı, 'S' = Sıvı, 'G' = Gaz, 'D' = Diğer (manuel)
@@ -2699,6 +2763,33 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Elektrik Kablosu (XLPE)': 'K',
     'Li-ion Batarya': 'K',
     'Mobilya (karma)': 'K',
+    'Tütün yaprağı (kuru)': 'K',
+    'Kıyılmış tütün': 'K',
+    'Sigara (mamul)': 'K',
+    'Filtre tow (selüloz asetat)': 'K',
+    'BOPP / OPP ambalaj filmi': 'K',
+    'Gliserin (nemlendirici)': 'S',
+    'Saman / Kuru ot': 'K',
+    'Talaş / Ahşap pelet': 'K',
+    'Halı / Yer döşemesi': 'K',
+    'Linolyum': 'K',
+    'Poliamid (Naylon)': 'K',
+    'PET': 'K',
+    'Polikarbonat (PC)': 'K',
+    'Mum / Parafin': 'K',
+    'Şeker': 'K',
+    'Un / Tahıl': 'K',
+    'Kükürt': 'K',
+    'Bitkisel yağ': 'S',
+    'Gazyağı / Jet yakıtı': 'S',
+    'Fuel Oil (Akaryakıt)': 'S',
+    'Motor yağı': 'S',
+    'İzopropanol (IPA)': 'S',
+    'Toluen / Ksilen': 'S',
+    'Hekzan': 'S',
+    'Bütan': 'G',
+    'Asetilen': 'G',
+    'Hidrojen': 'G',
     'Benzin': 'S',
     'Dizel': 'S',
     'Metanol': 'S',
@@ -3407,6 +3498,36 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                 onDegisti: () => setState(() {}),
               ),
             ),
+            if (_malzemeler.any(
+              (m) => _patlayiciMalzemeler.contains(m.ad),
+            )) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  border: Border.all(color: Colors.orange.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 20,
+                      color: Colors.orange.shade800,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.explosiveMaterialWarning,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
 
           // ¦¦ Pano modu
@@ -5280,6 +5401,33 @@ String _malzemeGorunenAd(String value, AppLocalizations l10n) =>
       'Elektrik Kablosu (XLPE)' => l10n.materialXlpeCable,
       'Li-ion Batarya' => l10n.materialLithiumIonBattery,
       'Mobilya (karma)' => l10n.materialMixedFurniture,
+      'Tütün yaprağı (kuru)' => l10n.materialTobaccoLeaf,
+      'Kıyılmış tütün' => l10n.materialCutTobacco,
+      'Sigara (mamul)' => l10n.materialCigarettes,
+      'Filtre tow (selüloz asetat)' => l10n.materialFilterTow,
+      'BOPP / OPP ambalaj filmi' => l10n.materialBoppFilm,
+      'Gliserin (nemlendirici)' => l10n.materialGlycerin,
+      'Saman / Kuru ot' => l10n.materialStrawHay,
+      'Talaş / Ahşap pelet' => l10n.materialSawdustPellets,
+      'Halı / Yer döşemesi' => l10n.materialCarpetFloor,
+      'Linolyum' => l10n.materialLinoleum,
+      'Poliamid (Naylon)' => l10n.materialPolyamide,
+      'PET' => l10n.materialPet,
+      'Polikarbonat (PC)' => l10n.materialPolycarbonate,
+      'Mum / Parafin' => l10n.materialWaxParaffin,
+      'Şeker' => l10n.materialSugar,
+      'Un / Tahıl' => l10n.materialFlourGrain,
+      'Kükürt' => l10n.materialSulfur,
+      'Bitkisel yağ' => l10n.materialVegetableOil,
+      'Gazyağı / Jet yakıtı' => l10n.materialKerosene,
+      'Fuel Oil (Akaryakıt)' => l10n.materialFuelOil,
+      'Motor yağı' => l10n.materialEngineOil,
+      'İzopropanol (IPA)' => l10n.materialIsopropanol,
+      'Toluen / Ksilen' => l10n.materialTolueneXylene,
+      'Hekzan' => l10n.materialHexane,
+      'Bütan' => l10n.materialButane,
+      'Asetilen' => l10n.materialAcetylene,
+      'Hidrojen' => l10n.materialHydrogen,
       'Diğer (manuel)' => l10n.materialOtherManual,
       _ => value,
     };
@@ -6717,7 +6865,8 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
                         _Nfpa96Satir(
                           ikon: Icons.cleaning_services_rounded,
                           metin: l10n.hoodReqCleaningFrequency(
-                            _temizlikSikligi == '3 ayda bir (wok / charbroiler / büyük fritöz)'
+                            _temizlikSikligi ==
+                                    '3 ayda bir (wok / charbroiler / büyük fritöz)'
                                 ? l10n.hoodCleaningFreqHighVolume
                                 : _temizlikSikligi == 'Yıllık (düşük hacimli)'
                                 ? l10n.hoodCleaningFreqLow
@@ -15596,7 +15745,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
               onTap: () async {
                 final uri = Uri.parse('https://aistudio.google.com/apikey');
                 if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
                 }
               },
               child: Text(
@@ -19054,6 +19203,180 @@ class _SprinkleState extends State<SprinkleSistemi> {
 }
 
 // ¦¦ Sonuç kartı
+/// Kritik devre düğümlerinden boru bölümü bazlı hidrolik hesap tablosu üretir.
+SpReportData _spRaporOlustur(_SpSonuc s, AppLocalizations l10n) {
+  final nDal = s.kritikDevre.where((n) => n.tip == 'dal').length;
+  final nTali = s.kritikDevre.where((n) => n.tip == 'tali').length;
+  final satirlar = <SpReportRow>[];
+  for (final nd in s.kritikDevre) {
+    final bool ana = nd.tip == 'ana';
+    final int dn = switch (nd.tip) {
+      'dal' => s.dnBranch,
+      'tali' => s.dnCross,
+      _ => s.dnMain,
+    };
+    // Dal/tali: aralık × 1,2 (fitting %20 dahil) · Ana: lMain zaten %20 dahil
+    final double lToplam = ana ? nd.mesafe : s.aralik * 1.2;
+    final double lDuz = lToplam / 1.2;
+    final String parca = switch (nd.tip) {
+      'dal' => nd.no < nDal ? 'D${nd.no}-D${nd.no + 1}' : 'D${nd.no}-T1',
+      'tali' => nd.no < nTali ? 'T${nd.no}-T${nd.no + 1}' : 'T${nd.no}-A',
+      _ => 'A-P',
+    };
+    satirlar.add(
+      SpReportRow(
+        bolum: nd.tip,
+        parca: parca,
+        q: nd.q,
+        qKum: nd.cumQ,
+        dn: dn,
+        lDuz: lDuz,
+        lFit: lToplam - lDuz,
+        lToplam: lToplam,
+        kayipBarM: lToplam > 0 ? nd.dpSonraki / lToplam : 0,
+        pt: nd.p,
+        pe: ana ? s.pStatik : 0,
+        pf: nd.dpSonraki,
+        not: nd.note,
+      ),
+    );
+  }
+
+  String bar(double v) => '${v.toStringAsFixed(3)} bar';
+  final hesapToplam = s.pHead + s.dpToplam + s.pStatik + 0.50;
+  return SpReportData(
+    baslik: l10n.spExpTitle,
+    ust: [
+      (
+        l10n.spExpBuilding,
+        '${s.en.toStringAsFixed(1)} × ${s.boy.toStringAsFixed(1)} m  '
+            '(${s.binaAlani.toStringAsFixed(0)} m²)',
+      ),
+      (l10n.spExpHazardClass, s.sinif.kod),
+      (l10n.spExpDensity, s.sinif.yogunluk.toStringAsFixed(2)),
+      (l10n.spExpDesignArea, '${s.sinif.tasarimAlani.toStringAsFixed(0)} m²'),
+      (l10n.spExpCoverage, '${s.maxKapsamaEfektif.toStringAsFixed(0)} m²'),
+      (l10n.spExpSprinklerCount, '${s.nTasarim}'),
+      (l10n.spExpKFactor, s.kFactorEfektif.toStringAsFixed(0)),
+      (
+        l10n.spExpPipeMaterial,
+        '${_spBoruAdiL10n(l10n, s.boruMalzeme)}  (C=${s.boruC.toStringAsFixed(0)})',
+      ),
+    ],
+    kolonlar: [
+      l10n.spExpColNo,
+      l10n.spExpColPart,
+      l10n.spExpColQ,
+      l10n.spExpColQCum,
+      l10n.spExpColDn,
+      l10n.spExpColStraight,
+      l10n.spExpColFittings,
+      l10n.spExpColTotalLen,
+      l10n.spExpColLoss,
+      l10n.spExpColPt,
+      l10n.spExpColPe,
+      l10n.spExpColPf,
+      l10n.spExpColNote,
+    ],
+    bolumAdlari: {
+      'dal': l10n.spRcSectionBranchPipe.replaceAll('─', '').trim(),
+      'tali': l10n.spRcSectionDistPipe.replaceAll('─', '').trim(),
+      'ana': l10n.spRcSectionMainPipe.replaceAll('─', '').trim(),
+    },
+    satirlar: satirlar,
+    ozet: [
+      (
+        l10n.spExpSumFlow,
+        '${s.kritikDevre.last.cumQ.toStringAsFixed(1)} L/min',
+      ),
+      (l10n.spExpSumHead, bar(s.pHead)),
+      (l10n.spExpSumFriction, bar(s.dpToplam)),
+      (l10n.spExpSumStatic, bar(s.pStatik)),
+      (l10n.spExpSumAlarm, bar(0.50)),
+      (l10n.spExpSumCalc, bar(hesapToplam)),
+      (l10n.spExpSumPump, bar(s.pompaBasinc)),
+    ],
+    altNot: l10n.spExpFootNote,
+  );
+}
+
+class _SpExportButonlari extends StatelessWidget {
+  final _SpSonuc sonuc;
+  final Color renk;
+  const _SpExportButonlari({required this.sonuc, required this.renk});
+
+  Future<void> _aktar(BuildContext context, bool pdf) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final rapor = _spRaporOlustur(sonuc, l10n);
+      final now = DateTime.now();
+      final tarih =
+          '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+      String? kayit;
+      if (pdf) {
+        kayit = await shareSpReport(
+          await buildSpPdf(rapor),
+          fileName: 'sprinkler_hidrolik_$tarih.pdf',
+          mimeType: 'application/pdf',
+        );
+      } else {
+        kayit = await shareSpReport(
+          buildSpXlsx(rapor),
+          fileName: 'sprinkler_hidrolik_$tarih.xlsx',
+          mimeType:
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+      }
+      if (kayit != null) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('${l10n.spExpSaved} $kayit')),
+        );
+      }
+    } catch (e) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.genericErrorWithDetail('$e'))),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.spExpHeader,
+          style: const TextStyle(fontSize: 12, color: Colors.black54),
+        ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _aktar(context, true),
+                icon: const Icon(Icons.picture_as_pdf_rounded, size: 18),
+                label: Text(l10n.spExpPdf),
+                style: OutlinedButton.styleFrom(foregroundColor: renk),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _aktar(context, false),
+                icon: const Icon(Icons.table_chart_rounded, size: 18),
+                label: Text(l10n.spExpExcel),
+                style: OutlinedButton.styleFrom(foregroundColor: renk),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _SpResultCard extends StatelessWidget {
   final _SpSonuc sonuc;
   final Color renk;
@@ -19262,6 +19585,8 @@ class _SpResultCard extends StatelessWidget {
           renk,
         ),
         if (s.kritikDevre.isNotEmpty) ...[
+          _SpExportButonlari(sonuc: s, renk: renk),
+          const SizedBox(height: 8),
           // Başlık satırı
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
