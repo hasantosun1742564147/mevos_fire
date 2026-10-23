@@ -37,7 +37,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteWarning =>
-      'Your account will be removed from the active system. Your name, email, previous membership status, and registration/deletion dates will be retained in the deleted-members history for administrators. This action cannot be undone.';
+      'Your account will be removed from the active system. Your name, email, previous account entitlement status, and creation/deletion dates will be retained in the deleted-accounts history for administrators. This action cannot be undone.';
 
   @override
   String get accountManagement => 'Account Management';
@@ -326,15 +326,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Sign In';
 
   @override
-  String get demoLogin => 'Enter Demo (Kitchen Hood Suppression)';
-
-  @override
-  String get accountPrompt => 'Don\'t have an account yet? ';
-
-  @override
-  String get register => 'Create an account â†’';
-
-  @override
   String get preliminaryToolDisclaimer =>
       'Preliminary calculation tool · Not an official design calculation';
 
@@ -389,10 +380,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get smokeControlDescription =>
       'Natural and mechanical exhaust, pressurization — EN 12101-2 / EN 12101-3 / EN 12101-6';
-
-  @override
-  String get demoMode =>
-      'DEMO MODE · Only the \"Kitchen Hood Suppression\" module is available. Create an account and subscribe to access other modules.';
 
   @override
   String get standardSearch => 'Standards Search';
@@ -1721,11 +1708,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String genericErrorWithDetail(String detail) {
     return 'Error: $detail';
-  }
-
-  @override
-  String fireModuleSubscriptionMissing(String perms) {
-    return 'You do not have an active Fire module subscription. Start a subscription from your account.\nPerms received from server: $perms';
   }
 
   @override
@@ -3643,16 +3625,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String savedOnLabel(String date) {
     return 'Saved: $date';
   }
-
-  @override
-  String get upgradeRequiredTitle => 'Upgrade Required';
-
-  @override
-  String get upgradeRequiredMessage =>
-      'This module is not available in the demo version. Create your MEVOS account and start a Fire module subscription to access all modules.';
-
-  @override
-  String get upgradeSignUpButton => 'Sign Up';
 
   @override
   String get geminiApiKeyRequiredInfo =>

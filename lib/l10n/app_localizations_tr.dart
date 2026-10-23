@@ -37,7 +37,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get accountDeleteWarning =>
-      'Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki üyelik durumu ve kayıt/silinme tarihleri silinen üyeler geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.';
+      'Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki hesap yetki durumu ve oluşturulma/silinme tarihleri silinen hesaplar geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.';
 
   @override
   String get accountManagement => 'Hesap Yönetimi';
@@ -327,15 +327,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get login => 'Giriş Yap';
 
   @override
-  String get demoLogin => 'Demo ile Gir (Davlumbaz Söndürme)';
-
-  @override
-  String get accountPrompt => 'Henüz hesabınız yok mu? ';
-
-  @override
-  String get register => 'Kayıt olun →';
-
-  @override
   String get preliminaryToolDisclaimer =>
       'Ön hesap aracıdır · Resmi proje hesabı değildir';
 
@@ -390,10 +381,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get smokeControlDescription =>
       'Doğal ve mekanik tahliye, basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6';
-
-  @override
-  String get demoMode =>
-      'DEMO MODU · Yalnızca \"Davlumbaz Söndürme\" modülü açıktır. Diğer modüller için hesap oluşturup abone olun.';
 
   @override
   String get standardSearch => 'Standart Arama';
@@ -1716,11 +1703,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String genericErrorWithDetail(String detail) {
     return 'Hata: $detail';
-  }
-
-  @override
-  String fireModuleSubscriptionMissing(String perms) {
-    return 'Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\nSunucudan gelen perms: $perms';
   }
 
   @override
@@ -3631,16 +3613,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String savedOnLabel(String date) {
     return 'Kaydedilme: $date';
   }
-
-  @override
-  String get upgradeRequiredTitle => 'Sürüm Yükselt';
-
-  @override
-  String get upgradeRequiredMessage =>
-      'Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.';
-
-  @override
-  String get upgradeSignUpButton => 'Kayıt Ol';
 
   @override
   String get geminiApiKeyRequiredInfo =>

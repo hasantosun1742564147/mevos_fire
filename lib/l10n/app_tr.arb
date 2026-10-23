@@ -9,7 +9,7 @@
   "delete": "Sil",
   "deletingAccount": "Hesap siliniyor...",
   "accountDeleteTitle": "Hesabınızı silmeyi onaylıyor musunuz?",
-  "accountDeleteWarning": "Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki üyelik durumu ve kayıt/silinme tarihleri silinen üyeler geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.",
+  "accountDeleteWarning": "Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki hesap yetki durumu ve oluşturulma/silinme tarihleri silinen hesaplar geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.",
   "accountManagement": "Hesap Yönetimi",
   "accountDeleteInfo": "Hesabınızı ve bu cihazda saklanan hesap bilgilerinizi kalıcı olarak silebilirsiniz.",
   "deleteAccount": "Hesabımı Kalıcı Olarak Sil",
@@ -140,9 +140,6 @@
   "passwordRequired": "Şifre gereklidir",
   "loggingIn": "Giriş yapılıyor...",
   "login": "Giriş Yap",
-  "demoLogin": "Demo ile Gir (Davlumbaz Söndürme)",
-  "accountPrompt": "Henüz hesabınız yok mu? ",
-  "register": "Kayıt olun →",
   "preliminaryToolDisclaimer": "Ön hesap aracıdır · Resmi proje hesabı değildir",
   "fireSafetyCalculator": "Yangın Güvenliği Hesap Merkezi",
   "fireLoadTitle": "Yangın Yükü Hesabı",
@@ -159,7 +156,6 @@
   "smokeDetectionDescription": "Dedektör yerleşimi ve oda tipleri — TS EN 54-7 / EN 54-14",
   "smokeControlTitle": "Duman Kontrolü",
   "smokeControlDescription": "Doğal ve mekanik tahliye, basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6",
-  "demoMode": "DEMO MODU · Yalnızca \"Davlumbaz Söndürme\" modülü açıktır. Diğer modüller için hesap oluşturup abone olun.",
   "standardSearch": "Standart Arama",
   "standardSearchDescription": "Yangın ve güvenlik standartları veritabanında numara, ad veya kategori ile arama",
   "standardGuide": "Standart Rehberi",
@@ -609,14 +605,6 @@
   "@genericErrorWithDetail": {
     "placeholders": {
       "detail": {
-        "type": "String"
-      }
-    }
-  },
-  "fireModuleSubscriptionMissing": "Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\nSunucudan gelen perms: {perms}",
-  "@fireModuleSubscriptionMissing": {
-    "placeholders": {
-      "perms": {
         "type": "String"
       }
     }
@@ -1668,9 +1656,6 @@
       }
     }
   },
-  "upgradeRequiredTitle": "Sürüm Yükselt",
-  "upgradeRequiredMessage": "Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.",
-  "upgradeSignUpButton": "Kayıt Ol",
   "geminiApiKeyRequiredInfo": "Yapay zeka için ücretsiz Google Gemini API anahtarı gereklidir.",
   "enterStandardNumberFirst": "Önce standart numarasını girin.",
   "apiKeyRequiredError": "API anahtarı gerekli.",

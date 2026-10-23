@@ -37,7 +37,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeleteWarning =>
-      'Ihr Konto wird aus dem aktiven System entfernt. Name, E-Mail-Adresse, vorheriger Mitgliedsstatus sowie Registrierungs- und Löschdatum bleiben für Administratoren im Verlauf gelöschter Mitglieder gespeichert. Dieser Vorgang kann nicht rückgängig gemacht werden.';
+      'Ihr Konto wird aus dem aktiven System entfernt. Name, E-Mail-Adresse, vorheriger Berechtigungsstatus des Kontos sowie Erstellungs- und Löschdatum bleiben für Administratoren im Verlauf gelöschter Konten gespeichert. Dieser Vorgang kann nicht rückgängig gemacht werden.';
 
   @override
   String get accountManagement => 'Kontoverwaltung';
@@ -329,15 +329,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get login => 'Anmelden';
 
   @override
-  String get demoLogin => 'Demo öffnen (Küchenhaubenlöschung)';
-
-  @override
-  String get accountPrompt => 'Sie haben noch kein Konto? ';
-
-  @override
-  String get register => 'Konto erstellen â†’';
-
-  @override
   String get preliminaryToolDisclaimer =>
       'Vorläufiges Berechnungstool · Keine offizielle Projektberechnung';
 
@@ -392,10 +383,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get smokeControlDescription =>
       'Natürliche und maschinelle Entrauchung, Druckbelüftung — EN 12101-2 / EN 12101-3 / EN 12101-6';
-
-  @override
-  String get demoMode =>
-      'DEMOMODUS · Nur das Modul „Küchenhaubenlöschanlage“ ist verfügbar. Erstellen Sie ein Konto und schließen Sie ein Abonnement ab, um weitere Module zu nutzen.';
 
   @override
   String get standardSearch => 'Normensuche';
@@ -1722,11 +1709,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String genericErrorWithDetail(String detail) {
     return 'Fehler: $detail';
-  }
-
-  @override
-  String fireModuleSubscriptionMissing(String perms) {
-    return 'Sie haben kein aktives Abonnement für das Brandschutzmodul. Starten Sie ein Abonnement über Ihr Konto.\nVom Server erhaltene Berechtigungen: $perms';
   }
 
   @override
@@ -3670,16 +3652,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String savedOnLabel(String date) {
     return 'Gespeichert: $date';
   }
-
-  @override
-  String get upgradeRequiredTitle => 'Upgrade erforderlich';
-
-  @override
-  String get upgradeRequiredMessage =>
-      'Dieses Modul ist in der Demoversion nicht verfügbar. Erstellen Sie Ihr MEVOS-Konto und starten Sie das Fire-Modul-Abonnement, um auf alle Module zuzugreifen.';
-
-  @override
-  String get upgradeSignUpButton => 'Registrieren';
 
   @override
   String get geminiApiKeyRequiredInfo =>

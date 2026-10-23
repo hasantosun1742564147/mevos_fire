@@ -160,7 +160,7 @@ Future<String?> _geminiApiDiyaloguGoster(
   final result = await showDialog<String>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: Text(AppLocalizations.of(context)!.apiKeyTitle),
+      title: Text(AppLocalizations.of(context).apiKeyTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +195,7 @@ Future<String?> _geminiApiDiyaloguGoster(
             controller: ctrl,
             obscureText: true,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.apiKeyTitle,
+              labelText: AppLocalizations.of(context).apiKeyTitle,
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.key_rounded),
             ),
@@ -205,7 +205,7 @@ Future<String?> _geminiApiDiyaloguGoster(
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),
-          child: Text(AppLocalizations.of(context)!.cancel),
+          child: Text(AppLocalizations.of(context).cancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
@@ -229,16 +229,40 @@ Future<String?> _geminiApiDiyaloguGoster(
 const kApiBase = 'https://www.mevos.com.tr';
 const kAppVersion = '2.0.0'; // güncelleme kontrolü için mevcut sürüm
 
+/// Giriş yapılmış ve hesapta aktif Yangın yetkisi var mı?
+/// AnaSayfa'daki modül görünürlüğü, giriş/çıkış butonları ve hesap silme
+/// bölümü buna bağlıdır. Oturum açılıp kapandığında [_anaSayfayiAc] günceller.
+final ValueNotifier<bool> _oturumAcik = ValueNotifier<bool>(false);
+
+/// AnaSayfa'yı açar (önceki tüm sayfaları kapatır).
+/// [oturumAcik] false ise yalnızca herkese açık modüller görünür.
+void _anaSayfayiAc(BuildContext context, {required bool oturumAcik}) {
+  _oturumAcik.value = oturumAcik;
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => const AnaSayfa()),
+    (route) => false,
+  );
+}
+
 void _cikisYap(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('jwt_token');
   if (context.mounted) {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const GirisSayfasi()),
-      (route) => false,
-    );
+    _anaSayfayiAc(context, oturumAcik: false);
   }
 }
+
+/// Alt sayfaların AppBar'larındaki çıkış butonu — yalnızca oturum açıkken görünür.
+List<Widget> _cikisAksiyonu(BuildContext context, AppLocalizations l10n) =>
+    _oturumAcik.value
+    ? [
+        IconButton(
+          icon: const Icon(Icons.logout_rounded, color: Colors.white),
+          tooltip: l10n.logout,
+          onPressed: () => _cikisYap(context),
+        ),
+      ]
+    : const [];
 
 // ────────────────────────────────────────────────────────────────────────────
 // YANGINI MODÜLÜ AKTİF ABONELİK KONTROLÜ
@@ -278,7 +302,7 @@ class _StartupEkraniState extends State<_StartupEkrani> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('jwt_token');
     if (token == null || token.isEmpty) {
-      _girisEkranineGit();
+      _anaEkranaGit(oturumAcik: false);
       return;
     }
     try {
@@ -304,39 +328,32 @@ class _StartupEkraniState extends State<_StartupEkrani> {
           perms['fire_activatedAt']?.toString() ?? '',
         );
         if (hasActiveFirePerm(perms)) {
-          _anaEkranaGit();
+          _anaEkranaGit(oturumAcik: true);
         } else {
+          // Yetki yok / süresi dolmuş: oturumu sil, girişsiz devam et
           await prefs.remove('jwt_token');
-          _girisEkranineGit();
+          _anaEkranaGit(oturumAcik: false);
         }
       } else if (response.statusCode == 401) {
         await prefs.remove('jwt_token');
-        _girisEkranineGit();
+        _anaEkranaGit(oturumAcik: false);
       } else {
-        _anaEkranaGit();
-      }
-    } on TimeoutException {
-      // Çevrimdışı: önbellekteki fire iznini kullan
-      final cachedPerm = prefs.getString('fire_perm') ?? 'false';
-      final cachedAt = prefs.getString('fire_perm_at') ?? '';
-      if (hasActiveFirePerm({
-        'fire': cachedPerm,
-        'fire_activatedAt': cachedAt,
-      })) {
-        _anaEkranaGit();
-      } else {
-        _girisEkranineGit();
+        _anaEkranaGit(oturumAcik: _onbellekYetkiliMi(prefs));
       }
     } catch (_) {
-      _girisEkranineGit();
+      // Çevrimdışı / zaman aşımı: önbellekteki fire iznini kullan
+      _anaEkranaGit(oturumAcik: _onbellekYetkiliMi(prefs));
     }
   }
 
-  void _anaEkranaGit() {
+  bool _onbellekYetkiliMi(SharedPreferences prefs) => hasActiveFirePerm({
+    'fire': prefs.getString('fire_perm') ?? 'false',
+    'fire_activatedAt': prefs.getString('fire_perm_at') ?? '',
+  });
+
+  void _anaEkranaGit({required bool oturumAcik}) {
     if (mounted) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const AnaSayfa()));
+      _anaSayfayiAc(context, oturumAcik: oturumAcik);
       _guncellemKontrol();
     }
   }
@@ -393,14 +410,6 @@ class _StartupEkraniState extends State<_StartupEkrani> {
       if (diff != 0) return diff;
     }
     return 0;
-  }
-
-  void _girisEkranineGit() {
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const GirisSayfasi()),
-      );
-    }
   }
 
   @override
@@ -546,34 +555,27 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
         final token = data['token'] as String;
         final user = data['user'] as Map<String, dynamic>;
         final perms = (user['perms'] as Map<String, dynamic>?) ?? {};
-        debugPrint('LOGIN USER: ${jsonEncode(user)}');
+        final yetkili = hasActiveFirePerm(perms);
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('jwt_token', token);
-        await prefs.setString('user_name', (user['name'] as String?) ?? '');
-        await prefs.setString('user_email', (user['email'] as String?) ?? '');
-        await prefs.setInt('is_premium', (user['is_premium'] as int?) ?? 0);
-        await prefs.setString(
-          'fire_perm',
-          perms['fire']?.toString() ?? 'false',
-        );
-        await prefs.setString(
-          'fire_perm_at',
-          perms['fire_activatedAt']?.toString() ?? '',
-        );
-        if (!hasActiveFirePerm(perms)) {
-          setState(() {
-            _hata = AppLocalizations.of(
-              context,
-            ).fireModuleSubscriptionMissing(jsonEncode(perms));
-            _yukleniyor = false;
-          });
-          return;
+        if (yetkili) {
+          await prefs.setString('jwt_token', token);
+          await prefs.setString('user_name', (user['name'] as String?) ?? '');
+          await prefs.setString('user_email', (user['email'] as String?) ?? '');
+          await prefs.setInt('is_premium', (user['is_premium'] as int?) ?? 0);
+          await prefs.setString(
+            'fire_perm',
+            perms['fire']?.toString() ?? 'false',
+          );
+          await prefs.setString(
+            'fire_perm_at',
+            perms['fire_activatedAt']?.toString() ?? '',
+          );
+        } else {
+          // Aktif yetki yok: girişi reddetme, oturum açmadan herkese açık modüllerle devam et
+          await prefs.remove('jwt_token');
         }
         if (mounted) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const AnaSayfa()),
-            (route) => false,
-          );
+          _anaSayfayiAc(context, oturumAcik: yetkili);
         }
       } else {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -659,9 +661,21 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: _DilSecici(color: Colors.white),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                            ),
+                            tooltip: MaterialLocalizations.of(
+                              context,
+                            ).closeButtonTooltip,
+                            onPressed: () => Navigator.of(context).maybePop(),
+                          ),
+                          _DilSecici(color: Colors.white),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       // Logo
@@ -862,74 +876,6 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 14),
-                      // Demo ile giriş
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () =>
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      const AnaSayfa(demoModu: true),
-                                ),
-                                (route) => false,
-                              ),
-                          icon: const Icon(
-                            Icons.play_circle_outline_rounded,
-                            size: 20,
-                          ),
-                          label: Text(
-                            l10n.demoLogin,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.5),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Kayıt linki
-                      GestureDetector(
-                        onTap: () => launchUrl(
-                          Uri.parse(
-                            'https://www.mevos.com.tr/pages/kayit.html',
-                          ),
-                          mode: LaunchMode.inAppBrowserView,
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white.withValues(alpha: 0.55),
-                            ),
-                            children: [
-                              TextSpan(text: l10n.accountPrompt),
-                              TextSpan(
-                                text: l10n.register,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.white.withValues(
-                                    alpha: 0.7,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: 16),
                       Text(
                         l10n.preliminaryToolDisclaimer,
@@ -994,6 +940,8 @@ String _localizedProjectModule(AppLocalizations l10n, String module) =>
 
 class ProjeServisi {
   static const _key = 'kayitli_projeler_v1';
+  // Girişsiz / yetkisiz kullanıcıya açık modüllerin proje kimlikleri
+  static const herkeseAcikModuller = {'Davlumbaz Söndürme'};
   static final hesapSinyali = ValueNotifier<bool>(false);
   static String hesapVeri = ''; // son hesap özeti — proje kaydında kullanılır
   static Map<String, String>? kayitliGirdiler; // yüklenen proje girdileri
@@ -1042,7 +990,13 @@ class _KayitliProjelerState extends State<KayitliProjeler> {
   }
 
   Future<void> _yukle() async {
-    final list = await ProjeServisi.yukle();
+    final list = (await ProjeServisi.yukle())
+        .where(
+          (p) =>
+              _oturumAcik.value ||
+              ProjeServisi.herkeseAcikModuller.contains(p.modul),
+        )
+        .toList();
     if (mounted)
       setState(() {
         _projeler = list;
@@ -1437,7 +1391,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          AppLocalizations.of(context)!.calculationResults,
+                          AppLocalizations.of(context).calculationResults,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -1523,7 +1477,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  AppLocalizations.of(context)!.noSavedCalculationResult,
+                  AppLocalizations.of(context).noSavedCalculationResult,
                   style: TextStyle(fontSize: 13, color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
@@ -1535,7 +1489,7 @@ class _ProjeDetaySayfasi extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () => _yenidenHesapla(context),
                 icon: const Icon(Icons.calculate_rounded),
-                label: Text(AppLocalizations.of(context)!.recalculate),
+                label: Text(AppLocalizations.of(context).recalculate),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFB91C1C),
                   foregroundColor: Colors.white,
@@ -1582,7 +1536,7 @@ class _KaydedilmisVeriPaneliState extends State<_KaydedilmisVeriPaneli> {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      AppLocalizations.of(context)!.savedValues,
+                      AppLocalizations.of(context).savedValues,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -1623,9 +1577,7 @@ class _KaydedilmisVeriPaneliState extends State<_KaydedilmisVeriPaneli> {
 // ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
 
 class AnaSayfa extends StatelessWidget {
-  const AnaSayfa({super.key, this.demoModu = false});
-
-  final bool demoModu;
+  const AnaSayfa({super.key});
 
   static const Color _kFire = Color(0xFFB91C1C);
 
@@ -1717,11 +1669,7 @@ class AnaSayfa extends StatelessWidget {
             foregroundColor: Colors.white,
             title: _appBarTitle(baslik),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.logout_rounded, color: Colors.white),
-                tooltip: l10n.logout,
-                onPressed: () => _cikisYap(context),
-              ),
+              ..._cikisAksiyonu(context, l10n),
             ],
           ),
           body: Column(
@@ -1753,49 +1701,17 @@ class AnaSayfa extends StatelessWidget {
     return baslik;
   }
 
-  // Demo modunda yalnızca Davlumbaz Söndürme serbest; diğerleri kayıt sayfasına yönlendirir.
-  void _modulAc(
-    BuildContext context, {
-    required bool demoIzinli,
-    required VoidCallback ac,
-  }) {
-    if (demoModu && !demoIzinli) {
-      _surumYukseltUyarisiGoster(context);
-    } else {
-      ac();
-    }
-  }
-
-  void _surumYukseltUyarisiGoster(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.upgradeRequiredTitle),
-        content: Text(l10n.upgradeRequiredMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              launchUrl(
-                Uri.parse('https://www.mevos.com.tr/pages/kayit.html'),
-                mode: LaunchMode.inAppBrowserView,
-              );
-            },
-            child: Text(l10n.upgradeSignUpButton),
-          ),
-        ],
-      ),
+  void _girisAc(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const GirisSayfasi()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final yetkili = _oturumAcik.value;
     return Scaffold(
       backgroundColor: const Color(0xFFFEF2F2),
       appBar: AppBar(
@@ -1812,11 +1728,25 @@ class AnaSayfa extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const ApiAyarlariSayfasi()),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: l10n.logout,
-            onPressed: () => _cikisYap(context),
-          ),
+          if (yetkili)
+            IconButton(
+              icon: const Icon(Icons.logout_rounded, color: Colors.white),
+              tooltip: l10n.logout,
+              onPressed: () => _cikisYap(context),
+            )
+          else if (MediaQuery.sizeOf(context).width >= 480)
+            TextButton.icon(
+              onPressed: () => _girisAc(context),
+              icon: const Icon(Icons.login_rounded, size: 18),
+              label: Text(l10n.login),
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.login_rounded, color: Colors.white),
+              tooltip: l10n.login,
+              onPressed: () => _girisAc(context),
+            ),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: Text(
@@ -1862,161 +1792,107 @@ class AnaSayfa extends StatelessWidget {
                 ],
               ),
             ),
-            if (demoModu) ...[
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF7ED),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFFDBA74)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_rounded,
-                      color: Color(0xFF9A3412),
-                      size: 18,
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        l10n.demoMode,
-                        style: TextStyle(
-                          color: Color(0xFF9A3412),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
             const SizedBox(height: 20),
 
             // Modül kartları
-            _ModulKarti(
-              baslik: l10n.fireLoadTitle,
-              aciklama: l10n.fireLoadDescription,
-              ikon: Icons.whatshot_rounded,
-              renk: const Color(0xFF0F766E),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () => _git(
-                  context,
-                  const YanginYukuSayfasi(),
-                  l10n.fireLoadTitle,
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.fireLoadTitle,
+                  aciklama: l10n.fireLoadDescription,
+                  ikon: Icons.whatshot_rounded,
+                  renk: const Color(0xFF0F766E),
+                  onTap: () => _git(
+                      context,
+                      const YanginYukuSayfasi(),
+                      l10n.fireLoadTitle,
+                    ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
+                const SizedBox(height: 12),
+            ],
             _ModulKarti(
               baslik: l10n.kitchenSuppressionTitle,
               aciklama: l10n.kitchenSuppressionDescription,
               ikon: Icons.kitchen_rounded,
               renk: const Color(0xFF0369A1),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: true,
-                ac: () => _git(
+              onTap: () => _git(
                   context,
                   const DavlumbazSondurme(),
                   l10n.kitchenSuppressionTitle,
                 ),
-              ),
             ),
             const SizedBox(height: 12),
-            _ModulKarti(
-              baslik: l10n.gasSuppressionTitle,
-              aciklama: l10n.gasSuppressionDescription,
-              ikon: Icons.cloud_rounded,
-              renk: const Color(0xFF0891B2),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () => _git(
-                  context,
-                  const GazliSondurme(),
-                  l10n.gasSuppressionTitle,
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.gasSuppressionTitle,
+                  aciklama: l10n.gasSuppressionDescription,
+                  ikon: Icons.cloud_rounded,
+                  renk: const Color(0xFF0891B2),
+                  onTap: () => _git(
+                      context,
+                      const GazliSondurme(),
+                      l10n.gasSuppressionTitle,
+                    ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _ModulKarti(
-              baslik: l10n.lithiumFireTitle,
-              aciklama: l10n.lithiumFireDescription,
-              ikon: Icons.battery_charging_full_rounded,
-              renk: const Color(0xFF7C3AED),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () => _git(
-                  context,
-                  const LityumPilYangini(),
-                  l10n.lithiumFireTitle,
+                const SizedBox(height: 12),
+            ],
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.lithiumFireTitle,
+                  aciklama: l10n.lithiumFireDescription,
+                  ikon: Icons.battery_charging_full_rounded,
+                  renk: const Color(0xFF7C3AED),
+                  onTap: () => _git(
+                      context,
+                      const LityumPilYangini(),
+                      l10n.lithiumFireTitle,
+                    ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _ModulKarti(
-              baslik: l10n.sprinklerTitle,
-              aciklama: l10n.sprinklerDescription,
-              ikon: Icons.water_rounded,
-              renk: const Color(0xFF0EA5E9),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () =>
-                    _git(context, const SprinkleSistemi(), l10n.sprinklerTitle),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _ModulKarti(
-              baslik: l10n.smokeDetectionTitle,
-              aciklama: l10n.smokeDetectionDescription,
-              ikon: Icons.sensors_rounded,
-              renk: const Color(0xFF7C2D12),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () => _git(
-                  context,
-                  const DumanAlgilama(),
-                  l10n.smokeDetectionTitle,
+                const SizedBox(height: 12),
+            ],
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.sprinklerTitle,
+                  aciklama: l10n.sprinklerDescription,
+                  ikon: Icons.water_rounded,
+                  renk: const Color(0xFF0EA5E9),
+                  onTap: () =>
+                        _git(context, const SprinkleSistemi(), l10n.sprinklerTitle),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _ModulKarti(
-              baslik: l10n.smokeControlTitle,
-              aciklama: l10n.smokeControlDescription,
-              ikon: Icons.air_rounded,
-              renk: const Color(0xFF374151),
+                const SizedBox(height: 12),
+            ],
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.smokeDetectionTitle,
+                  aciklama: l10n.smokeDetectionDescription,
+                  ikon: Icons.sensors_rounded,
+                  renk: const Color(0xFF7C2D12),
+                  onTap: () => _git(
+                      context,
+                      const DumanAlgilama(),
+                      l10n.smokeDetectionTitle,
+                    ),
+                ),
+                const SizedBox(height: 12),
+            ],
+            if (yetkili) ...[
+                _ModulKarti(
+                  baslik: l10n.smokeControlTitle,
+                  aciklama: l10n.smokeControlDescription,
+                  ikon: Icons.air_rounded,
+                  renk: const Color(0xFF374151),
 
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () =>
-                    _git(context, const DumanKontrol(), l10n.smokeControlTitle),
-              ),
-            ),
-            const SizedBox(height: 12),
+                  onTap: () =>
+                        _git(context, const DumanKontrol(), l10n.smokeControlTitle),
+                ),
+                const SizedBox(height: 12),
+            ],
             _ModulKarti(
               baslik: l10n.standardSearch,
               aciklama: l10n.standardSearchDescription,
               ikon: Icons.search_rounded,
               renk: const Color(0xFF065F46),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () =>
+              onTap: () =>
                     _git(context, const StandartArama(), l10n.standardSearch),
-              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -2024,10 +1900,7 @@ class AnaSayfa extends StatelessWidget {
               aciklama: l10n.standardGuideDescription,
               ikon: Icons.menu_book_rounded,
               renk: const Color(0xFF6D28D9),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () {
+              onTap: () {
                   final rehberKey = GlobalKey<_StandartRehberiState>();
                   Navigator.push(
                     context,
@@ -2055,14 +1928,7 @@ class AnaSayfa extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.logout_rounded,
-                                color: Colors.white,
-                              ),
-                              tooltip: l10n.logout,
-                              onPressed: () => _cikisYap(context),
-                            ),
+                            ..._cikisAksiyonu(context, l10n),
                           ],
                         ),
                         body: StandartRehberi(key: rehberKey),
@@ -2070,7 +1936,6 @@ class AnaSayfa extends StatelessWidget {
                     ),
                   );
                 },
-              ),
             ),
             const SizedBox(height: 12),
             _ModulKarti(
@@ -2078,14 +1943,10 @@ class AnaSayfa extends StatelessWidget {
               aciklama: l10n.savedProjectsDescription,
               ikon: Icons.folder_rounded,
               renk: const Color(0xFF92400E),
-              onTap: () => _modulAc(
-                context,
-                demoIzinli: false,
-                ac: () => Navigator.push(
+              onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const KayitliProjeler()),
                 ),
-              ),
             ),
             const SizedBox(height: 24),
             Text(
@@ -2241,10 +2102,6 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
     'Bitkisel Yağ': [1, 5, 10, 20, 50, 100],
   };
 
-  // Varsayılan birim (LPG → ton, sıvılar → m³)
-  static String _varsayilanBirim(String tur) =>
-      tur.contains('LPG') ? 'ton' : 'm³';
-
   // ¦¦ Pano modu
   final _pWCtrl = TextEditingController();
   final _pHCtrl = TextEditingController();
@@ -2275,20 +2132,12 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   };
 
   // ¦¦ TS EN 3-7 Taşınabilir Söndürücü Sonuçları
-  static const double _kktKg = 6.0; // sabit 6 kg KKT
   String? _en37BeyanA, _en37BeyanB;
-  int? _en37SayiA, _en37SayiB;
   int? _en37SayiAlanA, _en37SayiAlanB;
   int? _en37SayiEnerjiA, _en37SayiEnerjiB;
   double? _en37KapasiteA, _en37KapasiteB;
   String? _en37KktA, _en37KktB;
   String? _yanginSinifiAciklama;
-
-  // Sınıf B: B-değeri × 6.1 MJ (heptan eşdeğeri, %30 verimlilik)
-  static double _bKapasite(String beyan) {
-    final n = double.tryParse(beyan.replaceAll('B', '')) ?? 21;
-    return n * 6.1;
-  }
 
   static _En37Sonuc _en37Hesapla(double yon, double alan, double toplamMJ) {
     // 6 kg KKT sabit → spec tablosundan al
@@ -2805,7 +2654,6 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
   };
 
   bool get _isPano => _mod == _Mod.pano;
-  bool get _isDepo => _mod == _Mod.depo;
 
   void _hesapla() {
     setState(() {
@@ -2976,14 +2824,14 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
         }
       }
       tBuy = ta * math.sqrt(qEff);
-      final eBuy = (tBuy! * tBuy! * tBuy!) / (3.0 * ta * ta); // MJ
+      final eBuy = (tBuy * tBuy * tBuy) / (3.0 * ta * ta); // MJ
       // Sabit faz hedefi: toplam yükün %70'i (Eurocode Ek E varsayımı), enerji korunumlu
       final hedefSabitSonu = math.min(0.70 * toplam, toplam);
       final eSab = (hedefSabitSonu - eBuy).clamp(0.0, double.infinity);
-      tSab = tBuy! + (qEff > 0 ? eSab / qEff : 0.0);
+      tSab = tBuy + (qEff > 0 ? eSab / qEff : 0.0);
       // Bozunma enerjisi = gerçek kalan enerji (sabit %30 varsayımı yerine — toplamı asla aşmaz)
       final eBozunma = (toplam - (eBuy + eSab)).clamp(0.0, double.infinity);
-      tToplam = tSab! + (qEff > 0 ? eBozunma / (qEff / 2.0) : 0.0);
+      tToplam = tSab + (qEff > 0 ? eBozunma / (qEff / 2.0) : 0.0);
       _qPik = qEff;
       _sinirlayanFaktor = sinirlayan;
     } else {
@@ -3030,8 +2878,6 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
       _tToplam = tToplam;
       _en37BeyanA = en37?.beyanA;
       _en37BeyanB = en37?.beyanB;
-      _en37SayiA = en37 == null ? null : math.max(en37.sayi, en37.sayiEnerjiA);
-      _en37SayiB = en37 == null ? null : math.max(en37.sayi, en37.sayiEnerjiB);
       _en37SayiAlanA = en37?.sayi;
       _en37SayiAlanB = en37?.sayi;
       _en37SayiEnerjiA = en37?.sayiEnerjiA;
@@ -3249,7 +3095,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -3762,7 +3608,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: Text(AppLocalizations.of(context)!.calculate),
+            label: Text(AppLocalizations.of(context).calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kC,
               foregroundColor: Colors.white,
@@ -4241,7 +4087,7 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       label: Text(
                         AppLocalizations.of(
                           context,
-                        )!.calculateExtinguishingAgent,
+                        ).calculateExtinguishingAgent,
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0369A1),
@@ -4424,7 +4270,6 @@ class _YanginYukuState extends State<YanginYukuSayfasi> {
                       );
                 // Pratik söndürme kapasitesi: A sınıfı 2 MW, B/C sınıfı 0.6 MW
                 final double qPerDolap = isSinifB ? 0.6 : 2.0;
-                final double qPerDolapUst = qPerDolap; // tek değer
 
                 final toplamQ = alanBazli * qPerDolap;
                 // Su rezerv süresi: toplam yangın süresi varsa onu kullan, yoksa BYKHY minimum
@@ -4766,12 +4611,10 @@ class _ZamanSatir extends StatelessWidget {
   final String faz;
   final double sure;
   final Color renk;
-  final double? hrr; // MW — opsiyonel
   const _ZamanSatir({
     required this.faz,
     required this.sure,
     required this.renk,
-    this.hrr,
   });
   String _fmt(double s) {
     if (s < 60) return '${s.toStringAsFixed(0)} s';
@@ -4792,11 +4635,6 @@ class _ZamanSatir extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Expanded(child: Text(faz, style: const TextStyle(fontSize: 12))),
-        if (hrr != null)
-          Text(
-            '${hrr!.toStringAsFixed(2)} MW  · ',
-            style: TextStyle(fontSize: 12, color: renk.withAlpha(180)),
-          ),
         Text(
           _fmt(sure),
           style: TextStyle(
@@ -4987,7 +4825,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
           : widget.secenekler
                 .where(
                   (s) =>
-                      '${_binaGorunenAd(s, AppLocalizations.of(context)!)} ${_grupAdi(widget.tehlikeMap[s] ?? '?', AppLocalizations.of(context)!)}'
+                      '${_binaGorunenAd(s, AppLocalizations.of(context))} ${_grupAdi(widget.tehlikeMap[s] ?? '?', AppLocalizations.of(context))}'
                           .toLowerCase()
                           .contains(q),
                 )
@@ -5026,7 +4864,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
               controller: widget.araCtrl,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchBuildingTypes,
+                hintText: AppLocalizations.of(context).searchBuildingTypes,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: widget.araCtrl.text.isNotEmpty
                     ? IconButton(
@@ -5047,7 +4885,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
             child: _filtreli.isEmpty
                 ? Center(
                     child: Text(
-                      AppLocalizations.of(context)!.noResults,
+                      AppLocalizations.of(context).noResults,
                       style: TextStyle(color: Colors.black45),
                     ),
                   )
@@ -5077,7 +4915,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
                           if (isHeader) {
                             final ad = _grupAdi(
                               text,
-                              AppLocalizations.of(context)!,
+                              AppLocalizations.of(context),
                             );
                             final renk = _grupRenk[text] ?? Colors.black54;
                             return Container(
@@ -5115,7 +4953,7 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
                             title: Text(
                               _binaGorunenAd(
                                 item,
-                                AppLocalizations.of(context)!,
+                                AppLocalizations.of(context),
                               ),
                               style: TextStyle(
                                 fontSize: 13,
@@ -5146,37 +4984,6 @@ class _BinaSeciciSheetState extends State<_BinaSeciciSheet> {
     );
   }
 }
-
-// TS EN 3-7 bilgi satırı
-Widget _En37BilgiSatir(String baslik, String deger) => Padding(
-  padding: const EdgeInsets.only(bottom: 3),
-  child: Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        '• ',
-        style: TextStyle(color: Color(0xFF78350F), fontSize: 11),
-      ),
-      Expanded(
-        child: RichText(
-          text: TextSpan(
-            style: const TextStyle(fontSize: 11, color: Colors.black87),
-            children: [
-              TextSpan(
-                text: '$baslik: ',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF78350F),
-                ),
-              ),
-              TextSpan(text: deger),
-            ],
-          ),
-        ),
-      ),
-    ],
-  ),
-);
 
 class _MalzemeSatir extends StatefulWidget {
   final _Malzeme malzeme;
@@ -5258,7 +5065,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                     },
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.material,
+                        labelText: AppLocalizations.of(context).material,
                         border: OutlineInputBorder(),
                         isDense: true,
                         labelStyle: TextStyle(color: kC),
@@ -5269,7 +5076,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                             child: Text(
                               _malzemeGorunenAd(
                                 widget.malzeme.ad,
-                                AppLocalizations.of(context)!,
+                                AppLocalizations.of(context),
                               ),
                               style: const TextStyle(fontSize: 12),
                               overflow: TextOverflow.ellipsis,
@@ -5309,7 +5116,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                       decimal: true,
                     ),
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.massKg,
+                      labelText: AppLocalizations.of(context).massKg,
 
                       border: OutlineInputBorder(),
                       isDense: true,
@@ -5335,7 +5142,7 @@ class _MalzemeSatirState extends State<_MalzemeSatir> {
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(
                         context,
-                      )!.netCalorificValue,
+                      ).netCalorificValue,
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'MJ/kg',
@@ -5487,7 +5294,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
 
   void _filtrele() {
     final q = widget.araCtrl.text.toLowerCase();
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     setState(() {
       _filtreli = q.isEmpty
           ? widget.secenekler
@@ -5504,7 +5311,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
   }
 
   Widget _grupBaslik(String g, int adet, bool acik) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final ad = _grupAdi(g, l10n);
     final renk = _grupRenk[g] ?? Colors.black54;
     final ikon = _grupIkon[g] ?? Icons.circle;
@@ -5551,7 +5358,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
 
   Widget _malzemeSatiri(String item) {
     final secili = item == widget.secilenMalzeme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return ListTile(
       dense: true,
       selected: secili,
@@ -5600,7 +5407,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
               controller: widget.araCtrl,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchMaterials,
+                hintText: AppLocalizations.of(context).searchMaterials,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: widget.araCtrl.text.isNotEmpty
                     ? IconButton(
@@ -5621,7 +5428,7 @@ class _MalzemeSeciciSheetState extends State<_MalzemeSeciciSheet> {
             child: _filtreli.isEmpty
                 ? Center(
                     child: Text(
-                      AppLocalizations.of(context)!.noResults,
+                      AppLocalizations.of(context).noResults,
                       style: TextStyle(color: Colors.black45),
                     ),
                   )
@@ -5836,7 +5643,7 @@ class _DepoSatirState extends State<_DepoSatir> {
                       decimal: true,
                     ),
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.capacityTank,
+                      labelText: AppLocalizations.of(context).capacityTank,
                       border: const OutlineInputBorder(),
                       isDense: true,
                       suffixText: widget.depo.birim,
@@ -5857,7 +5664,7 @@ class _DepoSatirState extends State<_DepoSatir> {
                   child: DropdownButtonHideUnderline(
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.unit,
+                        labelText: AppLocalizations.of(context).unit,
                         border: OutlineInputBorder(),
                         isDense: true,
                         labelStyle: TextStyle(color: kC),
@@ -5887,7 +5694,7 @@ class _DepoSatirState extends State<_DepoSatir> {
                     controller: _adetC,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.quantity,
+                      labelText: AppLocalizations.of(context).quantity,
                       border: OutlineInputBorder(),
                       isDense: true,
                       suffixText: 'adet',
@@ -6218,7 +6025,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
       _temizlikSikligi = temizlikSikligi;
       _filterMesafeUyari = filterUyari;
       _fritUyari = fritUyari;
-      final l10nNotes = AppLocalizations.of(context)!;
+      final l10nNotes = AppLocalizations.of(context);
       final hazardText = tehlike == 'Orta'
           ? l10nNotes.hazardMedium
           : tehlike == 'Yüksek'
@@ -6287,7 +6094,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -6718,7 +6525,7 @@ class _DavlumbazState extends State<DavlumbazSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: Text(AppLocalizations.of(context)!.calculate),
+            label: Text(AppLocalizations.of(context).calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kD,
               foregroundColor: Colors.white,
@@ -7028,7 +6835,7 @@ class _EkipmanKarti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final equipmentName = switch (index) {
       0 => l10n.hoodToastSandwichMachine,
       1 => l10n.hoodSmallElectricOven,
@@ -7257,7 +7064,7 @@ class _GazSonucSatir extends StatelessWidget {
 // NFPA 2001:2022 gereklilik satırı
 class _GazNfpaSatir extends StatelessWidget {
   final String metin;
-  const _GazNfpaSatir(this.metin, {super.key});
+  const _GazNfpaSatir(this.metin);
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
@@ -7611,7 +7418,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
   String? _hata;
   double? _netHacim, _konsantrasyon, _ajanMiktar, _silindirSayisi;
   String? _noaelUyari;
-  double? _boruCapMin, _boruAkisHizi, _akisDebiM3s, _akisKgs;
+  double? _boruCapMin, _boruAkisHizi, _akisDebiM3s;
   int? _boruDN;
   // Nozul & dağıtım borusu
   int? _nozulSayisi;
@@ -7720,7 +7527,6 @@ class _GazliSondurmeState extends State<GazliSondurme>
       _boruCapMin = null;
       _boruDN = null;
       _akisDebiM3s = null;
-      _akisKgs = null;
       _nozulAkisKgs = null;
       _nozulSayisi = null;
       _dalBoruDN = null;
@@ -7781,7 +7587,6 @@ class _GazliSondurmeState extends State<GazliSondurme>
         _boruAkisHizi = gercekHiz;
         _boruDN = dn;
         _akisDebiM3s = qM3s;
-        _akisKgs = massFlowKgs;
       });
 
       // ── Nozul sayısı ──────────────────────────────────────────────────────
@@ -7934,7 +7739,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final ajan = _ajanlar[_ajanIdx];
     return Column(
       children: [
@@ -8406,7 +8211,7 @@ class _GazliSondurmeState extends State<GazliSondurme>
                     ElevatedButton.icon(
                       onPressed: _hesapla,
                       icon: const Icon(Icons.calculate_rounded),
-                      label: Text(AppLocalizations.of(context)!.calculate),
+                      label: Text(AppLocalizations.of(context).calculate),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _kGaz,
                         foregroundColor: Colors.white,
@@ -9593,7 +9398,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final ajan = _ajanlar[_ajanIdx];
     final makine = _makineIipleri[_makineTipiIdx];
     final cozucu = _cozucuTipleri[_cozucuIdx];
@@ -9978,7 +9783,7 @@ class _BaskiMakinesiSondurmeState extends State<BaskiMakinesiSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: Text(AppLocalizations.of(context)!.calculate),
+            label: Text(AppLocalizations.of(context).calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kBaski,
               foregroundColor: Colors.white,
@@ -10485,7 +10290,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -10633,7 +10438,7 @@ class _PanoIciSondurmeState extends State<PanoIciSondurme> {
           ElevatedButton.icon(
             onPressed: _hesapla,
             icon: const Icon(Icons.calculate_rounded),
-            label: Text(AppLocalizations.of(context)!.calculate),
+            label: Text(AppLocalizations.of(context).calculate),
             style: ElevatedButton.styleFrom(
               backgroundColor: _kPano,
               foregroundColor: Colors.white,
@@ -11164,7 +10969,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                           decimal: true,
                         ),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.unitWidth,
+                          labelText: AppLocalizations.of(context).unitWidth,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -11178,7 +10983,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                           decimal: true,
                         ),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.unitLength,
+                          labelText: AppLocalizations.of(context).unitLength,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -11192,7 +10997,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
                           decimal: true,
                         ),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.unitHeight,
+                          labelText: AppLocalizations.of(context).unitHeight,
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),
@@ -11216,7 +11021,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -11290,7 +11095,7 @@ class _DumanAlgilamaState extends State<DumanAlgilama> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -12106,7 +11911,7 @@ class _DumanKontrolState extends State<DumanKontrol> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -12612,7 +12417,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
   // EV sonuçları
   String? _evHata;
   double? _evIsi, _evDebiArac, _evDebiToplam, _evHacim, _evDaldirma;
-  double? _evHrrTepe, _evTbuyume, _evAlfa;
+  double? _evHrrTepe, _evTbuyume;
 
   @override
   void initState() {
@@ -12741,7 +12546,6 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       _evDaldirma = null;
       _evHrrTepe = null;
       _evTbuyume = null;
-      _evAlfa = null;
     });
     final e = double.tryParse(_kapasiteCtrl.text.replaceAll(',', '.'));
     final n = int.tryParse(_aracSayisiCtrl.text);
@@ -12808,7 +12612,6 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       _evDaldirma = daldirma;
       _evHrrTepe = hrrTepe;
       _evTbuyume = tBuyume;
-      _evAlfa = alfa;
     });
     ProjeServisi.hesapVeri = jsonEncode({
       'i': {
@@ -12847,7 +12650,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -13018,7 +12821,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
             ElevatedButton.icon(
               onPressed: _hesapla,
               icon: const Icon(Icons.calculate_rounded),
-              label: Text(AppLocalizations.of(context)!.calculateCooling),
+              label: Text(AppLocalizations.of(context).calculateCooling),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _kLi,
                 foregroundColor: Colors.white,
@@ -13186,7 +12989,6 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                   _evDaldirma = null;
                   _evHrrTepe = null;
                   _evTbuyume = null;
-                  _evAlfa = null;
                   _evHata = null;
                 }),
               ),
@@ -13237,7 +13039,6 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
                   _evDaldirma = null;
                   _evHrrTepe = null;
                   _evTbuyume = null;
-                  _evAlfa = null;
                   _evHata = null;
                 }),
               ),
@@ -13289,7 +13090,7 @@ class _LityumPilYanginiState extends State<LityumPilYangini> {
       ElevatedButton.icon(
         onPressed: _hesaplaEv,
         icon: const Icon(Icons.calculate_rounded),
-        label: Text(AppLocalizations.of(context)!.calculateCooling),
+        label: Text(AppLocalizations.of(context).calculateCooling),
         style: ElevatedButton.styleFrom(
           backgroundColor: _kLi,
           foregroundColor: Colors.white,
@@ -13922,7 +13723,6 @@ class _StandartRehberiState extends State<StandartRehberi> {
                 maxTokens: 256,
               );
               String aciklama = '';
-              String kategori = '';
               try {
                 final temiz = cevap
                     .replaceAll(RegExp(r'```json|```'), '')
@@ -13934,7 +13734,6 @@ class _StandartRehberiState extends State<StandartRehberi> {
                       json.decode(temiz.substring(idx1, idx2 + 1))
                           as Map<String, dynamic>;
                   aciklama = (parsed['aciklama'] ?? '').toString();
-                  kategori = (parsed['kategori'] ?? '').toString();
                 }
               } catch (_) {
                 aciklama = cevap.trim();
@@ -14198,10 +13997,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(
                                 context,
-                              )!.standardNumber,
+                              ).standardNumber,
                               hintText: AppLocalizations.of(
                                 context,
-                              )!.standardNumberExample,
+                              ).standardNumberExample,
                               prefixIcon: Icon(Icons.tag_rounded),
                               border: OutlineInputBorder(),
                               isDense: true,
@@ -14265,10 +14064,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
                       controller: aciklamaCtrl,
                       maxLines: 3,
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.description,
+                        labelText: AppLocalizations.of(context).description,
                         hintText: AppLocalizations.of(
                           context,
-                        )!.shortDescriptionHint,
+                        ).shortDescriptionHint,
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
@@ -14285,10 +14084,10 @@ class _StandartRehberiState extends State<StandartRehberi> {
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(
                                 context,
-                              )!.topicKeyword,
+                              ).topicKeyword,
                               hintText: AppLocalizations.of(
                                 context,
-                              )!.topicKeywordExample,
+                              ).topicKeywordExample,
                               prefixIcon: Icon(Icons.topic_rounded),
                               border: OutlineInputBorder(),
                               isDense: true,
@@ -14473,7 +14272,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: Text(AppLocalizations.of(context)!.cancel),
+                        child: Text(AppLocalizations.of(context).cancel),
                       ),
                       const SizedBox(width: 8),
                       FilledButton(
@@ -15206,7 +15005,7 @@ class _StandartRehberiState extends State<StandartRehberi> {
                                             child: Text(
                                               AppLocalizations.of(
                                                 context,
-                                              )!.cancel,
+                                              ).cancel,
                                             ),
                                           ),
                                           FilledButton(
@@ -15617,10 +15416,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
         await prefs.remove(key);
       }
       if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const GirisSayfasi()),
-        (route) => false,
-      );
+      _anaSayfayiAc(context, oturumAcik: false);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -15673,11 +15469,7 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
         foregroundColor: Colors.white,
         title: Text(l10n.settingsTitle, style: const TextStyle(fontSize: 16)),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: l10n.logout,
-            onPressed: () => _cikisYap(context),
-          ),
+          ..._cikisAksiyonu(context, l10n),
         ],
       ),
       body: SingleChildScrollView(
@@ -15757,60 +15549,62 @@ class _ApiAyarlariSayfasiState extends State<ApiAyarlariSayfasi> {
                 ),
               ),
             ),
-            const Divider(height: 36),
-            Text(
-              l10n.accountManagement,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.accountDeleteInfo,
-              style: const TextStyle(fontSize: 12, color: Colors.black54),
-            ),
-            if (_kullaniciEposta.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.email_outlined,
-                    size: 18,
-                    color: Colors.black54,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _kullaniciEposta,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
+            if (_oturumAcik.value) ...[
+                const Divider(height: 36),
+                Text(
+                  l10n.accountManagement,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.accountDeleteInfo,
+                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+                if (_kullaniciEposta.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.email_outlined,
+                        size: 18,
+                        color: Colors.black54,
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _kullaniciEposta,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _siliniyor ? null : _hesabiSil,
+                    icon: _siliniyor
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.delete_forever_rounded),
+                    label: Text(
+                      _siliniyor ? l10n.deletingAccount : l10n.deleteAccount,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
             ],
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: _siliniyor ? null : _hesabiSil,
-                icon: _siliniyor
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.delete_forever_rounded),
-                label: Text(
-                  _siliniyor ? l10n.deletingAccount : l10n.deleteAccount,
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-              ),
-            ),
             const Divider(height: 36),
             Text(
               l10n.feedbackTitle,
@@ -16196,11 +15990,7 @@ class _AiSohbetSayfasiState extends State<AiSohbetSayfasi> {
             tooltip: l10n.updateApiKey,
             onPressed: _apiGuncelle,
           ),
-          IconButton(
-            icon: const Icon(Icons.logout_rounded, color: Colors.white),
-            tooltip: l10n.logout,
-            onPressed: () => _cikisYap(context),
-          ),
+          ..._cikisAksiyonu(context, l10n),
         ],
       ),
       body: Column(
@@ -16411,7 +16201,7 @@ class _MesajGiris extends StatelessWidget {
               minLines: 1,
               enabled: !yukleniyor,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.questionHint,
+                hintText: AppLocalizations.of(context).questionHint,
                 filled: true,
                 fillColor: const Color(0xFFF8F9FF),
                 contentPadding: const EdgeInsets.symmetric(
@@ -18401,7 +18191,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
   Future<void> _faaliyetSec(BuildContext context) async {
     final araCtrl = TextEditingController();
     String filtre = '';
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     final secilen = await showDialog<String>(
       context: context,
@@ -18505,7 +18295,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
-                    child: Text(AppLocalizations.of(context)!.cancel),
+                    child: Text(AppLocalizations.of(context).cancel),
                   ),
                 ],
               ),
@@ -18541,7 +18331,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final bottomPad = MediaQuery.of(context).padding.bottom;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPad),
@@ -19386,7 +19176,7 @@ class _SpResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = sonuc;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

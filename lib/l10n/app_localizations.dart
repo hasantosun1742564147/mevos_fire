@@ -157,7 +157,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeleteWarning.
   ///
   /// In tr, this message translates to:
-  /// **'Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki üyelik durumu ve kayıt/silinme tarihleri silinen üyeler geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.'**
+  /// **'Hesabınız aktif sistemden silinir. Ad-soyad, e-posta, önceki hesap yetki durumu ve oluşturulma/silinme tarihleri silinen hesaplar geçmişinde adminlere gösterilmek üzere tutulur. Bu işlem geri alınamaz.'**
   String get accountDeleteWarning;
 
   /// No description provided for @accountManagement.
@@ -670,24 +670,6 @@ abstract class AppLocalizations {
   /// **'Giriş Yap'**
   String get login;
 
-  /// No description provided for @demoLogin.
-  ///
-  /// In tr, this message translates to:
-  /// **'Demo ile Gir (Davlumbaz Söndürme)'**
-  String get demoLogin;
-
-  /// No description provided for @accountPrompt.
-  ///
-  /// In tr, this message translates to:
-  /// **'Henüz hesabınız yok mu? '**
-  String get accountPrompt;
-
-  /// No description provided for @register.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kayıt olun →'**
-  String get register;
-
   /// No description provided for @preliminaryToolDisclaimer.
   ///
   /// In tr, this message translates to:
@@ -783,12 +765,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Doğal ve mekanik tahliye, basınçlandırma — EN 12101-2 / EN 12101-3 / EN 12101-6'**
   String get smokeControlDescription;
-
-  /// No description provided for @demoMode.
-  ///
-  /// In tr, this message translates to:
-  /// **'DEMO MODU · Yalnızca \"Davlumbaz Söndürme\" modülü açıktır. Diğer modüller için hesap oluşturup abone olun.'**
-  String get demoMode;
 
   /// No description provided for @standardSearch.
   ///
@@ -3242,12 +3218,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Hata: {detail}'**
   String genericErrorWithDetail(String detail);
-
-  /// No description provided for @fireModuleSubscriptionMissing.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yangın modülü aboneliğiniz bulunmuyor. Hesabınızdan abonelik başlatın.\nSunucudan gelen perms: {perms}'**
-  String fireModuleSubscriptionMissing(String perms);
 
   /// No description provided for @loginFailed.
   ///
@@ -6491,24 +6461,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Kaydedilme: {date}'**
   String savedOnLabel(String date);
-
-  /// No description provided for @upgradeRequiredTitle.
-  ///
-  /// In tr, this message translates to:
-  /// **'Sürüm Yükselt'**
-  String get upgradeRequiredTitle;
-
-  /// No description provided for @upgradeRequiredMessage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu modül demo sürümünde kullanılamaz. Tüm modüllere erişmek için MEVOS hesabınızı oluşturup Yangın modülü aboneliğini başlatın.'**
-  String get upgradeRequiredMessage;
-
-  /// No description provided for @upgradeSignUpButton.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kayıt Ol'**
-  String get upgradeSignUpButton;
 
   /// No description provided for @geminiApiKeyRequiredInfo.
   ///
