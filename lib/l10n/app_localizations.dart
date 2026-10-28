@@ -5541,7 +5541,7 @@ abstract class AppLocalizations {
   /// No description provided for @spRcBuildingArea.
   ///
   /// In tr, this message translates to:
-  /// **'Bina Alanı'**
+  /// **'Kat Alanı (tipik)'**
   String get spRcBuildingArea;
 
   /// No description provided for @spRcCeilingHeight.
@@ -6017,6 +6017,984 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Fitting eşdeğer boyu düz boru uzunluğunun %20\'si olarak alınmıştır. Hazen-Williams formülü kullanılmıştır. Ön tasarım amaçlıdır; sonuçlar proje mühendisi tarafından doğrulanmalıdır.'**
   String get spExpFootNote;
+
+  /// No description provided for @spSectionsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölümler'**
+  String get spSectionsTitle;
+
+  /// No description provided for @spSectionsInfo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Her bölüm bir kattaki kullanım alanıdır (ör. otel zemin, idari bina 1. kat, üretim holü, bodrum otopark). Aynı katta farklı kullanımlar ayrı bölüm olarak eklenebilir. Aynı ölçüdeki katlar için kopyala butonunu kullanın.'**
+  String get spSectionsInfo;
+
+  /// No description provided for @spAddSection.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüm ekle'**
+  String get spAddSection;
+
+  /// No description provided for @spDeleteSection.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölümü sil'**
+  String get spDeleteSection;
+
+  /// No description provided for @spSectionNameLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüm adı (ör. İdari bina)'**
+  String get spSectionNameLabel;
+
+  /// No description provided for @spTypicalFloorTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat ölçüleri'**
+  String get spTypicalFloorTitle;
+
+  /// No description provided for @spLevelsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat ve pompa konumu'**
+  String get spLevelsTitle;
+
+  /// No description provided for @spFloorHeightLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat yüksekliği (asma tavan boşluğu dahil)'**
+  String get spFloorHeightLabel;
+
+  /// No description provided for @spLevelInfo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat yüksekliği döşemeden üst döşemenin altına kadar ölçülür (asma tavan boşluğu dahil); asma tavan varsa boşluk aşağıda ayrıca girilir. Kotlar, \'Pompa bu katta\' işaretli katın döşemesi ±0,00 alınarak kat yüksekliklerinden otomatik hesaplanır; işaret yoksa pompa zemin katta kabul edilir. Bodrum katlar eksi kot alır.'**
+  String get spLevelInfo;
+
+  /// No description provided for @spEnterValidFloorHeight.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçerli bir kat yüksekliği girin (m).'**
+  String get spEnterValidFloorHeight;
+
+  /// No description provided for @spUnitFloor.
+  ///
+  /// In tr, this message translates to:
+  /// **'kat'**
+  String get spUnitFloor;
+
+  /// No description provided for @spCommonOptionsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ortak Sistem Seçenekleri'**
+  String get spCommonOptionsTitle;
+
+  /// No description provided for @spSectionResultsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüm Sonuçları'**
+  String get spSectionResultsTitle;
+
+  /// No description provided for @spSystemSummaryTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sistem Özeti'**
+  String get spSystemSummaryTitle;
+
+  /// No description provided for @spSumFlowGoverning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Debiyi belirleyen bölüm'**
+  String get spSumFlowGoverning;
+
+  /// No description provided for @spSumPressureGoverning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Basıncı belirleyen bölüm'**
+  String get spSumPressureGoverning;
+
+  /// No description provided for @spSumWaterTank.
+  ///
+  /// In tr, this message translates to:
+  /// **'Su deposu'**
+  String get spSumWaterTank;
+
+  /// No description provided for @spSumJockey.
+  ///
+  /// In tr, this message translates to:
+  /// **'Jokey pompa'**
+  String get spSumJockey;
+
+  /// No description provided for @spSumSectionCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüm sayısı'**
+  String get spSumSectionCount;
+
+  /// No description provided for @spSumTotalArea.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam korunan alan'**
+  String get spSumTotalArea;
+
+  /// No description provided for @spSumTotalSprinklers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam sprinkler'**
+  String get spSumTotalSprinklers;
+
+  /// No description provided for @spSumAlarmValves.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam alarm vanası'**
+  String get spSumAlarmValves;
+
+  /// No description provided for @spSumPipeLength.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam boru metrajı'**
+  String get spSumPipeLength;
+
+  /// No description provided for @spSumPressureZoneWarning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pompa basıncı 12 bar\'ı aşıyor (EN 12845 §8.2): {n} basınç zonu ve basınç düşürücü vana (PRV) gerekir.'**
+  String spSumPressureZoneWarning(String n);
+
+  /// No description provided for @spSumDesignNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'EN 12845: Tasarım alanları aynı anda çalışmaz. Pompa ve su deposu, statik yük dahil en elverişsiz bölüme göre boyutlandırılmıştır.'**
+  String get spSumDesignNote;
+
+  /// No description provided for @spRcSectionTotalSprinklers.
+  ///
+  /// In tr, this message translates to:
+  /// **'BÖLÜM TOPLAMI'**
+  String get spRcSectionTotalSprinklers;
+
+  /// No description provided for @spRcTopSprinklerLevel.
+  ///
+  /// In tr, this message translates to:
+  /// **'En üst sprinkler kotu'**
+  String get spRcTopSprinklerLevel;
+
+  /// No description provided for @spExpSection.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüm'**
+  String get spExpSection;
+
+  /// No description provided for @spLhConditionNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'LH yalnızca düşük yangın yüklü, 126 m²\'den büyük bölümü olmayan ve en az 30 dk yangın dayanımlı alanlar için geçerlidir (TS EN 12845 6.2.2). Bu şart sağlanmıyorsa OH1 seçin.'**
+  String get spLhConditionNote;
+
+  /// No description provided for @spOhPaintingNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'OH1 veya OH2 kullanımında boyama ya da benzeri yüksek yangın yüklü alanlar varsa bu alanlar OH3 olarak değerlendirilir (TS EN 12845 Tablo A.2 notu).'**
+  String get spOhPaintingNote;
+
+  /// No description provided for @spStdSchoolsAndOtherEducationalInstitutions.
+  ///
+  /// In tr, this message translates to:
+  /// **'Okullar ve diğer eğitim kurumları (belirli alanlar — bkz. 6.2.2)'**
+  String get spStdSchoolsAndOtherEducationalInstitutions;
+
+  /// No description provided for @spStdOffices.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ofisler / bürolar (belirli alanlar — bkz. 6.2.2)'**
+  String get spStdOffices;
+
+  /// No description provided for @spStdPrisons.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cezaevleri'**
+  String get spStdPrisons;
+
+  /// No description provided for @spStdCementWorks.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çimento fabrikaları'**
+  String get spStdCementWorks;
+
+  /// No description provided for @spStdSheetMetalProductFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sac metal ürün fabrikaları'**
+  String get spStdSheetMetalProductFactories;
+
+  /// No description provided for @spStdHospitals.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hastaneler'**
+  String get spStdHospitals;
+
+  /// No description provided for @spStdHotels.
+  ///
+  /// In tr, this message translates to:
+  /// **'Oteller'**
+  String get spStdHotels;
+
+  /// No description provided for @spStdLibraries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kütüphaneler (kitap depoları hariç)'**
+  String get spStdLibraries;
+
+  /// No description provided for @spStdRestaurants.
+  ///
+  /// In tr, this message translates to:
+  /// **'Lokantalar / restoranlar'**
+  String get spStdRestaurants;
+
+  /// No description provided for @spStdSchools.
+  ///
+  /// In tr, this message translates to:
+  /// **'Okullar (bkz. 6.2.2)'**
+  String get spStdSchools;
+
+  /// No description provided for @spStdOffices2.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ofisler / bürolar (bkz. 6.2.2)'**
+  String get spStdOffices2;
+
+  /// No description provided for @spStdDataProcessing.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bilgi işlem / bilgisayar odaları (bant arşivi hariç)'**
+  String get spStdDataProcessing;
+
+  /// No description provided for @spStdResidentialBuildings.
+  ///
+  /// In tr, this message translates to:
+  /// **'Konutlar (BYKHY Ek-1/B)'**
+  String get spStdResidentialBuildings;
+
+  /// No description provided for @spStdPhotographicFilmFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf filmi fabrikaları'**
+  String get spStdPhotographicFilmFactories;
+
+  /// No description provided for @spStdMetalWorking.
+  ///
+  /// In tr, this message translates to:
+  /// **'Metal işleme fabrikaları'**
+  String get spStdMetalWorking;
+
+  /// No description provided for @spStdAbattoirsMeatFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mezbahalar, et fabrikaları'**
+  String get spStdAbattoirsMeatFactories;
+
+  /// No description provided for @spStdBakeries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fırınlar / ekmek fabrikaları'**
+  String get spStdBakeries;
+
+  /// No description provided for @spStdBiscuitFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bisküvi fabrikaları'**
+  String get spStdBiscuitFactories;
+
+  /// No description provided for @spStdBreweries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bira fabrikaları'**
+  String get spStdBreweries;
+
+  /// No description provided for @spStdChocolateFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çikolata fabrikaları'**
+  String get spStdChocolateFactories;
+
+  /// No description provided for @spStdConfectionery.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şekerleme imalathaneleri'**
+  String get spStdConfectionery;
+
+  /// No description provided for @spStdDairies.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mandıralar / süt işleme tesisleri'**
+  String get spStdDairies;
+
+  /// No description provided for @spStdFoodFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gıda fabrikaları (genel)'**
+  String get spStdFoodFactories;
+
+  /// No description provided for @spStdLaboratories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fizik laboratuvarları'**
+  String get spStdLaboratories;
+
+  /// No description provided for @spStdLaundries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çamaşırhaneler'**
+  String get spStdLaundries;
+
+  /// No description provided for @spStdCarParks.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otoparklar (kapalı, katlı ve bodrum)'**
+  String get spStdCarParks;
+
+  /// No description provided for @spStdMuseums.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müzeler'**
+  String get spStdMuseums;
+
+  /// No description provided for @spStdLeatherGoodsFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Deri eşya fabrikaları'**
+  String get spStdLeatherGoodsFactories;
+
+  /// No description provided for @spStdGlassFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cam fabrikaları'**
+  String get spStdGlassFactories;
+
+  /// No description provided for @spStdDyersWorksSoapFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Boyahaneler (tekstil boyama), sabun fabrikaları'**
+  String get spStdDyersWorksSoapFactories;
+
+  /// No description provided for @spStdPhotographicLaboratories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf laboratuvarları'**
+  String get spStdPhotographicLaboratories;
+
+  /// No description provided for @spStdPaintApplicationShopsWithWaterBased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Su bazlı boya uygulama atölyeleri'**
+  String get spStdPaintApplicationShopsWithWaterBased;
+
+  /// No description provided for @spStdElectronicsFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Elektronik fabrikaları'**
+  String get spStdElectronicsFactories;
+
+  /// No description provided for @spStdRadioEquipmentFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Radyo / telsiz cihazı fabrikaları'**
+  String get spStdRadioEquipmentFactories;
+
+  /// No description provided for @spStdWashingMachineFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çamaşır makinesi fabrikaları'**
+  String get spStdWashingMachineFactories;
+
+  /// No description provided for @spStdCarWorkshops.
+  ///
+  /// In tr, this message translates to:
+  /// **'Oto tamirhaneleri / servis atölyeleri'**
+  String get spStdCarWorkshops;
+
+  /// No description provided for @spStdAnimalFodderFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hayvan yemi fabrikaları'**
+  String get spStdAnimalFodderFactories;
+
+  /// No description provided for @spStdCornMills.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tahıl değirmenleri'**
+  String get spStdCornMills;
+
+  /// No description provided for @spStdDehydratedVegetableAndSoupFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kurutulmuş sebze ve çorba fabrikaları'**
+  String get spStdDehydratedVegetableAndSoupFactories;
+
+  /// No description provided for @spStdSugarFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şeker fabrikaları'**
+  String get spStdSugarFactories;
+
+  /// No description provided for @spStdBroadcastingStudios.
+  ///
+  /// In tr, this message translates to:
+  /// **'Radyo-TV yayın stüdyoları (küçük)'**
+  String get spStdBroadcastingStudios;
+
+  /// No description provided for @spStdRailwayStations.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tren istasyonları'**
+  String get spStdRailwayStations;
+
+  /// No description provided for @spStdPlantRooms.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teknik / tesisat odaları'**
+  String get spStdPlantRooms;
+
+  /// No description provided for @spStdFarmBuildings.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tarım (çiftlik) binaları'**
+  String get spStdFarmBuildings;
+
+  /// No description provided for @spStdBookBindingFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cilthaneler'**
+  String get spStdBookBindingFactories;
+
+  /// No description provided for @spStdCardboardFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karton / mukavva fabrikaları'**
+  String get spStdCardboardFactories;
+
+  /// No description provided for @spStdPaperFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kâğıt fabrikaları'**
+  String get spStdPaperFactories;
+
+  /// No description provided for @spStdDepartmentStoresShoppingCentres.
+  ///
+  /// In tr, this message translates to:
+  /// **'Büyük mağazalar, alışveriş merkezleri (AVM)'**
+  String get spStdDepartmentStoresShoppingCentres;
+
+  /// No description provided for @spStdCarpetFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Halı fabrikaları (kauçuk ve köpük plastik hariç)'**
+  String get spStdCarpetFactories;
+
+  /// No description provided for @spStdClothAndClothingFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kumaş ve giyim (konfeksiyon) fabrikaları'**
+  String get spStdClothAndClothingFactories;
+
+  /// No description provided for @spStdFibreBoardFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Lif levha fabrikaları'**
+  String get spStdFibreBoardFactories;
+
+  /// No description provided for @spStdFootwearFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ayakkabı fabrikaları (plastik ve kauçuk hariç)'**
+  String get spStdFootwearFactories;
+
+  /// No description provided for @spStdKnittingFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Örme / triko fabrikaları'**
+  String get spStdKnittingFactories;
+
+  /// No description provided for @spStdLinenFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Keten kumaş fabrikaları'**
+  String get spStdLinenFactories;
+
+  /// No description provided for @spStdMattressFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yatak / şilte fabrikaları (köpük plastik hariç)'**
+  String get spStdMattressFactories;
+
+  /// No description provided for @spStdSewingFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Dikimhaneler'**
+  String get spStdSewingFactories;
+
+  /// No description provided for @spStdWeavingMills.
+  ///
+  /// In tr, this message translates to:
+  /// **'Dokuma fabrikaları'**
+  String get spStdWeavingMills;
+
+  /// No description provided for @spStdWoollenAndWorstedMills.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yün ve kamgarn fabrikaları'**
+  String get spStdWoollenAndWorstedMills;
+
+  /// No description provided for @spStdWoodworkingFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ahşap işleme fabrikaları'**
+  String get spStdWoodworkingFactories;
+
+  /// No description provided for @spStdFurnitureFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mobilya fabrikaları (köpük plastik hariç)'**
+  String get spStdFurnitureFactories;
+
+  /// No description provided for @spStdFurnitureShowrooms.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mobilya mağazaları / teşhir salonları'**
+  String get spStdFurnitureShowrooms;
+
+  /// No description provided for @spStdUpholsteryFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Döşemecilik imalathaneleri (köpük plastik hariç)'**
+  String get spStdUpholsteryFactories;
+
+  /// No description provided for @spStdAlcoholDistilleries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Alkol damıtımhaneleri'**
+  String get spStdAlcoholDistilleries;
+
+  /// No description provided for @spStdCinemasAndTheatres.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sinemalar ve tiyatrolar'**
+  String get spStdCinemasAndTheatres;
+
+  /// No description provided for @spStdConcertHalls.
+  ///
+  /// In tr, this message translates to:
+  /// **'Konser salonları'**
+  String get spStdConcertHalls;
+
+  /// No description provided for @spStdTobaccoFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tütün fabrikaları'**
+  String get spStdTobaccoFactories;
+
+  /// No description provided for @spStdFilmAndTvProductionStudios.
+  ///
+  /// In tr, this message translates to:
+  /// **'Film ve TV yapım stüdyoları'**
+  String get spStdFilmAndTvProductionStudios;
+
+  /// No description provided for @spStdWastePaperProcessing.
+  ///
+  /// In tr, this message translates to:
+  /// **'Atık kâğıt işleme tesisleri'**
+  String get spStdWastePaperProcessing;
+
+  /// No description provided for @spStdExhibitionHalls.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sergi / fuar salonları (aşırı tavan boşluğu dikkate alınmalı)'**
+  String get spStdExhibitionHalls;
+
+  /// No description provided for @spStdCottonMills.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pamuk iplik fabrikaları'**
+  String get spStdCottonMills;
+
+  /// No description provided for @spStdFlaxPreparationPlants.
+  ///
+  /// In tr, this message translates to:
+  /// **'Keten hazırlama tesisleri'**
+  String get spStdFlaxPreparationPlants;
+
+  /// No description provided for @spStdHempPreparationPlants.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kenevir hazırlama tesisleri'**
+  String get spStdHempPreparationPlants;
+
+  /// No description provided for @spStdSawMills.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kereste bıçkıhaneleri'**
+  String get spStdSawMills;
+
+  /// No description provided for @spStdPlywoodFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kontrplak fabrikaları'**
+  String get spStdPlywoodFactories;
+
+  /// No description provided for @spStdFloorClothAndLinoleumManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Döşeme kumaşı (muşamba) ve linolyum imalatı'**
+  String get spStdFloorClothAndLinoleumManufacture;
+
+  /// No description provided for @spStdResinLampBlackAndTurpentineManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Reçine, lamba isi ve terebentin imalatı'**
+  String get spStdResinLampBlackAndTurpentineManufacture;
+
+  /// No description provided for @spStdRubberSubstituteManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kauçuk ikamesi (yapay kauçuk) imalatı'**
+  String get spStdRubberSubstituteManufacture;
+
+  /// No description provided for @spStdWoodWoolManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Odun yünü imalatı'**
+  String get spStdWoodWoolManufacture;
+
+  /// No description provided for @spStdMatchManufacturers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kibrit fabrikaları'**
+  String get spStdMatchManufacturers;
+
+  /// No description provided for @spStdPaintApplicationShopsWithSolvent.
+  ///
+  /// In tr, this message translates to:
+  /// **'Solvent bazlı boya uygulama atölyeleri'**
+  String get spStdPaintApplicationShopsWithSolvent;
+
+  /// No description provided for @spStdRefrigeratorFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Buzdolabı fabrikaları'**
+  String get spStdRefrigeratorFactories;
+
+  /// No description provided for @spStdPrintingWorks.
+  ///
+  /// In tr, this message translates to:
+  /// **'Matbaalar / baskı tesisleri'**
+  String get spStdPrintingWorks;
+
+  /// No description provided for @spStdCableFactoriesForPpPePs.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kablo fabrikaları (PP/PE/PS veya benzeri yanma özellikli, OH3 dışı)'**
+  String get spStdCableFactoriesForPpPePs;
+
+  /// No description provided for @spStdInjectionMouldingForPpPePs.
+  ///
+  /// In tr, this message translates to:
+  /// **'Plastik enjeksiyon kalıplama (PP/PE/PS veya benzeri, OH3 dışı)'**
+  String get spStdInjectionMouldingForPpPePs;
+
+  /// No description provided for @spStdPlasticsFactoriesAndPlasticGoodsFor.
+  ///
+  /// In tr, this message translates to:
+  /// **'Plastik fabrikaları ve plastik eşya (köpük hariç; PP/PE/PS veya benzeri, OH3 dışı)'**
+  String get spStdPlasticsFactoriesAndPlasticGoodsFor;
+
+  /// No description provided for @spStdRubberGoodsFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kauçuk eşya fabrikaları'**
+  String get spStdRubberGoodsFactories;
+
+  /// No description provided for @spStdSyntheticFibreFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sentetik elyaf fabrikaları (akrilik hariç)'**
+  String get spStdSyntheticFibreFactories;
+
+  /// No description provided for @spStdRopeFactories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Halat fabrikaları'**
+  String get spStdRopeFactories;
+
+  /// No description provided for @spStdCarpetFactoriesIncludingUnexpandedPlastics.
+  ///
+  /// In tr, this message translates to:
+  /// **'Halı fabrikaları (genleşmemiş plastik içeren)'**
+  String get spStdCarpetFactoriesIncludingUnexpandedPlastics;
+
+  /// No description provided for @spStdFootwearFactoriesIncludingPlasticsAndRubber.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ayakkabı fabrikaları (plastik ve kauçuk dahil)'**
+  String get spStdFootwearFactoriesIncludingPlasticsAndRubber;
+
+  /// No description provided for @spStdFireLighterManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutuşturucu (çıra) imalatı'**
+  String get spStdFireLighterManufacture;
+
+  /// No description provided for @spStdTarDistilling.
+  ///
+  /// In tr, this message translates to:
+  /// **'Katran damıtma'**
+  String get spStdTarDistilling;
+
+  /// No description provided for @spStdDepotsForBusesUnLadenLorries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otobüs, boş kamyon ve demiryolu vagonu depoları (garajları)'**
+  String get spStdDepotsForBusesUnLadenLorries;
+
+  /// No description provided for @spStdCandleWaxAndParaffinManufacturers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mum, balmumu ve parafin imalatı'**
+  String get spStdCandleWaxAndParaffinManufacturers;
+
+  /// No description provided for @spStdPaperMachineHalls.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kâğıt makinesi holleri'**
+  String get spStdPaperMachineHalls;
+
+  /// No description provided for @spStdCarpetFactoriesIncludingRubberAndFoam.
+  ///
+  /// In tr, this message translates to:
+  /// **'Halı fabrikaları (kauçuk ve köpük plastik dahil)'**
+  String get spStdCarpetFactoriesIncludingRubberAndFoam;
+
+  /// No description provided for @spStdSawMill.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bıçkıhaneler (Tablo A.3)'**
+  String get spStdSawMill;
+
+  /// No description provided for @spStdChipboardManufacturing.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yonga levha (sunta) imalatı (ilave nesne koruması gerekebilir)'**
+  String get spStdChipboardManufacturing;
+
+  /// No description provided for @spStdPaintColourAndVarnishManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Boya, renk maddesi ve vernik imalatı'**
+  String get spStdPaintColourAndVarnishManufacture;
+
+  /// No description provided for @spStdCelluloseNitrateManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Selüloz nitrat imalatı'**
+  String get spStdCelluloseNitrateManufacture;
+
+  /// No description provided for @spStdRubberTyresForCarsAndLorries.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomobil ve kamyon lastiği imalatı'**
+  String get spStdRubberTyresForCarsAndLorries;
+
+  /// No description provided for @spStdManufactureOfFoamPlasticsFoamRubber.
+  ///
+  /// In tr, this message translates to:
+  /// **'Köpük plastik, köpük kauçuk ve köpük kauçuk eşya imalatı (malzeme faktörü m3; m4 hariç — Tablo B.1)'**
+  String get spStdManufactureOfFoamPlasticsFoamRubber;
+
+  /// No description provided for @spStdFireworkManufacture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Havai fişek imalatı'**
+  String get spStdFireworkManufacture;
+
+  /// No description provided for @spFloorLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat'**
+  String get spFloorLabel;
+
+  /// No description provided for @spFloorBasement.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bodrum'**
+  String get spFloorBasement;
+
+  /// No description provided for @spFloorBasementN.
+  ///
+  /// In tr, this message translates to:
+  /// **'{n}. Bodrum'**
+  String spFloorBasementN(String n);
+
+  /// No description provided for @spFloorGround.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zemin'**
+  String get spFloorGround;
+
+  /// No description provided for @spFloorN.
+  ///
+  /// In tr, this message translates to:
+  /// **'{n}. Kat'**
+  String spFloorN(String n);
+
+  /// No description provided for @spFloorLevelLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'kot'**
+  String get spFloorLevelLabel;
+
+  /// No description provided for @spPumpHereCheckbox.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pompa bu katta (kat döşemesi ±0,00 kabul edilir)'**
+  String get spPumpHereCheckbox;
+
+  /// No description provided for @spPumpShort.
+  ///
+  /// In tr, this message translates to:
+  /// **'pompa'**
+  String get spPumpShort;
+
+  /// No description provided for @spCopyToNextFloor.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir üst kata kopyala'**
+  String get spCopyToNextFloor;
+
+  /// No description provided for @spMissingFloorHeight.
+  ///
+  /// In tr, this message translates to:
+  /// **'{kat} için kat yüksekliği bilinmiyor. Kotlar aradaki katların yüksekliğinden hesaplandığı için bu kat için de bir bölüm ekleyin ya da pompanın bulunduğu katı işaretleyin.'**
+  String spMissingFloorHeight(String kat);
+
+  /// No description provided for @spHoseCabinetTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yangın dolapları (en üst kat, min. 4 bar)'**
+  String get spHoseCabinetTitle;
+
+  /// No description provided for @spHoseCabinetPressure.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yangın dolabı basıncı (en üst kat)'**
+  String get spHoseCabinetPressure;
+
+  /// No description provided for @spHoseFromSprinklerLine.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sprinkler hattından'**
+  String get spHoseFromSprinklerLine;
+
+  /// No description provided for @spHoseSeparateLine.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pompadan ayrı hat'**
+  String get spHoseSeparateLine;
+
+  /// No description provided for @spHoseSeparateLineInfo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sprinkler hattı en üst kat dolabında 4 bar sağlamıyor; bu bölümlerin dolapları için pompadan ayrı hat çekilmelidir. Pompa basıncı ayrı hattın ihtiyacına göre yükseltildi.'**
+  String get spHoseSeparateLineInfo;
+
+  /// No description provided for @spSupervisedValve.
+  ///
+  /// In tr, this message translates to:
+  /// **'İzlenebilir vana'**
+  String get spSupervisedValve;
+
+  /// No description provided for @spFlowSwitch.
+  ///
+  /// In tr, this message translates to:
+  /// **'Akış anahtarı'**
+  String get spFlowSwitch;
+
+  /// No description provided for @spDrainValve.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tahliye vanası'**
+  String get spDrainValve;
+
+  /// No description provided for @spPipeByDiameter.
+  ///
+  /// In tr, this message translates to:
+  /// **'Boru metrajı (çap ve tipe göre)'**
+  String get spPipeByDiameter;
+
+  /// No description provided for @spPipeBranch.
+  ///
+  /// In tr, this message translates to:
+  /// **'Dal boru'**
+  String get spPipeBranch;
+
+  /// No description provided for @spPipeDist.
+  ///
+  /// In tr, this message translates to:
+  /// **'Dağıtım borusu'**
+  String get spPipeDist;
+
+  /// No description provided for @spPipeMain.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ana boru / kolon'**
+  String get spPipeMain;
+
+  /// No description provided for @spHoseReelCheckbox.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yangın dolabı debisini ekle (en üst katta 2 dolap)'**
+  String get spHoseReelCheckbox;
+
+  /// No description provided for @spHoseReelInfo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Düşük/orta tehlike: 2 × 100 L/dk = 200 L/dk · Yüksek tehlike ve depolama: 2 × 200 L/dk = 400 L/dk. Bu debi pompa debisine ve su deposuna eklenir. En üst kattaki dolapta en az 4 bar aranır; sprinkler hattı bunu sağlamıyorsa pompadan ayrı hat çekilir.'**
+  String get spHoseReelInfo;
+
+  /// No description provided for @spHoseReelFlow.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yangın dolabı ilavesi'**
+  String get spHoseReelFlow;
+
+  /// No description provided for @spVoidExceedsHeight.
+  ///
+  /// In tr, this message translates to:
+  /// **'Asma tavan boşluğu kat yüksekliğinden küçük olmalıdır.'**
+  String get spVoidExceedsHeight;
+
+  /// No description provided for @spFloorControlSet.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat kontrol seti'**
+  String get spFloorControlSet;
+
+  /// No description provided for @spFloorControlTotal.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kat kontrol setleri'**
+  String get spFloorControlTotal;
+
+  /// No description provided for @spFloorControlContent.
+  ///
+  /// In tr, this message translates to:
+  /// **'izlenebilir vana + akış anahtarı + tahliye vanası'**
+  String get spFloorControlContent;
+
+  /// No description provided for @spFloorControlInfo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Katlı yapıda her kata (bodrum dahil) izlenebilir vana, akış anahtarı ve tahliye vanası konur. Çapları o katın ana borusu çapındadır.'**
+  String get spFloorControlInfo;
 
   /// No description provided for @spRcHydraulicFootnote.
   ///
@@ -7475,582 +8453,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Patlama önleme sistemleri standardı.'**
   String get stdDescNfpa69ExplosionPrevention;
-
-  /// No description provided for @spActOfficesAdmin.
-  ///
-  /// In tr, this message translates to:
-  /// **'Ofisler ve yönetim binaları'**
-  String get spActOfficesAdmin;
-
-  /// No description provided for @spActHotelsHostelsGuesthouses.
-  ///
-  /// In tr, this message translates to:
-  /// **'Oteller, misafirhaneler, pansiyonlar'**
-  String get spActHotelsHostelsGuesthouses;
-
-  /// No description provided for @spActHospitalsClinics.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hastaneler, klinikler, sağlık merkezleri'**
-  String get spActHospitalsClinics;
-
-  /// No description provided for @spActSchoolsUniversities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Okullar, üniversiteler ve eğitim binaları'**
-  String get spActSchoolsUniversities;
-
-  /// No description provided for @spActResidentialApartments.
-  ///
-  /// In tr, this message translates to:
-  /// **'Konutlar ve apartmanlar'**
-  String get spActResidentialApartments;
-
-  /// No description provided for @spActPrisonsReformatories.
-  ///
-  /// In tr, this message translates to:
-  /// **'Cezaevleri ve ıslahevleri'**
-  String get spActPrisonsReformatories;
-
-  /// No description provided for @spActChurchesMosquesWorship.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kiliseler, camiler ve ibadethaneler'**
-  String get spActChurchesMosquesWorship;
-
-  /// No description provided for @spActTheatresCinemaSeating.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tiyatrolar / sinema (yalnızca seyirci oturma alanları)'**
-  String get spActTheatresCinemaSeating;
-
-  /// No description provided for @spActMuseumsGalleries.
-  ///
-  /// In tr, this message translates to:
-  /// **'Müzeler ve sanat galerileri'**
-  String get spActMuseumsGalleries;
-
-  /// No description provided for @spActBreweriesExclDistilleries.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bira fabrikaları (damıtma tesisleri hariç)'**
-  String get spActBreweriesExclDistilleries;
-
-  /// No description provided for @spActMultiStoreyBasementCarParks.
-  ///
-  /// In tr, this message translates to:
-  /// **'Çok katlı ve bodrum katlı kapalı otoparklar'**
-  String get spActMultiStoreyBasementCarParks;
-
-  /// No description provided for @spActCeramicsProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Seramik ürünleri üretimi'**
-  String get spActCeramicsProduction;
-
-  /// No description provided for @spActGlassGlasswareExclFibre.
-  ///
-  /// In tr, this message translates to:
-  /// **'Cam ve cam eşya üretimi (cam elyafı hariç)'**
-  String get spActGlassGlasswareExclFibre;
-
-  /// No description provided for @spActChemResearchLabs.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kimya araştırma laboratuvarları'**
-  String get spActChemResearchLabs;
-
-  /// No description provided for @spActDairyProcessing.
-  ///
-  /// In tr, this message translates to:
-  /// **'Süt ve süt ürünleri işleme tesisleri (mandıralar)'**
-  String get spActDairyProcessing;
-
-  /// No description provided for @spActElectronicsAssembly.
-  ///
-  /// In tr, this message translates to:
-  /// **'Elektronik ekipman montaj atölyeleri'**
-  String get spActElectronicsAssembly;
-
-  /// No description provided for @spActFoodProcessingPackaging.
-  ///
-  /// In tr, this message translates to:
-  /// **'Gıda işleme ve paketleme tesisleri'**
-  String get spActFoodProcessingPackaging;
-
-  /// No description provided for @spActHotelsKitchenLaundryService.
-  ///
-  /// In tr, this message translates to:
-  /// **'Oteller — mutfak, çamaşırhane ve servis alanları'**
-  String get spActHotelsKitchenLaundryService;
-
-  /// No description provided for @spActInstitutionalCommercialLaundries.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kurumsal ve ticari çamaşırhaneler'**
-  String get spActInstitutionalCommercialLaundries;
-
-  /// No description provided for @spActLeatherProductsProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Deri ve deri ürünleri üretimi'**
-  String get spActLeatherProductsProduction;
-
-  /// No description provided for @spActLightMetalworkingWorkshops.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hafif metal işleme atölyeleri'**
-  String get spActLightMetalworkingWorkshops;
-
-  /// No description provided for @spActPharmaceuticalProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Farmasötik (ilaç) üretim tesisleri'**
-  String get spActPharmaceuticalProduction;
-
-  /// No description provided for @spActResearchLabsNonflamLiquids.
-  ///
-  /// In tr, this message translates to:
-  /// **'Araştırma laboratuvarları (yanmaz sıvı kullanımı)'**
-  String get spActResearchLabsNonflamLiquids;
-
-  /// No description provided for @spActTextileWeavingNaturalFibresUntreated.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)'**
-  String get spActTextileWeavingNaturalFibresUntreated;
-
-  /// No description provided for @spActTobaccoProcessingPackaging.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tütün işleme ve paketleme'**
-  String get spActTobaccoProcessingPackaging;
-
-  /// No description provided for @spActAgriIndustrialMachineryAssembly.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tarım ve iş makinesi montaj tesisleri'**
-  String get spActAgriIndustrialMachineryAssembly;
-
-  /// No description provided for @spActGrainFlourMillFoodProcessing.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tahıl, un değirmeni ve benzeri gıda işleme'**
-  String get spActGrainFlourMillFoodProcessing;
-
-  /// No description provided for @spActChemProductionNonflamLiquidsOnly.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)'**
-  String get spActChemProductionNonflamLiquidsOnly;
-
-  /// No description provided for @spActDeptStoresShoppingCentresSingleStorey.
-  ///
-  /// In tr, this message translates to:
-  /// **'Büyük mağazalar ve alışveriş merkezleri (tek katlı)'**
-  String get spActDeptStoresShoppingCentresSingleStorey;
-
-  /// No description provided for @spActElectricalEquipmentFactories.
-  ///
-  /// In tr, this message translates to:
-  /// **'Elektrikli ekipman üretim fabrikaları'**
-  String get spActElectricalEquipmentFactories;
-
-  /// No description provided for @spActComputerDataProcessingRooms.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bilgisayar ve elektronik veri işleme odaları'**
-  String get spActComputerDataProcessingRooms;
-
-  /// No description provided for @spActGeneralEngineeringWorkshopsFactories.
-  ///
-  /// In tr, this message translates to:
-  /// **'Genel mühendislik atölyeleri ve fabrikalar'**
-  String get spActGeneralEngineeringWorkshopsFactories;
-
-  /// No description provided for @spActFruitVegCanningFacilities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Meyve, sebze ve konserve işleme tesisleri'**
-  String get spActFruitVegCanningFacilities;
-
-  /// No description provided for @spActVehicleMaintenanceRepairGarages.
-  ///
-  /// In tr, this message translates to:
-  /// **'Araç bakım-onarım garajları'**
-  String get spActVehicleMaintenanceRepairGarages;
-
-  /// No description provided for @spActFibreglassProductionAssembly.
-  ///
-  /// In tr, this message translates to:
-  /// **'Cam elyafı (fiberglas) üretimi ve montajı'**
-  String get spActFibreglassProductionAssembly;
-
-  /// No description provided for @spActHardwareIronmongeryStores.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hırdavat ve demir-çelik ürünleri mağazaları'**
-  String get spActHardwareIronmongeryStores;
-
-  /// No description provided for @spActHospitalsTreatmentSurgeryAreas.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hastaneler — tedavi ve ameliyat alanları'**
-  String get spActHospitalsTreatmentSurgeryAreas;
-
-  /// No description provided for @spActKnittingHosieryFactories.
-  ///
-  /// In tr, this message translates to:
-  /// **'Örme (triko/hosiery) fabrikaları'**
-  String get spActKnittingHosieryFactories;
-
-  /// No description provided for @spActLibrariesOpenShelfAreas.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kütüphaneler — genel açık raf alanları'**
-  String get spActLibrariesOpenShelfAreas;
-
-  /// No description provided for @spActGeneralMetalworkingFactories.
-  ///
-  /// In tr, this message translates to:
-  /// **'Genel metal işleme fabrikaları'**
-  String get spActGeneralMetalworkingFactories;
-
-  /// No description provided for @spActPaperBoardProductionFacilities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kâğıt ve karton üretim tesisleri'**
-  String get spActPaperBoardProductionFacilities;
-
-  /// No description provided for @spActPlasticsManufNonflamOnly.
-  ///
-  /// In tr, this message translates to:
-  /// **'Plastik ürün imalatı (yalnızca yanmaz plastikler)'**
-  String get spActPlasticsManufNonflamOnly;
-
-  /// No description provided for @spActGeneralPrintingWaterBasedInk.
-  ///
-  /// In tr, this message translates to:
-  /// **'Genel baskı / matbaa (su bazlı mürekkep)'**
-  String get spActGeneralPrintingWaterBasedInk;
-
-  /// No description provided for @spActSupermarketsHypermarkets.
-  ///
-  /// In tr, this message translates to:
-  /// **'Süpermarketler ve hipermarketler'**
-  String get spActSupermarketsHypermarkets;
-
-  /// No description provided for @spActTailoringGarmentManufacture.
-  ///
-  /// In tr, this message translates to:
-  /// **'Terzilik, konfeksiyon ve giyim üretimi'**
-  String get spActTailoringGarmentManufacture;
-
-  /// No description provided for @spActTextileSpinningWeavingSynthetic.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tekstil eğirme ve dokuma (sentetik elyaf)'**
-  String get spActTextileSpinningWeavingSynthetic;
-
-  /// No description provided for @spActLoadingShippingDocks.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yükleme-boşaltma, sevkiyat/nakliye rampaları'**
-  String get spActLoadingShippingDocks;
-
-  /// No description provided for @spActGeneralStorageUpTo4m.
-  ///
-  /// In tr, this message translates to:
-  /// **'Genel depolama (istiflenmiş yükseklik ≤ 4 m)'**
-  String get spActGeneralStorageUpTo4m;
-
-  /// No description provided for @spActAircraftHangarsMaintenance.
-  ///
-  /// In tr, this message translates to:
-  /// **'Uçak hangarları — bakım ve onarım alanları'**
-  String get spActAircraftHangarsMaintenance;
-
-  /// No description provided for @spActOilclothTarpaulinCanvasProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Muşamba, branda, çadır bezi ve branda üretimi'**
-  String get spActOilclothTarpaulinCanvasProduction;
-
-  /// No description provided for @spActChemProductionFpAbove55.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kimyasal üretim (parlama noktası > 55 °C ürünler)'**
-  String get spActChemProductionFpAbove55;
-
-  /// No description provided for @spActColdStores.
-  ///
-  /// In tr, this message translates to:
-  /// **'Soğuk hava depoları'**
-  String get spActColdStores;
-
-  /// No description provided for @spActFilmTvStudiosProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Film ve televizyon stüdyoları (üretim alanı)'**
-  String get spActFilmTvStudiosProduction;
-
-  /// No description provided for @spActFurnitureUpholsteryProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Mobilya ve döşeme üretimi (sünger, kumaş)'**
-  String get spActFurnitureUpholsteryProduction;
-
-  /// No description provided for @spActJoineryWoodworkingWorkshops.
-  ///
-  /// In tr, this message translates to:
-  /// **'Marangoz / doğrama — ahşap işleme atölyeleri'**
-  String get spActJoineryWoodworkingWorkshops;
-
-  /// No description provided for @spActMatchProductionFacilities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kibrit üretim tesisleri'**
-  String get spActMatchProductionFacilities;
-
-  /// No description provided for @spActOfficesLargePaperArchives.
-  ///
-  /// In tr, this message translates to:
-  /// **'Büyük kâğıt arşiv alanları olan ofisler'**
-  String get spActOfficesLargePaperArchives;
-
-  /// No description provided for @spActWaterBasedPaintVarnishProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Su bazlı boya ve vernik üretimi'**
-  String get spActWaterBasedPaintVarnishProduction;
-
-  /// No description provided for @spActPaperCorrugatedBoxProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi'**
-  String get spActPaperCorrugatedBoxProduction;
-
-  /// No description provided for @spActThermoplasticsManufShaping.
-  ///
-  /// In tr, this message translates to:
-  /// **'Termoplastik plastik imalat ve şekillendirme'**
-  String get spActThermoplasticsManufShaping;
-
-  /// No description provided for @spActHighSpeedOffsetPrintingOilInk.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yüksek hızlı ofset baskı (petrol bazlı mürekkep)'**
-  String get spActHighSpeedOffsetPrintingOilInk;
-
-  /// No description provided for @spActRubberProductsProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kauçuk ürünleri üretim tesisleri'**
-  String get spActRubberProductsProduction;
-
-  /// No description provided for @spActTextileDyeingFinishingFacilities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tekstil boyama ve terbiye işleme tesisleri'**
-  String get spActTextileDyeingFinishingFacilities;
-
-  /// No description provided for @spActGeneralStorage4to8m.
-  ///
-  /// In tr, this message translates to:
-  /// **'Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)'**
-  String get spActGeneralStorage4to8m;
-
-  /// No description provided for @spActChemProductionClosedProcessFp55.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)'**
-  String get spActChemProductionClosedProcessFp55;
-
-  /// No description provided for @spActPlasticRubberPartsClosedMoulding.
-  ///
-  /// In tr, this message translates to:
-  /// **'Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)'**
-  String get spActPlasticRubberPartsClosedMoulding;
-
-  /// No description provided for @spActTextileDyeingFinishingWaterBased.
-  ///
-  /// In tr, this message translates to:
-  /// **'Tekstil boyama ve terbiye tesisleri (su bazlı)'**
-  String get spActTextileDyeingFinishingWaterBased;
-
-  /// No description provided for @spActPharmacyCosmeticsDetergentProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Eczane, kozmetik ve deterjan üretim tesisleri'**
-  String get spActPharmacyCosmeticsDetergentProduction;
-
-  /// No description provided for @spActFoodBeverageProductionHighVolume.
-  ///
-  /// In tr, this message translates to:
-  /// **'Gıda ve içecek üretim tesisleri (yüksek hacimli)'**
-  String get spActFoodBeverageProductionHighVolume;
-
-  /// No description provided for @spActPaperProductionDryCuttingSorting.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)'**
-  String get spActPaperProductionDryCuttingSorting;
-
-  /// No description provided for @spActPaintShopsWaterUvCuring.
-  ///
-  /// In tr, this message translates to:
-  /// **'Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler'**
-  String get spActPaintShopsWaterUvCuring;
-
-  /// No description provided for @spActMetalworkingMachineryHeavySwarfOilMist.
-  ///
-  /// In tr, this message translates to:
-  /// **'Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)'**
-  String get spActMetalworkingMachineryHeavySwarfOilMist;
-
-  /// No description provided for @spActFlammableLiquidProcessFp55Plus.
-  ///
-  /// In tr, this message translates to:
-  /// **'Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri'**
-  String get spActFlammableLiquidProcessFp55Plus;
-
-  /// No description provided for @spActFoamRubberFoamPlasticProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri'**
-  String get spActFoamRubberFoamPlasticProduction;
-
-  /// No description provided for @spActFlowCoatingMetalPlasticParts.
-  ///
-  /// In tr, this message translates to:
-  /// **'Metal ve plastik parçalar için akış kaplama (flow coating)'**
-  String get spActFlowCoatingMetalPlasticParts;
-
-  /// No description provided for @spActIndustrialPrintingFlammableInkSolvent.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri'**
-  String get spActIndustrialPrintingFlammableInkSolvent;
-
-  /// No description provided for @spActAerosolSprayPackagingFilling.
-  ///
-  /// In tr, this message translates to:
-  /// **'Aerosol ve sprey ürünleri paketleme/dolum tesisleri'**
-  String get spActAerosolSprayPackagingFilling;
-
-  /// No description provided for @spActFlammableLiquidProcessFpBelow55Open.
-  ///
-  /// In tr, this message translates to:
-  /// **'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)'**
-  String get spActFlammableLiquidProcessFpBelow55Open;
-
-  /// No description provided for @spActChemProductionContainingFp55Liquids.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)'**
-  String get spActChemProductionContainingFp55Liquids;
-
-  /// No description provided for @spActSolventBasedPaintVarnishProduction.
-  ///
-  /// In tr, this message translates to:
-  /// **'Solvent bazlı boya ve vernik üretim tesisleri'**
-  String get spActSolventBasedPaintVarnishProduction;
-
-  /// No description provided for @spActSpraySolventPaintApplication.
-  ///
-  /// In tr, this message translates to:
-  /// **'Sprey boyahane — yanıcı solvent bazlı boya uygulaması'**
-  String get spActSpraySolventPaintApplication;
-
-  /// No description provided for @spActDryCleaningPerchloroethyleneSolvent.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)'**
-  String get spActDryCleaningPerchloroethyleneSolvent;
-
-  /// No description provided for @spActSolventExtractionFacilities.
-  ///
-  /// In tr, this message translates to:
-  /// **'Solvent ekstraksiyon tesisleri'**
-  String get spActSolventExtractionFacilities;
-
-  /// No description provided for @spActPrintingGravureFlammableInk.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yanıcı mürekkep kullanan baskı / gravür tesisleri'**
-  String get spActPrintingGravureFlammableInk;
-
-  /// No description provided for @spActSprayCoatingBoothsFlammableLiquid.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yanıcı sıvı ile sprey kaplama / boyama kabinleri'**
-  String get spActSprayCoatingBoothsFlammableLiquid;
-
-  /// No description provided for @spActRubberMasticFlammableRawMaterialProcessing.
-  ///
-  /// In tr, this message translates to:
-  /// **'Kauçuk mastik ve yanıcı hammadde işleme tesisleri'**
-  String get spActRubberMasticFlammableRawMaterialProcessing;
-
-  /// No description provided for @spActPaintInkVarnishPackagingFilling.
-  ///
-  /// In tr, this message translates to:
-  /// **'Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri'**
-  String get spActPaintInkVarnishPackagingFilling;
-
-  /// No description provided for @spActHighRackPalletStorageSolidAbove4m.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m'**
-  String get spActHighRackPalletStorageSolidAbove4m;
-
-  /// No description provided for @spActTyresRubberProductsStorage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Araç lastikleri ve kauçuk ürün depolaması'**
-  String get spActTyresRubberProductsStorage;
-
-  /// No description provided for @spActPaperRollsReelsStorage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Rulo kâğıt ve kâğıt topu depolaması'**
-  String get spActPaperRollsReelsStorage;
-
-  /// No description provided for @spActSolidPlasticRawProductStoragePalletRack.
-  ///
-  /// In tr, this message translates to:
-  /// **'Katı plastik hammadde ve ürün depolaması (paletli/raflı)'**
-  String get spActSolidPlasticRawProductStoragePalletRack;
-
-  /// No description provided for @spActBaledCottonTextileSyntheticFibreStorage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması'**
-  String get spActBaledCottonTextileSyntheticFibreStorage;
-
-  /// No description provided for @spActHighRackPalletStorageFlammableLiquidAbove4m.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi'**
-  String get spActHighRackPalletStorageFlammableLiquidAbove4m;
-
-  /// No description provided for @spActAerosolStoreFlammablePropellantHighRack.
-  ///
-  /// In tr, this message translates to:
-  /// **'Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir'**
-  String get spActAerosolStoreFlammablePropellantHighRack;
-
-  /// No description provided for @spActFlammableLiquidPackagedProductStorage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem'**
-  String get spActFlammableLiquidPackagedProductStorage;
-
-  /// No description provided for @spActHighDensityStorageWaterSensitiveHighCalorific.
-  ///
-  /// In tr, this message translates to:
-  /// **'Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması'**
-  String get spActHighDensityStorageWaterSensitiveHighCalorific;
 
   /// No description provided for @spActNoncombustibleStorageMetalGlassCeramicConcrete.
   ///

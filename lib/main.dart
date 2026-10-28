@@ -16555,16 +16555,10 @@ const List<_SpSinif> _spSiniflar = [
     minBasinc: 0.70, // EN 12845 Tablo 1 — LH minimum 0,70 bar
     sureDk: 30, // EN 12845 Tablo 2 — LH su besleme süresi 30 dk
     faaliyetler: [
-      // EN 12845:2015 Ek A — LH
-      'Ofisler ve yönetim binaları',
-      'Oteller, misafirhaneler, pansiyonlar',
-      'Hastaneler, klinikler, sağlık merkezleri',
-      'Okullar, üniversiteler ve eğitim binaları',
-      'Konutlar ve apartmanlar',
-      'Cezaevleri ve ıslahevleri',
-      'Kiliseler, camiler ve ibadethaneler',
-      'Tiyatrolar / sinema (yalnızca seyirci oturma alanları)',
-      'Müzeler ve sanat galerileri',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.1 (Düşük Tehlike)
+      'Okullar ve diğer eğitim kurumları (belirli alanlar — bkz. 6.2.2)',
+      'Ofisler / bürolar (belirli alanlar — bkz. 6.2.2)',
+      'Cezaevleri',
     ],
   ),
   _SpSinif(
@@ -16579,23 +16573,17 @@ const List<_SpSinif> _spSiniflar = [
     yanAralik: 3.4,
     yanSonMesafe: 1.8, // Çizelge 20 — OH yan duvar
     faaliyetler: [
-      // EN 12845:2015 Ek A — OH Grup 1
-      'Bira fabrikaları (damıtma tesisleri hariç)',
-      'Çok katlı ve bodrum katlı kapalı otoparklar',
-      'Seramik ürünleri üretimi',
-      'Cam ve cam eşya üretimi (cam elyafı hariç)',
-      'Kimya araştırma laboratuvarları',
-      'Süt ve süt ürünleri işleme tesisleri (mandıralar)',
-      'Elektronik ekipman montaj atölyeleri',
-      'Gıda işleme ve paketleme tesisleri',
-      'Oteller — mutfak, çamaşırhane ve servis alanları',
-      'Kurumsal ve ticari çamaşırhaneler',
-      'Deri ve deri ürünleri üretimi',
-      'Hafif metal işleme atölyeleri',
-      'Farmasötik (ilaç) üretim tesisleri',
-      'Araştırma laboratuvarları (yanmaz sıvı kullanımı)',
-      'Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)',
-      'Tütün işleme ve paketleme',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.2 (OH1) · BYKHY Ek-1/B Orta Tehlike-1
+      'Çimento fabrikaları',
+      'Sac metal ürün fabrikaları',
+      'Hastaneler',
+      'Oteller',
+      'Kütüphaneler (kitap depoları hariç)',
+      'Lokantalar / restoranlar',
+      'Okullar (bkz. 6.2.2)',
+      'Ofisler / bürolar (bkz. 6.2.2)',
+      'Bilgi işlem / bilgisayar odaları (bant arşivi hariç)',
+      'Konutlar (BYKHY Ek-1/B)',
     ],
   ),
   _SpSinif(
@@ -16610,30 +16598,22 @@ const List<_SpSinif> _spSiniflar = [
     yanAralik: 3.4,
     yanSonMesafe: 1.8,
     faaliyetler: [
-      // EN 12845:2015 Ek A — OH Grup 2
-      'Tarım ve iş makinesi montaj tesisleri',
-      'Tahıl, un değirmeni ve benzeri gıda işleme',
-      'Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)',
-      'Büyük mağazalar ve alışveriş merkezleri (tek katlı)',
-      'Elektrikli ekipman üretim fabrikaları',
-      'Bilgisayar ve elektronik veri işleme odaları',
-      'Genel mühendislik atölyeleri ve fabrikalar',
-      'Meyve, sebze ve konserve işleme tesisleri',
-      'Araç bakım-onarım garajları',
-      'Cam elyafı (fiberglas) üretimi ve montajı',
-      'Hırdavat ve demir-çelik ürünleri mağazaları',
-      'Hastaneler — tedavi ve ameliyat alanları',
-      'Örme (triko/hosiery) fabrikaları',
-      'Kütüphaneler — genel açık raf alanları',
-      'Genel metal işleme fabrikaları',
-      'Kâğıt ve karton üretim tesisleri',
-      'Plastik ürün imalatı (yalnızca yanmaz plastikler)',
-      'Genel baskı / matbaa (su bazlı mürekkep)',
-      'Süpermarketler ve hipermarketler',
-      'Terzilik, konfeksiyon ve giyim üretimi',
-      'Tekstil eğirme ve dokuma (sentetik elyaf)',
-      'Yükleme-boşaltma, sevkiyat/nakliye rampaları',
-      'Genel depolama (istiflenmiş yükseklik ≤ 4 m)',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.2 (OH2) · BYKHY Ek-1/B Orta Tehlike-2
+      'Fotoğraf filmi fabrikaları',
+      'Metal işleme fabrikaları',
+      'Mezbahalar, et fabrikaları',
+      'Fırınlar / ekmek fabrikaları',
+      'Bisküvi fabrikaları',
+      'Bira fabrikaları',
+      'Çikolata fabrikaları',
+      'Şekerleme imalathaneleri',
+      'Mandıralar / süt işleme tesisleri',
+      'Gıda fabrikaları (genel)',
+      'Fizik laboratuvarları',
+      'Çamaşırhaneler',
+      'Otoparklar (kapalı, katlı ve bodrum)',
+      'Müzeler',
+      'Deri eşya fabrikaları',
     ],
   ),
   _SpSinif(
@@ -16648,23 +16628,41 @@ const List<_SpSinif> _spSiniflar = [
     yanAralik: 3.4,
     yanSonMesafe: 1.8,
     faaliyetler: [
-      // EN 12845:2015 Ek A — OH Grup 3
-      'Uçak hangarları — bakım ve onarım alanları',
-      'Muşamba, branda, çadır bezi ve branda üretimi',
-      'Kimyasal üretim (parlama noktası > 55 °C ürünler)',
-      'Soğuk hava depoları',
-      'Film ve televizyon stüdyoları (üretim alanı)',
-      'Mobilya ve döşeme üretimi (sünger, kumaş)',
-      'Marangoz / doğrama — ahşap işleme atölyeleri',
-      'Kibrit üretim tesisleri',
-      'Büyük kâğıt arşiv alanları olan ofisler',
-      'Su bazlı boya ve vernik üretimi',
-      'Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi',
-      'Termoplastik plastik imalat ve şekillendirme',
-      'Yüksek hızlı ofset baskı (petrol bazlı mürekkep)',
-      'Kauçuk ürünleri üretim tesisleri',
-      'Tekstil boyama ve terbiye işleme tesisleri',
-      'Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.2 (OH3) · BYKHY Ek-1/B Orta Tehlike-3
+      'Cam fabrikaları',
+      'Boyahaneler (tekstil boyama), sabun fabrikaları',
+      'Fotoğraf laboratuvarları',
+      'Su bazlı boya uygulama atölyeleri',
+      'Elektronik fabrikaları',
+      'Radyo / telsiz cihazı fabrikaları',
+      'Çamaşır makinesi fabrikaları',
+      'Oto tamirhaneleri / servis atölyeleri',
+      'Hayvan yemi fabrikaları',
+      'Tahıl değirmenleri',
+      'Kurutulmuş sebze ve çorba fabrikaları',
+      'Şeker fabrikaları',
+      'Radyo-TV yayın stüdyoları (küçük)',
+      'Tren istasyonları',
+      'Teknik / tesisat odaları',
+      'Tarım (çiftlik) binaları',
+      'Cilthaneler',
+      'Karton / mukavva fabrikaları',
+      'Kâğıt fabrikaları',
+      'Büyük mağazalar, alışveriş merkezleri (AVM)',
+      'Halı fabrikaları (kauçuk ve köpük plastik hariç)',
+      'Kumaş ve giyim (konfeksiyon) fabrikaları',
+      'Lif levha fabrikaları',
+      'Ayakkabı fabrikaları (plastik ve kauçuk hariç)',
+      'Örme / triko fabrikaları',
+      'Keten kumaş fabrikaları',
+      'Yatak / şilte fabrikaları (köpük plastik hariç)',
+      'Dikimhaneler',
+      'Dokuma fabrikaları',
+      'Yün ve kamgarn fabrikaları',
+      'Ahşap işleme fabrikaları',
+      'Mobilya fabrikaları (köpük plastik hariç)',
+      'Mobilya mağazaları / teşhir salonları',
+      'Döşemecilik imalathaneleri (köpük plastik hariç)',
     ],
   ),
   _SpSinif(
@@ -16679,15 +16677,19 @@ const List<_SpSinif> _spSiniflar = [
     yanAralik: 3.4,
     yanSonMesafe: 1.8,
     faaliyetler: [
-      // EN 12845:2015 Ek A — OH Grup 4 (yanıcı sıvı İÇERMEYEN kimyasal/sanayi prosesleri)
-      'Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)',
-      'Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)',
-      'Tekstil boyama ve terbiye tesisleri (su bazlı)',
-      'Eczane, kozmetik ve deterjan üretim tesisleri',
-      'Gıda ve içecek üretim tesisleri (yüksek hacimli)',
-      'Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)',
-      'Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler',
-      'Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.2 (OH4) · BYKHY Ek-1/B Orta Tehlike-4
+      'Alkol damıtımhaneleri',
+      'Sinemalar ve tiyatrolar',
+      'Konser salonları',
+      'Tütün fabrikaları',
+      'Film ve TV yapım stüdyoları',
+      'Atık kâğıt işleme tesisleri',
+      'Sergi / fuar salonları (aşırı tavan boşluğu dikkate alınmalı)',
+      'Pamuk iplik fabrikaları',
+      'Keten hazırlama tesisleri',
+      'Kenevir hazırlama tesisleri',
+      'Kereste bıçkıhaneleri',
+      'Kontrplak fabrikaları',
     ],
   ),
   _SpSinif(
@@ -16700,12 +16702,23 @@ const List<_SpSinif> _spSiniflar = [
     kFactor: 115, // EN 12845 — HHP sınıfları K=115 minimum
     sureDk: 90, // EN 12845 Tablo 2 — HHP su besleme süresi 90 dk
     faaliyetler: [
-      // EN 12845:2015 Çizelge 3 — HHP1 · 7,5 mm/min · 260 m²
-      'Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri',
-      'Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri',
-      'Metal ve plastik parçalar için akış kaplama (flow coating)',
-      'Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri',
-      'Aerosol ve sprey ürünleri paketleme/dolum tesisleri',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.3 (HHP1)
+      'Döşeme kumaşı (muşamba) ve linolyum imalatı',
+      'Reçine, lamba isi ve terebentin imalatı',
+      'Kauçuk ikamesi (yapay kauçuk) imalatı',
+      'Odun yünü imalatı',
+      'Kibrit fabrikaları',
+      'Solvent bazlı boya uygulama atölyeleri',
+      'Buzdolabı fabrikaları',
+      'Matbaalar / baskı tesisleri',
+      'Kablo fabrikaları (PP/PE/PS veya benzeri yanma özellikli, OH3 dışı)',
+      'Plastik enjeksiyon kalıplama (PP/PE/PS veya benzeri, OH3 dışı)',
+      'Plastik fabrikaları ve plastik eşya (köpük hariç; PP/PE/PS veya benzeri, OH3 dışı)',
+      'Kauçuk eşya fabrikaları',
+      'Sentetik elyaf fabrikaları (akrilik hariç)',
+      'Halat fabrikaları',
+      'Halı fabrikaları (genleşmemiş plastik içeren)',
+      'Ayakkabı fabrikaları (plastik ve kauçuk dahil)',
     ],
   ),
   _SpSinif(
@@ -16718,17 +16731,16 @@ const List<_SpSinif> _spSiniflar = [
     kFactor: 115,
     sureDk: 90,
     faaliyetler: [
-      // EN 12845:2015 Çizelge 3 — HHP2 · 10,0 mm/min · 260 m²
-      'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)',
-      'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)',
-      'Solvent bazlı boya ve vernik üretim tesisleri',
-      'Sprey boyahane — yanıcı solvent bazlı boya uygulaması',
-      'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)',
-      'Solvent ekstraksiyon tesisleri',
-      'Yanıcı mürekkep kullanan baskı / gravür tesisleri',
-      'Yanıcı sıvı ile sprey kaplama / boyama kabinleri',
-      'Kauçuk mastik ve yanıcı hammadde işleme tesisleri',
-      'Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.3 (HHP2)
+      'Tutuşturucu (çıra) imalatı',
+      'Katran damıtma',
+      'Otobüs, boş kamyon ve demiryolu vagonu depoları (garajları)',
+      'Mum, balmumu ve parafin imalatı',
+      'Kâğıt makinesi holleri',
+      'Halı fabrikaları (kauçuk ve köpük plastik dahil)',
+      'Bıçkıhaneler (Tablo A.3)',
+      'Yonga levha (sunta) imalatı (ilave nesne koruması gerekebilir)',
+      'Boya, renk maddesi ve vernik imalatı',
     ],
   ),
   _SpSinif(
@@ -16741,12 +16753,10 @@ const List<_SpSinif> _spSiniflar = [
     kFactor: 115,
     sureDk: 90,
     faaliyetler: [
-      // EN 12845:2015 Çizelge 3 — HHP3 · 12,5 mm/min · 260 m²
-      'Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m',
-      'Araç lastikleri ve kauçuk ürün depolaması',
-      'Rulo kâğıt ve kâğıt topu depolaması',
-      'Katı plastik hammadde ve ürün depolaması (paletli/raflı)',
-      'Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.3 (HHP3)
+      'Selüloz nitrat imalatı',
+      'Otomobil ve kamyon lastiği imalatı',
+      'Köpük plastik, köpük kauçuk ve köpük kauçuk eşya imalatı (malzeme faktörü m3; m4 hariç — Tablo B.1)',
     ],
   ),
   _SpSinif(
@@ -16763,12 +16773,8 @@ const List<_SpSinif> _spSiniflar = [
     kFactor: 115,
     sureDk: 90,
     faaliyetler: [
-      // EN 12845 Çizelge 3 Not — HHP4: Yoğun su sistemleri bu standardın kapsamı dışındadır.
-      // Özel değerlendirme ve yetkili mühendis onayı zorunludur.
-      'Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi',
-      'Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir',
-      'Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem',
-      'Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması',
+      // TS EN 12845+A1:2020 Ek A — Tablo A.3 (HHP4 — yoğun su, standart dışı)
+      'Havai fişek imalatı',
     ],
   ),
 
@@ -17311,7 +17317,23 @@ class _SpHidrolikNode {
 }
 
 class _SpSonuc {
-  final double binaAlani, en, boy, yuks;
+  final double binaAlani, en, boy, yuks; // binaAlani: tipik kat alanı
+  // ¦¦ Bölüm / kat bilgileri
+  final int kat; // -3..-1 bodrum, 0 zemin, 1..10 normal kat
+  final double katYuks; // kattan kata yükseklik (m)
+  final double kot; // kat döşemesinin pompa katına göre kotu (m)
+  final double statikYukseklik; // en üst sprinklerin pompaya göre yüksekliği (m)
+  final int nToplamBolum; // bölüm toplam sprinkler (gizli boşluk dahil)
+  final double alanBolum; // bölüm toplam alanı (m²)
+  final double qDolap; // en üst kattaki 2 yangın dolabının debisi (L/min)
+  final int dnKatAna; // kat ana borusu (yalnız sprinkler) — kat kontrol seti çapı
+  // ¦¦ Yangın dolabı (en üst kat, min. 4 bar)
+  final bool dolapAyriHat; // sprinkler hattı 4 bar sağlamıyor → pompadan ayrı hat
+  final double hDolap; // en üst kat dolap vanasının pompaya göre kotu (m)
+  final int? dnDolapHat; // ayrı hat çapı
+  final double dpDolapHat; // ayrı hat sürtünme kaybı (bar)
+  final double pDolapGerekli; // ayrı hat için gereken pompa basıncı (bar)
+  final double pompaBasincSprinkler; // yalnız sprinkler devresinin pompa basıncı
   final double
   maxKapsamaEfektif; // Tablo 19 maks. kapsama (yüksekliğe göre değişmez)
   final String? yuksUyari; // > standart limit uyarısı
@@ -17378,6 +17400,20 @@ class _SpSonuc {
     required this.en,
     required this.boy,
     required this.yuks,
+    required this.kat,
+    required this.katYuks,
+    required this.kot,
+    required this.statikYukseklik,
+    required this.nToplamBolum,
+    required this.alanBolum,
+    required this.qDolap,
+    required this.dnKatAna,
+    required this.dolapAyriHat,
+    required this.hDolap,
+    this.dnDolapHat,
+    required this.dpDolapHat,
+    required this.pDolapGerekli,
+    required this.pompaBasincSprinkler,
     required this.maxKapsamaEfektif,
     required this.yuksUyari,
     required this.asmaTavan,
@@ -17509,102 +17545,109 @@ String _spKurulumAciklamaL10n(AppLocalizations l10n, String adTr) => switch (adT
 
 /// Görüntüleme amaçlı yerelleştirilmiş sprinkler faaliyet açıklaması (iç anahtar: orijinal Türkçe faaliyet metni)
 String _spFaaliyetL10n(AppLocalizations l10n, String faaliyet) => switch (faaliyet) {
-  'Ofisler ve yönetim binaları' => l10n.spActOfficesAdmin,
-  'Oteller, misafirhaneler, pansiyonlar' => l10n.spActHotelsHostelsGuesthouses,
-  'Hastaneler, klinikler, sağlık merkezleri' => l10n.spActHospitalsClinics,
-  'Okullar, üniversiteler ve eğitim binaları' => l10n.spActSchoolsUniversities,
-  'Konutlar ve apartmanlar' => l10n.spActResidentialApartments,
-  'Cezaevleri ve ıslahevleri' => l10n.spActPrisonsReformatories,
-  'Kiliseler, camiler ve ibadethaneler' => l10n.spActChurchesMosquesWorship,
-  'Tiyatrolar / sinema (yalnızca seyirci oturma alanları)' => l10n.spActTheatresCinemaSeating,
-  'Müzeler ve sanat galerileri' => l10n.spActMuseumsGalleries,
-  'Bira fabrikaları (damıtma tesisleri hariç)' => l10n.spActBreweriesExclDistilleries,
-  'Çok katlı ve bodrum katlı kapalı otoparklar' => l10n.spActMultiStoreyBasementCarParks,
-  'Seramik ürünleri üretimi' => l10n.spActCeramicsProduction,
-  'Cam ve cam eşya üretimi (cam elyafı hariç)' => l10n.spActGlassGlasswareExclFibre,
-  'Kimya araştırma laboratuvarları' => l10n.spActChemResearchLabs,
-  'Süt ve süt ürünleri işleme tesisleri (mandıralar)' => l10n.spActDairyProcessing,
-  'Elektronik ekipman montaj atölyeleri' => l10n.spActElectronicsAssembly,
-  'Gıda işleme ve paketleme tesisleri' => l10n.spActFoodProcessingPackaging,
-  'Oteller — mutfak, çamaşırhane ve servis alanları' => l10n.spActHotelsKitchenLaundryService,
-  'Kurumsal ve ticari çamaşırhaneler' => l10n.spActInstitutionalCommercialLaundries,
-  'Deri ve deri ürünleri üretimi' => l10n.spActLeatherProductsProduction,
-  'Hafif metal işleme atölyeleri' => l10n.spActLightMetalworkingWorkshops,
-  'Farmasötik (ilaç) üretim tesisleri' => l10n.spActPharmaceuticalProduction,
-  'Araştırma laboratuvarları (yanmaz sıvı kullanımı)' => l10n.spActResearchLabsNonflamLiquids,
-  'Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)' => l10n.spActTextileWeavingNaturalFibresUntreated,
-  'Tütün işleme ve paketleme' => l10n.spActTobaccoProcessingPackaging,
-  'Tarım ve iş makinesi montaj tesisleri' => l10n.spActAgriIndustrialMachineryAssembly,
-  'Tahıl, un değirmeni ve benzeri gıda işleme' => l10n.spActGrainFlourMillFoodProcessing,
-  'Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)' => l10n.spActChemProductionNonflamLiquidsOnly,
-  'Büyük mağazalar ve alışveriş merkezleri (tek katlı)' => l10n.spActDeptStoresShoppingCentresSingleStorey,
-  'Elektrikli ekipman üretim fabrikaları' => l10n.spActElectricalEquipmentFactories,
-  'Bilgisayar ve elektronik veri işleme odaları' => l10n.spActComputerDataProcessingRooms,
-  'Genel mühendislik atölyeleri ve fabrikalar' => l10n.spActGeneralEngineeringWorkshopsFactories,
-  'Meyve, sebze ve konserve işleme tesisleri' => l10n.spActFruitVegCanningFacilities,
-  'Araç bakım-onarım garajları' => l10n.spActVehicleMaintenanceRepairGarages,
-  'Cam elyafı (fiberglas) üretimi ve montajı' => l10n.spActFibreglassProductionAssembly,
-  'Hırdavat ve demir-çelik ürünleri mağazaları' => l10n.spActHardwareIronmongeryStores,
-  'Hastaneler — tedavi ve ameliyat alanları' => l10n.spActHospitalsTreatmentSurgeryAreas,
-  'Örme (triko/hosiery) fabrikaları' => l10n.spActKnittingHosieryFactories,
-  'Kütüphaneler — genel açık raf alanları' => l10n.spActLibrariesOpenShelfAreas,
-  'Genel metal işleme fabrikaları' => l10n.spActGeneralMetalworkingFactories,
-  'Kâğıt ve karton üretim tesisleri' => l10n.spActPaperBoardProductionFacilities,
-  'Plastik ürün imalatı (yalnızca yanmaz plastikler)' => l10n.spActPlasticsManufNonflamOnly,
-  'Genel baskı / matbaa (su bazlı mürekkep)' => l10n.spActGeneralPrintingWaterBasedInk,
-  'Süpermarketler ve hipermarketler' => l10n.spActSupermarketsHypermarkets,
-  'Terzilik, konfeksiyon ve giyim üretimi' => l10n.spActTailoringGarmentManufacture,
-  'Tekstil eğirme ve dokuma (sentetik elyaf)' => l10n.spActTextileSpinningWeavingSynthetic,
-  'Yükleme-boşaltma, sevkiyat/nakliye rampaları' => l10n.spActLoadingShippingDocks,
-  'Genel depolama (istiflenmiş yükseklik ≤ 4 m)' => l10n.spActGeneralStorageUpTo4m,
-  'Uçak hangarları — bakım ve onarım alanları' => l10n.spActAircraftHangarsMaintenance,
-  'Muşamba, branda, çadır bezi ve branda üretimi' => l10n.spActOilclothTarpaulinCanvasProduction,
-  'Kimyasal üretim (parlama noktası > 55 °C ürünler)' => l10n.spActChemProductionFpAbove55,
-  'Soğuk hava depoları' => l10n.spActColdStores,
-  'Film ve televizyon stüdyoları (üretim alanı)' => l10n.spActFilmTvStudiosProduction,
-  'Mobilya ve döşeme üretimi (sünger, kumaş)' => l10n.spActFurnitureUpholsteryProduction,
-  'Marangoz / doğrama — ahşap işleme atölyeleri' => l10n.spActJoineryWoodworkingWorkshops,
-  'Kibrit üretim tesisleri' => l10n.spActMatchProductionFacilities,
-  'Büyük kâğıt arşiv alanları olan ofisler' => l10n.spActOfficesLargePaperArchives,
-  'Su bazlı boya ve vernik üretimi' => l10n.spActWaterBasedPaintVarnishProduction,
-  'Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi' => l10n.spActPaperCorrugatedBoxProduction,
-  'Termoplastik plastik imalat ve şekillendirme' => l10n.spActThermoplasticsManufShaping,
-  'Yüksek hızlı ofset baskı (petrol bazlı mürekkep)' => l10n.spActHighSpeedOffsetPrintingOilInk,
-  'Kauçuk ürünleri üretim tesisleri' => l10n.spActRubberProductsProduction,
-  'Tekstil boyama ve terbiye işleme tesisleri' => l10n.spActTextileDyeingFinishingFacilities,
-  'Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)' => l10n.spActGeneralStorage4to8m,
-  'Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)' => l10n.spActChemProductionClosedProcessFp55,
-  'Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)' => l10n.spActPlasticRubberPartsClosedMoulding,
-  'Tekstil boyama ve terbiye tesisleri (su bazlı)' => l10n.spActTextileDyeingFinishingWaterBased,
-  'Eczane, kozmetik ve deterjan üretim tesisleri' => l10n.spActPharmacyCosmeticsDetergentProduction,
-  'Gıda ve içecek üretim tesisleri (yüksek hacimli)' => l10n.spActFoodBeverageProductionHighVolume,
-  'Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)' => l10n.spActPaperProductionDryCuttingSorting,
-  'Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler' => l10n.spActPaintShopsWaterUvCuring,
-  'Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)' => l10n.spActMetalworkingMachineryHeavySwarfOilMist,
-  'Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri' => l10n.spActFlammableLiquidProcessFp55Plus,
-  'Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri' => l10n.spActFoamRubberFoamPlasticProduction,
-  'Metal ve plastik parçalar için akış kaplama (flow coating)' => l10n.spActFlowCoatingMetalPlasticParts,
-  'Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri' => l10n.spActIndustrialPrintingFlammableInkSolvent,
-  'Aerosol ve sprey ürünleri paketleme/dolum tesisleri' => l10n.spActAerosolSprayPackagingFilling,
-  'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)' => l10n.spActFlammableLiquidProcessFpBelow55Open,
-  'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)' => l10n.spActChemProductionContainingFp55Liquids,
-  'Solvent bazlı boya ve vernik üretim tesisleri' => l10n.spActSolventBasedPaintVarnishProduction,
-  'Sprey boyahane — yanıcı solvent bazlı boya uygulaması' => l10n.spActSpraySolventPaintApplication,
-  'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)' => l10n.spActDryCleaningPerchloroethyleneSolvent,
-  'Solvent ekstraksiyon tesisleri' => l10n.spActSolventExtractionFacilities,
-  'Yanıcı mürekkep kullanan baskı / gravür tesisleri' => l10n.spActPrintingGravureFlammableInk,
-  'Yanıcı sıvı ile sprey kaplama / boyama kabinleri' => l10n.spActSprayCoatingBoothsFlammableLiquid,
-  'Kauçuk mastik ve yanıcı hammadde işleme tesisleri' => l10n.spActRubberMasticFlammableRawMaterialProcessing,
-  'Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri' => l10n.spActPaintInkVarnishPackagingFilling,
-  'Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m' => l10n.spActHighRackPalletStorageSolidAbove4m,
-  'Araç lastikleri ve kauçuk ürün depolaması' => l10n.spActTyresRubberProductsStorage,
-  'Rulo kâğıt ve kâğıt topu depolaması' => l10n.spActPaperRollsReelsStorage,
-  'Katı plastik hammadde ve ürün depolaması (paletli/raflı)' => l10n.spActSolidPlasticRawProductStoragePalletRack,
-  'Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması' => l10n.spActBaledCottonTextileSyntheticFibreStorage,
-  'Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi' => l10n.spActHighRackPalletStorageFlammableLiquidAbove4m,
-  'Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir' => l10n.spActAerosolStoreFlammablePropellantHighRack,
-  'Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem' => l10n.spActFlammableLiquidPackagedProductStorage,
-  'Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması' => l10n.spActHighDensityStorageWaterSensitiveHighCalorific,
+  'Okullar ve diğer eğitim kurumları (belirli alanlar — bkz. 6.2.2)' => l10n.spStdSchoolsAndOtherEducationalInstitutions,
+  'Ofisler / bürolar (belirli alanlar — bkz. 6.2.2)' => l10n.spStdOffices,
+  'Cezaevleri' => l10n.spStdPrisons,
+  'Çimento fabrikaları' => l10n.spStdCementWorks,
+  'Sac metal ürün fabrikaları' => l10n.spStdSheetMetalProductFactories,
+  'Hastaneler' => l10n.spStdHospitals,
+  'Oteller' => l10n.spStdHotels,
+  'Kütüphaneler (kitap depoları hariç)' => l10n.spStdLibraries,
+  'Lokantalar / restoranlar' => l10n.spStdRestaurants,
+  'Okullar (bkz. 6.2.2)' => l10n.spStdSchools,
+  'Ofisler / bürolar (bkz. 6.2.2)' => l10n.spStdOffices2,
+  'Bilgi işlem / bilgisayar odaları (bant arşivi hariç)' => l10n.spStdDataProcessing,
+  'Konutlar (BYKHY Ek-1/B)' => l10n.spStdResidentialBuildings,
+  'Fotoğraf filmi fabrikaları' => l10n.spStdPhotographicFilmFactories,
+  'Metal işleme fabrikaları' => l10n.spStdMetalWorking,
+  'Mezbahalar, et fabrikaları' => l10n.spStdAbattoirsMeatFactories,
+  'Fırınlar / ekmek fabrikaları' => l10n.spStdBakeries,
+  'Bisküvi fabrikaları' => l10n.spStdBiscuitFactories,
+  'Bira fabrikaları' => l10n.spStdBreweries,
+  'Çikolata fabrikaları' => l10n.spStdChocolateFactories,
+  'Şekerleme imalathaneleri' => l10n.spStdConfectionery,
+  'Mandıralar / süt işleme tesisleri' => l10n.spStdDairies,
+  'Gıda fabrikaları (genel)' => l10n.spStdFoodFactories,
+  'Fizik laboratuvarları' => l10n.spStdLaboratories,
+  'Çamaşırhaneler' => l10n.spStdLaundries,
+  'Otoparklar (kapalı, katlı ve bodrum)' => l10n.spStdCarParks,
+  'Müzeler' => l10n.spStdMuseums,
+  'Deri eşya fabrikaları' => l10n.spStdLeatherGoodsFactories,
+  'Cam fabrikaları' => l10n.spStdGlassFactories,
+  'Boyahaneler (tekstil boyama), sabun fabrikaları' => l10n.spStdDyersWorksSoapFactories,
+  'Fotoğraf laboratuvarları' => l10n.spStdPhotographicLaboratories,
+  'Su bazlı boya uygulama atölyeleri' => l10n.spStdPaintApplicationShopsWithWaterBased,
+  'Elektronik fabrikaları' => l10n.spStdElectronicsFactories,
+  'Radyo / telsiz cihazı fabrikaları' => l10n.spStdRadioEquipmentFactories,
+  'Çamaşır makinesi fabrikaları' => l10n.spStdWashingMachineFactories,
+  'Oto tamirhaneleri / servis atölyeleri' => l10n.spStdCarWorkshops,
+  'Hayvan yemi fabrikaları' => l10n.spStdAnimalFodderFactories,
+  'Tahıl değirmenleri' => l10n.spStdCornMills,
+  'Kurutulmuş sebze ve çorba fabrikaları' => l10n.spStdDehydratedVegetableAndSoupFactories,
+  'Şeker fabrikaları' => l10n.spStdSugarFactories,
+  'Radyo-TV yayın stüdyoları (küçük)' => l10n.spStdBroadcastingStudios,
+  'Tren istasyonları' => l10n.spStdRailwayStations,
+  'Teknik / tesisat odaları' => l10n.spStdPlantRooms,
+  'Tarım (çiftlik) binaları' => l10n.spStdFarmBuildings,
+  'Cilthaneler' => l10n.spStdBookBindingFactories,
+  'Karton / mukavva fabrikaları' => l10n.spStdCardboardFactories,
+  'Kâğıt fabrikaları' => l10n.spStdPaperFactories,
+  'Büyük mağazalar, alışveriş merkezleri (AVM)' => l10n.spStdDepartmentStoresShoppingCentres,
+  'Halı fabrikaları (kauçuk ve köpük plastik hariç)' => l10n.spStdCarpetFactories,
+  'Kumaş ve giyim (konfeksiyon) fabrikaları' => l10n.spStdClothAndClothingFactories,
+  'Lif levha fabrikaları' => l10n.spStdFibreBoardFactories,
+  'Ayakkabı fabrikaları (plastik ve kauçuk hariç)' => l10n.spStdFootwearFactories,
+  'Örme / triko fabrikaları' => l10n.spStdKnittingFactories,
+  'Keten kumaş fabrikaları' => l10n.spStdLinenFactories,
+  'Yatak / şilte fabrikaları (köpük plastik hariç)' => l10n.spStdMattressFactories,
+  'Dikimhaneler' => l10n.spStdSewingFactories,
+  'Dokuma fabrikaları' => l10n.spStdWeavingMills,
+  'Yün ve kamgarn fabrikaları' => l10n.spStdWoollenAndWorstedMills,
+  'Ahşap işleme fabrikaları' => l10n.spStdWoodworkingFactories,
+  'Mobilya fabrikaları (köpük plastik hariç)' => l10n.spStdFurnitureFactories,
+  'Mobilya mağazaları / teşhir salonları' => l10n.spStdFurnitureShowrooms,
+  'Döşemecilik imalathaneleri (köpük plastik hariç)' => l10n.spStdUpholsteryFactories,
+  'Alkol damıtımhaneleri' => l10n.spStdAlcoholDistilleries,
+  'Sinemalar ve tiyatrolar' => l10n.spStdCinemasAndTheatres,
+  'Konser salonları' => l10n.spStdConcertHalls,
+  'Tütün fabrikaları' => l10n.spStdTobaccoFactories,
+  'Film ve TV yapım stüdyoları' => l10n.spStdFilmAndTvProductionStudios,
+  'Atık kâğıt işleme tesisleri' => l10n.spStdWastePaperProcessing,
+  'Sergi / fuar salonları (aşırı tavan boşluğu dikkate alınmalı)' => l10n.spStdExhibitionHalls,
+  'Pamuk iplik fabrikaları' => l10n.spStdCottonMills,
+  'Keten hazırlama tesisleri' => l10n.spStdFlaxPreparationPlants,
+  'Kenevir hazırlama tesisleri' => l10n.spStdHempPreparationPlants,
+  'Kereste bıçkıhaneleri' => l10n.spStdSawMills,
+  'Kontrplak fabrikaları' => l10n.spStdPlywoodFactories,
+  'Döşeme kumaşı (muşamba) ve linolyum imalatı' => l10n.spStdFloorClothAndLinoleumManufacture,
+  'Reçine, lamba isi ve terebentin imalatı' => l10n.spStdResinLampBlackAndTurpentineManufacture,
+  'Kauçuk ikamesi (yapay kauçuk) imalatı' => l10n.spStdRubberSubstituteManufacture,
+  'Odun yünü imalatı' => l10n.spStdWoodWoolManufacture,
+  'Kibrit fabrikaları' => l10n.spStdMatchManufacturers,
+  'Solvent bazlı boya uygulama atölyeleri' => l10n.spStdPaintApplicationShopsWithSolvent,
+  'Buzdolabı fabrikaları' => l10n.spStdRefrigeratorFactories,
+  'Matbaalar / baskı tesisleri' => l10n.spStdPrintingWorks,
+  'Kablo fabrikaları (PP/PE/PS veya benzeri yanma özellikli, OH3 dışı)' => l10n.spStdCableFactoriesForPpPePs,
+  'Plastik enjeksiyon kalıplama (PP/PE/PS veya benzeri, OH3 dışı)' => l10n.spStdInjectionMouldingForPpPePs,
+  'Plastik fabrikaları ve plastik eşya (köpük hariç; PP/PE/PS veya benzeri, OH3 dışı)' => l10n.spStdPlasticsFactoriesAndPlasticGoodsFor,
+  'Kauçuk eşya fabrikaları' => l10n.spStdRubberGoodsFactories,
+  'Sentetik elyaf fabrikaları (akrilik hariç)' => l10n.spStdSyntheticFibreFactories,
+  'Halat fabrikaları' => l10n.spStdRopeFactories,
+  'Halı fabrikaları (genleşmemiş plastik içeren)' => l10n.spStdCarpetFactoriesIncludingUnexpandedPlastics,
+  'Ayakkabı fabrikaları (plastik ve kauçuk dahil)' => l10n.spStdFootwearFactoriesIncludingPlasticsAndRubber,
+  'Tutuşturucu (çıra) imalatı' => l10n.spStdFireLighterManufacture,
+  'Katran damıtma' => l10n.spStdTarDistilling,
+  'Otobüs, boş kamyon ve demiryolu vagonu depoları (garajları)' => l10n.spStdDepotsForBusesUnLadenLorries,
+  'Mum, balmumu ve parafin imalatı' => l10n.spStdCandleWaxAndParaffinManufacturers,
+  'Kâğıt makinesi holleri' => l10n.spStdPaperMachineHalls,
+  'Halı fabrikaları (kauçuk ve köpük plastik dahil)' => l10n.spStdCarpetFactoriesIncludingRubberAndFoam,
+  'Bıçkıhaneler (Tablo A.3)' => l10n.spStdSawMill,
+  'Yonga levha (sunta) imalatı (ilave nesne koruması gerekebilir)' => l10n.spStdChipboardManufacturing,
+  'Boya, renk maddesi ve vernik imalatı' => l10n.spStdPaintColourAndVarnishManufacture,
+  'Selüloz nitrat imalatı' => l10n.spStdCelluloseNitrateManufacture,
+  'Otomobil ve kamyon lastiği imalatı' => l10n.spStdRubberTyresForCarsAndLorries,
+  'Köpük plastik, köpük kauçuk ve köpük kauçuk eşya imalatı (malzeme faktörü m3; m4 hariç — Tablo B.1)' => l10n.spStdManufactureOfFoamPlasticsFoamRubber,
+  'Havai fişek imalatı' => l10n.spStdFireworkManufacture,
   'Yanmaz ürün depolama — metal, cam, seramik, beton ürünler' => l10n.spActNoncombustibleStorageMetalGlassCeramicConcrete,
   'Dondurulmuş gıda ve soğuk zincir ürün depolama' => l10n.spActFrozenFoodColdChainStorage,
   'Kapalı metal kutu / bidon içindeki yanmaz ürünler' => l10n.spActNoncombustibleInSealedMetalCansDrums,
@@ -17660,39 +17703,661 @@ class SprinkleSistemi extends StatefulWidget {
   State<SprinkleSistemi> createState() => _SprinkleState();
 }
 
-class _SprinkleState extends State<SprinkleSistemi> {
-  static const Color _kC = Color(0xFF0EA5E9);
+/// Seçilebilir katlar: -3..-1 bodrum, 0 zemin, 1..10 normal kat
+final List<int> _spKatlar = List.generate(14, (i) => i - 3);
 
-  final _enCtrl = TextEditingController();
-  final _boyCtrl = TextEditingController();
-  final _yuksCtrl = TextEditingController();
-  final _asmaBoslukCtrl = TextEditingController();
-  bool _asmaTavan = false;
-  // ¦¦ Köpük
-  bool _kopukAktif = false;
-  String _kopukSiviKat = 'HC'; // HC = hidrokarbon, PS = polar solvent
-  String _kopukTipKod = 'AFFF3';
-  int _kopukSure = 10; // dakika
-  String? _secilenFaaliyet;
-  // ¦¦ Gelişmiş tasarım seçenekleri
-  int _boruMalzemeIdx = 0;
-  int _sprinklerTipiIdx = 0;
-  int _kurulumSinifIdx = 1;
-  bool _kuruBoru = false;
-  bool _rafDepolama = false;
-  final _rafKatSayisiCtrl = TextEditingController(text: '2');
+String _spKatAdi(AppLocalizations l10n, int kat) => kat == -1
+    ? l10n.spFloorBasement
+    : kat < -1
+    ? l10n.spFloorBasementN('${-kat}')
+    : kat == 0
+    ? l10n.spFloorGround
+    : l10n.spFloorN('$kat');
 
-  /// Seçili faaliyete göre tehlike sınıfı indeksini otomatik belirler
-  int? get _sinifIdx {
-    if (_secilenFaaliyet == null) return null;
+/// Sprinkler projesinde bir bölüm: tek bir kattaki kullanım alanı
+/// (ör. otel zemin, idari bina 1. kat, üretim holü, bodrum otopark).
+class _SpBolum {
+  final adCtrl = TextEditingController();
+  final enCtrl = TextEditingController();
+  final boyCtrl = TextEditingController();
+  final katYuksCtrl = TextEditingController(); // asma tavan boşluğu dahil
+  final asmaBoslukCtrl = TextEditingController();
+  final rafKatSayisiCtrl = TextEditingController(text: '2');
+  String? faaliyet;
+  bool asmaTavan = false;
+  bool rafDepolama = false;
+  bool kopukAktif = false;
+  String kopukSiviKat = 'HC'; // HC = hidrokarbon, PS = polar solvent
+  String kopukTipKod = 'AFFF3';
+  int kopukSure = 10; // dakika
+  bool acik = true; // giriş kartı açık mı (yalnızca arayüz)
+  final kartKey = GlobalKey(); // eklenince karta kaydırmak için
+  int kat = 0; // seçili kat (bkz. _spKatlar)
+  bool pompaBurada = false; // pompa bu katta → döşemesi ±0,00
+
+  _SpBolum();
+
+  /// Seçili faaliyete göre tehlike sınıfı indeksi
+  int? get sinifIdx {
+    if (faaliyet == null) return null;
     final idx = _spSiniflar.indexWhere(
-      (s) => s.faaliyetler.contains(_secilenFaaliyet),
+      (s) => s.faaliyetler.contains(faaliyet),
     );
     return idx >= 0 ? idx : null;
   }
 
+  String gorunenAd(AppLocalizations l10n) {
+    final ad = adCtrl.text.trim();
+    return ad.isNotEmpty ? ad : _spKatAdi(l10n, kat);
+  }
+
+  Map<String, dynamic> toJson() => {
+    'ad': adCtrl.text,
+    'en': enCtrl.text,
+    'boy': boyCtrl.text,
+    'katYuks': katYuksCtrl.text,
+    'kat': kat,
+    'pompa': pompaBurada,
+    'faaliyet': faaliyet ?? '',
+    'asmaTavan': asmaTavan,
+    'asmaBosluk': asmaBoslukCtrl.text,
+    'rafDepolama': rafDepolama,
+    'rafKatSayisi': rafKatSayisiCtrl.text,
+    'kopukAktif': kopukAktif,
+    'kopukSiviKat': kopukSiviKat,
+    'kopukTipKod': kopukTipKod,
+    'kopukSure': kopukSure,
+  };
+
+  factory _SpBolum.fromJson(Map<String, dynamic> j) {
+    String t(String k, String d) => j[k]?.toString() ?? d;
+    bool e(String k) => j[k] == true || j[k] == 'true';
+    final b = _SpBolum();
+    b.adCtrl.text = t('ad', '');
+    b.enCtrl.text = t('en', '');
+    b.boyCtrl.text = t('boy', '');
+    b.katYuksCtrl.text = t('katYuks', '');
+    b.kat = (int.tryParse(t('kat', '0')) ?? 0).clamp(-3, 10);
+    b.pompaBurada = e('pompa');
+    final f = t('faaliyet', '');
+    b.faaliyet = f.isEmpty ? null : f;
+    b.asmaTavan = e('asmaTavan');
+    b.asmaBoslukCtrl.text = t('asmaBosluk', '');
+    b.rafDepolama = e('rafDepolama');
+    b.rafKatSayisiCtrl.text = t('rafKatSayisi', '2');
+    b.kopukAktif = e('kopukAktif');
+    b.kopukSiviKat = t('kopukSiviKat', 'HC');
+    b.kopukTipKod = t('kopukTipKod', 'AFFF3');
+    b.kopukSure = int.tryParse(t('kopukSure', '10')) ?? 10;
+    b.acik = false;
+    return b;
+  }
+
+  void dispose() {
+    for (final c in [
+      adCtrl,
+      enCtrl,
+      boyCtrl,
+      katYuksCtrl,
+      asmaBoslukCtrl,
+      rafKatSayisiCtrl,
+    ]) {
+      c.dispose();
+    }
+  }
+}
+
+/// Bölüm girdisi geçersiz olduğunda fırlatılır (mesaj yerelleştirilmiş).
+class _SpGirdiHatasi implements Exception {
+  final String mesaj;
+  const _SpGirdiHatasi(this.mesaj);
+}
+
+double? _spSayi(TextEditingController c) =>
+    double.tryParse(c.text.trim().replaceAll(',', '.'));
+
+/// Tek bir bölüm için EN 12845 sprinkler hesabı.
+/// Tipik kat için yerleşim ve kritik devre hesaplanır; sprinkler sayısı, boru
+/// metrajı ve alarm vanaları kat sayısıyla çarpılır. Statik yük, bölümün en üst
+/// katındaki sprinklerin pompaya göre yüksekliğinden hesaplanır.
+/// Yangın dolabında (en üst kat) aranan minimum basınç (bar)
+const double _spDolapMinBasinc = 4.0;
+
+/// Yüksek tehlike: HHP ve depolama (SF/RS) sınıfları; LH ve OH değil.
+bool _spYuksekTehlike(String kod) => !(kod == 'LH' || kod.startsWith('OH'));
+
+_SpSonuc _spBolumHesapla(
+  _SpBolum b,
+  AppLocalizations l10n, {
+  required int boruMalzemeIdx,
+  required int sprinklerTipiIdx,
+  required int kurulumSinifIdx,
+  required bool kuruBoru,
+  required bool yanginDolabi,
+  required double kot,
+  bool dolapAyriHat = false,
+}) {
+  final en = _spSayi(b.enCtrl);
+  final boy = _spSayi(b.boyCtrl);
+  final katYuks = _spSayi(b.katYuksCtrl); // döşemeden üst döşeme altına
+
+  if (en == null || en <= 0) {
+    throw _SpGirdiHatasi(l10n.enterValidBuildingWidthM);
+  }
+  if (boy == null || boy <= 0) {
+    throw _SpGirdiHatasi(l10n.enterValidBuildingLengthM);
+  }
+  if (katYuks == null || katYuks <= 0) {
+    throw _SpGirdiHatasi(l10n.spEnterValidFloorHeight);
+  }
+  final sinifIdx = b.sinifIdx;
+  if (sinifIdx == null) {
+    throw _SpGirdiHatasi(l10n.selectBuildingActivity);
+  }
+
+  final sinif = _spSiniflar[sinifIdx];
+  final alan = en * boy; // tipik kat alanı
+  final alanBolum = alan;
+
+  // ¦¦ Boru malzemesi — Hazen-Williams C katsayısı
+  final boruMalzeme = _spBoruMalzemeleri[boruMalzemeIdx];
+  final boruC = boruMalzeme.$2;
+
+  // ¦¦ Sprinkler tipi / K-Faktör override (varsayılan: sınıfa göre otomatik)
+  final sprinklerTipi = _spSprinklerTipleri[sprinklerTipiIdx];
+  final kFactorEfektif = sprinklerTipi.kFactor ?? sinif.kFactor;
+  final kFactorUyari = kFactorEfektif < sinif.kFactor
+      ? l10n.spKFactorWarning(
+          '${kFactorEfektif.toInt()}',
+          sinif.kod,
+          '${sinif.kFactor.toInt()}',
+        )
+      : null;
+
+  // ¦¦ Asma tavan hesabı (EN 12845 Md. 5.4) — kullanıcı cm girer, hesapta m
+  final asmaBosluk = b.asmaTavan
+      ? ((_spSayi(b.asmaBoslukCtrl) ?? 0.0) / 100.0)
+      : 0.0;
+  if (asmaBosluk >= katYuks) {
+    throw _SpGirdiHatasi(l10n.spVoidExceedsHeight);
+  }
+  final asmaSprinklerGerek = b.asmaTavan && asmaBosluk > 0.8;
+  int nAsmaSpr = 0; // kat başına gizli boşluk sprinkleri
+
+  // Sprinklerin bulunduğu tavan yüksekliği: asma tavan varsa onun altı
+  final yuks = katYuks - asmaBosluk;
+
+  // ¦¦ Tavan yüksekliği düzeltmesi (EN 12845 Md. 5.2.3)
+  final maxKapsamaEfektif = _spMaxKapsamaYuks(yuks, sinif.kod);
+  final yuksUyari = _spYuksUyari(l10n, yuks, sinif.kod);
+  final aralikAlan = math.sqrt(maxKapsamaEfektif);
+  // Çizelge 19: S ve D mesafe limiti uygulanır (hangi kısıt bağlayıcıysa)
+  final aralik = math.min(aralikAlan, sinif.maxMesafe);
+
+  // ¦¦ Sprinkler ızgarası (tipik kat)
+  final nX = (en / aralik).ceil();
+  final nY = (boy / aralik).ceil();
+  final nToplam = nX * nY;
+  final gercekAralikX = en / nX;
+  final gercekAralikY = boy / nY;
+  final gercekKapsama = gercekAralikX * gercekAralikY;
+  // Gizli boşluk sprinklerleri (aynı ızgara boşluğa uygulanır)
+  if (asmaSprinklerGerek) {
+    nAsmaSpr = nToplam;
+  }
+  final nToplamBolum = nToplam + nAsmaSpr;
+
+  // ¦¦ Tasarım alanına düşen sprinkler sayısı
+  final nTasarim = (sinif.tasarimAlani / maxKapsamaEfektif).ceil();
+
+  // ¦¦ Sprinkler debisi ve basıncı
+  // Min. işletme basıncı: LH=0,35 bar | OH/HH=0,50 bar (EN 12845 Tablo 1)
+  final qHeadHesap = sinif.yogunluk * maxKapsamaEfektif; // L/min
+  double pHead = math.pow(qHeadHesap / kFactorEfektif, 2).toDouble();
+  if (pHead < sinif.minBasinc) pHead = sinif.minBasinc;
+  final qHead = kFactorEfektif * math.sqrt(pHead); // gerçek debi
+
+  // ¦¦ Minimum yoğunluk kontrolü için referans debi
+  final qTasarimMin = sinif.yogunluk * sinif.tasarimAlani; // L/min
+
+  // ¦¦ Boru debileri (çap seçimi sprinkler sayısına dayalı — LH/OH)
+  final tasarimKenar = math.sqrt(sinif.tasarimAlani);
+  final headPerBranch = (tasarimKenar / aralik).ceil();
+  final nCrossCalc = nTasarim;
+  final nMainCalc = nTasarim;
+  final qBranch = headPerBranch * qHead;
+
+  // EN 12845 Tablo 14 bazlı çap seçimi (LH/OH); HH için hız yöntemi
+  final boruTabloHH = sinif.kod.startsWith('HH');
+  final dnBranch = boruTabloHH
+      ? _spSecBoruHiz(qBranch, vMax: 5.0)
+      : _spSecBoruEN12845(headPerBranch, sinif.kod);
+  final dnCross = boruTabloHH
+      ? _spSecBoruHiz(qTasarimMin, vMax: 4.0)
+      : _spSecBoruEN12845(nCrossCalc, sinif.kod);
+  final dnMainSprinkler = boruTabloHH
+      ? _spSecBoruHiz(qTasarimMin, vMax: 3.5)
+      : _spSecBoruEN12845(nMainCalc, sinif.kod);
+
+  // ¦¦ EN 12845 §13.3.2: Kritik Devre — 3 Faz Hidrolik Hesabı
+  final nBranchPipes = (nTasarim / headPerBranch).ceil();
+  final kritikDevre = <_SpHidrolikNode>[];
+
+  // Faz 1: Dal boru
+  double pIter = pHead;
+  double cumQDal = 0.0;
+  for (int i = 1; i <= headPerBranch; i++) {
+    final qi = kFactorEfektif * math.sqrt(pIter);
+    cumQDal += qi;
+    final dpNext = _spHW(cumQDal, dnBranch, aralik * 1.2, c: boruC);
+    kritikDevre.add(
+      _SpHidrolikNode(
+        no: i,
+        tip: 'dal',
+        mesafe: (i - 1) * aralik,
+        p: pIter,
+        q: qi,
+        cumQ: cumQDal,
+        dpSonraki: dpNext,
+      ),
+    );
+    pIter += dpNext;
+  }
+  final pDesignPoint = pIter;
+  final qDalBoru = cumQDal;
+
+  // Faz 2: Tali boru — K-orantılama balanslama
+  double pTaliIter = pDesignPoint;
+  double cumQTali = 0.0;
+  for (int j = 1; j <= nBranchPipes; j++) {
+    final qBranchJ = qDalBoru * math.sqrt(pTaliIter / pDesignPoint);
+    cumQTali += qBranchJ;
+    final dpNextTali = _spHW(cumQTali, dnCross, aralik * 1.2, c: boruC);
+    final String? noteJ = j == 1
+        ? null
+        : 'Kol $j: Q = ${qDalBoru.toStringAsFixed(1)}×√(${pTaliIter.toStringAsFixed(3)}/${pDesignPoint.toStringAsFixed(3)}) = ${qBranchJ.toStringAsFixed(1)} L/min';
+    kritikDevre.add(
+      _SpHidrolikNode(
+        no: j,
+        tip: 'tali',
+        mesafe: (j - 1) * aralik,
+        p: pTaliIter,
+        q: qBranchJ,
+        cumQ: cumQTali,
+        dpSonraki: dpNextTali,
+        note: noteJ,
+      ),
+    );
+    pTaliIter += dpNextTali;
+  }
+
+  final qTasarim = math.max(cumQTali, qTasarimMin);
+
+  // TS EN 12845+A1 Tablo 6 — ön-hesaplı LH/OH sistemleri için bağlayıcı alt sınır
+  final t6MinDebi = _spT6MinDebi(sinif.kod);
+  final qEfektif = math.max(qTasarim, t6MinDebi);
+  final tablo6ZorunluDebi = qEfektif > qTasarim;
+
+  // ¦¦ Yangın dolapları: en üst kattaki 2 dolap sprinklerle aynı anda çalışır
+  // (LH/OH: 2 × 100 L/min · yüksek tehlike ve depolama: 2 × 200 L/min)
+  final qDolap = yanginDolabi
+      ? 2 * (_spYuksekTehlike(sinif.kod) ? 200.0 : 100.0)
+      : 0.0;
+  // Dolaplar sprinkler kolonundan besleniyorsa debileri ana boruya eklenir;
+  // pompadan ayrı hat çekildiyse sprinkler kolonu yalnız sprinkler debisini taşır
+  final ayriHat = dolapAyriHat && qDolap > 0;
+  final qAnaHat = qEfektif + (ayriHat ? 0.0 : qDolap);
+  final qToplam = qEfektif + qDolap; // pompa ve depo için toplam debi
+  // Ana boru / kolon dolap debisini de taşıyorsa toplam debiye göre hız kontrolü
+  final dnMain = qAnaHat > qEfektif
+      ? math.max(dnMainSprinkler, _spSecBoruHiz(qAnaHat, vMax: 3.5))
+      : dnMainSprinkler;
+
+  final qCross = qEfektif;
+  final qMain = qAnaHat;
+
+  // ¦¦ Statik yükseklik: bölümün en üst katındaki sprinklerin pompaya göre kotu
+  // (gizli boşluk sprinkleri döşeme altında, diğerleri asma tavan seviyesinde)
+  final statikYukseklik =
+      kot + (asmaSprinklerGerek ? katYuks : yuks);
+  final kolonUzunlugu = math.max(0.0, statikYukseklik);
+
+  // ¦¦ Kritik devre uzunlukları (+%20 bağlantı eklentisi)
+  // Esas boru: pompa dairesinden bölüme yatay hat + en üst kata kolon
+  final lBranch = headPerBranch * aralik * 1.2;
+  final lCross = tasarimKenar * 1.0;
+  final lMain = (math.max(en, boy) / 2.0 + kolonUzunlugu) * 1.2;
+
+  // ¦¦ Bölüm boru metrajı — tipik kat × kat sayısı (gizli boşlukta ikinci şebeke)
+  final sebekeCarpani = asmaSprinklerGerek ? 2 : 1;
+  final mBranch = nY * headPerBranch * aralik * 1.2 * sebekeCarpani;
+  final mCross = nBranchPipes * aralik * 1.2 * sebekeCarpani;
+  final mMainPompa = (math.max(en, boy) / 2.0 + kolonUzunlugu) * 1.2;
+  final mMainEk = math.max(0.0, boy - tasarimKenar) * 1.2;
+  final mMain = mMainPompa + mMainEk;
+  final mToplam = mBranch + mCross + mMain;
+
+  // ¦¦ Islak alarm vanası sayısı — EN 12845:2015 Madde 11.2.1 (bölüm toplamı)
+  // Sprinkler limiti: LH/OH 1000, HH 500 adet/vana
+  // Alan limiti:      LH/OH 4800 m², HH 2300 m²/vana
+  final isHH = sinif.kod.startsWith('HH');
+  final maxVanaBasina = isHH ? 500 : 1000;
+  final maxAlanPerVana = isHH ? 2300.0 : 4800.0;
+  final nByCount = (nToplamBolum / maxVanaBasina).ceil();
+  final nByArea = (alanBolum / maxAlanPerVana).ceil();
+  final nAlarmVana = nByCount > nByArea ? nByCount : nByArea;
+
+  // Faz 3: Ana boru (main pipe) — 1 düğüm
+  {
+    final dpAna = _spHW(qAnaHat, dnMain, lMain, c: boruC);
+    kritikDevre.add(
+      _SpHidrolikNode(
+        no: 1,
+        tip: 'ana',
+        mesafe: lMain,
+        p: pTaliIter,
+        q: qAnaHat,
+        cumQ: qAnaHat,
+        dpSonraki: dpAna,
+        note:
+            'Esas boru: L = ${lMain.toStringAsFixed(1)} m (kolon ${kolonUzunlugu.toStringAsFixed(1)} m, fitting %20 dahil)'
+            '${qAnaHat > qEfektif ? ' · Q = ${qEfektif.toStringAsFixed(0)} + yangın dolabı ${qDolap.toStringAsFixed(0)} L/min' : ''}',
+      ),
+    );
+  }
+
+  // ¦¦ Sürtünme kayıpları — kritikDevre düğümlerinden türetilir
+  final dpBranch = kritikDevre
+      .where((n) => n.tip == 'dal')
+      .fold(0.0, (s, n) => s + n.dpSonraki);
+  final dpCross = kritikDevre
+      .where((n) => n.tip == 'tali')
+      .fold(0.0, (s, n) => s + n.dpSonraki);
+  final dpMain = kritikDevre
+      .where((n) => n.tip == 'ana')
+      .fold(0.0, (s, n) => s + n.dpSonraki);
+  final dpToplam = dpBranch + dpCross + dpMain;
+
+  // ¦¦ Statik yük (1 bar ≈ 10.2 m su sütunu) — bodrum katlarda negatif alınmaz
+  final pStatik = kolonUzunlugu * 0.098;
+
+  // ¦¦ Pompa
+  final pompaBasincHesap = pHead + dpToplam + pStatik + 0.50;
+  final t6MinBasinc = _spT6MinBasinc(sinif.kod);
+  final pompaBasincMin = t6MinBasinc > 0 ? t6MinBasinc + pStatik : 0.0;
+  final pompaBasincSprinkler = math.max(pompaBasincHesap, pompaBasincMin);
+  final tablo6ZorunluBasinc = pompaBasincSprinkler > pompaBasincHesap;
+
+  // ¦¦ Yangın dolabı: en üst kattaki dolap vanası (döşemeden ~1,5 m) min. 4 bar.
+  // Ayrı hatta: P = 4 + statik + ayrı hat kaybı + 0,5 (vana/emniyet)
+  final hDolap = kot + 1.5;
+  int? dnDolapHat;
+  double dpDolapHat = 0.0;
+  double pDolapGerekli = 0.0;
+  if (ayriHat) {
+    // Dolap besleme hattı: en az DN50, hız ≤ 2,5 m/s
+    dnDolapHat = math.max(50, _spSecBoruHiz(qDolap, vMax: 2.5));
+    dpDolapHat = _spHW(qDolap, dnDolapHat, lMain, c: boruC);
+    pDolapGerekli =
+        _spDolapMinBasinc + math.max(0.0, hDolap) * 0.098 + dpDolapHat + 0.50;
+  }
+  final pompaBasinc = math.max(pompaBasincSprinkler, pDolapGerekli);
+  // TS EN 12845+A1 §8.2: Maks. işletme basıncı 12 bar
+  final maxBasincUyari = pompaBasinc > 12.0;
+  final pompaDeb = qToplam * 1.15;
+
+  // ¦¦ Su deposu hacmi (EN 12845 Tablo 2)
+  final suDepoHacmi = qToplam * sinif.sureDk.toDouble(); // L
+
+  // ¦¦ Kurulum sınıfı / jokey pompası
+  final kurulum = _spKurulumSiniflari[kurulumSinifIdx];
+  final jokeyDebi = pompaDeb * 0.01;
+  final jokeyBasinc = pompaBasinc * 1.10;
+
+  // ¦¦ Kuru borulu sistem — bölüm boru şebekesi iç hacmi
+  final kuruBoruHacmi = kuruBoru
+      ? (_spBoruHacmiL(dnBranch, mBranch) +
+            _spBoruHacmiL(dnCross, mCross) +
+            _spBoruHacmiL(dnMain, mMain))
+      : null;
+
+  final zonSayisi = maxBasincUyari ? (pompaBasinc / 12.0).ceil() : 1;
+
+  // ¦¦ Raf depolama (in-rack sprinkler) — basitleştirilmiş ön tasarım
+  int? rafKatSayisi;
+  int? rafEkSprinkler;
+  double? rafEkDebi;
+  if (b.rafDepolama) {
+    rafKatSayisi = int.tryParse(b.rafKatSayisiCtrl.text.trim()) ?? 0;
+    if (rafKatSayisi > 0) {
+      const rafYatayAralik = 3.0; // m — tipik in-rack ön tasarım varsayımı
+      final rafSiraBasi = math.max(1, (en / rafYatayAralik).ceil());
+      rafEkSprinkler = rafKatSayisi * rafSiraBasi;
+      const kFactorRaf = 80.0; // tipik in-rack K80
+      const pRafMin = 1.0; // bar — in-rack ön tasarım min. basınç varsayımı
+      rafEkDebi = rafEkSprinkler * kFactorRaf * math.sqrt(pRafMin);
+    }
+  }
+
+  // ¦¦ Köpük sistemi hesabı (EN 13565-2) — tipik kat alanı
+  _KopukSonuc? kopukSonuc;
+  if (b.kopukAktif) {
+    final kTip = _kopukTipleri.firstWhere(
+      (t) => t.kod == b.kopukTipKod,
+      orElse: () => _kopukTipleri.first,
+    );
+    final hiz = b.kopukSiviKat == 'PS'
+        ? (kTip.hizPS ?? kTip.hizHC)
+        : kTip.hizHC;
+    final cozDebi = hiz * alan; // L/min
+    final kDebi = cozDebi * kTip.konsOrani / 100.0; // L/min
+    final sDebi = cozDebi - kDebi; // L/min
+    final kTank = kDebi * b.kopukSure.toDouble(); // L
+    final sTank = sDebi * b.kopukSure.toDouble(); // L
+    kopukSonuc = _KopukSonuc(
+      tip: kTip,
+      siviKat: b.kopukSiviKat,
+      alan: alan,
+      sure: b.kopukSure.toDouble(),
+      uygulamaHizi: hiz,
+      cozeltDebi: cozDebi,
+      konsDebi: kDebi,
+      suDebi: sDebi,
+      konsTankHacmi: kTank,
+      suTankHacmi: sTank,
+    );
+  }
+
+  return _SpSonuc(
+    binaAlani: alan,
+    en: en,
+    boy: boy,
+    yuks: yuks,
+    kat: b.kat,
+    katYuks: katYuks,
+    kot: kot,
+    statikYukseklik: statikYukseklik,
+    nToplamBolum: nToplamBolum,
+    alanBolum: alanBolum,
+    qDolap: qDolap,
+    dnKatAna: dnMainSprinkler,
+    dolapAyriHat: ayriHat,
+    hDolap: hDolap,
+    dnDolapHat: dnDolapHat,
+    dpDolapHat: dpDolapHat,
+    pDolapGerekli: pDolapGerekli,
+    pompaBasincSprinkler: pompaBasincSprinkler,
+    maxKapsamaEfektif: maxKapsamaEfektif,
+    yuksUyari: yuksUyari,
+    asmaTavan: b.asmaTavan,
+    asmaBosluk: asmaBosluk,
+    asmaSprinklerGerek: asmaSprinklerGerek,
+    nAsmaSpr: nAsmaSpr,
+    sinif: sinif,
+    aralik: aralik,
+    nX: nX,
+    nY: nY,
+    nToplam: nToplam,
+    gercekKapsama: gercekKapsama,
+    nTasarim: nTasarim,
+    qHead: qHead,
+    pHead: pHead,
+    qTasarim: qTasarim,
+    dnBranch: dnBranch,
+    dnCross: dnCross,
+    dnMain: dnMain,
+    nBranch: headPerBranch,
+    nCross: nCrossCalc,
+    nMain: nMainCalc,
+    nBranchPipes: nBranchPipes,
+    boruTabloHH: boruTabloHH,
+    qBranch: qBranch,
+    qCross: qCross,
+    qMain: qMain,
+    lBranch: lBranch,
+    lCross: lCross,
+    lMain: lMain,
+    mBranch: mBranch,
+    mCross: mCross,
+    mMain: mMain,
+    mMainEk: mMainEk,
+    mToplam: mToplam,
+    nAlarmVana: nAlarmVana,
+    maxVanaBasina: maxVanaBasina,
+    maxAlanPerVana: maxAlanPerVana,
+    dpBranch: dpBranch,
+    dpCross: dpCross,
+    dpMain: dpMain,
+    dpToplam: dpToplam,
+    pStatik: pStatik,
+    pompaDeb: pompaDeb,
+    pompaBasinc: pompaBasinc,
+    suDepoHacmi: suDepoHacmi,
+    tablo6ZorunluDebi: tablo6ZorunluDebi,
+    tablo6ZorunluBasinc: tablo6ZorunluBasinc,
+    maxBasincUyari: maxBasincUyari,
+    kritikDevre: kritikDevre,
+    kopuk: kopukSonuc,
+    boruMalzeme: boruMalzeme.$1,
+    boruC: boruC,
+    sprinklerTipi: sprinklerTipi,
+    kFactorEfektif: kFactorEfektif,
+    kFactorUyari: kFactorUyari,
+    kurulum: kurulum,
+    jokeyDebi: jokeyDebi,
+    jokeyBasinc: jokeyBasinc,
+    kuruBoru: kuruBoru,
+    kuruBoruHacmi: kuruBoruHacmi,
+    zonSayisi: zonSayisi,
+    rafDepolama: b.rafDepolama,
+    rafKatSayisi: rafKatSayisi,
+    rafEkSprinkler: rafEkSprinkler,
+    rafEkDebi: rafEkDebi,
+  );
+}
+
+/// Çok bölümlü projenin sistem sonucu.
+/// EN 12845: tasarım alanları aynı anda çalışmaz; pompa ve su deposu, statik yük
+/// dahil en elverişsiz bölüme göre boyutlandırılır.
+class _SpSistemSonuc {
+  final List<String> adlar;
+  final List<_SpSonuc> bolumler;
+  const _SpSistemSonuc(this.adlar, this.bolumler);
+
+  int _enBuyuk(double Function(_SpSonuc) deger) {
+    var k = 0;
+    for (var i = 1; i < bolumler.length; i++) {
+      if (deger(bolumler[i]) > deger(bolumler[k])) k = i;
+    }
+    return k;
+  }
+
+  int get debiIdx => _enBuyuk((s) => s.pompaDeb);
+  int get basincIdx => _enBuyuk((s) => s.pompaBasinc);
+  int get depoIdx => _enBuyuk((s) => s.suDepoHacmi);
+  double get pompaDeb => bolumler[debiIdx].pompaDeb;
+  double get pompaBasinc => bolumler[basincIdx].pompaBasinc;
+  double get suDepoHacmi => bolumler[depoIdx].suDepoHacmi;
+  double get jokeyDebi => pompaDeb * 0.01;
+  double get jokeyBasinc => pompaBasinc * 1.10;
+  int get zonSayisi => pompaBasinc > 12.0 ? (pompaBasinc / 12.0).ceil() : 1;
+  int get toplamSprinkler =>
+      bolumler.fold(0, (t, s) => t + s.nToplamBolum);
+  double get toplamAlan => bolumler.fold(0.0, (t, s) => t + s.alanBolum);
+  int get toplamAlarmVana => bolumler.fold(0, (t, s) => t + s.nAlarmVana);
+
+  /// Katlı yapı: çok katlı ya da eksi kotlu (bodrum) bölüm varsa. Bu durumda
+  /// her kata (bodrum dahil) izlenebilir vana + akış anahtarı + test vanası
+  /// konur; çapları o bölümün ana borusu çapındadır.
+  bool get katli => bolumler.map((s) => s.kat).toSet().length > 1;
+
+  /// Sistem pompa basıncıyla en üst kat dolabında kalan basınç (bar):
+  /// P_pompa − 0,5 (vana/emniyet) − statik − hat kaybı
+  double dolapBasinci(int i) {
+    final s = bolumler[i];
+    final kayip = s.dolapAyriHat ? s.dpDolapHat : s.dpMain;
+    return pompaBasinc - 0.50 - math.max(0.0, s.hDolap) * 0.098 - kayip;
+  }
+
+  bool get dolapVar => bolumler.any((s) => s.qDolap > 0);
+  bool get dolapAyriHatVar => bolumler.any((s) => s.dolapAyriHat);
+  int get toplamKatKontrolSeti =>
+      katli ? bolumler.length : 0;
+
+  /// Kat kontrol setleri çapa göre: DN → adet (her çapta vana, akış anahtarı
+  /// ve tahliye vanası aynı adettedir)
+  Map<int, int> get katKontrolCapaGore {
+    final m = <int, int>{};
+    if (!katli) return m;
+    for (final s in bolumler) {
+      m[s.dnKatAna] = (m[s.dnKatAna] ?? 0) + 1;
+    }
+    return Map.fromEntries(
+      m.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+    );
+  }
+
+  /// Boru metrajı çap ve tipe göre: (DN, tip, metre) — tip: dal / tali / ana
+  List<(int, String, double)> get metrajDokumu {
+    final m = <(int, String), double>{};
+    void ekle(int dn, String tip, double metre) =>
+        m[(dn, tip)] = (m[(dn, tip)] ?? 0) + metre;
+    for (final s in bolumler) {
+      ekle(s.dnBranch, 'dal', s.mBranch);
+      ekle(s.dnCross, 'tali', s.mCross);
+      ekle(s.dnMain, 'ana', s.mMain);
+    }
+    const sira = {'dal': 0, 'tali': 1, 'ana': 2};
+    return [
+      for (final e in m.entries) (e.key.$1, e.key.$2, e.value),
+    ]..sort(
+      (a, b) => a.$1 != b.$1
+          ? a.$1.compareTo(b.$1)
+          : sira[a.$2]!.compareTo(sira[b.$2]!),
+    );
+  }
+  double get toplamMetraj => bolumler.fold(0.0, (t, s) => t + s.mToplam);
+}
+
+String _spBoruTipiL10n(AppLocalizations l10n, String tip) => switch (tip) {
+  'dal' => l10n.spPipeBranch,
+  'tali' => l10n.spPipeDist,
+  _ => l10n.spPipeMain,
+};
+
+class _SprinkleState extends State<SprinkleSistemi> {
+  static const Color _kC = Color(0xFF0EA5E9);
+
+  final List<_SpBolum> _bolumler = [_SpBolum()];
+  // ¦¦ Ortak sistem seçenekleri
+  int _boruMalzemeIdx = 0;
+  int _sprinklerTipiIdx = 0;
+  int _kurulumSinifIdx = 1;
+  bool _kuruBoru = false;
+  bool _yanginDolabi = true; // en üst katta 2 yangın dolabı debisi
+
   String? _hata;
-  _SpSonuc? _sonuc;
+  _SpSistemSonuc? _sonuc;
 
   @override
   void initState() {
@@ -17700,19 +18365,37 @@ class _SprinkleState extends State<SprinkleSistemi> {
     final g = ProjeServisi.kayitliGirdiler;
     if (g != null) {
       ProjeServisi.kayitliGirdiler = null;
-      _enCtrl.text = g['en'] ?? '';
-      _boyCtrl.text = g['boy'] ?? '';
-      _yuksCtrl.text = g['yuks'] ?? '';
-      _asmaBoslukCtrl.text = g['asmaBosluk'] ?? '';
-      _asmaTavan = g['asmaTavan'] == 'true';
-      final faaliyet = g['faaliyet'] ?? '';
-      _secilenFaaliyet = faaliyet.isNotEmpty ? faaliyet : null;
       _boruMalzemeIdx = int.tryParse(g['boruMalzemeIdx'] ?? '0') ?? 0;
       _sprinklerTipiIdx = int.tryParse(g['sprinklerTipiIdx'] ?? '0') ?? 0;
       _kurulumSinifIdx = int.tryParse(g['kurulumSinifIdx'] ?? '1') ?? 1;
       _kuruBoru = g['kuruBoru'] == 'true';
-      _rafDepolama = g['rafDepolama'] == 'true';
-      _rafKatSayisiCtrl.text = g['rafKatSayisi'] ?? '2';
+      _yanginDolabi = g['yanginDolabi'] != 'false';
+      final raw = g['bolumler'] ?? '';
+      if (raw.isNotEmpty) {
+        final liste = (jsonDecode(raw) as List)
+            .map((e) => _SpBolum.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (liste.isNotEmpty) {
+          for (final b in _bolumler) {
+            b.dispose();
+          }
+          _bolumler
+            ..clear()
+            ..addAll(liste);
+        }
+      } else {
+        // Eski (tek bölümlü) kayıt
+        final b = _bolumler.first;
+        b.enCtrl.text = g['en'] ?? '';
+        b.boyCtrl.text = g['boy'] ?? '';
+        b.katYuksCtrl.text = g['yuks'] ?? '';
+        b.asmaBoslukCtrl.text = g['asmaBosluk'] ?? '';
+        b.asmaTavan = g['asmaTavan'] == 'true';
+        final faaliyet = g['faaliyet'] ?? '';
+        b.faaliyet = faaliyet.isNotEmpty ? faaliyet : null;
+        b.rafDepolama = g['rafDepolama'] == 'true';
+        b.rafKatSayisiCtrl.text = g['rafKatSayisi'] ?? '2';
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _hesapla();
       });
@@ -17721,474 +18404,225 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
   @override
   void dispose() {
-    _enCtrl.dispose();
-    _boyCtrl.dispose();
-    _yuksCtrl.dispose();
-    _asmaBoslukCtrl.dispose();
-    _rafKatSayisiCtrl.dispose();
+    for (final b in _bolumler) {
+      b.dispose();
+    }
     super.dispose();
   }
 
-  void _hesapla() {
+  void _degisti() => setState(() => _sonuc = null);
+
+  void _bolumEkle() {
+    final enUst = _bolumler.isEmpty
+        ? -1
+        : _bolumler.map((b) => b.kat).reduce(math.max);
+    _bolumGoster(_SpBolum()..kat = math.min(enUst + 1, 10), _bolumler.length);
+  }
+
+  /// Bölümü bir üst kata kopyalar (aynı ölçü ve seçeneklerle)
+  void _bolumKopyala(int i) {
+    final kaynak = _bolumler[i];
+    final yeni = _SpBolum.fromJson(kaynak.toJson())
+      ..adCtrl.text = ''
+      ..kat = math.min(kaynak.kat + 1, 10)
+      ..pompaBurada = false
+      ..acik = true;
+    _bolumGoster(yeni, i + 1);
+  }
+
+  void _bolumGoster(_SpBolum yeni, int sira) {
     setState(() {
-      _hata = null;
+      for (final b in _bolumler) {
+        b.acik = false;
+      }
+      _bolumler.insert(sira, yeni);
       _sonuc = null;
     });
-
-    final l10n = AppLocalizations.of(context);
-    final en = double.tryParse(_enCtrl.text.replaceAll(',', '.'));
-    final boy = double.tryParse(_boyCtrl.text.replaceAll(',', '.'));
-    final yuks = double.tryParse(_yuksCtrl.text.replaceAll(',', '.'));
-
-    if (en == null || en <= 0) {
-      setState(
-        () => _hata = AppLocalizations.of(context).enterValidBuildingWidthM,
-      );
-      return;
-    }
-    if (boy == null || boy <= 0) {
-      setState(
-        () => _hata = AppLocalizations.of(context).enterValidBuildingLengthM,
-      );
-      return;
-    }
-    if (yuks == null || yuks <= 0) {
-      setState(() => _hata = AppLocalizations.of(context).enterCeilingHeightM);
-      return;
-    }
-    if (_sinifIdx == null) {
-      setState(
-        () => _hata = AppLocalizations.of(context).selectBuildingActivity,
-      );
-      return;
-    }
-
-    final sinif = _spSiniflar[_sinifIdx!];
-    final alan = en * boy;
-
-    // ¦¦ Boru malzemesi — Hazen-Williams C katsayısı
-    final boruMalzeme = _spBoruMalzemeleri[_boruMalzemeIdx];
-    final boruC = boruMalzeme.$2;
-
-    // ¦¦ Sprinkler tipi / K-Faktör override (varsayılan: sınıfa göre otomatik)
-    final sprinklerTipi = _spSprinklerTipleri[_sprinklerTipiIdx];
-    final kFactorEfektif = sprinklerTipi.kFactor ?? sinif.kFactor;
-    final kFactorUyari = kFactorEfektif < sinif.kFactor
-        ? l10n.spKFactorWarning(
-            '${kFactorEfektif.toInt()}',
-            sinif.kod,
-            '${sinif.kFactor.toInt()}',
-          )
-        : null;
-
-    // ¦¦ Asma tavan hesabı (EN 12845 Md. 5.4)
-    final asmaBoslukStr = _asmaBoslukCtrl.text.replaceAll(',', '.');
-    // Kullanıcı cm girer, hesapta m'ye çevrilir
-    final asmaBosluk = _asmaTavan
-        ? ((double.tryParse(asmaBoslukStr) ?? 0.0) / 100.0)
-        : 0.0;
-    final asmaSprinklerGerek = _asmaTavan && asmaBosluk > 0.8;
-    // Gizli boşluk sprinkler sayısı: aynı ızgara üst katsayısı ile
-    // (bos boşluk tavanı için standart aralık kullanılır)
-    int nAsmaSpr = 0;
-
-    // ¦¦ Tavan yüksekliği düzeltmesi (EN 12845 Md. 5.2.3)
-    final maxKapsamaEfektif = _spMaxKapsamaYuks(yuks, sinif.kod);
-    final yuksUyari = _spYuksUyari(l10n, yuks, sinif.kod);
-    // Düzeltilmiş kapsama alanı → alan bazlı aralık
-    final aralikAlan = math.sqrt(maxKapsamaEfektif);
-    // Çizelge 19: S ve D mesafe limiti uygulanır (hangi kısıt bağlayıcıysa)
-    final aralik = math.min(aralikAlan, sinif.maxMesafe);
-
-    // ¦¦ Sprinkler ızgarası (ana kat)
-    final nX = (en / aralik).ceil();
-    final nY = (boy / aralik).ceil();
-    final nToplam = nX * nY;
-    final gercekAralikX = en / nX;
-    final gercekAralikY = boy / nY;
-    final gercekKapsama = gercekAralikX * gercekAralikY;
-    // Gizli boşluk sprinklerleri (aynı ızgara üst kata uygulanır)
-    if (asmaSprinklerGerek) {
-      nAsmaSpr = nToplam;
-    }
-
-    // ¦¦ Tasarım alanına düşen sprinkler sayısı
-    final nTasarim = (sinif.tasarimAlani / maxKapsamaEfektif).ceil();
-
-    // ¦¦ Sprinkler debisi ve basıncı
-    // K-faktör: LH/OH=80, HH=115 (EN 12845)
-    // Min. işletme basıncı: LH=0,35 bar | OH/HH=0,50 bar (EN 12845 Tablo 1)
-    final qHeadHesap = sinif.yogunluk * maxKapsamaEfektif; // L/min
-    double pHead = math.pow(qHeadHesap / kFactorEfektif, 2).toDouble();
-    if (pHead < sinif.minBasinc) pHead = sinif.minBasinc;
-    final qHead = kFactorEfektif * math.sqrt(pHead); // gerçek debi
-
-    // ¦¦ Minimum yoğunluk kontrolü için referans debi (iteratif hesapla güncellenir)
-    final qTasarimMin = sinif.yogunluk * sinif.tasarimAlani; // L/min
-
-    // ¦¦ Boru debileri (çap seçimi sprinkler sayısına dayalı — LH/OH için akıştan bağımsız)
-    final tasarimKenar = math.sqrt(sinif.tasarimAlani);
-    final headPerBranch = (tasarimKenar / aralik)
-        .ceil(); // bir dal boru üzerindeki spr. (tasarım alanı)
-    final nCrossCalc =
-        nTasarim; // cross main tasarım alanındaki tüm sprinkleri besler
-    final nMainCalc = nTasarim; // ana boru: tasarım debisi (aynı)
-    final qBranch = headPerBranch * qHead;
-
-    // EN 12845 Tablo 14 bazlı çap seçimi (LH/OH); HH için hız yöntemi
-    final boruTabloHH = sinif.kod.startsWith('HH');
-    final dnBranch = boruTabloHH
-        ? _spSecBoruHiz(qBranch, vMax: 5.0)
-        : _spSecBoruEN12845(headPerBranch, sinif.kod);
-    // LH/OH: sayı bazlı (akıştan bağımsız) · HH: qTasarimMin ön tahmini
-    final dnCross = boruTabloHH
-        ? _spSecBoruHiz(qTasarimMin, vMax: 4.0)
-        : _spSecBoruEN12845(nCrossCalc, sinif.kod);
-    final dnMain = boruTabloHH
-        ? _spSecBoruHiz(qTasarimMin, vMax: 3.5)
-        : _spSecBoruEN12845(nMainCalc, sinif.kod);
-
-    // ¦¦ EN 12845 §13.3.2: Kritik Devre — 3 Faz Hidrolik Hesabı
-    // Faz 1: Dal boru (range pipe) — en uzak kol, headPerBranch sprinkler
-    // Faz 2: Tali boru (distribution) — nBranchPipes kavşak, K-orantılama balanslama
-    // Faz 3: Ana boru (main pipe) — esas boru kaybı [qEfektif+lMain sonrasına eklenir]
-    final nBranchPipes = (nTasarim / headPerBranch).ceil();
-    final kritikDevre = <_SpHidrolikNode>[];
-
-    // Faz 1: Dal boru
-    double pIter = pHead;
-    double cumQDal = 0.0;
-    for (int i = 1; i <= headPerBranch; i++) {
-      final qi = kFactorEfektif * math.sqrt(pIter);
-      cumQDal += qi;
-      final dpNext = _spHW(cumQDal, dnBranch, aralik * 1.2, c: boruC);
-      kritikDevre.add(
-        _SpHidrolikNode(
-          no: i,
-          tip: 'dal',
-          mesafe: (i - 1) * aralik,
-          p: pIter,
-          q: qi,
-          cumQ: cumQDal,
-          dpSonraki: dpNext,
-        ),
-      );
-      pIter += dpNext;
-    }
-    // pIter = tasarım noktası basıncı (design point) — dal boru → tali boru kavşağı
-    final pDesignPoint = pIter;
-    final qDalBoru = cumQDal;
-
-    // Faz 2: Tali boru (distribution pipe) — K-orantılama balanslama
-    // Q_j = qDalBoru × √(P_j / pDesignPoint)  (dallar aynı boru konfigürasyonuna sahip)
-    double pTaliIter = pDesignPoint;
-    double cumQTali = 0.0;
-    for (int j = 1; j <= nBranchPipes; j++) {
-      final qBranchJ = qDalBoru * math.sqrt(pTaliIter / pDesignPoint);
-      cumQTali += qBranchJ;
-      final dpNextTali = _spHW(cumQTali, dnCross, aralik * 1.2, c: boruC);
-      final String? noteJ = j == 1
-          ? null
-          : 'Kol $j: Q = ${qDalBoru.toStringAsFixed(1)}×√(${pTaliIter.toStringAsFixed(3)}/${pDesignPoint.toStringAsFixed(3)}) = ${qBranchJ.toStringAsFixed(1)} L/min';
-      kritikDevre.add(
-        _SpHidrolikNode(
-          no: j,
-          tip: 'tali',
-          mesafe: (j - 1) * aralik,
-          p: pTaliIter,
-          q: qBranchJ,
-          cumQ: cumQTali,
-          dpSonraki: dpNextTali,
-          note: noteJ,
-        ),
-      );
-      pTaliIter += dpNextTali;
-    }
-    // pTaliIter = ana boru başlangıç basıncı (tali boru → ana boru kavşağı)
-
-    final qTasarim = math.max(cumQTali, qTasarimMin);
-
-    // TS EN 12845+A1 Tablo 6 — ön-hesaplı LH/OH sistemleri için bağlayıcı alt sınır
-    final _t6MinDebi = _spT6MinDebi(sinif.kod);
-    final qEfektif = math.max(qTasarim, _t6MinDebi); // hangisi büyükse
-    final tablo6ZorunluDebi = qEfektif > qTasarim; // Tablo 6 bağlayıcı oldu mu?
-
-    // Gerçek boru debileri (iteratif hesap sonucuna dayalı)
-    final qCross = qEfektif;
-    final qMain = qEfektif;
-
-    // ¦¦ Kritik devre uzunlukları (+%20 bağlantı eklentisi)
-    // lBranch: kritik dal borusu uzunluğu (headPerBranch × aralik)
-    final lBranch = headPerBranch * aralik * 1.2;
-    final lCross = tasarimKenar * 1.0;
-    final lMain = (math.max(en, boy) / 2.0) * 1.2;
-
-    // ¦¦ Toplam boru metrajı (toplam sprinkler sayısı baz alınarak)
-    // Dal borular: tüm satırlar (nY) × gerçek dal boru uzunluğu (headPerBranch × aralik)
-    final mBranch = nY * headPerBranch * aralik * 1.2;
-    // Dağıtım borusu: nBranchPipes dal kol bağlantısı × aralik aralığı
-    final mCross = nBranchPipes * aralik * 1.2;
-    // Esas boru: pompa dairesinden + tasarım alanı dışında kalan bina boyu
-    final mMainPompa = (math.max(en, boy) / 2.0) * 1.2;
-    final mMainEk = math.max(0.0, boy - tasarimKenar) * 1.2;
-    final mMain = mMainPompa + mMainEk;
-    final mToplam = mBranch + mCross + mMain;
-
-    // ¦¦ Islak alarm vanası sayısı — EN 12845:2015 Madde 11.2.1
-    // Sprinkler limiti: LH/OH 1000, HH 500 adet/vana
-    // Alan limiti:      LH/OH 4800 m², HH 2300 m²/vana
-    final isHH = sinif.kod.startsWith('HH');
-    final maxVanaBasina = isHH ? 500 : 1000;
-    final maxAlanPerVana = isHH ? 2300.0 : 4800.0;
-    final nByCount = (nToplam / maxVanaBasina).ceil();
-    final nByArea = (alan / maxAlanPerVana).ceil();
-    final nAlarmVana = nByCount > nByArea ? nByCount : nByArea;
-
-    // Faz 3: Ana boru (main pipe) — 1 düğüm (qEfektif ve lMain mevcut)
-    {
-      final dpAna = _spHW(qEfektif, dnMain, lMain, c: boruC);
-      kritikDevre.add(
-        _SpHidrolikNode(
-          no: 1,
-          tip: 'ana',
-          mesafe: lMain,
-          p: pTaliIter,
-          q: qEfektif,
-          cumQ: qEfektif,
-          dpSonraki: dpAna,
-          note:
-              'Esas boru: L = ${lMain.toStringAsFixed(1)} m (fitting %20 dahil)',
-        ),
-      );
-    }
-
-    // ¦¦ Sürtünme kayıpları — kritikDevre düğümlerinden türetilir
-    final dpBranch = kritikDevre
-        .where((n) => n.tip == 'dal')
-        .fold(0.0, (s, n) => s + n.dpSonraki);
-    final dpCross = kritikDevre
-        .where((n) => n.tip == 'tali')
-        .fold(0.0, (s, n) => s + n.dpSonraki);
-    final dpMain = kritikDevre
-        .where((n) => n.tip == 'ana')
-        .fold(0.0, (s, n) => s + n.dpSonraki);
-    final dpToplam = dpBranch + dpCross + dpMain;
-
-    // ¦¦ Statik yük (1 bar ? 10.2 m su sütunu)
-    final pStatik = yuks * 0.098;
-
-    // ¦¦ Pompa
-    // TS EN 12845+A1 Tablo 6: kontrol vanası girişinde minimum basınç
-    final pompaBasincHesap = pHead + dpToplam + pStatik + 0.50;
-    final _t6MinBasinc = _spT6MinBasinc(sinif.kod);
-    // Tablo 6 basıncı statik yük (pStatik) ile birlikte pompa basıncına uygulanır
-    final pompaBasincMin = _t6MinBasinc > 0 ? _t6MinBasinc + pStatik : 0.0;
-    final pompaBasinc = math.max(pompaBasincHesap, pompaBasincMin);
-    final tablo6ZorunluBasinc = pompaBasinc > pompaBasincHesap;
-    // TS EN 12845+A1 §8.2: Herhangi bir sprinkler konumundaki maks. basınç 12 bar'ı geçmemeli
-    final maxBasincUyari = pompaBasinc > 12.0;
-    // Pompa debisi: Tablo 6 efektif debisine %15 emniyet payı
-    final pompaDeb = qEfektif * 1.15;
-
-    // ¦¦ Su deposu hacmi (EN 12845 Tablo 2)
-    // LH=30 dk, OH=60 dk, HH=90 dk  ×  Q_efektif (Tablo 6 bağlayıcı ise)
-    final suDepoHacmi = qEfektif * sinif.sureDk.toDouble(); // L
-
-    // ¦¦ Kurulum sınıfı / pompa yedekliliği (EN 12845 Böl. 6 ilkeleri)
-    final kurulum = _spKurulumSiniflari[_kurulumSinifIdx];
-    // Jokey (basınç bekletme) pompası: tipik pratik değer — ana debinin ~%1'i,
-    // basıncı ana pompa kapalı-vana (churn) basıncından bir miktar yüksek tutulur.
-    final jokeyDebi = pompaDeb * 0.01;
-    final jokeyBasinc = pompaBasinc * 1.10;
-
-    // ¦¦ Kuru borulu sistem — boru şebekesi iç hacmi (hava/priming suyu tahmini)
-    final kuruBoruHacmi = _kuruBoru
-        ? (_spBoruHacmiL(dnBranch, mBranch) +
-              _spBoruHacmiL(dnCross, mCross) +
-              _spBoruHacmiL(dnMain, mMain))
-        : null;
-
-    // ¦¦ Basınç düşürücü vana / zon ayrımı — §8.2 sınırı (12 bar) aşıldığında
-    final zonSayisi = maxBasincUyari ? (pompaBasinc / 12.0).ceil() : 1;
-
-    // ¦¦ Raf depolama (in-rack sprinkler) — basitleştirilmiş ön tasarım
-    // Not: Kesin in-rack yerleşimi (flue space, kat aralığı) EN 12845 Ek H
-    // kapsamında tam tasarımla belirlenmelidir; burada yalnızca ön fikir verilir.
-    int? rafKatSayisi;
-    int? rafEkSprinkler;
-    double? rafEkDebi;
-    if (_rafDepolama) {
-      rafKatSayisi = int.tryParse(_rafKatSayisiCtrl.text.trim()) ?? 0;
-      if (rafKatSayisi > 0) {
-        const rafYatayAralik = 3.0; // m — tipik in-rack ön tasarım varsayımı
-        final rafSiraBasi = math.max(1, (en / rafYatayAralik).ceil());
-        rafEkSprinkler = rafKatSayisi * rafSiraBasi;
-        const kFactorRaf = 80.0; // tipik in-rack K80
-        const pRafMin = 1.0; // bar — in-rack ön tasarım min. basınç varsayımı
-        rafEkDebi = rafEkSprinkler * kFactorRaf * math.sqrt(pRafMin);
+    // Ekranı yeni bölümün başına kaydır
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = yeni.kartKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          alignment: 0.0,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
       }
-    }
-
-    // ¦¦ Köpük sistemi hesabı (EN 13565-2)
-    _KopukSonuc? kopukSonuc;
-    if (_kopukAktif) {
-      final kTip = _kopukTipleri.firstWhere(
-        (t) => t.kod == _kopukTipKod,
-        orElse: () => _kopukTipleri.first,
-      );
-      final hiz = _kopukSiviKat == 'PS'
-          ? (kTip.hizPS ?? kTip.hizHC)
-          : kTip.hizHC;
-      final cozDebi = hiz * alan; // L/min
-      final kDebi = cozDebi * kTip.konsOrani / 100.0; // L/min
-      final sDebi = cozDebi - kDebi; // L/min
-      final kTank = kDebi * _kopukSure.toDouble(); // L
-      final sTank = sDebi * _kopukSure.toDouble(); // L
-      kopukSonuc = _KopukSonuc(
-        tip: kTip,
-        siviKat: _kopukSiviKat,
-        alan: alan,
-        sure: _kopukSure.toDouble(),
-        uygulamaHizi: hiz,
-        cozeltDebi: cozDebi,
-        konsDebi: kDebi,
-        suDebi: sDebi,
-        konsTankHacmi: kTank,
-        suTankHacmi: sTank,
-      );
-    }
-
-    setState(() {
-      _sonuc = _SpSonuc(
-        binaAlani: alan,
-        en: en,
-        boy: boy,
-        yuks: yuks,
-        maxKapsamaEfektif: maxKapsamaEfektif,
-        yuksUyari: yuksUyari,
-        asmaTavan: _asmaTavan,
-        asmaBosluk: asmaBosluk,
-        asmaSprinklerGerek: asmaSprinklerGerek,
-        nAsmaSpr: nAsmaSpr,
-        sinif: sinif,
-        aralik: aralik,
-        nX: nX,
-        nY: nY,
-        nToplam: nToplam,
-        gercekKapsama: gercekKapsama,
-        nTasarim: nTasarim,
-        qHead: qHead,
-        pHead: pHead,
-        qTasarim: qTasarim,
-        dnBranch: dnBranch,
-        dnCross: dnCross,
-        dnMain: dnMain,
-        nBranch: headPerBranch,
-        nCross: nCrossCalc,
-        nMain: nMainCalc,
-        nBranchPipes: nBranchPipes,
-        boruTabloHH: boruTabloHH,
-        qBranch: qBranch,
-        qCross: qCross,
-        qMain: qMain,
-        lBranch: lBranch,
-        lCross: lCross,
-        lMain: lMain,
-        mBranch: mBranch,
-        mCross: mCross,
-        mMain: mMain,
-        mMainEk: mMainEk,
-        mToplam: mToplam,
-        nAlarmVana: nAlarmVana,
-        maxVanaBasina: maxVanaBasina,
-        maxAlanPerVana: maxAlanPerVana,
-        dpBranch: dpBranch,
-        dpCross: dpCross,
-        dpMain: dpMain,
-        dpToplam: dpToplam,
-        pStatik: pStatik,
-        pompaDeb: pompaDeb,
-        pompaBasinc: pompaBasinc,
-        suDepoHacmi: suDepoHacmi,
-        tablo6ZorunluDebi: tablo6ZorunluDebi,
-        tablo6ZorunluBasinc: tablo6ZorunluBasinc,
-        maxBasincUyari: maxBasincUyari,
-        kritikDevre: kritikDevre,
-        kopuk: kopukSonuc,
-        boruMalzeme: boruMalzeme.$1,
-        boruC: boruC,
-        sprinklerTipi: sprinklerTipi,
-        kFactorEfektif: kFactorEfektif,
-        kFactorUyari: kFactorUyari,
-        kurulum: kurulum,
-        jokeyDebi: jokeyDebi,
-        jokeyBasinc: jokeyBasinc,
-        kuruBoru: _kuruBoru,
-        kuruBoruHacmi: kuruBoruHacmi,
-        zonSayisi: zonSayisi,
-        rafDepolama: _rafDepolama,
-        rafKatSayisi: rafKatSayisi,
-        rafEkSprinkler: rafEkSprinkler,
-        rafEkDebi: rafEkDebi,
-      );
     });
-    if (_sonuc != null) {
-      final s = _sonuc!;
-      final wSpacing = s.en / s.nX;
-      final lSpacing = s.boy / s.nY;
-      final emniyet = s.pompaBasinc - s.pHead - s.dpToplam - s.pStatik;
-      final resultsText = [
-        '## Bina & Tasarım Parametreleri',
-        'Bina: ${s.en.toStringAsFixed(1)}×${s.boy.toStringAsFixed(1)} m  |  Bina Alanı: ${s.binaAlani.toStringAsFixed(1)} m²  |  Tavan Yüksekliği: ${s.yuks.toStringAsFixed(1)} m',
-        'Tehlike Sınıfı: ${s.sinif.kod}  |  Açıklama: ${s.sinif.ad}',
-        'Tasarım Yoğunluğu: ${s.sinif.yogunluk.toStringAsFixed(2)} mm/min  |  Tasarım Alanı: ${s.sinif.tasarimAlani.toStringAsFixed(0)} m²  |  Maks. Kapsama/Sprinkler: ${s.maxKapsamaEfektif.toStringAsFixed(0)} m²',
-        '## Sprinkler Yerleşim Hesabı',
-        'Izgara Aralığı: ${s.aralik.toStringAsFixed(2)} m  |  Gerçek Kapsama: ${s.gercekKapsama.toStringAsFixed(2)} m²',
-        'Yatay Sıra: ${s.nX} adet × ${wSpacing.toStringAsFixed(2)} m  |  Dikey Sıra: ${s.nY} adet × ${lSpacing.toStringAsFixed(2)} m',
-        'Toplam Sprinkler: ${s.nToplam} adet  |  Tasarım Grubu: ${s.nTasarim} adet',
-        '## Kritik Devre Hidrolik Hesabı',
-        'En Uzak Sprinkler Debisi: ${s.qHead.toStringAsFixed(1)} L/min  |  En Uzak Basınç: ${s.pHead.toStringAsFixed(3)} bar  |  K-Faktör: ${s.kFactorEfektif.toStringAsFixed(0)} (${s.sprinklerTipi.ad})',
-        'Boru Malzemesi: ${s.boruMalzeme} (C=${s.boruC.toStringAsFixed(0)})',
-        'Q Tasarım: ${s.qTasarim.toStringAsFixed(1)} L/min  |  Pompa Debi: ${s.pompaDeb.toStringAsFixed(0)} L/min',
-        'Dal Boru: DN${s.dnBranch}  |  Dağıtım Boru: DN${s.dnCross}  |  Ana Boru: DN${s.dnMain}',
-        'ΔP Sürtünme: ${s.dpToplam.toStringAsFixed(3)} bar  |  Statik Yük: ${s.pStatik.toStringAsFixed(3)} bar  |  Emniyet: ${emniyet.clamp(0, 10).toStringAsFixed(3)} bar',
-        '## Pompa Gereksinimleri',
-        'Pompa Debi: ${s.pompaDeb.toStringAsFixed(0)} L/min  |  Pompa Basınç: ${s.pompaBasinc.toStringAsFixed(2)} bar',
-        'Kurulum Sınıfı: ${s.kurulum.ad}  |  Jokey Pompa: ${s.jokeyDebi.toStringAsFixed(1)} L/min @ ${s.jokeyBasinc.toStringAsFixed(2)} bar',
-        if (s.zonSayisi > 1)
-          'Basınç Zonu: ${s.zonSayisi} adet (12 bar sınırı — PRV gerekli)',
-        '## Su Deposu — EN 12845 Tablo 2',
-        'Besleme Süresi: ${s.sinif.sureDk} dak.  |  Su Deposu Hacmi: ${(s.suDepoHacmi / 1000).toStringAsFixed(2)} m³',
-        if (s.kuruBoru)
-          'Kuru Borulu Sistem: Boru şebekesi hacmi ≈ ${(s.kuruBoruHacmi! / 1000).toStringAsFixed(2)} m³ (hava/priming suyu tahmini)',
-        if (s.rafDepolama && s.rafEkSprinkler != null)
-          'Raf Depolama (In-Rack, ön tasarım): ${s.rafKatSayisi} kat × ek ${s.rafEkSprinkler} sprinkler  |  Ek Debi: ${s.rafEkDebi!.toStringAsFixed(0)} L/min',
-      ].join('\n');
-      ProjeServisi.hesapVeri = jsonEncode({
-        'i': {
-          'en': _enCtrl.text,
-          'boy': _boyCtrl.text,
-          'yuks': _yuksCtrl.text,
-          'asmaTavan': _asmaTavan.toString(),
-          'asmaBosluk': _asmaBoslukCtrl.text,
-          'faaliyet': _secilenFaaliyet ?? '',
-          'boruMalzemeIdx': _boruMalzemeIdx.toString(),
-          'sprinklerTipiIdx': _sprinklerTipiIdx.toString(),
-          'kurulumSinifIdx': _kurulumSinifIdx.toString(),
-          'kuruBoru': _kuruBoru.toString(),
-          'rafDepolama': _rafDepolama.toString(),
-          'rafKatSayisi': _rafKatSayisiCtrl.text,
-        },
-        'r': resultsText,
-      });
-    } else {
-      ProjeServisi.hesapVeri = '';
+  }
+
+  /// Kat kotları (m): "pompa bu katta" işaretli katın döşemesi ±0,00 (yoksa
+  /// zemin). Aradaki katların yükseklikleri toplanır; bodrum katlar eksi kot alır.
+  Map<int, double> _katKotlari(AppLocalizations l10n) {
+    final yukseklik = <int, double>{};
+    for (final b in _bolumler) {
+      final h = _spSayi(b.katYuksCtrl);
+      if (h == null || h <= 0) {
+        throw _SpGirdiHatasi(
+          '${b.gorunenAd(l10n)}: ${l10n.spEnterValidFloorHeight}',
+        );
+      }
+      yukseklik[b.kat] = math.max(yukseklik[b.kat] ?? 0.0, h);
     }
+    final pompaIdx = _bolumler.indexWhere((b) => b.pompaBurada);
+    final pompaKat = pompaIdx >= 0 ? _bolumler[pompaIdx].kat : 0;
+    double h(int kat) {
+      final v = yukseklik[kat];
+      if (v == null) {
+        throw _SpGirdiHatasi(l10n.spMissingFloorHeight(_spKatAdi(l10n, kat)));
+      }
+      return v;
+    }
+
+    final kotlar = <int, double>{};
+    for (final kat in yukseklik.keys) {
+      var z = 0.0;
+      for (var j = pompaKat; j < kat; j++) {
+        z += h(j);
+      }
+      for (var j = kat; j < pompaKat; j++) {
+        z -= h(j);
+      }
+      kotlar[kat] = z;
+    }
+    return kotlar;
+  }
+
+  void _bolumSil(int i) {
+    final b = _bolumler.removeAt(i);
+    setState(() => _sonuc = null);
+    WidgetsBinding.instance.addPostFrameCallback((_) => b.dispose());
+  }
+
+  void _hesapla() {
+    final l10n = AppLocalizations.of(context);
+    // Yangın dolabı: sprinkler hattı en üst kat dolabında 4 bar sağlamıyorsa o
+    // bölüm için pompadan ayrı hat. Pompa basıncı değişince diğer bölümler
+    // yeniden kontrol edilir (bir bölüm ayrı hatta geçince geri dönmez).
+    final Map<int, double> kotlar;
+    try {
+      kotlar = _katKotlari(l10n);
+    } on _SpGirdiHatasi catch (e) {
+      setState(() {
+        _hata = e.mesaj;
+        _sonuc = null;
+      });
+      return;
+    }
+    final ayriHat = List<bool>.filled(_bolumler.length, false);
+    late _SpSistemSonuc sistem;
+    for (var tur = 0; tur <= _bolumler.length; tur++) {
+      final adlar = <String>[];
+      final sonuclar = <_SpSonuc>[];
+      for (var i = 0; i < _bolumler.length; i++) {
+        final b = _bolumler[i];
+        final ad = b.gorunenAd(l10n);
+        try {
+          sonuclar.add(
+            _spBolumHesapla(
+              b,
+              l10n,
+              boruMalzemeIdx: _boruMalzemeIdx,
+              sprinklerTipiIdx: _sprinklerTipiIdx,
+              kurulumSinifIdx: _kurulumSinifIdx,
+              kuruBoru: _kuruBoru,
+              yanginDolabi: _yanginDolabi,
+              kot: kotlar[b.kat]!,
+              dolapAyriHat: ayriHat[i],
+            ),
+          );
+          adlar.add(ad);
+        } on _SpGirdiHatasi catch (e) {
+          setState(() {
+            _hata = '$ad: ${e.mesaj}';
+            _sonuc = null;
+            b.acik = true;
+          });
+          return;
+        }
+      }
+      sistem = _SpSistemSonuc(adlar, sonuclar);
+      var degisti = false;
+      for (var i = 0; i < sonuclar.length; i++) {
+        if (!ayriHat[i] &&
+            sonuclar[i].qDolap > 0 &&
+            sistem.dolapBasinci(i) < _spDolapMinBasinc) {
+          ayriHat[i] = true;
+          degisti = true;
+        }
+      }
+      if (!degisti) break;
+    }
+    setState(() {
+      _hata = null;
+      _sonuc = sistem;
+    });
+    ProjeServisi.hesapVeri = jsonEncode({
+      'i': {
+        'bolumler': jsonEncode(_bolumler.map((b) => b.toJson()).toList()),
+        'boruMalzemeIdx': _boruMalzemeIdx.toString(),
+        'sprinklerTipiIdx': _sprinklerTipiIdx.toString(),
+        'kurulumSinifIdx': _kurulumSinifIdx.toString(),
+        'kuruBoru': _kuruBoru.toString(),
+        'yanginDolabi': _yanginDolabi.toString(),
+      },
+      'r': _ozetMetni(l10n, sistem),
+    });
     ProjeServisi.hesapSinyali.value = true;
   }
 
+  /// Kayıtlı projelerde gösterilen sonuç özeti
+  String _ozetMetni(AppLocalizations l10n, _SpSistemSonuc ss) {
+    final ilk = ss.bolumler.first;
+    return [
+      '## Sistem Özeti',
+      'Bölüm sayısı: ${ss.bolumler.length}  |  Toplam alan: ${ss.toplamAlan.toStringAsFixed(0)} m²  |  Toplam sprinkler: ${ss.toplamSprinkler} adet  |  Alarm vanası: ${ss.toplamAlarmVana} adet',
+      'Pompa Debi: ${ss.pompaDeb.toStringAsFixed(0)} L/min (${ss.adlar[ss.debiIdx]})  |  Pompa Basınç: ${ss.pompaBasinc.toStringAsFixed(2)} bar (${ss.adlar[ss.basincIdx]})',
+      'Jokey Pompa: ${ss.jokeyDebi.toStringAsFixed(1)} L/min @ ${ss.jokeyBasinc.toStringAsFixed(2)} bar  |  Kurulum Sınıfı: ${ilk.kurulum.ad}',
+      if (ss.zonSayisi > 1)
+        'Basınç Zonu: ${ss.zonSayisi} adet (12 bar sınırı — PRV gerekli)',
+      'Su Deposu: ${(ss.suDepoHacmi / 1000).toStringAsFixed(2)} m³ (${ss.adlar[ss.depoIdx]}, ${ss.bolumler[ss.depoIdx].sinif.sureDk} dak.)',
+      'Boru Malzemesi: ${ilk.boruMalzeme} (C=${ilk.boruC.toStringAsFixed(0)})  |  Toplam Boru: ${ss.toplamMetraj.toStringAsFixed(0)} m',
+      if (ss.dolapVar)
+        for (var i = 0; i < ss.bolumler.length; i++)
+          ss.bolumler[i].dolapAyriHat
+              ? 'Yangın Dolabı (${ss.adlar[i]}): sprinkler hattı 4 bar sağlamıyor → pompadan ayrı hat DN${ss.bolumler[i].dnDolapHat}, dolapta ${ss.dolapBasinci(i).toStringAsFixed(2)} bar'
+              : 'Yangın Dolabı (${ss.adlar[i]}): sprinkler hattından, dolapta ${ss.dolapBasinci(i).toStringAsFixed(2)} bar (min. 4 bar)',
+      for (final e in ss.katKontrolCapaGore.entries)
+        'Kat Kontrol (DN${e.key}): İzlenebilir vana ${e.value} adet  |  Akış anahtarı ${e.value} adet  |  Tahliye vanası ${e.value} adet',
+      for (final (dn, tip, m) in ss.metrajDokumu)
+        'Boru DN$dn (${tip == 'dal' ? 'dal' : tip == 'tali' ? 'dağıtım' : 'ana/kolon'}): ${m.toStringAsFixed(0)} m',
+      for (var i = 0; i < ss.bolumler.length; i++)
+        ..._bolumOzetSatirlari(l10n, ss.adlar[i], ss.bolumler[i], ss.katli),
+    ].join('\n');
+  }
+
+  List<String> _bolumOzetSatirlari(
+    AppLocalizations l10n,
+    String ad,
+    _SpSonuc s,
+    bool katli,
+  ) => [
+    '## Bölüm: $ad',
+    'Tehlike Sınıfı: ${s.sinif.kod}  |  Kat: ${_spKatAdi(l10n, s.kat)} (kot ${s.kot.toStringAsFixed(2)} m, h=${s.katYuks.toStringAsFixed(2)} m) × ${s.en.toStringAsFixed(1)}×${s.boy.toStringAsFixed(1)} m  |  Tavan: ${s.yuks.toStringAsFixed(1)} m  |  En üst sprinkler kotu: ${s.statikYukseklik.toStringAsFixed(1)} m',
+    'Sprinkler: ${s.nToplamBolum} adet (${s.nToplam}${s.asmaSprinklerGerek ? ' + asma tavan ${s.nAsmaSpr}' : ''})  |  Tasarım Grubu: ${s.nTasarim} adet  |  Alarm Vanası: ${s.nAlarmVana} adet',
+    'Q Tasarım: ${s.qTasarim.toStringAsFixed(1)} L/min${s.qDolap > 0 ? ' + Yangın Dolabı ${s.qDolap.toStringAsFixed(0)} L/min' : ''}  |  Pompa: ${s.pompaDeb.toStringAsFixed(0)} L/min @ ${s.pompaBasinc.toStringAsFixed(2)} bar  |  Statik Yük: ${s.pStatik.toStringAsFixed(3)} bar',
+    'Dal Boru: DN${s.dnBranch}  |  Dağıtım Boru: DN${s.dnCross}  |  Ana Boru: DN${s.dnMain}',
+    if (katli)
+      'Kat Kontrol: DN${s.dnKatAna} — izlenebilir vana, akış anahtarı, tahliye vanası (her biri 1 adet)',
+    if (s.asmaTavan)
+      'Asma Tavan Boşluğu: ${(s.asmaBosluk * 100).toStringAsFixed(0)} cm${s.asmaSprinklerGerek ? ' — gizli boşluk sprinkleri gerekli' : ''}',
+    if (s.kuruBoru && s.kuruBoruHacmi != null)
+      'Kuru Borulu Sistem: Boru şebekesi hacmi ≈ ${(s.kuruBoruHacmi! / 1000).toStringAsFixed(2)} m³',
+    if (s.rafDepolama && s.rafEkSprinkler != null)
+      'Raf Depolama (In-Rack, ön tasarım): ${s.rafKatSayisi} kat × ek ${s.rafEkSprinkler} sprinkler  |  Ek Debi: ${s.rafEkDebi!.toStringAsFixed(0)} L/min',
+    if (s.kopuk != null)
+      'Köpük: ${s.kopuk!.tip.ad}  |  Konsantre Tankı: ${s.kopuk!.konsTankHacmi.toStringAsFixed(0)} L',
+  ];
+
   /// Arama destekli faaliyet seçim diyaloğu
-  Future<void> _faaliyetSec(BuildContext context) async {
+  Future<void> _faaliyetSec(BuildContext context, _SpBolum bolum) async {
     final araCtrl = TextEditingController();
     String filtre = '';
     final l10n = AppLocalizations.of(context);
@@ -18262,17 +18696,17 @@ class _SprinkleState extends State<SprinkleSistemi> {
                         : ListView.separated(
                             shrinkWrap: true,
                             itemCount: filtrelenmis.length,
-                            separatorBuilder: (_, __) =>
+                            separatorBuilder: (_, _) =>
                                 const Divider(height: 1),
                             itemBuilder: (_, i) {
                               final e = filtrelenmis[i];
-                              final isSelected = e.value == _secilenFaaliyet;
+                              final isSelected = e.value == bolum.faaliyet;
                               return ListTile(
                                 dense: true,
                                 selected: isSelected,
                                 selectedTileColor: const Color(
                                   0xFF0EA5E9,
-                                ).withOpacity(0.1),
+                                ).withValues(alpha: 0.1),
                                 leading: Text(
                                   '[${e.key}]',
                                   style: TextStyle(
@@ -18295,7 +18729,7 @@ class _SprinkleState extends State<SprinkleSistemi> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
-                    child: Text(AppLocalizations.of(context).cancel),
+                    child: Text(l10n.cancel),
                   ),
                 ],
               ),
@@ -18304,10 +18738,11 @@ class _SprinkleState extends State<SprinkleSistemi> {
         },
       ),
     );
+    araCtrl.dispose();
 
     if (secilen != null) {
       setState(() {
-        _secilenFaaliyet = secilen;
+        bolum.faaliyet = secilen;
         _sonuc = null;
       });
     }
@@ -18329,10 +18764,683 @@ class _SprinkleState extends State<SprinkleSistemi> {
         ),
       );
 
+  Widget _sayiAlani(
+    TextEditingController c,
+    String label,
+    IconData icon, {
+    String? suffix,
+    bool tamSayi = false,
+    bool eksiOlabilir = false,
+  }) => TextFormField(
+    controller: c,
+    keyboardType: tamSayi
+        ? TextInputType.number
+        : TextInputType.numberWithOptions(decimal: true, signed: eksiOlabilir),
+    onChanged: (_) {
+      if (_sonuc != null) _degisti();
+    },
+    decoration: _spDecor(label, icon, suffix: suffix),
+  );
+
+  Widget _onayKutusu(bool deger, String metin, ValueChanged<bool> degisti) =>
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFCBD5E1)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Checkbox(
+              value: deger,
+              activeColor: _kC,
+              onChanged: (v) => setState(() {
+                degisti(v ?? false);
+                _sonuc = null;
+              }),
+            ),
+            Expanded(child: Text(metin, style: const TextStyle(fontSize: 13))),
+          ],
+        ),
+      );
+
+  Widget _bilgiNotu(String metin) => Container(
+    padding: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFEF3C7),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: const Color(0xFFFCD34D)),
+    ),
+    child: Text(metin, style: const TextStyle(fontSize: 11, height: 1.4)),
+  );
+
+  Widget _altBaslik(String metin) => Padding(
+    padding: const EdgeInsets.only(top: 14, bottom: 8),
+    child: Text(
+      metin,
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+    ),
+  );
+
+  // ¦¦ Ortak sistem seçenekleri (tüm bölümler için)
+  List<Widget> _ortakSecenekler(AppLocalizations l10n) => [
+    Text(
+      l10n.spCommonOptionsTitle,
+      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+    ),
+    const SizedBox(height: 8),
+    DropdownButtonFormField<int>(
+      value: _boruMalzemeIdx,
+      isExpanded: true,
+      decoration: _spDecor(l10n.pipeMaterial, Icons.plumbing_rounded),
+      items: [
+        for (int i = 0; i < _spBoruMalzemeleri.length; i++)
+          DropdownMenuItem(
+            value: i,
+            child: Text(
+              '${_spBoruAdiL10n(l10n, _spBoruMalzemeleri[i].$1)}  —  C=${_spBoruMalzemeleri[i].$2.toInt()}',
+              style: const TextStyle(fontSize: 12),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+      ],
+      onChanged: (v) => setState(() {
+        _boruMalzemeIdx = v ?? 0;
+        _sonuc = null;
+      }),
+    ),
+    const SizedBox(height: 10),
+    DropdownButtonFormField<int>(
+      value: _sprinklerTipiIdx,
+      isExpanded: true,
+      decoration: _spDecor(l10n.spSprinklerTypeLabel, Icons.water_drop_rounded),
+      items: [
+        for (int i = 0; i < _spSprinklerTipleri.length; i++)
+          DropdownMenuItem(
+            value: i,
+            child: Text(
+              _spTipiAdL10n(l10n, _spSprinklerTipleri[i].ad),
+              style: const TextStyle(fontSize: 12),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+      ],
+      onChanged: (v) => setState(() {
+        _sprinklerTipiIdx = v ?? 0;
+        _sonuc = null;
+      }),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 6, left: 4),
+      child: Text(
+        _spTipiAciklamaL10n(l10n, _spSprinklerTipleri[_sprinklerTipiIdx].ad),
+        style: const TextStyle(
+          fontSize: 11,
+          color: Colors.black54,
+          fontStyle: FontStyle.italic,
+        ),
+      ),
+    ),
+    const SizedBox(height: 10),
+    DropdownButtonFormField<int>(
+      value: _kurulumSinifIdx,
+      isExpanded: true,
+      decoration: _spDecor(
+        l10n.spInstallationClassLabel,
+        Icons.settings_input_component_rounded,
+      ),
+      items: [
+        for (int i = 0; i < _spKurulumSiniflari.length; i++)
+          DropdownMenuItem(
+            value: i,
+            child: Text(
+              _spKurulumAdL10n(l10n, _spKurulumSiniflari[i].ad),
+              style: const TextStyle(fontSize: 12),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+      ],
+      onChanged: (v) => setState(() {
+        _kurulumSinifIdx = v ?? 1;
+        _sonuc = null;
+      }),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 6, left: 4),
+      child: Text(
+        _spKurulumAciklamaL10n(l10n, _spKurulumSiniflari[_kurulumSinifIdx].ad),
+        style: const TextStyle(
+          fontSize: 11,
+          color: Colors.black54,
+          fontStyle: FontStyle.italic,
+        ),
+      ),
+    ),
+    const SizedBox(height: 10),
+    _onayKutusu(_kuruBoru, l10n.spDryPipeCheckbox, (v) => _kuruBoru = v),
+    if (_kuruBoru)
+      Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: _bilgiNotu(l10n.spDryPipeInfo),
+      ),
+    const SizedBox(height: 10),
+    _onayKutusu(
+      _yanginDolabi,
+      l10n.spHoseReelCheckbox,
+      (v) => _yanginDolabi = v,
+    ),
+    if (_yanginDolabi)
+      Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: _bilgiNotu(l10n.spHoseReelInfo),
+      ),
+  ];
+
+  // ¦¦ Tek bölümün giriş kartı
+  Widget _bolumKarti(AppLocalizations l10n, int i) {
+    final b = _bolumler[i];
+    final sinifIdx = b.sinifIdx;
+    final sinif = sinifIdx != null ? _spSiniflar[sinifIdx] : null;
+    final ozet = [
+      if (sinif != null) sinif.kod,
+      _spKatAdi(l10n, b.kat),
+      if (b.pompaBurada) l10n.spPumpShort,
+      if (b.enCtrl.text.trim().isNotEmpty && b.boyCtrl.text.trim().isNotEmpty)
+        '${b.enCtrl.text.trim()}×${b.boyCtrl.text.trim()} m',
+      if (b.asmaTavan) l10n.ceilingSuspended,
+    ].join('  ·  ');
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _kC.withValues(alpha: 0.45)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => setState(() => b.acik = !b.acik),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 13,
+                    backgroundColor: _kC,
+                    child: Text(
+                      '${i + 1}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          b.gorunenAd(l10n),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          ozet,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.copy_rounded, color: Colors.black54),
+                    tooltip: l10n.spCopyToNextFloor,
+                    onPressed: b.kat < 10 ? () => _bolumKopyala(i) : null,
+                  ),
+                  if (_bolumler.length > 1)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: Colors.red,
+                      ),
+                      tooltip: l10n.spDeleteSection,
+                      onPressed: () => _bolumSil(i),
+                    ),
+                  Icon(
+                    b.acik
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+            ),
+          ),
+          if (b.acik)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: _bolumAlanlari(l10n, b, sinif),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _bolumAlanlari(
+    AppLocalizations l10n,
+    _SpBolum b,
+    _SpSinif? sinif,
+  ) => [
+    const Divider(height: 1),
+    const SizedBox(height: 12),
+    // ¦¦ Kat ve pompa konumu
+    Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        l10n.spLevelsTitle,
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+      ),
+    ),
+    DropdownButtonFormField<int>(
+      value: b.kat,
+      isExpanded: true,
+      decoration: _spDecor(l10n.spFloorLabel, Icons.layers_rounded),
+      items: [
+        for (final k in _spKatlar)
+          DropdownMenuItem(
+            value: k,
+            child: Text(
+              _spKatAdi(l10n, k),
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+      ],
+      onChanged: (v) => setState(() {
+        b.kat = v ?? 0;
+        _sonuc = null;
+      }),
+    ),
+    const SizedBox(height: 10),
+    _onayKutusu(b.pompaBurada, l10n.spPumpHereCheckbox, (v) {
+      if (v) {
+        for (final d in _bolumler) {
+          d.pompaBurada = false;
+        }
+      }
+      b.pompaBurada = v;
+    }),
+    const SizedBox(height: 6),
+    _bilgiNotu(l10n.spLevelInfo),
+    const SizedBox(height: 14),
+    TextFormField(
+      controller: b.adCtrl,
+      onChanged: (_) => setState(() {}),
+      decoration: _spDecor(l10n.spSectionNameLabel, Icons.label_rounded),
+    ),
+
+    // ¦¦ Faaliyet → tehlike sınıfı
+    _altBaslik(l10n.buildingActivity),
+    GestureDetector(
+      onTap: () => _faaliyetSec(context, b),
+      child: InputDecorator(
+        decoration: _spDecor(
+          l10n.spBuildingActivityFieldLabel,
+          Icons.business_center_rounded,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                b.faaliyet != null
+                    ? _spFaaliyetL10n(l10n, b.faaliyet!)
+                    : l10n.spSelectActivityPlaceholder,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: b.faaliyet == null ? Colors.grey : null,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Icon(Icons.search, size: 18, color: Colors.grey),
+          ],
+        ),
+      ),
+    ),
+    if (sinif != null) ...[
+      const SizedBox(height: 10),
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: _kC.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: _kC.withValues(alpha: 0.45)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.verified_rounded,
+                  color: Color(0xFF0369A1),
+                  size: 16,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    l10n.spHazardClassInline(_spSinifAdL10n(l10n, sinif.kod)),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: Color(0xFF0369A1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              l10n.spHazardClassDetail(
+                '${sinif.yogunluk}',
+                '${sinif.tasarimAlani.toInt()}',
+                '${sinif.maxKapsama.toInt()}',
+              ),
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            // TS EN 12845 6.2.2 ve Tablo A.2 notu
+            if (sinif.kod == 'LH' || sinif.kod == 'OH1' || sinif.kod == 'OH2')
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  sinif.kod == 'LH'
+                      ? l10n.spLhConditionNote
+                      : l10n.spOhPaintingNote,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFFB45309),
+                    height: 1.4,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    ],
+
+    // ¦¦ Tipik kat ölçüleri
+    _altBaslik(l10n.spTypicalFloorTitle),
+    Row(
+      children: [
+        Expanded(
+          child: _sayiAlani(
+            b.enCtrl,
+            l10n.spFieldWidthM,
+            Icons.width_full_rounded,
+            suffix: 'm',
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _sayiAlani(
+            b.boyCtrl,
+            l10n.spFieldLengthM,
+            Icons.height_rounded,
+            suffix: 'm',
+          ),
+        ),
+      ],
+    ),
+    const SizedBox(height: 10),
+    _sayiAlani(
+      b.katYuksCtrl,
+      l10n.spFloorHeightLabel,
+      Icons.vertical_align_top_rounded,
+      suffix: 'm',
+    ),
+
+
+    // ¦¦ Asma tavan
+    _altBaslik(l10n.ceilingSuspended),
+    _onayKutusu(
+      b.asmaTavan,
+      l10n.spSuspendedCeilingCheckbox,
+      (v) => b.asmaTavan = v,
+    ),
+    if (b.asmaTavan) ...[
+      const SizedBox(height: 8),
+      _sayiAlani(
+        b.asmaBoslukCtrl,
+        l10n.spVoidDepthLabel,
+        Icons.layers_rounded,
+        suffix: 'cm',
+      ),
+      const SizedBox(height: 6),
+      _bilgiNotu(l10n.spVoidDepthInfo),
+    ],
+
+    // ¦¦ Raf depolama
+    const SizedBox(height: 10),
+    _onayKutusu(
+      b.rafDepolama,
+      l10n.spRackStorageCheckbox,
+      (v) => b.rafDepolama = v,
+    ),
+    if (b.rafDepolama) ...[
+      const SizedBox(height: 8),
+      _sayiAlani(
+        b.rafKatSayisiCtrl,
+        l10n.spRackLevelsLabel,
+        Icons.view_agenda_rounded,
+        suffix: l10n.spUnitLevel,
+        tamSayi: true,
+      ),
+      const SizedBox(height: 6),
+      _bilgiNotu(l10n.spRackInfo),
+    ],
+
+    // ¦¦ Köpük sistemi
+    const SizedBox(height: 10),
+    _onayKutusu(
+      b.kopukAktif,
+      l10n.spFoamSystemCheckbox,
+      (v) => b.kopukAktif = v,
+    ),
+    if (b.kopukAktif) ..._kopukAlanlari(l10n, b),
+  ];
+
+  List<Widget> _kopukAlanlari(AppLocalizations l10n, _SpBolum b) => [
+    const SizedBox(height: 10),
+    Text(
+      l10n.flammableLiquidCategory,
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 6),
+    Row(
+      children: [
+        Expanded(
+          child: _KopukRadio(
+            label: l10n.hydrocarbon,
+            sub: l10n.spHydrocarbonSub,
+            value: 'HC',
+            group: b.kopukSiviKat,
+            renk: _kC,
+            onChanged: (v) => setState(() {
+              b.kopukSiviKat = v!;
+              _sonuc = null;
+            }),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _KopukRadio(
+            label: l10n.polarSolvent,
+            sub: l10n.spPolarSolventSub,
+            value: 'PS',
+            group: b.kopukSiviKat,
+            renk: _kC,
+            onChanged: (v) => setState(() {
+              b.kopukSiviKat = v!;
+              if (_kopukTipleri
+                      .firstWhere((t) => t.kod == b.kopukTipKod)
+                      .hizPS ==
+                  null) {
+                b.kopukTipKod = 'ARAFFF3';
+              }
+              _sonuc = null;
+            }),
+          ),
+        ),
+      ],
+    ),
+    const SizedBox(height: 12),
+    Text(
+      l10n.foamConcentrateType,
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 6),
+    DropdownButtonFormField<String>(
+      value: b.kopukTipKod,
+      decoration: _spDecor(l10n.foamType, Icons.bubble_chart_rounded),
+      items: [
+        for (final t in _kopukTipleri)
+          if (b.kopukSiviKat == 'HC' || t.hizPS != null)
+            DropdownMenuItem(
+              value: t.kod,
+              child: Text(
+                '${t.ad}  —  '
+                '${b.kopukSiviKat == "PS" && t.hizPS != null ? t.hizPS!.toStringAsFixed(1) : t.hizHC.toStringAsFixed(1)} L/min/m²',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+      ],
+      onChanged: (v) => setState(() {
+        b.kopukTipKod = v!;
+        _sonuc = null;
+      }),
+    ),
+    const SizedBox(height: 10),
+    Text(
+      l10n.minimumApplicationTime,
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 6),
+    Row(
+      children: [
+        for (final sure in [10, 15, 20, 30])
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: b.kopukSure == sure
+                      ? _kC.withValues(alpha: 0.12)
+                      : null,
+                  side: BorderSide(
+                    color: b.kopukSure == sure
+                        ? _kC
+                        : const Color(0xFFCBD5E1),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () => setState(() {
+                  b.kopukSure = sure;
+                  _sonuc = null;
+                }),
+                child: Text(
+                  l10n.spFoamDurationMin('$sure'),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: b.kopukSure == sure ? _kC : Colors.black87,
+                    fontWeight: b.kopukSure == sure
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    ),
+    const SizedBox(height: 6),
+    Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE0F2FE),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF7DD3FC)),
+      ),
+      child: Text(
+        l10n.spFoamPolarSolventInfo,
+        style: const TextStyle(
+          fontSize: 11,
+          height: 1.4,
+          color: Color(0xFF0369A1),
+        ),
+      ),
+    ),
+  ];
+
+  Widget _hhp4Uyari(AppLocalizations l10n) => Container(
+    margin: const EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFEF2F2),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: const Color(0xFFFCA5A5)),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(
+          Icons.warning_amber_rounded,
+          color: Color(0xFFDC2626),
+          size: 18,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            l10n.spHHP4Warning,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Color(0xFFDC2626),
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final bottomPad = MediaQuery.of(context).padding.bottom;
+    final ss = _sonuc;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPad),
       child: Column(
@@ -18349,570 +19457,37 @@ class _SprinkleState extends State<SprinkleSistemi> {
           ),
           const SizedBox(height: 16),
 
-          // ¦¦ Bina boyutları
+          // ¦¦ Bölümler
           Text(
-            l10n.buildingDimensions,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            l10n.spSectionsTitle,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _enCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: _spDecor(
-                    l10n.spFieldWidthM,
-                    Icons.width_full_rounded,
-                    suffix: 'm',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextFormField(
-                  controller: _boyCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: _spDecor(
-                    l10n.spFieldLengthM,
-                    Icons.height_rounded,
-                    suffix: 'm',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextFormField(
-                  controller: _yuksCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: _spDecor(
-                    l10n.spFieldCeilingM,
-                    Icons.vertical_align_top_rounded,
-                    suffix: 'm',
-                  ),
-                ),
-              ),
-            ],
+          const SizedBox(height: 4),
+          Text(
+            l10n.spSectionsInfo,
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
+          const SizedBox(height: 10),
+          for (var i = 0; i < _bolumler.length; i++)
+            KeyedSubtree(
+              key: _bolumler[i].kartKey,
+              child: _bolumKarti(l10n, i),
+            ),
+          OutlinedButton.icon(
+            onPressed: _bolumEkle,
+            icon: const Icon(Icons.add_rounded),
+            label: Text(l10n.spAddSection),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: _kC,
+              side: BorderSide(color: _kC.withValues(alpha: 0.6)),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // ¦¦ Ortak sistem seçenekleri
+          ..._ortakSecenekler(l10n),
           const SizedBox(height: 16),
-
-          // ¦¦ Asma Tavan
-          Text(
-            l10n.ceilingSuspended,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFCBD5E1)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: _asmaTavan,
-                  activeColor: _kC,
-                  onChanged: (v) => setState(() {
-                    _asmaTavan = v ?? false;
-                    _sonuc = null;
-                  }),
-                ),
-                Expanded(
-                  child: Text(
-                    l10n.spSuspendedCeilingCheckbox,
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (_asmaTavan) ...[
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _asmaBoslukCtrl,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: _spDecor(
-                l10n.spVoidDepthLabel,
-                Icons.layers_rounded,
-                suffix: 'cm',
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEF3C7),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFCD34D)),
-              ),
-              child: Text(
-                l10n.spVoidDepthInfo,
-                style: const TextStyle(fontSize: 11, height: 1.4),
-              ),
-            ),
-          ],
-
-          // ¦¦ Bina faaliyeti seçimi devam
-          Text(
-            l10n.buildingActivity,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          GestureDetector(
-            onTap: () => _faaliyetSec(context),
-            child: InputDecorator(
-              decoration: _spDecor(
-                l10n.spBuildingActivityFieldLabel,
-                Icons.business_center_rounded,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _secilenFaaliyet != null
-                          ? _spFaaliyetL10n(l10n, _secilenFaaliyet!)
-                          : l10n.spSelectActivityPlaceholder,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: _secilenFaaliyet == null ? Colors.grey : null,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const Icon(Icons.search, size: 18, color: Colors.grey),
-                ],
-              ),
-            ),
-          ),
-
-          // ¦¦ Otomatik belirlenen tehlike sınıfı
-          if (_sinifIdx != null) ...[
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0EA5E9).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color(0xFF0EA5E9).withOpacity(0.45),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.verified_rounded,
-                        color: Color(0xFF0369A1),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          l10n.spHazardClassInline(
-                            _spSinifAdL10n(l10n, _spSiniflar[_sinifIdx!].kod),
-                          ),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: Color(0xFF0369A1),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    l10n.spHazardClassDetail(
-                      '${_spSiniflar[_sinifIdx!].yogunluk}',
-                      '${_spSiniflar[_sinifIdx!].tasarimAlani.toInt()}',
-                      '${_spSiniflar[_sinifIdx!].maxKapsama.toInt()}',
-                    ),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Colors.black54,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-
-          // ¦¦ Gelişmiş Tasarım Seçenekleri
-          Text(
-            l10n.advancedDesignOptions,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<int>(
-            value: _boruMalzemeIdx,
-            isExpanded: true,
-            decoration: _spDecor(l10n.pipeMaterial, Icons.plumbing_rounded),
-            items: [
-              for (int i = 0; i < _spBoruMalzemeleri.length; i++)
-                DropdownMenuItem(
-                  value: i,
-                  child: Text(
-                    '${_spBoruAdiL10n(l10n, _spBoruMalzemeleri[i].$1)}  —  C=${_spBoruMalzemeleri[i].$2.toInt()}',
-                    style: const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-            ],
-            onChanged: (v) => setState(() {
-              _boruMalzemeIdx = v ?? 0;
-              _sonuc = null;
-            }),
-          ),
-          const SizedBox(height: 10),
-          DropdownButtonFormField<int>(
-            value: _sprinklerTipiIdx,
-            isExpanded: true,
-            decoration: _spDecor(
-              l10n.spSprinklerTypeLabel,
-              Icons.water_drop_rounded,
-            ),
-            items: [
-              for (int i = 0; i < _spSprinklerTipleri.length; i++)
-                DropdownMenuItem(
-                  value: i,
-                  child: Text(
-                    _spTipiAdL10n(l10n, _spSprinklerTipleri[i].ad),
-                    style: const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-            ],
-            onChanged: (v) => setState(() {
-              _sprinklerTipiIdx = v ?? 0;
-              _sonuc = null;
-            }),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 6, left: 4),
-            child: Text(
-              _spTipiAciklamaL10n(l10n, _spSprinklerTipleri[_sprinklerTipiIdx].ad),
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.black54,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          DropdownButtonFormField<int>(
-            value: _kurulumSinifIdx,
-            isExpanded: true,
-            decoration: _spDecor(
-              l10n.spInstallationClassLabel,
-              Icons.settings_input_component_rounded,
-            ),
-            items: [
-              for (int i = 0; i < _spKurulumSiniflari.length; i++)
-                DropdownMenuItem(
-                  value: i,
-                  child: Text(
-                    _spKurulumAdL10n(l10n, _spKurulumSiniflari[i].ad),
-                    style: const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-            ],
-            onChanged: (v) => setState(() {
-              _kurulumSinifIdx = v ?? 1;
-              _sonuc = null;
-            }),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 6, left: 4),
-            child: Text(
-              _spKurulumAciklamaL10n(l10n, _spKurulumSiniflari[_kurulumSinifIdx].ad),
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.black54,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFCBD5E1)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: _kuruBoru,
-                  activeColor: _kC,
-                  onChanged: (v) => setState(() {
-                    _kuruBoru = v ?? false;
-                    _sonuc = null;
-                  }),
-                ),
-                Expanded(
-                  child: Text(
-                    l10n.spDryPipeCheckbox,
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (_kuruBoru)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF3C7),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFFCD34D)),
-                ),
-                child: Text(
-                  l10n.spDryPipeInfo,
-                  style: const TextStyle(fontSize: 11, height: 1.4),
-                ),
-              ),
-            ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFCBD5E1)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: _rafDepolama,
-                  activeColor: _kC,
-                  onChanged: (v) => setState(() {
-                    _rafDepolama = v ?? false;
-                    _sonuc = null;
-                  }),
-                ),
-                Expanded(
-                  child: Text(
-                    l10n.spRackStorageCheckbox,
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (_rafDepolama) ...[
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _rafKatSayisiCtrl,
-              keyboardType: TextInputType.number,
-              decoration: _spDecor(
-                l10n.spRackLevelsLabel,
-                Icons.view_agenda_rounded,
-                suffix: l10n.spUnitLevel,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEF3C7),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFCD34D)),
-              ),
-              child: Text(
-                l10n.spRackInfo,
-                style: const TextStyle(fontSize: 11, height: 1.4),
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 16),
-
-          // ¦¦ Köpük Sistemi
-          Text(
-            l10n.foamSystem,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFCBD5E1)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: _kopukAktif,
-                  activeColor: _kC,
-                  onChanged: (v) => setState(() {
-                    _kopukAktif = v ?? false;
-                    _sonuc = null;
-                  }),
-                ),
-                Expanded(
-                  child: Text(
-                    l10n.spFoamSystemCheckbox,
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (_kopukAktif) ...[
-            const SizedBox(height: 10),
-            // Sıvı kategorisi
-            Text(
-              l10n.flammableLiquidCategory,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Expanded(
-                  child: _KopukRadio(
-                    label: l10n.hydrocarbon,
-                    sub: l10n.spHydrocarbonSub,
-                    value: 'HC',
-                    group: _kopukSiviKat,
-                    renk: _kC,
-                    onChanged: (v) => setState(() {
-                      _kopukSiviKat = v!;
-                      _sonuc = null;
-                    }),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _KopukRadio(
-                    label: l10n.polarSolvent,
-                    sub: l10n.spPolarSolventSub,
-                    value: 'PS',
-                    group: _kopukSiviKat,
-                    renk: _kC,
-                    onChanged: (v) => setState(() {
-                      _kopukSiviKat = v!;
-                      if (_kopukTipleri
-                              .firstWhere((t) => t.kod == _kopukTipKod)
-                              .hizPS ==
-                          null) {
-                        _kopukTipKod = 'ARAFFF3';
-                      }
-                      _sonuc = null;
-                    }),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Köpük tipi
-            Text(
-              l10n.foamConcentrateType,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 6),
-            DropdownButtonFormField<String>(
-              value: _kopukTipKod,
-              decoration: _spDecor(l10n.foamType, Icons.bubble_chart_rounded),
-              items: [
-                for (final t in _kopukTipleri)
-                  if (_kopukSiviKat == 'HC' || t.hizPS != null)
-                    DropdownMenuItem(
-                      value: t.kod,
-                      child: Text(
-                        '${t.ad}  —  '
-                        '${_kopukSiviKat == "PS" && t.hizPS != null ? t.hizPS!.toStringAsFixed(1) : t.hizHC.toStringAsFixed(1)} L/min/m²',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-              ],
-              onChanged: (v) => setState(() {
-                _kopukTipKod = v!;
-                _sonuc = null;
-              }),
-            ),
-            const SizedBox(height: 10),
-            // Uygulama süresi
-            Text(
-              l10n.minimumApplicationTime,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                for (final sure in [10, 15, 20, 30])
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: _kopukSure == sure
-                              ? _kC.withOpacity(0.12)
-                              : null,
-                          side: BorderSide(
-                            color: _kopukSure == sure
-                                ? _kC
-                                : const Color(0xFFCBD5E1),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () => setState(() {
-                          _kopukSure = sure;
-                          _sonuc = null;
-                        }),
-                        child: Text(
-                          l10n.spFoamDurationMin('$sure'),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _kopukSure == sure ? _kC : Colors.black87,
-                            fontWeight: _kopukSure == sure
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0F2FE),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF7DD3FC)),
-              ),
-              child: Text(
-                l10n.spFoamPolarSolventInfo,
-                style: const TextStyle(
-                  fontSize: 11,
-                  height: 1.4,
-                  color: Color(0xFF0369A1),
-                ),
-              ),
-            ),
-          ],
 
           // Hata mesajı
           if (_hata != null)
@@ -18951,41 +19526,299 @@ class _SprinkleState extends State<SprinkleSistemi> {
           ),
 
           // ¦¦ Sonuçlar
-          if (_sonuc != null) ...[
+          if (ss != null) ...[
             const SizedBox(height: 20),
-            if (_sonuc!.sinif.kod == 'HHP4')
-              Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF2F2),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFFCA5A5)),
+            _SpSistemOzetKarti(sistem: ss, renk: _kC),
+            const SizedBox(height: 16),
+            Text(
+              l10n.spSectionResultsTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            const SizedBox(height: 8),
+            for (var i = 0; i < ss.bolumler.length; i++)
+              Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                color: Colors.white,
+                elevation: 0,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: _kC.withValues(alpha: 0.35)),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.warning_amber_rounded,
-                      color: Color(0xFFDC2626),
-                      size: 18,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        l10n.spHHP4Warning,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFFDC2626),
-                          height: 1.5,
-                        ),
+                child: Theme(
+                  data: Theme.of(
+                    context,
+                  ).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    initiallyExpanded: ss.bolumler.length == 1,
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+                    childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                    title: Text(
+                      ss.adlar[i],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
                     ),
-                  ],
+                    subtitle: Text(
+                      '${ss.bolumler[i].sinif.kod}  ·  ${_spKatAdi(l10n, ss.bolumler[i].kat)} (${ss.bolumler[i].kot >= 0 ? '+' : ''}${ss.bolumler[i].kot.toStringAsFixed(2)} m)  ·  '
+                      '${ss.bolumler[i].nToplamBolum} ${l10n.spUnitAdet} sprinkler  ·  '
+                      '${ss.bolumler[i].pompaBasinc.toStringAsFixed(2)} bar',
+                      style: const TextStyle(fontSize: 11),
+                    ),
+                    children: [
+                      if (ss.bolumler[i].sinif.kod == 'HHP4') _hhp4Uyari(l10n),
+                      _SpResultCard(
+                        sonuc: ss.bolumler[i],
+                        renk: _kC,
+                        katKontrol: ss.katli,
+                        dolapBasinci: ss.dolapBasinci(i),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            _SpResultCard(sonuc: _sonuc!, renk: _kC),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Sistem özeti: toplamlar, pompa/depo ve belirleyen bölümler, dışa aktarma.
+class _SpSistemOzetKarti extends StatelessWidget {
+  final _SpSistemSonuc sistem;
+  final Color renk;
+  const _SpSistemOzetKarti({required this.sistem, required this.renk});
+
+  Widget _baslik(String metin) => Padding(
+    padding: const EdgeInsets.only(top: 10, bottom: 2),
+    child: Text(
+      metin,
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+        color: renk,
+      ),
+    ),
+  );
+
+  Widget _satir(String etiket, String deger) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 5,
+          child: Text(
+            etiket,
+            style: const TextStyle(fontSize: 12, color: Colors.black54),
+          ),
+        ),
+        Expanded(
+          flex: 6,
+          child: Text(
+            deger,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final ss = sistem;
+    final cok = ss.bolumler.length > 1;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: renk.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: renk.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.hub_rounded, color: renk, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                l10n.spSystemSummaryTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: renk,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _SpPompaBox(
+                label: l10n.spRcPumpFlowLabel,
+                value: ss.pompaDeb.toStringAsFixed(0),
+                unit: 'L/min',
+                sub: '${(ss.pompaDeb * 60 / 1000).toStringAsFixed(2)} m³/h',
+                renk: renk,
+              ),
+              Container(
+                width: 1,
+                height: 60,
+                color: renk.withValues(alpha: 0.3),
+              ),
+              _SpPompaBox(
+                label: l10n.spRcPumpPressureLabel,
+                value: ss.pompaBasinc.toStringAsFixed(2),
+                unit: 'bar',
+                sub: '${(ss.pompaBasinc * 10.2).toStringAsFixed(1)} m SSS',
+                renk: renk,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Divider(height: 1),
+          const SizedBox(height: 6),
+          if (cok) ...[
+            _satir(
+              l10n.spSumFlowGoverning,
+              ss.adlar[ss.debiIdx],
+            ),
+            _satir(
+              l10n.spSumPressureGoverning,
+              ss.adlar[ss.basincIdx],
+            ),
+          ],
+          _satir(
+            l10n.spSumWaterTank,
+            '${(ss.suDepoHacmi / 1000).toStringAsFixed(1)} m³  '
+                '(${ss.bolumler[ss.depoIdx].sinif.sureDk} ${l10n.spUnitMinutes}'
+                '${cok ? ' · ${ss.adlar[ss.depoIdx]}' : ''})',
+          ),
+          _satir(
+            l10n.spSumJockey,
+            '${ss.jokeyDebi.toStringAsFixed(1)} L/min @ ${ss.jokeyBasinc.toStringAsFixed(2)} bar',
+          ),
+          _satir(l10n.spSumSectionCount, '${ss.bolumler.length}'),
+          _satir(
+            l10n.spSumTotalArea,
+            '${ss.toplamAlan.toStringAsFixed(0)} m²',
+          ),
+          _satir(
+            l10n.spSumTotalSprinklers,
+            '${ss.toplamSprinkler} ${l10n.spUnitAdet}',
+          ),
+          _satir(
+            l10n.spSumAlarmValves,
+            '${ss.toplamAlarmVana} ${l10n.spUnitAdet}',
+          ),
+          // Yangın dolapları — en üst kat dolabında min. 4 bar
+          if (ss.dolapVar) ...[
+            _baslik(l10n.spHoseCabinetTitle),
+            for (var i = 0; i < ss.bolumler.length; i++)
+              _satir(
+                '   • ${ss.adlar[i]}',
+                ss.bolumler[i].dolapAyriHat
+                    ? '${l10n.spHoseSeparateLine} DN${ss.bolumler[i].dnDolapHat}  ·  ${ss.dolapBasinci(i).toStringAsFixed(2)} bar'
+                    : '${l10n.spHoseFromSprinklerLine}  ·  ${ss.dolapBasinci(i).toStringAsFixed(2)} bar',
+              ),
+            if (ss.dolapAyriHatVar)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  l10n.spHoseSeparateLineInfo,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFFB45309),
+                    height: 1.4,
+                  ),
+                ),
+              ),
+          ],
+          // Boru metrajı — çap ve tipe göre
+          _baslik(l10n.spPipeByDiameter),
+          for (final (dn, tip, m) in ss.metrajDokumu)
+            _satir(
+              '   DN$dn  ·  ${_spBoruTipiL10n(l10n, tip)}',
+              '${m.toStringAsFixed(0)} m',
+            ),
+          _satir(
+            l10n.spSumPipeLength,
+            '${ss.toplamMetraj.toStringAsFixed(0)} m',
+          ),
+          if (ss.katli) ...[
+            // Kat kontrol setleri — malzeme bazında, çapa göre
+            _baslik(
+              '${l10n.spFloorControlTotal}  (${ss.toplamKatKontrolSeti} ${l10n.spUnitFloor})',
+            ),
+            for (final e in ss.katKontrolCapaGore.entries) ...[
+              _satir(
+                '   ${l10n.spSupervisedValve} DN${e.key}',
+                '${e.value} ${l10n.spUnitAdet}',
+              ),
+              _satir(
+                '   ${l10n.spFlowSwitch} DN${e.key}',
+                '${e.value} ${l10n.spUnitAdet}',
+              ),
+              _satir(
+                '   ${l10n.spDrainValve} DN${e.key}',
+                '${e.value} ${l10n.spUnitAdet}',
+              ),
+            ],
+            const SizedBox(height: 4),
+            for (var i = 0; i < ss.bolumler.length; i++)
+              _satir(
+                '   • ${ss.adlar[i]}',
+                '${_spKatAdi(l10n, ss.bolumler[i].kat)}  ·  DN${ss.bolumler[i].dnKatAna}',
+              ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.spFloorControlInfo,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+                height: 1.4,
+              ),
+            ),
+          ],
+          if (ss.zonSayisi > 1) ...[
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF2F2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFCA5A5)),
+              ),
+              child: Text(
+                l10n.spSumPressureZoneWarning('${ss.zonSayisi}'),
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFFDC2626),
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+          if (cok) ...[
+            const SizedBox(height: 8),
+            Text(
+              l10n.spSumDesignNote,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+                height: 1.4,
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+          _SpExportButonlari(sistem: ss, renk: renk),
         ],
       ),
     );
@@ -18994,7 +19827,12 @@ class _SprinkleState extends State<SprinkleSistemi> {
 
 // ¦¦ Sonuç kartı
 /// Kritik devre düğümlerinden boru bölümü bazlı hidrolik hesap tablosu üretir.
-SpReportData _spRaporOlustur(_SpSonuc s, AppLocalizations l10n) {
+SpReportData _spRaporOlustur(
+  _SpSonuc s,
+  String bolumAdi,
+  AppLocalizations l10n, {
+  bool katKontrol = false,
+}) {
   final nDal = s.kritikDevre.where((n) => n.tip == 'dal').length;
   final nTali = s.kritikDevre.where((n) => n.tip == 'tali').length;
   final satirlar = <SpReportRow>[];
@@ -19035,13 +19873,19 @@ SpReportData _spRaporOlustur(_SpSonuc s, AppLocalizations l10n) {
   String bar(double v) => '${v.toStringAsFixed(3)} bar';
   final hesapToplam = s.pHead + s.dpToplam + s.pStatik + 0.50;
   return SpReportData(
-    baslik: l10n.spExpTitle,
+    baslik: '${l10n.spExpSection}: $bolumAdi',
     ust: [
       (
         l10n.spExpBuilding,
-        '${s.en.toStringAsFixed(1)} × ${s.boy.toStringAsFixed(1)} m  '
-            '(${s.binaAlani.toStringAsFixed(0)} m²)',
+        '${_spKatAdi(l10n, s.kat)} (${s.kot.toStringAsFixed(2)} m) · ${s.en.toStringAsFixed(1)} × ${s.boy.toStringAsFixed(1)} m  '
+            '(${s.alanBolum.toStringAsFixed(0)} m²)',
       ),
+      (l10n.spRcTopSprinklerLevel, '${s.statikYukseklik.toStringAsFixed(1)} m'),
+      if (katKontrol)
+        (
+          l10n.spFloorControlSet,
+          'DN${s.dnKatAna}',
+        ),
       (l10n.spExpHazardClass, s.sinif.kod),
       (l10n.spExpDensity, s.sinif.yogunluk.toStringAsFixed(2)),
       (l10n.spExpDesignArea, '${s.sinif.tasarimAlani.toStringAsFixed(0)} m²'),
@@ -19081,6 +19925,8 @@ SpReportData _spRaporOlustur(_SpSonuc s, AppLocalizations l10n) {
       ),
       (l10n.spExpSumHead, bar(s.pHead)),
       (l10n.spExpSumFriction, bar(s.dpToplam)),
+      if (s.qDolap > 0)
+        (l10n.spHoseReelFlow, '${s.qDolap.toStringAsFixed(0)} L/min'),
       (l10n.spExpSumStatic, bar(s.pStatik)),
       (l10n.spExpSumAlarm, bar(0.50)),
       (l10n.spExpSumCalc, bar(hesapToplam)),
@@ -19090,16 +19936,83 @@ SpReportData _spRaporOlustur(_SpSonuc s, AppLocalizations l10n) {
   );
 }
 
+/// Sistem özeti + tüm bölümlerin hidrolik tabloları
+SpReportProje _spProjeRaporOlustur(_SpSistemSonuc ss, AppLocalizations l10n) {
+  final cok = ss.bolumler.length > 1;
+  final ilk = ss.bolumler.first;
+  return SpReportProje(
+    baslik: l10n.spExpTitle,
+    ozetBaslik: l10n.spSystemSummaryTitle,
+    ozet: [
+      (
+        l10n.spRcPumpFlowLabel,
+        '${ss.pompaDeb.toStringAsFixed(0)} L/min${cok ? '  (${ss.adlar[ss.debiIdx]})' : ''}',
+      ),
+      (
+        l10n.spRcPumpPressureLabel,
+        '${ss.pompaBasinc.toStringAsFixed(2)} bar${cok ? '  (${ss.adlar[ss.basincIdx]})' : ''}',
+      ),
+      (
+        l10n.spSumWaterTank,
+        '${(ss.suDepoHacmi / 1000).toStringAsFixed(1)} m³  '
+            '(${ss.bolumler[ss.depoIdx].sinif.sureDk} ${l10n.spUnitMinutes}${cok ? ' · ${ss.adlar[ss.depoIdx]}' : ''})',
+      ),
+      (
+        l10n.spSumJockey,
+        '${ss.jokeyDebi.toStringAsFixed(1)} L/min @ ${ss.jokeyBasinc.toStringAsFixed(2)} bar',
+      ),
+      (l10n.spSumSectionCount, '${ss.bolumler.length}'),
+      (l10n.spSumTotalArea, '${ss.toplamAlan.toStringAsFixed(0)} m²'),
+      (l10n.spSumTotalSprinklers, '${ss.toplamSprinkler}'),
+      (l10n.spSumAlarmValves, '${ss.toplamAlarmVana}'),
+      (l10n.spSumPipeLength, '${ss.toplamMetraj.toStringAsFixed(0)} m'),
+      if (ss.dolapVar)
+        for (var i = 0; i < ss.bolumler.length; i++)
+          (
+            '${l10n.spHoseCabinetTitle}: ${ss.adlar[i]}',
+            ss.bolumler[i].dolapAyriHat
+                ? '${l10n.spHoseSeparateLine} DN${ss.bolumler[i].dnDolapHat} · ${ss.dolapBasinci(i).toStringAsFixed(2)} bar'
+                : '${l10n.spHoseFromSprinklerLine} · ${ss.dolapBasinci(i).toStringAsFixed(2)} bar',
+          ),
+      for (final (dn, tip, m) in ss.metrajDokumu)
+        ('DN$dn · ${_spBoruTipiL10n(l10n, tip)}', '${m.toStringAsFixed(0)} m'),
+      for (final e in ss.katKontrolCapaGore.entries) ...[
+        ('${l10n.spSupervisedValve} DN${e.key}', '${e.value}'),
+        ('${l10n.spFlowSwitch} DN${e.key}', '${e.value}'),
+        ('${l10n.spDrainValve} DN${e.key}', '${e.value}'),
+      ],
+      (
+        l10n.spExpPipeMaterial,
+        '${_spBoruAdiL10n(l10n, ilk.boruMalzeme)}  (C=${ilk.boruC.toStringAsFixed(0)})',
+      ),
+      if (ss.zonSayisi > 1)
+        ('', l10n.spSumPressureZoneWarning('${ss.zonSayisi}')),
+    ],
+    bolumler: [
+      for (var i = 0; i < ss.bolumler.length; i++)
+        _spRaporOlustur(
+          ss.bolumler[i],
+          ss.adlar[i],
+          l10n,
+          katKontrol: ss.katli,
+        ),
+    ],
+    altNot: cok
+        ? '${l10n.spSumDesignNote} ${l10n.spExpFootNote}'
+        : l10n.spExpFootNote,
+  );
+}
+
 class _SpExportButonlari extends StatelessWidget {
-  final _SpSonuc sonuc;
+  final _SpSistemSonuc sistem;
   final Color renk;
-  const _SpExportButonlari({required this.sonuc, required this.renk});
+  const _SpExportButonlari({required this.sistem, required this.renk});
 
   Future<void> _aktar(BuildContext context, bool pdf) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     try {
-      final rapor = _spRaporOlustur(sonuc, l10n);
+      final rapor = _spProjeRaporOlustur(sistem, l10n);
       final now = DateTime.now();
       final tarih =
           '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
@@ -19170,8 +20083,15 @@ class _SpExportButonlari extends StatelessWidget {
 class _SpResultCard extends StatelessWidget {
   final _SpSonuc sonuc;
   final Color renk;
+  final bool katKontrol; // katlı yapı → her kata kat kontrol seti
+  final double? dolapBasinci; // sistem pompasıyla en üst kat dolabında basınç
 
-  const _SpResultCard({required this.sonuc, required this.renk});
+  const _SpResultCard({
+    required this.sonuc,
+    required this.renk,
+    this.katKontrol = false,
+    this.dolapBasinci,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19187,6 +20107,15 @@ class _SpResultCard extends StatelessWidget {
             l10n.spRcBuildingArea,
             '${s.binaAlani.toStringAsFixed(1)} m²   '
                 '(${s.en.toStringAsFixed(1)} m × ${s.boy.toStringAsFixed(1)} m)',
+          ),
+          (
+            l10n.spFloorLabel,
+            '${_spKatAdi(l10n, s.kat)}  ·  ${l10n.spFloorLevelLabel} ${s.kot >= 0 ? '+' : ''}${s.kot.toStringAsFixed(2)} m  ·  '
+                'h = ${s.katYuks.toStringAsFixed(2)} m',
+          ),
+          (
+            l10n.spRcTopSprinklerLevel,
+            '${s.statikYukseklik.toStringAsFixed(2)} m',
           ),
           (
             l10n.spRcCeilingHeight,
@@ -19257,8 +20186,13 @@ class _SpResultCard extends StatelessWidget {
           ),
           (
             l10n.spRcTotalSprinklers,
-            '${s.nToplam} ${l10n.spUnitAdet}  ${l10n.spRcMainFloorSuffix}',
+            '${s.nToplam} ${l10n.spUnitAdet}',
           ),
+          if (s.asmaSprinklerGerek)
+            (
+              l10n.spRcSectionTotalSprinklers,
+              '${s.nToplamBolum} ${l10n.spUnitAdet}  (+ ${l10n.ceilingSuspended})',
+            ),
           (
             l10n.spRcSprinklersInDesignArea,
             '${s.nTasarim} ${l10n.spUnitAdet}   '
@@ -19357,13 +20291,26 @@ class _SpResultCard extends StatelessWidget {
             '${s.dpToplam.toStringAsFixed(3)} bar',
           ),
           (
-            l10n.spRcStaticHeadFormula(s.yuks.toStringAsFixed(1)),
+            l10n.spRcStaticHeadFormula(
+              math.max(0.0, s.statikYukseklik).toStringAsFixed(1),
+            ),
             '${s.pStatik.toStringAsFixed(3)} bar',
           ),
           (
             l10n.spRcFarthestHeadMinPressure,
             '${s.pHead.toStringAsFixed(2)} bar  (min. ${s.sinif.minBasinc} bar, K=${s.sinif.kFactor.toInt()})',
           ),
+          if (s.qDolap > 0)
+            (
+              l10n.spHoseReelFlow,
+              '2 × ${(s.qDolap / 2).toStringAsFixed(0)} = ${s.qDolap.toStringAsFixed(0)} L/min',
+            ),
+          if (s.qDolap > 0 && dolapBasinci != null)
+            (
+              l10n.spHoseCabinetPressure,
+              '${dolapBasinci!.toStringAsFixed(2)} bar  (min. ${_spDolapMinBasinc.toStringAsFixed(0)} bar)  ›  '
+                  '${s.dolapAyriHat ? '${l10n.spHoseSeparateLine} DN${s.dnDolapHat}' : l10n.spHoseFromSprinklerLine}',
+            ),
           (l10n.spRcSafetyMarginLabel, '0.500 bar'),
         ], renk),
         const SizedBox(height: 8),
@@ -19375,8 +20322,6 @@ class _SpResultCard extends StatelessWidget {
           renk,
         ),
         if (s.kritikDevre.isNotEmpty) ...[
-          _SpExportButonlari(sonuc: s, renk: renk),
-          const SizedBox(height: 8),
           // Başlık satırı
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -19594,15 +20539,13 @@ class _SpResultCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                s.tablo6ZorunluDebi
-                    ? 'Q = max(Q_tasarım, Tablo 6 min.) × 1.15\n'
-                          '  = max(${s.qTasarim.toStringAsFixed(0)}, ${_spT6MinDebi(s.sinif.kod).toStringAsFixed(0)}) × 1.15'
-                          ' = ${s.pompaDeb.toStringAsFixed(0)} L/min  ← Tablo 6 bağlayıcı\n'
-                          'P = P_sp + P_sürt + P_statik + P_emn = ${s.pHead.toStringAsFixed(2)} + ${s.dpToplam.toStringAsFixed(3)} + ${s.pStatik.toStringAsFixed(3)} + 0.500'
-                          '${s.tablo6ZorunluBasinc ? ' → ${((s.pHead + s.dpToplam + s.pStatik + 0.50)).toStringAsFixed(3)} bar\n  Tablo 6 min. basınç (${_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1)} + ${s.pStatik.toStringAsFixed(3)} = ${(s.pompaBasinc).toStringAsFixed(3)} bar) bağlayıcı' : ' = ${s.pompaBasinc.toStringAsFixed(3)} bar'}'
-                    : 'Q = Q_tasarım × 1.15 = ${s.qTasarim.toStringAsFixed(0)} × 1.15 = ${s.pompaDeb.toStringAsFixed(0)} L/min\n'
-                          'P = P_sprinkler + P_sürtünme + P_statik + P_emniyet\n'
-                          '  = ${s.pHead.toStringAsFixed(2)} + ${s.dpToplam.toStringAsFixed(3)} + ${s.pStatik.toStringAsFixed(3)} + 0.500 = ${s.pompaBasinc.toStringAsFixed(3)} bar',
+                'Q = (${s.tablo6ZorunluDebi ? 'max(Q_tasarım, Tablo 6 min.)' : 'Q_tasarım'}${s.qDolap > 0 ? ' + Q_dolap' : ''}) × 1.15\n'
+                    '  = (${(s.tablo6ZorunluDebi ? _spT6MinDebi(s.sinif.kod) : s.qTasarim).toStringAsFixed(0)}${s.qDolap > 0 ? ' + ${s.qDolap.toStringAsFixed(0)}' : ''}) × 1.15'
+                    ' = ${s.pompaDeb.toStringAsFixed(0)} L/min${s.tablo6ZorunluDebi ? '  ← Tablo 6 bağlayıcı' : ''}\n'
+                    'P = P_sprinkler + P_sürtünme + P_statik + P_emniyet\n'
+                    '  = ${s.pHead.toStringAsFixed(2)} + ${s.dpToplam.toStringAsFixed(3)} + ${s.pStatik.toStringAsFixed(3)} + 0.500'
+                    '${s.tablo6ZorunluBasinc ? ' → ${((s.pHead + s.dpToplam + s.pStatik + 0.50)).toStringAsFixed(3)} bar\n  Tablo 6 min. basınç (${_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1)} + ${s.pStatik.toStringAsFixed(3)} = ${(s.pompaBasincSprinkler).toStringAsFixed(3)} bar) bağlayıcı' : ' = ${s.pompaBasincSprinkler.toStringAsFixed(3)} bar'}'
+                    '${s.dolapAyriHat ? '\nP_dolap = 4.0 + P_statik + P_ayrı hat + P_emniyet\n  = 4.0 + ${(math.max(0.0, s.hDolap) * 0.098).toStringAsFixed(3)} + ${s.dpDolapHat.toStringAsFixed(3)} + 0.500 = ${s.pDolapGerekli.toStringAsFixed(3)} bar${s.pDolapGerekli > s.pompaBasincSprinkler ? '  ← bağlayıcı' : ''}' : ''}',
                 style: TextStyle(
                   fontSize: 11,
                   fontFamily: 'monospace',
@@ -19637,7 +20580,7 @@ class _SpResultCard extends StatelessWidget {
                     child: Text(
                       '${l10n.spRcTable6AppliedIntro}\n'
                       '${s.tablo6ZorunluDebi ? '${l10n.spRcTable6FlowLine(s.qTasarim.toStringAsFixed(0), _spT6MinDebi(s.sinif.kod).toStringAsFixed(0))}\n' : ''}'
-                      '${s.tablo6ZorunluBasinc ? l10n.spRcTable6PressureLine(_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1), s.pompaBasinc.toStringAsFixed(2)) : ''}',
+                      '${s.tablo6ZorunluBasinc ? l10n.spRcTable6PressureLine(_spT6MinBasinc(s.sinif.kod).toStringAsFixed(1), s.pompaBasincSprinkler.toStringAsFixed(2)) : ''}',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.amber.shade900,
@@ -19775,12 +20718,10 @@ class _SpResultCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                s.tablo6ZorunluDebi
-                    ? 'V = Q_efektif × t = ${(s.suDepoHacmi / s.sinif.sureDk).toStringAsFixed(0)} L/min × ${s.sinif.sureDk} dk'
-                          ' = ${s.suDepoHacmi.toStringAsFixed(0)} L = ${(s.suDepoHacmi / 1000).toStringAsFixed(2)} m³\n'
-                          '(Q_tasarım=${s.qTasarim.toStringAsFixed(0)} L/min < Tablo 6 min. ${_spT6MinDebi(s.sinif.kod).toStringAsFixed(0)} L/min → Tablo 6 esas alındı)'
-                    : 'V = Q_tasarim × t = ${s.qTasarim.toStringAsFixed(0)} L/min × ${s.sinif.sureDk} dk'
-                          ' = ${s.suDepoHacmi.toStringAsFixed(0)} L = ${(s.suDepoHacmi / 1000).toStringAsFixed(2)} m³',
+                'V = (${s.tablo6ZorunluDebi ? 'Q_efektif' : 'Q_tasarım'}${s.qDolap > 0 ? ' + Q_dolap' : ''}) × t'
+                    ' = ${(s.suDepoHacmi / s.sinif.sureDk).toStringAsFixed(0)} L/min × ${s.sinif.sureDk} dk'
+                    ' = ${s.suDepoHacmi.toStringAsFixed(0)} L = ${(s.suDepoHacmi / 1000).toStringAsFixed(2)} m³'
+                    '${s.tablo6ZorunluDebi ? '\n(Q_tasarım=${s.qTasarim.toStringAsFixed(0)} L/min < Tablo 6 min. ${_spT6MinDebi(s.sinif.kod).toStringAsFixed(0)} L/min → Tablo 6 esas alındı)' : ''}',
                 style: TextStyle(
                   fontSize: 11,
                   fontFamily: 'monospace',
@@ -20098,7 +21039,7 @@ class _SpResultCard extends StatelessWidget {
               _spTable([
                 (
                   l10n.spRcTotalSprinklersRow,
-                  '${s.nToplam} ${l10n.spUnitAdet}',
+                  '${s.nToplamBolum} ${l10n.spUnitAdet}',
                 ),
                 (
                   l10n.spRcMaxSprinklersPerValve,
@@ -20112,7 +21053,7 @@ class _SpResultCard extends StatelessWidget {
                 ),
                 (
                   l10n.spRcAreaPerValve,
-                  '${(s.binaAlani / s.nAlarmVana).toStringAsFixed(0)} m²  '
+                  '${(s.alanBolum / s.nAlarmVana).toStringAsFixed(0)} m²  '
                       '(≤ ${s.maxAlanPerVana.toStringAsFixed(0)} m²)',
                 ),
                 (
@@ -20120,6 +21061,12 @@ class _SpResultCard extends StatelessWidget {
                   '${s.pompaDeb.toStringAsFixed(0)} L/min  '
                       '${l10n.spRcSingleValveSuffix}',
                 ),
+                if (katKontrol)
+                  (
+                    l10n.spFloorControlSet,
+                    '1 ${l10n.spUnitAdet} × DN${s.dnKatAna}  '
+                        '(${l10n.spFloorControlContent})',
+                  ),
               ], renk),
               const SizedBox(height: 8),
               Text(

@@ -61,6 +61,22 @@ class SpReportData {
   });
 }
 
+/// Çok bölümlü proje raporu: sistem özeti + her bölümün hidrolik tablosu.
+class SpReportProje {
+  final String baslik;
+  final String ozetBaslik;
+  final List<(String, String)> ozet; // sistem özeti (etiket, değer)
+  final List<SpReportData> bolumler; // baslik = bölüm adı
+  final String altNot;
+  const SpReportProje({
+    required this.baslik,
+    required this.ozetBaslik,
+    required this.ozet,
+    required this.bolumler,
+    required this.altNot,
+  });
+}
+
 String _f(double v, [int d = 2]) => v.toStringAsFixed(d);
 
 /// Noto Sans'ta bulunmayan karakterleri PDF için düz metne çevirir.
@@ -82,7 +98,7 @@ List<String> _satirHucreleri(int no, SpReportRow r) => [
   _pdfSafe(r.not ?? ''),
 ];
 
-Future<Uint8List> buildSpPdf(SpReportData d) async {
+Future<Uint8List> buildSpPdf(SpReportProje p) async {
   final regular = pw.Font.ttf(
     await rootBundle.load('assets/fonts/NotoSans-Regular.ttf'),
   );
@@ -95,14 +111,7 @@ Future<Uint8List> buildSpPdf(SpReportData d) async {
 
   const headColor = PdfColor.fromInt(0xFFD9EDEA);
   const sectionColor = PdfColor.fromInt(0xFFF1F5F9);
-
-  // Bölümlere göre gruplanmış veri satırları (sıra numarası kesintisiz)
-  final bolumler = <String, List<List<String>>>{};
-  int no = 0;
-  for (final r in d.satirlar) {
-    no++;
-    bolumler.putIfAbsent(r.bolum, () => []).add(_satirHucreleri(no, r));
-  }
+  const bolumColor = PdfColor.fromInt(0xFF0EA5E9);
 
   final colWidths = <int, pw.TableColumnWidth>{
     0: const pw.FixedColumnWidth(24),
@@ -119,30 +128,125 @@ Future<Uint8List> buildSpPdf(SpReportData d) async {
     11: const pw.FixedColumnWidth(42),
     12: const pw.FlexColumnWidth(),
   };
-
   const cellStyle = pw.TextStyle(fontSize: 7.5);
+
+  pw.Widget ozetKutusu(List<(String, String)> satirlar) => pw.Container(
+    padding: const pw.EdgeInsets.all(6),
+    decoration: pw.BoxDecoration(
+      border: pw.Border.all(color: PdfColors.grey600, width: 0.6),
+    ),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        for (final (k, v) in satirlar)
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 1),
+            child: pw.Row(
+              children: [
+                pw.SizedBox(
+                  width: 260,
+                  child: pw.Text(
+                    _pdfSafe(k),
+                    style: const pw.TextStyle(fontSize: 9),
+                  ),
+                ),
+                pw.Expanded(
+                  child: pw.Text(
+                    _pdfSafe(v),
+                    style: pw.TextStyle(
+                      fontSize: 9,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+
+  List<pw.Widget> bolumWidgetlari(SpReportData d) {
+    // Boru bölümlerine göre gruplanmış satırlar (sıra numarası kesintisiz)
+    final gruplar = <String, List<List<String>>>{};
+    int no = 0;
+    for (final r in d.satirlar) {
+      no++;
+      gruplar.putIfAbsent(r.bolum, () => []).add(_satirHucreleri(no, r));
+    }
+    return [
+      pw.Container(
+        width: double.infinity,
+        margin: const pw.EdgeInsets.only(top: 12, bottom: 4),
+        padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        color: bolumColor,
+        child: pw.Text(
+          _pdfSafe(d.baslik),
+          style: pw.TextStyle(
+            fontSize: 11,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.white,
+          ),
+        ),
+      ),
+      pw.Wrap(
+        spacing: 18,
+        runSpacing: 2,
+        children: [
+          for (final (k, v) in d.ust)
+            pw.Text(
+              _pdfSafe('$k: $v'),
+              style: const pw.TextStyle(fontSize: 8.5),
+            ),
+        ],
+      ),
+      pw.SizedBox(height: 6),
+      for (final (idx, e) in gruplar.entries.indexed) ...[
+        pw.Container(
+          width: double.infinity,
+          color: sectionColor,
+          padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+          child: pw.Text(
+            d.bolumAdlari[e.key] ?? e.key,
+            style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold),
+          ),
+        ),
+        pw.TableHelper.fromTextArray(
+          headers: idx == 0 ? d.kolonlar : null,
+          data: e.value,
+          columnWidths: colWidths,
+          headerStyle: pw.TextStyle(
+            fontSize: 7.5,
+            fontWeight: pw.FontWeight.bold,
+          ),
+          headerDecoration: const pw.BoxDecoration(color: headColor),
+          cellStyle: cellStyle,
+          cellAlignments: {
+            for (var i = 0; i < 13; i++)
+              i: i == 12 ? pw.Alignment.centerLeft : pw.Alignment.center,
+          },
+          cellPadding: const pw.EdgeInsets.symmetric(
+            horizontal: 3,
+            vertical: 2.5,
+          ),
+          border: pw.TableBorder.all(color: PdfColors.grey500, width: 0.4),
+        ),
+      ],
+      pw.SizedBox(height: 6),
+      ozetKutusu(d.ozet),
+    ];
+  }
+
   doc.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4.landscape,
       margin: const pw.EdgeInsets.all(24),
-      header: (_) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            _pdfSafe(d.baslik),
-            style: pw.TextStyle(fontSize: 13, fontWeight: pw.FontWeight.bold),
-          ),
-          pw.SizedBox(height: 4),
-          pw.Wrap(
-            spacing: 18,
-            runSpacing: 2,
-            children: [
-              for (final (k, v) in d.ust)
-                pw.Text(_pdfSafe('$k: $v'), style: const pw.TextStyle(fontSize: 8.5)),
-            ],
-          ),
-          pw.SizedBox(height: 6),
-        ],
+      header: (_) => pw.Padding(
+        padding: const pw.EdgeInsets.only(bottom: 6),
+        child: pw.Text(
+          _pdfSafe(p.baslik),
+          style: pw.TextStyle(fontSize: 13, fontWeight: pw.FontWeight.bold),
+        ),
       ),
       footer: (c) => pw.Align(
         alignment: pw.Alignment.centerRight,
@@ -152,74 +256,16 @@ Future<Uint8List> buildSpPdf(SpReportData d) async {
         ),
       ),
       build: (_) => [
-        for (final (idx, e) in bolumler.entries.indexed) ...[
-          pw.Container(
-            width: double.infinity,
-            color: sectionColor,
-            padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-            child: pw.Text(
-              d.bolumAdlari[e.key] ?? e.key,
-              style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold),
-            ),
-          ),
-          pw.TableHelper.fromTextArray(
-            headers: idx == 0 ? d.kolonlar : null,
-            data: e.value,
-            columnWidths: colWidths,
-            headerStyle: pw.TextStyle(
-              fontSize: 7.5,
-              fontWeight: pw.FontWeight.bold,
-            ),
-            headerDecoration: const pw.BoxDecoration(color: headColor),
-            cellStyle: cellStyle,
-            cellAlignments: {
-              for (var i = 0; i < 13; i++)
-                i: i == 12 ? pw.Alignment.centerLeft : pw.Alignment.center,
-            },
-            cellPadding: const pw.EdgeInsets.symmetric(
-              horizontal: 3,
-              vertical: 2.5,
-            ),
-            border: pw.TableBorder.all(color: PdfColors.grey500, width: 0.4),
-          ),
-        ],
-        pw.SizedBox(height: 10),
-        pw.Container(
-          padding: const pw.EdgeInsets.all(6),
-          decoration: pw.BoxDecoration(
-            border: pw.Border.all(color: PdfColors.grey600, width: 0.6),
-          ),
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              for (final (k, v) in d.ozet)
-                pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(vertical: 1),
-                  child: pw.Row(
-                    children: [
-                      pw.SizedBox(
-                        width: 260,
-                        child: pw.Text(
-                          _pdfSafe(k),
-                          style: const pw.TextStyle(fontSize: 9),
-                        ),
-                      ),
-                      pw.Text(
-                        _pdfSafe(v),
-                        style: pw.TextStyle(
-                          fontSize: 9,
-                          fontWeight: pw.FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-        pw.SizedBox(height: 6),
         pw.Text(
-          _pdfSafe(d.altNot),
+          _pdfSafe(p.ozetBaslik),
+          style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.SizedBox(height: 4),
+        ozetKutusu(p.ozet),
+        for (final d in p.bolumler) ...bolumWidgetlari(d),
+        pw.SizedBox(height: 8),
+        pw.Text(
+          _pdfSafe(p.altNot),
           style: const pw.TextStyle(fontSize: 7.5, color: PdfColors.grey700),
         ),
       ],
@@ -228,7 +274,7 @@ Future<Uint8List> buildSpPdf(SpReportData d) async {
   return doc.save();
 }
 
-Uint8List buildSpXlsx(SpReportData d) {
+Uint8List buildSpXlsx(SpReportProje p) {
   final book = xl.Excel.createExcel();
   const sheetName = 'Hidrolik';
   book.rename(book.getDefaultSheet()!, sheetName);
@@ -244,6 +290,11 @@ Uint8List buildSpXlsx(SpReportData d) {
     bold: true,
     backgroundColorHex: xl.ExcelColor.fromHexString('#F1F5F9'),
   );
+  final bolumStil = xl.CellStyle(
+    bold: true,
+    fontColorHex: xl.ExcelColor.fromHexString('#FFFFFF'),
+    backgroundColorHex: xl.ExcelColor.fromHexString('#0EA5E9'),
+  );
 
   void put(int col, int row, xl.CellValue v, [xl.CellStyle? st]) {
     final c = sh.cell(
@@ -254,48 +305,71 @@ Uint8List buildSpXlsx(SpReportData d) {
   }
 
   int row = 0;
-  put(0, row++, xl.TextCellValue(d.baslik), bold);
-  for (final (k, v) in d.ust) {
-    put(0, row, xl.TextCellValue(k), bold);
-    put(2, row++, xl.TextCellValue(v));
-  }
+  put(0, row++, xl.TextCellValue(p.baslik), bold);
   row++;
-  for (var i = 0; i < d.kolonlar.length; i++) {
-    put(i, row, xl.TextCellValue(d.kolonlar[i]), head);
+  put(0, row++, xl.TextCellValue(p.ozetBaslik), bold);
+  for (final (k, v) in p.ozet) {
+    put(0, row, xl.TextCellValue(k));
+    put(5, row++, xl.TextCellValue(v), bold);
   }
-  row++;
 
-  String? last;
-  int no = 0;
-  for (final r in d.satirlar) {
-    if (r.bolum != last) {
-      last = r.bolum;
-      put(0, row++, xl.TextCellValue(d.bolumAdlari[r.bolum] ?? r.bolum), section);
-    }
-    no++;
-    put(0, row, xl.IntCellValue(no));
-    put(1, row, xl.TextCellValue(r.parca));
-    put(2, row, xl.DoubleCellValue(double.parse(_f(r.q, 1))));
-    put(3, row, xl.DoubleCellValue(double.parse(_f(r.qKum, 1))));
-    put(4, row, xl.IntCellValue(r.dn));
-    put(5, row, xl.DoubleCellValue(double.parse(_f(r.lDuz))));
-    put(6, row, xl.DoubleCellValue(double.parse(_f(r.lFit))));
-    put(7, row, xl.DoubleCellValue(double.parse(_f(r.lToplam))));
-    put(8, row, xl.DoubleCellValue(double.parse(r.kayipBarM.toStringAsFixed(4))));
-    put(9, row, xl.DoubleCellValue(double.parse(_f(r.pt, 3))));
-    put(10, row, xl.DoubleCellValue(double.parse(_f(r.pe, 3))));
-    put(11, row, xl.DoubleCellValue(double.parse(_f(r.pf, 3))));
-    if (r.not != null) put(12, row, xl.TextCellValue(r.not!));
+  for (final d in p.bolumler) {
     row++;
-  }
+    for (var i = 0; i < d.kolonlar.length; i++) {
+      put(i, row, xl.TextCellValue(i == 0 ? d.baslik : ''), bolumStil);
+    }
+    row++;
+    for (final (k, v) in d.ust) {
+      put(0, row, xl.TextCellValue(k), bold);
+      put(2, row++, xl.TextCellValue(v));
+    }
+    row++;
+    for (var i = 0; i < d.kolonlar.length; i++) {
+      put(i, row, xl.TextCellValue(d.kolonlar[i]), head);
+    }
+    row++;
 
-  row++;
-  for (final (k, v) in d.ozet) {
-    put(0, row, xl.TextCellValue(k), bold);
-    put(7, row++, xl.TextCellValue(v), bold);
+    String? last;
+    int no = 0;
+    for (final r in d.satirlar) {
+      if (r.bolum != last) {
+        last = r.bolum;
+        put(
+          0,
+          row++,
+          xl.TextCellValue(d.bolumAdlari[r.bolum] ?? r.bolum),
+          section,
+        );
+      }
+      no++;
+      put(0, row, xl.IntCellValue(no));
+      put(1, row, xl.TextCellValue(r.parca));
+      put(2, row, xl.DoubleCellValue(double.parse(_f(r.q, 1))));
+      put(3, row, xl.DoubleCellValue(double.parse(_f(r.qKum, 1))));
+      put(4, row, xl.IntCellValue(r.dn));
+      put(5, row, xl.DoubleCellValue(double.parse(_f(r.lDuz))));
+      put(6, row, xl.DoubleCellValue(double.parse(_f(r.lFit))));
+      put(7, row, xl.DoubleCellValue(double.parse(_f(r.lToplam))));
+      put(
+        8,
+        row,
+        xl.DoubleCellValue(double.parse(r.kayipBarM.toStringAsFixed(4))),
+      );
+      put(9, row, xl.DoubleCellValue(double.parse(_f(r.pt, 3))));
+      put(10, row, xl.DoubleCellValue(double.parse(_f(r.pe, 3))));
+      put(11, row, xl.DoubleCellValue(double.parse(_f(r.pf, 3))));
+      if (r.not != null) put(12, row, xl.TextCellValue(r.not!));
+      row++;
+    }
+
+    row++;
+    for (final (k, v) in d.ozet) {
+      put(0, row, xl.TextCellValue(k), bold);
+      put(7, row++, xl.TextCellValue(v), bold);
+    }
   }
   row++;
-  put(0, row, xl.TextCellValue(d.altNot));
+  put(0, row, xl.TextCellValue(p.altNot));
 
   sh.setColumnWidth(0, 6);
   sh.setColumnWidth(1, 14);

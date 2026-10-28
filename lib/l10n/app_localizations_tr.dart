@@ -3101,7 +3101,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get spRcHeaderFoamSystem => 'Köpük Sistemi  —  EN 13565-2';
 
   @override
-  String get spRcBuildingArea => 'Bina Alanı';
+  String get spRcBuildingArea => 'Kat Alanı (tipik)';
 
   @override
   String get spRcCeilingHeight => 'Tavan Yüksekliği';
@@ -3354,6 +3354,546 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get spExpFootNote =>
       'Fitting eşdeğer boyu düz boru uzunluğunun %20\'si olarak alınmıştır. Hazen-Williams formülü kullanılmıştır. Ön tasarım amaçlıdır; sonuçlar proje mühendisi tarafından doğrulanmalıdır.';
+
+  @override
+  String get spSectionsTitle => 'Bölümler';
+
+  @override
+  String get spSectionsInfo =>
+      'Her bölüm bir kattaki kullanım alanıdır (ör. otel zemin, idari bina 1. kat, üretim holü, bodrum otopark). Aynı katta farklı kullanımlar ayrı bölüm olarak eklenebilir. Aynı ölçüdeki katlar için kopyala butonunu kullanın.';
+
+  @override
+  String get spAddSection => 'Bölüm ekle';
+
+  @override
+  String get spDeleteSection => 'Bölümü sil';
+
+  @override
+  String get spSectionNameLabel => 'Bölüm adı (ör. İdari bina)';
+
+  @override
+  String get spTypicalFloorTitle => 'Kat ölçüleri';
+
+  @override
+  String get spLevelsTitle => 'Kat ve pompa konumu';
+
+  @override
+  String get spFloorHeightLabel => 'Kat yüksekliği (asma tavan boşluğu dahil)';
+
+  @override
+  String get spLevelInfo =>
+      'Kat yüksekliği döşemeden üst döşemenin altına kadar ölçülür (asma tavan boşluğu dahil); asma tavan varsa boşluk aşağıda ayrıca girilir. Kotlar, \'Pompa bu katta\' işaretli katın döşemesi ±0,00 alınarak kat yüksekliklerinden otomatik hesaplanır; işaret yoksa pompa zemin katta kabul edilir. Bodrum katlar eksi kot alır.';
+
+  @override
+  String get spEnterValidFloorHeight => 'Geçerli bir kat yüksekliği girin (m).';
+
+  @override
+  String get spUnitFloor => 'kat';
+
+  @override
+  String get spCommonOptionsTitle => 'Ortak Sistem Seçenekleri';
+
+  @override
+  String get spSectionResultsTitle => 'Bölüm Sonuçları';
+
+  @override
+  String get spSystemSummaryTitle => 'Sistem Özeti';
+
+  @override
+  String get spSumFlowGoverning => 'Debiyi belirleyen bölüm';
+
+  @override
+  String get spSumPressureGoverning => 'Basıncı belirleyen bölüm';
+
+  @override
+  String get spSumWaterTank => 'Su deposu';
+
+  @override
+  String get spSumJockey => 'Jokey pompa';
+
+  @override
+  String get spSumSectionCount => 'Bölüm sayısı';
+
+  @override
+  String get spSumTotalArea => 'Toplam korunan alan';
+
+  @override
+  String get spSumTotalSprinklers => 'Toplam sprinkler';
+
+  @override
+  String get spSumAlarmValves => 'Toplam alarm vanası';
+
+  @override
+  String get spSumPipeLength => 'Toplam boru metrajı';
+
+  @override
+  String spSumPressureZoneWarning(String n) {
+    return 'Pompa basıncı 12 bar\'ı aşıyor (EN 12845 §8.2): $n basınç zonu ve basınç düşürücü vana (PRV) gerekir.';
+  }
+
+  @override
+  String get spSumDesignNote =>
+      'EN 12845: Tasarım alanları aynı anda çalışmaz. Pompa ve su deposu, statik yük dahil en elverişsiz bölüme göre boyutlandırılmıştır.';
+
+  @override
+  String get spRcSectionTotalSprinklers => 'BÖLÜM TOPLAMI';
+
+  @override
+  String get spRcTopSprinklerLevel => 'En üst sprinkler kotu';
+
+  @override
+  String get spExpSection => 'Bölüm';
+
+  @override
+  String get spLhConditionNote =>
+      'LH yalnızca düşük yangın yüklü, 126 m²\'den büyük bölümü olmayan ve en az 30 dk yangın dayanımlı alanlar için geçerlidir (TS EN 12845 6.2.2). Bu şart sağlanmıyorsa OH1 seçin.';
+
+  @override
+  String get spOhPaintingNote =>
+      'OH1 veya OH2 kullanımında boyama ya da benzeri yüksek yangın yüklü alanlar varsa bu alanlar OH3 olarak değerlendirilir (TS EN 12845 Tablo A.2 notu).';
+
+  @override
+  String get spStdSchoolsAndOtherEducationalInstitutions =>
+      'Okullar ve diğer eğitim kurumları (belirli alanlar — bkz. 6.2.2)';
+
+  @override
+  String get spStdOffices => 'Ofisler / bürolar (belirli alanlar — bkz. 6.2.2)';
+
+  @override
+  String get spStdPrisons => 'Cezaevleri';
+
+  @override
+  String get spStdCementWorks => 'Çimento fabrikaları';
+
+  @override
+  String get spStdSheetMetalProductFactories => 'Sac metal ürün fabrikaları';
+
+  @override
+  String get spStdHospitals => 'Hastaneler';
+
+  @override
+  String get spStdHotels => 'Oteller';
+
+  @override
+  String get spStdLibraries => 'Kütüphaneler (kitap depoları hariç)';
+
+  @override
+  String get spStdRestaurants => 'Lokantalar / restoranlar';
+
+  @override
+  String get spStdSchools => 'Okullar (bkz. 6.2.2)';
+
+  @override
+  String get spStdOffices2 => 'Ofisler / bürolar (bkz. 6.2.2)';
+
+  @override
+  String get spStdDataProcessing =>
+      'Bilgi işlem / bilgisayar odaları (bant arşivi hariç)';
+
+  @override
+  String get spStdResidentialBuildings => 'Konutlar (BYKHY Ek-1/B)';
+
+  @override
+  String get spStdPhotographicFilmFactories => 'Fotoğraf filmi fabrikaları';
+
+  @override
+  String get spStdMetalWorking => 'Metal işleme fabrikaları';
+
+  @override
+  String get spStdAbattoirsMeatFactories => 'Mezbahalar, et fabrikaları';
+
+  @override
+  String get spStdBakeries => 'Fırınlar / ekmek fabrikaları';
+
+  @override
+  String get spStdBiscuitFactories => 'Bisküvi fabrikaları';
+
+  @override
+  String get spStdBreweries => 'Bira fabrikaları';
+
+  @override
+  String get spStdChocolateFactories => 'Çikolata fabrikaları';
+
+  @override
+  String get spStdConfectionery => 'Şekerleme imalathaneleri';
+
+  @override
+  String get spStdDairies => 'Mandıralar / süt işleme tesisleri';
+
+  @override
+  String get spStdFoodFactories => 'Gıda fabrikaları (genel)';
+
+  @override
+  String get spStdLaboratories => 'Fizik laboratuvarları';
+
+  @override
+  String get spStdLaundries => 'Çamaşırhaneler';
+
+  @override
+  String get spStdCarParks => 'Otoparklar (kapalı, katlı ve bodrum)';
+
+  @override
+  String get spStdMuseums => 'Müzeler';
+
+  @override
+  String get spStdLeatherGoodsFactories => 'Deri eşya fabrikaları';
+
+  @override
+  String get spStdGlassFactories => 'Cam fabrikaları';
+
+  @override
+  String get spStdDyersWorksSoapFactories =>
+      'Boyahaneler (tekstil boyama), sabun fabrikaları';
+
+  @override
+  String get spStdPhotographicLaboratories => 'Fotoğraf laboratuvarları';
+
+  @override
+  String get spStdPaintApplicationShopsWithWaterBased =>
+      'Su bazlı boya uygulama atölyeleri';
+
+  @override
+  String get spStdElectronicsFactories => 'Elektronik fabrikaları';
+
+  @override
+  String get spStdRadioEquipmentFactories =>
+      'Radyo / telsiz cihazı fabrikaları';
+
+  @override
+  String get spStdWashingMachineFactories => 'Çamaşır makinesi fabrikaları';
+
+  @override
+  String get spStdCarWorkshops => 'Oto tamirhaneleri / servis atölyeleri';
+
+  @override
+  String get spStdAnimalFodderFactories => 'Hayvan yemi fabrikaları';
+
+  @override
+  String get spStdCornMills => 'Tahıl değirmenleri';
+
+  @override
+  String get spStdDehydratedVegetableAndSoupFactories =>
+      'Kurutulmuş sebze ve çorba fabrikaları';
+
+  @override
+  String get spStdSugarFactories => 'Şeker fabrikaları';
+
+  @override
+  String get spStdBroadcastingStudios => 'Radyo-TV yayın stüdyoları (küçük)';
+
+  @override
+  String get spStdRailwayStations => 'Tren istasyonları';
+
+  @override
+  String get spStdPlantRooms => 'Teknik / tesisat odaları';
+
+  @override
+  String get spStdFarmBuildings => 'Tarım (çiftlik) binaları';
+
+  @override
+  String get spStdBookBindingFactories => 'Cilthaneler';
+
+  @override
+  String get spStdCardboardFactories => 'Karton / mukavva fabrikaları';
+
+  @override
+  String get spStdPaperFactories => 'Kâğıt fabrikaları';
+
+  @override
+  String get spStdDepartmentStoresShoppingCentres =>
+      'Büyük mağazalar, alışveriş merkezleri (AVM)';
+
+  @override
+  String get spStdCarpetFactories =>
+      'Halı fabrikaları (kauçuk ve köpük plastik hariç)';
+
+  @override
+  String get spStdClothAndClothingFactories =>
+      'Kumaş ve giyim (konfeksiyon) fabrikaları';
+
+  @override
+  String get spStdFibreBoardFactories => 'Lif levha fabrikaları';
+
+  @override
+  String get spStdFootwearFactories =>
+      'Ayakkabı fabrikaları (plastik ve kauçuk hariç)';
+
+  @override
+  String get spStdKnittingFactories => 'Örme / triko fabrikaları';
+
+  @override
+  String get spStdLinenFactories => 'Keten kumaş fabrikaları';
+
+  @override
+  String get spStdMattressFactories =>
+      'Yatak / şilte fabrikaları (köpük plastik hariç)';
+
+  @override
+  String get spStdSewingFactories => 'Dikimhaneler';
+
+  @override
+  String get spStdWeavingMills => 'Dokuma fabrikaları';
+
+  @override
+  String get spStdWoollenAndWorstedMills => 'Yün ve kamgarn fabrikaları';
+
+  @override
+  String get spStdWoodworkingFactories => 'Ahşap işleme fabrikaları';
+
+  @override
+  String get spStdFurnitureFactories =>
+      'Mobilya fabrikaları (köpük plastik hariç)';
+
+  @override
+  String get spStdFurnitureShowrooms => 'Mobilya mağazaları / teşhir salonları';
+
+  @override
+  String get spStdUpholsteryFactories =>
+      'Döşemecilik imalathaneleri (köpük plastik hariç)';
+
+  @override
+  String get spStdAlcoholDistilleries => 'Alkol damıtımhaneleri';
+
+  @override
+  String get spStdCinemasAndTheatres => 'Sinemalar ve tiyatrolar';
+
+  @override
+  String get spStdConcertHalls => 'Konser salonları';
+
+  @override
+  String get spStdTobaccoFactories => 'Tütün fabrikaları';
+
+  @override
+  String get spStdFilmAndTvProductionStudios => 'Film ve TV yapım stüdyoları';
+
+  @override
+  String get spStdWastePaperProcessing => 'Atık kâğıt işleme tesisleri';
+
+  @override
+  String get spStdExhibitionHalls =>
+      'Sergi / fuar salonları (aşırı tavan boşluğu dikkate alınmalı)';
+
+  @override
+  String get spStdCottonMills => 'Pamuk iplik fabrikaları';
+
+  @override
+  String get spStdFlaxPreparationPlants => 'Keten hazırlama tesisleri';
+
+  @override
+  String get spStdHempPreparationPlants => 'Kenevir hazırlama tesisleri';
+
+  @override
+  String get spStdSawMills => 'Kereste bıçkıhaneleri';
+
+  @override
+  String get spStdPlywoodFactories => 'Kontrplak fabrikaları';
+
+  @override
+  String get spStdFloorClothAndLinoleumManufacture =>
+      'Döşeme kumaşı (muşamba) ve linolyum imalatı';
+
+  @override
+  String get spStdResinLampBlackAndTurpentineManufacture =>
+      'Reçine, lamba isi ve terebentin imalatı';
+
+  @override
+  String get spStdRubberSubstituteManufacture =>
+      'Kauçuk ikamesi (yapay kauçuk) imalatı';
+
+  @override
+  String get spStdWoodWoolManufacture => 'Odun yünü imalatı';
+
+  @override
+  String get spStdMatchManufacturers => 'Kibrit fabrikaları';
+
+  @override
+  String get spStdPaintApplicationShopsWithSolvent =>
+      'Solvent bazlı boya uygulama atölyeleri';
+
+  @override
+  String get spStdRefrigeratorFactories => 'Buzdolabı fabrikaları';
+
+  @override
+  String get spStdPrintingWorks => 'Matbaalar / baskı tesisleri';
+
+  @override
+  String get spStdCableFactoriesForPpPePs =>
+      'Kablo fabrikaları (PP/PE/PS veya benzeri yanma özellikli, OH3 dışı)';
+
+  @override
+  String get spStdInjectionMouldingForPpPePs =>
+      'Plastik enjeksiyon kalıplama (PP/PE/PS veya benzeri, OH3 dışı)';
+
+  @override
+  String get spStdPlasticsFactoriesAndPlasticGoodsFor =>
+      'Plastik fabrikaları ve plastik eşya (köpük hariç; PP/PE/PS veya benzeri, OH3 dışı)';
+
+  @override
+  String get spStdRubberGoodsFactories => 'Kauçuk eşya fabrikaları';
+
+  @override
+  String get spStdSyntheticFibreFactories =>
+      'Sentetik elyaf fabrikaları (akrilik hariç)';
+
+  @override
+  String get spStdRopeFactories => 'Halat fabrikaları';
+
+  @override
+  String get spStdCarpetFactoriesIncludingUnexpandedPlastics =>
+      'Halı fabrikaları (genleşmemiş plastik içeren)';
+
+  @override
+  String get spStdFootwearFactoriesIncludingPlasticsAndRubber =>
+      'Ayakkabı fabrikaları (plastik ve kauçuk dahil)';
+
+  @override
+  String get spStdFireLighterManufacture => 'Tutuşturucu (çıra) imalatı';
+
+  @override
+  String get spStdTarDistilling => 'Katran damıtma';
+
+  @override
+  String get spStdDepotsForBusesUnLadenLorries =>
+      'Otobüs, boş kamyon ve demiryolu vagonu depoları (garajları)';
+
+  @override
+  String get spStdCandleWaxAndParaffinManufacturers =>
+      'Mum, balmumu ve parafin imalatı';
+
+  @override
+  String get spStdPaperMachineHalls => 'Kâğıt makinesi holleri';
+
+  @override
+  String get spStdCarpetFactoriesIncludingRubberAndFoam =>
+      'Halı fabrikaları (kauçuk ve köpük plastik dahil)';
+
+  @override
+  String get spStdSawMill => 'Bıçkıhaneler (Tablo A.3)';
+
+  @override
+  String get spStdChipboardManufacturing =>
+      'Yonga levha (sunta) imalatı (ilave nesne koruması gerekebilir)';
+
+  @override
+  String get spStdPaintColourAndVarnishManufacture =>
+      'Boya, renk maddesi ve vernik imalatı';
+
+  @override
+  String get spStdCelluloseNitrateManufacture => 'Selüloz nitrat imalatı';
+
+  @override
+  String get spStdRubberTyresForCarsAndLorries =>
+      'Otomobil ve kamyon lastiği imalatı';
+
+  @override
+  String get spStdManufactureOfFoamPlasticsFoamRubber =>
+      'Köpük plastik, köpük kauçuk ve köpük kauçuk eşya imalatı (malzeme faktörü m3; m4 hariç — Tablo B.1)';
+
+  @override
+  String get spStdFireworkManufacture => 'Havai fişek imalatı';
+
+  @override
+  String get spFloorLabel => 'Kat';
+
+  @override
+  String get spFloorBasement => 'Bodrum';
+
+  @override
+  String spFloorBasementN(String n) {
+    return '$n. Bodrum';
+  }
+
+  @override
+  String get spFloorGround => 'Zemin';
+
+  @override
+  String spFloorN(String n) {
+    return '$n. Kat';
+  }
+
+  @override
+  String get spFloorLevelLabel => 'kot';
+
+  @override
+  String get spPumpHereCheckbox =>
+      'Pompa bu katta (kat döşemesi ±0,00 kabul edilir)';
+
+  @override
+  String get spPumpShort => 'pompa';
+
+  @override
+  String get spCopyToNextFloor => 'Bir üst kata kopyala';
+
+  @override
+  String spMissingFloorHeight(String kat) {
+    return '$kat için kat yüksekliği bilinmiyor. Kotlar aradaki katların yüksekliğinden hesaplandığı için bu kat için de bir bölüm ekleyin ya da pompanın bulunduğu katı işaretleyin.';
+  }
+
+  @override
+  String get spHoseCabinetTitle => 'Yangın dolapları (en üst kat, min. 4 bar)';
+
+  @override
+  String get spHoseCabinetPressure => 'Yangın dolabı basıncı (en üst kat)';
+
+  @override
+  String get spHoseFromSprinklerLine => 'Sprinkler hattından';
+
+  @override
+  String get spHoseSeparateLine => 'Pompadan ayrı hat';
+
+  @override
+  String get spHoseSeparateLineInfo =>
+      'Sprinkler hattı en üst kat dolabında 4 bar sağlamıyor; bu bölümlerin dolapları için pompadan ayrı hat çekilmelidir. Pompa basıncı ayrı hattın ihtiyacına göre yükseltildi.';
+
+  @override
+  String get spSupervisedValve => 'İzlenebilir vana';
+
+  @override
+  String get spFlowSwitch => 'Akış anahtarı';
+
+  @override
+  String get spDrainValve => 'Tahliye vanası';
+
+  @override
+  String get spPipeByDiameter => 'Boru metrajı (çap ve tipe göre)';
+
+  @override
+  String get spPipeBranch => 'Dal boru';
+
+  @override
+  String get spPipeDist => 'Dağıtım borusu';
+
+  @override
+  String get spPipeMain => 'Ana boru / kolon';
+
+  @override
+  String get spHoseReelCheckbox =>
+      'Yangın dolabı debisini ekle (en üst katta 2 dolap)';
+
+  @override
+  String get spHoseReelInfo =>
+      'Düşük/orta tehlike: 2 × 100 L/dk = 200 L/dk · Yüksek tehlike ve depolama: 2 × 200 L/dk = 400 L/dk. Bu debi pompa debisine ve su deposuna eklenir. En üst kattaki dolapta en az 4 bar aranır; sprinkler hattı bunu sağlamıyorsa pompadan ayrı hat çekilir.';
+
+  @override
+  String get spHoseReelFlow => 'Yangın dolabı ilavesi';
+
+  @override
+  String get spVoidExceedsHeight =>
+      'Asma tavan boşluğu kat yüksekliğinden küçük olmalıdır.';
+
+  @override
+  String get spFloorControlSet => 'Kat kontrol seti';
+
+  @override
+  String get spFloorControlTotal => 'Kat kontrol setleri';
+
+  @override
+  String get spFloorControlContent =>
+      'izlenebilir vana + akış anahtarı + tahliye vanası';
+
+  @override
+  String get spFloorControlInfo =>
+      'Katlı yapıda her kata (bodrum dahil) izlenebilir vana, akış anahtarı ve tahliye vanası konur. Çapları o katın ana borusu çapındadır.';
 
   @override
   String get spRcHydraulicFootnote =>
@@ -4261,378 +4801,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get stdDescNfpa69ExplosionPrevention =>
       'Patlama önleme sistemleri standardı.';
-
-  @override
-  String get spActOfficesAdmin => 'Ofisler ve yönetim binaları';
-
-  @override
-  String get spActHotelsHostelsGuesthouses =>
-      'Oteller, misafirhaneler, pansiyonlar';
-
-  @override
-  String get spActHospitalsClinics =>
-      'Hastaneler, klinikler, sağlık merkezleri';
-
-  @override
-  String get spActSchoolsUniversities =>
-      'Okullar, üniversiteler ve eğitim binaları';
-
-  @override
-  String get spActResidentialApartments => 'Konutlar ve apartmanlar';
-
-  @override
-  String get spActPrisonsReformatories => 'Cezaevleri ve ıslahevleri';
-
-  @override
-  String get spActChurchesMosquesWorship =>
-      'Kiliseler, camiler ve ibadethaneler';
-
-  @override
-  String get spActTheatresCinemaSeating =>
-      'Tiyatrolar / sinema (yalnızca seyirci oturma alanları)';
-
-  @override
-  String get spActMuseumsGalleries => 'Müzeler ve sanat galerileri';
-
-  @override
-  String get spActBreweriesExclDistilleries =>
-      'Bira fabrikaları (damıtma tesisleri hariç)';
-
-  @override
-  String get spActMultiStoreyBasementCarParks =>
-      'Çok katlı ve bodrum katlı kapalı otoparklar';
-
-  @override
-  String get spActCeramicsProduction => 'Seramik ürünleri üretimi';
-
-  @override
-  String get spActGlassGlasswareExclFibre =>
-      'Cam ve cam eşya üretimi (cam elyafı hariç)';
-
-  @override
-  String get spActChemResearchLabs => 'Kimya araştırma laboratuvarları';
-
-  @override
-  String get spActDairyProcessing =>
-      'Süt ve süt ürünleri işleme tesisleri (mandıralar)';
-
-  @override
-  String get spActElectronicsAssembly => 'Elektronik ekipman montaj atölyeleri';
-
-  @override
-  String get spActFoodProcessingPackaging =>
-      'Gıda işleme ve paketleme tesisleri';
-
-  @override
-  String get spActHotelsKitchenLaundryService =>
-      'Oteller — mutfak, çamaşırhane ve servis alanları';
-
-  @override
-  String get spActInstitutionalCommercialLaundries =>
-      'Kurumsal ve ticari çamaşırhaneler';
-
-  @override
-  String get spActLeatherProductsProduction => 'Deri ve deri ürünleri üretimi';
-
-  @override
-  String get spActLightMetalworkingWorkshops => 'Hafif metal işleme atölyeleri';
-
-  @override
-  String get spActPharmaceuticalProduction =>
-      'Farmasötik (ilaç) üretim tesisleri';
-
-  @override
-  String get spActResearchLabsNonflamLiquids =>
-      'Araştırma laboratuvarları (yanmaz sıvı kullanımı)';
-
-  @override
-  String get spActTextileWeavingNaturalFibresUntreated =>
-      'Tekstil dokuma — pamuk/yün/doğal elyaf (terbiye işlemsiz)';
-
-  @override
-  String get spActTobaccoProcessingPackaging => 'Tütün işleme ve paketleme';
-
-  @override
-  String get spActAgriIndustrialMachineryAssembly =>
-      'Tarım ve iş makinesi montaj tesisleri';
-
-  @override
-  String get spActGrainFlourMillFoodProcessing =>
-      'Tahıl, un değirmeni ve benzeri gıda işleme';
-
-  @override
-  String get spActChemProductionNonflamLiquidsOnly =>
-      'Kimyasal üretim (yalnızca yanmaz sıvılı ürünler)';
-
-  @override
-  String get spActDeptStoresShoppingCentresSingleStorey =>
-      'Büyük mağazalar ve alışveriş merkezleri (tek katlı)';
-
-  @override
-  String get spActElectricalEquipmentFactories =>
-      'Elektrikli ekipman üretim fabrikaları';
-
-  @override
-  String get spActComputerDataProcessingRooms =>
-      'Bilgisayar ve elektronik veri işleme odaları';
-
-  @override
-  String get spActGeneralEngineeringWorkshopsFactories =>
-      'Genel mühendislik atölyeleri ve fabrikalar';
-
-  @override
-  String get spActFruitVegCanningFacilities =>
-      'Meyve, sebze ve konserve işleme tesisleri';
-
-  @override
-  String get spActVehicleMaintenanceRepairGarages =>
-      'Araç bakım-onarım garajları';
-
-  @override
-  String get spActFibreglassProductionAssembly =>
-      'Cam elyafı (fiberglas) üretimi ve montajı';
-
-  @override
-  String get spActHardwareIronmongeryStores =>
-      'Hırdavat ve demir-çelik ürünleri mağazaları';
-
-  @override
-  String get spActHospitalsTreatmentSurgeryAreas =>
-      'Hastaneler — tedavi ve ameliyat alanları';
-
-  @override
-  String get spActKnittingHosieryFactories =>
-      'Örme (triko/hosiery) fabrikaları';
-
-  @override
-  String get spActLibrariesOpenShelfAreas =>
-      'Kütüphaneler — genel açık raf alanları';
-
-  @override
-  String get spActGeneralMetalworkingFactories =>
-      'Genel metal işleme fabrikaları';
-
-  @override
-  String get spActPaperBoardProductionFacilities =>
-      'Kâğıt ve karton üretim tesisleri';
-
-  @override
-  String get spActPlasticsManufNonflamOnly =>
-      'Plastik ürün imalatı (yalnızca yanmaz plastikler)';
-
-  @override
-  String get spActGeneralPrintingWaterBasedInk =>
-      'Genel baskı / matbaa (su bazlı mürekkep)';
-
-  @override
-  String get spActSupermarketsHypermarkets =>
-      'Süpermarketler ve hipermarketler';
-
-  @override
-  String get spActTailoringGarmentManufacture =>
-      'Terzilik, konfeksiyon ve giyim üretimi';
-
-  @override
-  String get spActTextileSpinningWeavingSynthetic =>
-      'Tekstil eğirme ve dokuma (sentetik elyaf)';
-
-  @override
-  String get spActLoadingShippingDocks =>
-      'Yükleme-boşaltma, sevkiyat/nakliye rampaları';
-
-  @override
-  String get spActGeneralStorageUpTo4m =>
-      'Genel depolama (istiflenmiş yükseklik ≤ 4 m)';
-
-  @override
-  String get spActAircraftHangarsMaintenance =>
-      'Uçak hangarları — bakım ve onarım alanları';
-
-  @override
-  String get spActOilclothTarpaulinCanvasProduction =>
-      'Muşamba, branda, çadır bezi ve branda üretimi';
-
-  @override
-  String get spActChemProductionFpAbove55 =>
-      'Kimyasal üretim (parlama noktası > 55 °C ürünler)';
-
-  @override
-  String get spActColdStores => 'Soğuk hava depoları';
-
-  @override
-  String get spActFilmTvStudiosProduction =>
-      'Film ve televizyon stüdyoları (üretim alanı)';
-
-  @override
-  String get spActFurnitureUpholsteryProduction =>
-      'Mobilya ve döşeme üretimi (sünger, kumaş)';
-
-  @override
-  String get spActJoineryWoodworkingWorkshops =>
-      'Marangoz / doğrama — ahşap işleme atölyeleri';
-
-  @override
-  String get spActMatchProductionFacilities => 'Kibrit üretim tesisleri';
-
-  @override
-  String get spActOfficesLargePaperArchives =>
-      'Büyük kâğıt arşiv alanları olan ofisler';
-
-  @override
-  String get spActWaterBasedPaintVarnishProduction =>
-      'Su bazlı boya ve vernik üretimi';
-
-  @override
-  String get spActPaperCorrugatedBoxProduction =>
-      'Kâğıt, karton ve oluklu mukavva kutu işleme/üretimi';
-
-  @override
-  String get spActThermoplasticsManufShaping =>
-      'Termoplastik plastik imalat ve şekillendirme';
-
-  @override
-  String get spActHighSpeedOffsetPrintingOilInk =>
-      'Yüksek hızlı ofset baskı (petrol bazlı mürekkep)';
-
-  @override
-  String get spActRubberProductsProduction =>
-      'Kauçuk ürünleri üretim tesisleri';
-
-  @override
-  String get spActTextileDyeingFinishingFacilities =>
-      'Tekstil boyama ve terbiye işleme tesisleri';
-
-  @override
-  String get spActGeneralStorage4to8m =>
-      'Genel depolama (istiflenmiş yükseklik > 4 m – 8 m)';
-
-  @override
-  String get spActChemProductionClosedProcessFp55 =>
-      'Kimyasal üretim (kapalı proses, parlama noktası > 55 °C)';
-
-  @override
-  String get spActPlasticRubberPartsClosedMoulding =>
-      'Plastik ve kauçuk parça üretimi (kapalı ekstrüzyon/kalıplama)';
-
-  @override
-  String get spActTextileDyeingFinishingWaterBased =>
-      'Tekstil boyama ve terbiye tesisleri (su bazlı)';
-
-  @override
-  String get spActPharmacyCosmeticsDetergentProduction =>
-      'Eczane, kozmetik ve deterjan üretim tesisleri';
-
-  @override
-  String get spActFoodBeverageProductionHighVolume =>
-      'Gıda ve içecek üretim tesisleri (yüksek hacimli)';
-
-  @override
-  String get spActPaperProductionDryCuttingSorting =>
-      'Kağıt üretim ve işleme tesisleri (kuru kesi/tasnif)';
-
-  @override
-  String get spActPaintShopsWaterUvCuring =>
-      'Su bazlı boya, vernik veya UV-kürleme boyasi kullanan boyahaneler';
-
-  @override
-  String get spActMetalworkingMachineryHeavySwarfOilMist =>
-      'Metal işleme ve makine üretim tesisleri (yoğun talaş, yağ buharı)';
-
-  @override
-  String get spActFlammableLiquidProcessFp55Plus =>
-      'Parlama noktası ≥ 55 °C yanıcı sıvı işleme/depolama prosesleri';
-
-  @override
-  String get spActFoamRubberFoamPlasticProduction =>
-      'Köpük kauçuk ve köpük plastik (PU, EPS/XPS) üretim tesisleri';
-
-  @override
-  String get spActFlowCoatingMetalPlasticParts =>
-      'Metal ve plastik parçalar için akış kaplama (flow coating)';
-
-  @override
-  String get spActIndustrialPrintingFlammableInkSolvent =>
-      'Yanıcı mürekkep / solvent kullanan endüstriyel baskı tesisleri';
-
-  @override
-  String get spActAerosolSprayPackagingFilling =>
-      'Aerosol ve sprey ürünleri paketleme/dolum tesisleri';
-
-  @override
-  String get spActFlammableLiquidProcessFpBelow55Open =>
-      'Parlama noktası < 55 °C yanıcı sıvı işleme prosesleri (açık kap)';
-
-  @override
-  String get spActChemProductionContainingFp55Liquids =>
-      'Kimyasal üretim (parlama noktası ≥ 55 °C yanıcı sıvı içeren ürünler)';
-
-  @override
-  String get spActSolventBasedPaintVarnishProduction =>
-      'Solvent bazlı boya ve vernik üretim tesisleri';
-
-  @override
-  String get spActSpraySolventPaintApplication =>
-      'Sprey boyahane — yanıcı solvent bazlı boya uygulaması';
-
-  @override
-  String get spActDryCleaningPerchloroethyleneSolvent =>
-      'Kuru temizleme tesisleri (perkloretilen / solvent bazlı)';
-
-  @override
-  String get spActSolventExtractionFacilities =>
-      'Solvent ekstraksiyon tesisleri';
-
-  @override
-  String get spActPrintingGravureFlammableInk =>
-      'Yanıcı mürekkep kullanan baskı / gravür tesisleri';
-
-  @override
-  String get spActSprayCoatingBoothsFlammableLiquid =>
-      'Yanıcı sıvı ile sprey kaplama / boyama kabinleri';
-
-  @override
-  String get spActRubberMasticFlammableRawMaterialProcessing =>
-      'Kauçuk mastik ve yanıcı hammadde işleme tesisleri';
-
-  @override
-  String get spActPaintInkVarnishPackagingFilling =>
-      'Boya, mürekkep veya vernik ambalajlama ve dolum tesisleri';
-
-  @override
-  String get spActHighRackPalletStorageSolidAbove4m =>
-      'Yüksek raflı palet depolama — katı malzeme, istif yüksekliği > 4 m';
-
-  @override
-  String get spActTyresRubberProductsStorage =>
-      'Araç lastikleri ve kauçuk ürün depolaması';
-
-  @override
-  String get spActPaperRollsReelsStorage =>
-      'Rulo kâğıt ve kâğıt topu depolaması';
-
-  @override
-  String get spActSolidPlasticRawProductStoragePalletRack =>
-      'Katı plastik hammadde ve ürün depolaması (paletli/raflı)';
-
-  @override
-  String get spActBaledCottonTextileSyntheticFibreStorage =>
-      'Balya pamuk, tekstil hammaddesi ve sentetik elyaf depolaması';
-
-  @override
-  String get spActHighRackPalletStorageFlammableLiquidAbove4m =>
-      'Yüksek raflı palet depolama — yanıcı sıvı içeren ürünler, > 4 m  ⚠ Yoğun su sistemi';
-
-  @override
-  String get spActAerosolStoreFlammablePropellantHighRack =>
-      'Aerosol ürün depoları (yanıcı itici gazlı, yüksek raf)  ⚠ Özel sistem gerektirir';
-
-  @override
-  String get spActFlammableLiquidPackagedProductStorage =>
-      'Yanıcı sıvı ambalajlı ürün depolaması (boya, solvent, vernik)  ⚠ Özel sistem';
-
-  @override
-  String get spActHighDensityStorageWaterSensitiveHighCalorific =>
-      'Islanmaya dayanıksız veya yüksek ısıl değerli ürünlerin yoğun depolanması';
 
   @override
   String get spActNoncombustibleStorageMetalGlassCeramicConcrete =>

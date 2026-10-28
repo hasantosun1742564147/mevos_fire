@@ -3110,7 +3110,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spRcHeaderFoamSystem => 'Foam System  —  EN 13565-2';
 
   @override
-  String get spRcBuildingArea => 'Building Area';
+  String get spRcBuildingArea => 'Floor Area (typical)';
 
   @override
   String get spRcCeilingHeight => 'Ceiling Height';
@@ -3365,6 +3365,547 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get spExpFootNote =>
       'Equivalent length of fittings is taken as 20% of the straight pipe length. Hazen-Williams formula used. For preliminary design only; results must be verified by the project engineer.';
+
+  @override
+  String get spSectionsTitle => 'Sections';
+
+  @override
+  String get spSectionsInfo =>
+      'Each section is the area of one use on one floor (e.g. hotel ground floor, offices floor 1, production hall, basement car park). Different uses on the same floor can be added as separate sections. Use the copy button for identical floors.';
+
+  @override
+  String get spAddSection => 'Add section';
+
+  @override
+  String get spDeleteSection => 'Delete section';
+
+  @override
+  String get spSectionNameLabel => 'Section name (e.g. Offices)';
+
+  @override
+  String get spTypicalFloorTitle => 'Floor dimensions';
+
+  @override
+  String get spLevelsTitle => 'Floor and pump location';
+
+  @override
+  String get spFloorHeightLabel =>
+      'Floor height (incl. suspended ceiling void)';
+
+  @override
+  String get spLevelInfo =>
+      'Floor height is measured from the floor to the underside of the slab above (including any suspended ceiling void); enter the void depth separately below. Levels are calculated automatically from the floor heights, taking the floor marked \'Pump is on this floor\' as ±0.00; if none is marked, the pump is assumed on the ground floor. Basements get negative levels.';
+
+  @override
+  String get spEnterValidFloorHeight => 'Enter a valid floor height (m).';
+
+  @override
+  String get spUnitFloor => 'floor(s)';
+
+  @override
+  String get spCommonOptionsTitle => 'Common System Options';
+
+  @override
+  String get spSectionResultsTitle => 'Section Results';
+
+  @override
+  String get spSystemSummaryTitle => 'System Summary';
+
+  @override
+  String get spSumFlowGoverning => 'Section governing flow';
+
+  @override
+  String get spSumPressureGoverning => 'Section governing pressure';
+
+  @override
+  String get spSumWaterTank => 'Water tank';
+
+  @override
+  String get spSumJockey => 'Jockey pump';
+
+  @override
+  String get spSumSectionCount => 'Number of sections';
+
+  @override
+  String get spSumTotalArea => 'Total protected area';
+
+  @override
+  String get spSumTotalSprinklers => 'Total sprinklers';
+
+  @override
+  String get spSumAlarmValves => 'Total alarm valves';
+
+  @override
+  String get spSumPipeLength => 'Total pipe length';
+
+  @override
+  String spSumPressureZoneWarning(String n) {
+    return 'Pump pressure exceeds 12 bar (EN 12845 §8.2): $n pressure zones with pressure-reducing valves (PRV) are required.';
+  }
+
+  @override
+  String get spSumDesignNote =>
+      'EN 12845: design areas do not operate simultaneously. Pump and water tank are sized for the most demanding section, including static head.';
+
+  @override
+  String get spRcSectionTotalSprinklers => 'SECTION TOTAL';
+
+  @override
+  String get spRcTopSprinklerLevel => 'Highest sprinkler level';
+
+  @override
+  String get spExpSection => 'Section';
+
+  @override
+  String get spLhConditionNote =>
+      'LH applies only to areas with a low fire load, no compartment larger than 126 m² and at least 30 min fire resistance (EN 12845 6.2.2). Otherwise select OH1.';
+
+  @override
+  String get spOhPaintingNote =>
+      'Where there is painting or other similar high fire load areas in an OH1 or OH2 occupancy, they should be treated as OH3 (EN 12845 Table A.2 note).';
+
+  @override
+  String get spStdSchoolsAndOtherEducationalInstitutions =>
+      'Schools and other educational institutions (certain areas, see 6.2.2)';
+
+  @override
+  String get spStdOffices => 'Offices (certain areas, see 6.2.2)';
+
+  @override
+  String get spStdPrisons => 'Prisons';
+
+  @override
+  String get spStdCementWorks => 'Cement works';
+
+  @override
+  String get spStdSheetMetalProductFactories => 'Sheet metal product factories';
+
+  @override
+  String get spStdHospitals => 'Hospitals';
+
+  @override
+  String get spStdHotels => 'Hotels';
+
+  @override
+  String get spStdLibraries => 'Libraries (excluding book stores)';
+
+  @override
+  String get spStdRestaurants => 'Restaurants';
+
+  @override
+  String get spStdSchools => 'Schools (see 6.2.2)';
+
+  @override
+  String get spStdOffices2 => 'Offices (see 6.2.2)';
+
+  @override
+  String get spStdDataProcessing =>
+      'Data processing (computer room, excluding tape storage)';
+
+  @override
+  String get spStdResidentialBuildings =>
+      'Residential buildings (Turkish fire regulation, Annex 1/B)';
+
+  @override
+  String get spStdPhotographicFilmFactories => 'Photographic film factories';
+
+  @override
+  String get spStdMetalWorking => 'Metal working';
+
+  @override
+  String get spStdAbattoirsMeatFactories => 'Abattoirs, meat factories';
+
+  @override
+  String get spStdBakeries => 'Bakeries';
+
+  @override
+  String get spStdBiscuitFactories => 'Biscuit factories';
+
+  @override
+  String get spStdBreweries => 'Breweries';
+
+  @override
+  String get spStdChocolateFactories => 'Chocolate factories';
+
+  @override
+  String get spStdConfectionery => 'Confectionery';
+
+  @override
+  String get spStdDairies => 'Dairies';
+
+  @override
+  String get spStdFoodFactories => 'Food factories (general)';
+
+  @override
+  String get spStdLaboratories => 'Laboratories (physical)';
+
+  @override
+  String get spStdLaundries => 'Laundries';
+
+  @override
+  String get spStdCarParks => 'Car parks (enclosed, multi-storey and basement)';
+
+  @override
+  String get spStdMuseums => 'Museums';
+
+  @override
+  String get spStdLeatherGoodsFactories => 'Leather goods factories';
+
+  @override
+  String get spStdGlassFactories => 'Glass factories';
+
+  @override
+  String get spStdDyersWorksSoapFactories => 'Dyers works, soap factories';
+
+  @override
+  String get spStdPhotographicLaboratories => 'Photographic laboratories';
+
+  @override
+  String get spStdPaintApplicationShopsWithWaterBased =>
+      'Paint application shops with water based paint';
+
+  @override
+  String get spStdElectronicsFactories => 'Electronics factories';
+
+  @override
+  String get spStdRadioEquipmentFactories => 'Radio equipment factories';
+
+  @override
+  String get spStdWashingMachineFactories => 'Washing machine factories';
+
+  @override
+  String get spStdCarWorkshops => 'Car workshops';
+
+  @override
+  String get spStdAnimalFodderFactories => 'Animal fodder factories';
+
+  @override
+  String get spStdCornMills => 'Corn mills';
+
+  @override
+  String get spStdDehydratedVegetableAndSoupFactories =>
+      'Dehydrated vegetable and soup factories';
+
+  @override
+  String get spStdSugarFactories => 'Sugar factories';
+
+  @override
+  String get spStdBroadcastingStudios => 'Broadcasting studios (small)';
+
+  @override
+  String get spStdRailwayStations => 'Railway stations';
+
+  @override
+  String get spStdPlantRooms => 'Plant (technical) rooms';
+
+  @override
+  String get spStdFarmBuildings => 'Farm buildings';
+
+  @override
+  String get spStdBookBindingFactories => 'Book binding factories';
+
+  @override
+  String get spStdCardboardFactories => 'Cardboard factories';
+
+  @override
+  String get spStdPaperFactories => 'Paper factories';
+
+  @override
+  String get spStdDepartmentStoresShoppingCentres =>
+      'Department stores, shopping centres';
+
+  @override
+  String get spStdCarpetFactories =>
+      'Carpet factories (excluding rubber and foam plastics)';
+
+  @override
+  String get spStdClothAndClothingFactories => 'Cloth and clothing factories';
+
+  @override
+  String get spStdFibreBoardFactories => 'Fibre board factories';
+
+  @override
+  String get spStdFootwearFactories =>
+      'Footwear factories (excluding plastics and rubber)';
+
+  @override
+  String get spStdKnittingFactories => 'Knitting factories';
+
+  @override
+  String get spStdLinenFactories => 'Linen factories';
+
+  @override
+  String get spStdMattressFactories =>
+      'Mattress factories (excluding foam plastics)';
+
+  @override
+  String get spStdSewingFactories => 'Sewing factories';
+
+  @override
+  String get spStdWeavingMills => 'Weaving mills';
+
+  @override
+  String get spStdWoollenAndWorstedMills => 'Woollen and worsted mills';
+
+  @override
+  String get spStdWoodworkingFactories => 'Woodworking factories';
+
+  @override
+  String get spStdFurnitureFactories =>
+      'Furniture factories (without foam plastics)';
+
+  @override
+  String get spStdFurnitureShowrooms => 'Furniture showrooms';
+
+  @override
+  String get spStdUpholsteryFactories =>
+      'Upholstery factories (without foam plastics)';
+
+  @override
+  String get spStdAlcoholDistilleries => 'Alcohol distilleries';
+
+  @override
+  String get spStdCinemasAndTheatres => 'Cinemas and theatres';
+
+  @override
+  String get spStdConcertHalls => 'Concert halls';
+
+  @override
+  String get spStdTobaccoFactories => 'Tobacco factories';
+
+  @override
+  String get spStdFilmAndTvProductionStudios =>
+      'Film and TV production studios';
+
+  @override
+  String get spStdWastePaperProcessing => 'Waste paper processing';
+
+  @override
+  String get spStdExhibitionHalls =>
+      'Exhibition halls (excessive clearance to be considered)';
+
+  @override
+  String get spStdCottonMills => 'Cotton mills';
+
+  @override
+  String get spStdFlaxPreparationPlants => 'Flax preparation plants';
+
+  @override
+  String get spStdHempPreparationPlants => 'Hemp preparation plants';
+
+  @override
+  String get spStdSawMills => 'Saw mills';
+
+  @override
+  String get spStdPlywoodFactories => 'Plywood factories';
+
+  @override
+  String get spStdFloorClothAndLinoleumManufacture =>
+      'Floor cloth and linoleum manufacture';
+
+  @override
+  String get spStdResinLampBlackAndTurpentineManufacture =>
+      'Resin, lamp black and turpentine manufacture';
+
+  @override
+  String get spStdRubberSubstituteManufacture =>
+      'Rubber substitute manufacture';
+
+  @override
+  String get spStdWoodWoolManufacture => 'Wood wool manufacture';
+
+  @override
+  String get spStdMatchManufacturers => 'Match manufacturers';
+
+  @override
+  String get spStdPaintApplicationShopsWithSolvent =>
+      'Paint application shops with solvent';
+
+  @override
+  String get spStdRefrigeratorFactories => 'Refrigerator factories';
+
+  @override
+  String get spStdPrintingWorks => 'Printing works';
+
+  @override
+  String get spStdCableFactoriesForPpPePs =>
+      'Cable factories for PP/PE/PS or similar burning characteristics other than OH3';
+
+  @override
+  String get spStdInjectionMouldingForPpPePs =>
+      'Injection moulding (plastics) for PP/PE/PS or similar, other than OH3';
+
+  @override
+  String get spStdPlasticsFactoriesAndPlasticGoodsFor =>
+      'Plastics factories and plastic goods (excl. foam) for PP/PE/PS or similar, other than OH3';
+
+  @override
+  String get spStdRubberGoodsFactories => 'Rubber goods factories';
+
+  @override
+  String get spStdSyntheticFibreFactories =>
+      'Synthetic fibre factories (excluding acrylic)';
+
+  @override
+  String get spStdRopeFactories => 'Rope factories';
+
+  @override
+  String get spStdCarpetFactoriesIncludingUnexpandedPlastics =>
+      'Carpet factories including unexpanded plastics';
+
+  @override
+  String get spStdFootwearFactoriesIncludingPlasticsAndRubber =>
+      'Footwear factories including plastics and rubber';
+
+  @override
+  String get spStdFireLighterManufacture => 'Fire lighter manufacture';
+
+  @override
+  String get spStdTarDistilling => 'Tar distilling';
+
+  @override
+  String get spStdDepotsForBusesUnLadenLorries =>
+      'Depots for buses, un-laden lorries and railway carriages';
+
+  @override
+  String get spStdCandleWaxAndParaffinManufacturers =>
+      'Candle wax and paraffin manufacturers';
+
+  @override
+  String get spStdPaperMachineHalls => 'Paper machine halls';
+
+  @override
+  String get spStdCarpetFactoriesIncludingRubberAndFoam =>
+      'Carpet factories including rubber and foam plastics';
+
+  @override
+  String get spStdSawMill => 'Saw mill (Table A.3)';
+
+  @override
+  String get spStdChipboardManufacturing =>
+      'Chipboard manufacturing (additional object protection may be necessary)';
+
+  @override
+  String get spStdPaintColourAndVarnishManufacture =>
+      'Paint, colour and varnish manufacture';
+
+  @override
+  String get spStdCelluloseNitrateManufacture =>
+      'Cellulose nitrate manufacture';
+
+  @override
+  String get spStdRubberTyresForCarsAndLorries =>
+      'Rubber tyres for cars and lorries';
+
+  @override
+  String get spStdManufactureOfFoamPlasticsFoamRubber =>
+      'Manufacture of foam plastics, foam rubber and foam rubber goods, material factor m3 (excluding m4, see Table B.1)';
+
+  @override
+  String get spStdFireworkManufacture => 'Firework manufacture';
+
+  @override
+  String get spFloorLabel => 'Floor';
+
+  @override
+  String get spFloorBasement => 'Basement';
+
+  @override
+  String spFloorBasementN(String n) {
+    return 'Basement $n';
+  }
+
+  @override
+  String get spFloorGround => 'Ground floor';
+
+  @override
+  String spFloorN(String n) {
+    return 'Floor $n';
+  }
+
+  @override
+  String get spFloorLevelLabel => 'level';
+
+  @override
+  String get spPumpHereCheckbox =>
+      'Pump is on this floor (floor level taken as ±0.00)';
+
+  @override
+  String get spPumpShort => 'pump';
+
+  @override
+  String get spCopyToNextFloor => 'Copy to the floor above';
+
+  @override
+  String spMissingFloorHeight(String kat) {
+    return 'Floor height for $kat is unknown. Levels are calculated from the heights of the floors in between, so add a section for this floor too or mark the floor where the pump is located.';
+  }
+
+  @override
+  String get spHoseCabinetTitle => 'Fire hose cabinets (top floor, min. 4 bar)';
+
+  @override
+  String get spHoseCabinetPressure => 'Fire hose cabinet pressure (top floor)';
+
+  @override
+  String get spHoseFromSprinklerLine => 'From sprinkler line';
+
+  @override
+  String get spHoseSeparateLine => 'Separate line from pump';
+
+  @override
+  String get spHoseSeparateLineInfo =>
+      'The sprinkler line does not provide 4 bar at the top-floor cabinet; a separate line from the pump is required for these sections\' cabinets. Pump pressure has been raised to meet the separate line.';
+
+  @override
+  String get spSupervisedValve => 'Supervised valve';
+
+  @override
+  String get spFlowSwitch => 'Flow switch';
+
+  @override
+  String get spDrainValve => 'Drain valve';
+
+  @override
+  String get spPipeByDiameter => 'Pipe lengths (by diameter and type)';
+
+  @override
+  String get spPipeBranch => 'Branch pipe';
+
+  @override
+  String get spPipeDist => 'Distribution pipe';
+
+  @override
+  String get spPipeMain => 'Main pipe / riser';
+
+  @override
+  String get spHoseReelCheckbox =>
+      'Add fire hose cabinet flow (2 cabinets on the top floor)';
+
+  @override
+  String get spHoseReelInfo =>
+      'Light/ordinary hazard: 2 × 100 L/min = 200 L/min · High hazard and storage: 2 × 200 L/min = 400 L/min. This flow is added to the pump flow and water tank. At least 4 bar is required at the top-floor cabinet; if the sprinkler line cannot provide it, a separate line from the pump is used.';
+
+  @override
+  String get spHoseReelFlow => 'Fire hose cabinet allowance';
+
+  @override
+  String get spVoidExceedsHeight =>
+      'The suspended ceiling void must be smaller than the floor height.';
+
+  @override
+  String get spFloorControlSet => 'Floor control assembly';
+
+  @override
+  String get spFloorControlTotal => 'Floor control assemblies';
+
+  @override
+  String get spFloorControlContent =>
+      'supervised valve + flow switch + drain valve';
+
+  @override
+  String get spFloorControlInfo =>
+      'In multi-storey buildings each floor (including basements) gets a supervised valve, a flow switch and a drain valve, sized to that floor\'s main pipe diameter.';
 
   @override
   String get spRcHydraulicFootnote =>
@@ -4275,376 +4816,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get stdDescNfpa69ExplosionPrevention =>
       'Standard on explosion prevention systems.';
-
-  @override
-  String get spActOfficesAdmin => 'Offices and administration buildings';
-
-  @override
-  String get spActHotelsHostelsGuesthouses =>
-      'Hotels, hostels, boarding houses';
-
-  @override
-  String get spActHospitalsClinics => 'Hospitals, clinics, health centres';
-
-  @override
-  String get spActSchoolsUniversities =>
-      'Schools, universities and educational buildings';
-
-  @override
-  String get spActResidentialApartments => 'Residences and apartment buildings';
-
-  @override
-  String get spActPrisonsReformatories => 'Prisons and reformatories';
-
-  @override
-  String get spActChurchesMosquesWorship =>
-      'Churches, mosques and places of worship';
-
-  @override
-  String get spActTheatresCinemaSeating =>
-      'Theatres / cinemas (auditorium seating areas only)';
-
-  @override
-  String get spActMuseumsGalleries => 'Museums and art galleries';
-
-  @override
-  String get spActBreweriesExclDistilleries =>
-      'Breweries (excluding distilleries)';
-
-  @override
-  String get spActMultiStoreyBasementCarParks =>
-      'Multi-storey and basement enclosed car parks';
-
-  @override
-  String get spActCeramicsProduction => 'Ceramic products manufacturing';
-
-  @override
-  String get spActGlassGlasswareExclFibre =>
-      'Glass and glassware manufacturing (excluding glass fibre)';
-
-  @override
-  String get spActChemResearchLabs => 'Chemical research laboratories';
-
-  @override
-  String get spActDairyProcessing => 'Dairy processing plants (creameries)';
-
-  @override
-  String get spActElectronicsAssembly =>
-      'Electronic equipment assembly workshops';
-
-  @override
-  String get spActFoodProcessingPackaging =>
-      'Food processing and packaging plants';
-
-  @override
-  String get spActHotelsKitchenLaundryService =>
-      'Hotels — kitchen, laundry and service areas';
-
-  @override
-  String get spActInstitutionalCommercialLaundries =>
-      'Institutional and commercial laundries';
-
-  @override
-  String get spActLeatherProductsProduction =>
-      'Leather and leather goods manufacturing';
-
-  @override
-  String get spActLightMetalworkingWorkshops => 'Light metalworking workshops';
-
-  @override
-  String get spActPharmaceuticalProduction =>
-      'Pharmaceutical manufacturing plants';
-
-  @override
-  String get spActResearchLabsNonflamLiquids =>
-      'Research laboratories (using non-flammable liquids)';
-
-  @override
-  String get spActTextileWeavingNaturalFibresUntreated =>
-      'Textile weaving — cotton/wool/natural fibre (untreated)';
-
-  @override
-  String get spActTobaccoProcessingPackaging =>
-      'Tobacco processing and packaging';
-
-  @override
-  String get spActAgriIndustrialMachineryAssembly =>
-      'Agricultural and industrial machinery assembly plants';
-
-  @override
-  String get spActGrainFlourMillFoodProcessing =>
-      'Grain, flour mill and similar food processing';
-
-  @override
-  String get spActChemProductionNonflamLiquidsOnly =>
-      'Chemical production (non-flammable liquid products only)';
-
-  @override
-  String get spActDeptStoresShoppingCentresSingleStorey =>
-      'Department stores and shopping centres (single storey)';
-
-  @override
-  String get spActElectricalEquipmentFactories =>
-      'Electrical equipment manufacturing factories';
-
-  @override
-  String get spActComputerDataProcessingRooms =>
-      'Computer and electronic data processing rooms';
-
-  @override
-  String get spActGeneralEngineeringWorkshopsFactories =>
-      'General engineering workshops and factories';
-
-  @override
-  String get spActFruitVegCanningFacilities =>
-      'Fruit, vegetable and canning processing plants';
-
-  @override
-  String get spActVehicleMaintenanceRepairGarages =>
-      'Vehicle maintenance and repair garages';
-
-  @override
-  String get spActFibreglassProductionAssembly =>
-      'Glass fibre (fibreglass) production and assembly';
-
-  @override
-  String get spActHardwareIronmongeryStores =>
-      'Hardware and ironmongery stores';
-
-  @override
-  String get spActHospitalsTreatmentSurgeryAreas =>
-      'Hospitals — treatment and surgical areas';
-
-  @override
-  String get spActKnittingHosieryFactories => 'Knitting (hosiery) factories';
-
-  @override
-  String get spActLibrariesOpenShelfAreas =>
-      'Libraries — general open-shelf areas';
-
-  @override
-  String get spActGeneralMetalworkingFactories =>
-      'General metalworking factories';
-
-  @override
-  String get spActPaperBoardProductionFacilities =>
-      'Paper and board production facilities';
-
-  @override
-  String get spActPlasticsManufNonflamOnly =>
-      'Plastic products manufacturing (non-flammable plastics only)';
-
-  @override
-  String get spActGeneralPrintingWaterBasedInk =>
-      'General printing (water-based ink)';
-
-  @override
-  String get spActSupermarketsHypermarkets => 'Supermarkets and hypermarkets';
-
-  @override
-  String get spActTailoringGarmentManufacture =>
-      'Tailoring, garment and clothing manufacture';
-
-  @override
-  String get spActTextileSpinningWeavingSynthetic =>
-      'Textile spinning and weaving (synthetic fibre)';
-
-  @override
-  String get spActLoadingShippingDocks =>
-      'Loading, shipping and dispatch docks';
-
-  @override
-  String get spActGeneralStorageUpTo4m =>
-      'General storage (stack height ≤ 4 m)';
-
-  @override
-  String get spActAircraftHangarsMaintenance =>
-      'Aircraft hangars — maintenance and repair areas';
-
-  @override
-  String get spActOilclothTarpaulinCanvasProduction =>
-      'Oilcloth, tarpaulin and canvas manufacturing';
-
-  @override
-  String get spActChemProductionFpAbove55 =>
-      'Chemical production (products with flash point > 55 °C)';
-
-  @override
-  String get spActColdStores => 'Cold stores';
-
-  @override
-  String get spActFilmTvStudiosProduction =>
-      'Film and television studios (production areas)';
-
-  @override
-  String get spActFurnitureUpholsteryProduction =>
-      'Furniture and upholstery manufacturing (foam, fabric)';
-
-  @override
-  String get spActJoineryWoodworkingWorkshops =>
-      'Joinery — woodworking workshops';
-
-  @override
-  String get spActMatchProductionFacilities => 'Match production facilities';
-
-  @override
-  String get spActOfficesLargePaperArchives =>
-      'Offices with large paper archive areas';
-
-  @override
-  String get spActWaterBasedPaintVarnishProduction =>
-      'Water-based paint and varnish production';
-
-  @override
-  String get spActPaperCorrugatedBoxProduction =>
-      'Paper, board and corrugated box processing/production';
-
-  @override
-  String get spActThermoplasticsManufShaping =>
-      'Thermoplastic manufacturing and shaping';
-
-  @override
-  String get spActHighSpeedOffsetPrintingOilInk =>
-      'High-speed offset printing (oil-based ink)';
-
-  @override
-  String get spActRubberProductsProduction =>
-      'Rubber products production facilities';
-
-  @override
-  String get spActTextileDyeingFinishingFacilities =>
-      'Textile dyeing and finishing facilities';
-
-  @override
-  String get spActGeneralStorage4to8m =>
-      'General storage (stack height > 4 m – 8 m)';
-
-  @override
-  String get spActChemProductionClosedProcessFp55 =>
-      'Chemical production (closed process, flash point > 55 °C)';
-
-  @override
-  String get spActPlasticRubberPartsClosedMoulding =>
-      'Plastic and rubber parts manufacturing (closed extrusion/moulding)';
-
-  @override
-  String get spActTextileDyeingFinishingWaterBased =>
-      'Textile dyeing and finishing plants (water-based)';
-
-  @override
-  String get spActPharmacyCosmeticsDetergentProduction =>
-      'Pharmacy, cosmetics and detergent production plants';
-
-  @override
-  String get spActFoodBeverageProductionHighVolume =>
-      'Food and beverage production plants (high volume)';
-
-  @override
-  String get spActPaperProductionDryCuttingSorting =>
-      'Paper production and processing plants (dry cutting/sorting)';
-
-  @override
-  String get spActPaintShopsWaterUvCuring =>
-      'Paint shops using water-based or UV-curing paint';
-
-  @override
-  String get spActMetalworkingMachineryHeavySwarfOilMist =>
-      'Metalworking and machinery production plants (heavy swarf, oil mist)';
-
-  @override
-  String get spActFlammableLiquidProcessFp55Plus =>
-      'Flammable liquid processing/storage processes (flash point ≥ 55 °C)';
-
-  @override
-  String get spActFoamRubberFoamPlasticProduction =>
-      'Foam rubber and foam plastic (PU, EPS/XPS) production plants';
-
-  @override
-  String get spActFlowCoatingMetalPlasticParts =>
-      'Flow coating of metal and plastic parts';
-
-  @override
-  String get spActIndustrialPrintingFlammableInkSolvent =>
-      'Industrial printing plants using flammable ink/solvent';
-
-  @override
-  String get spActAerosolSprayPackagingFilling =>
-      'Aerosol and spray product packaging/filling plants';
-
-  @override
-  String get spActFlammableLiquidProcessFpBelow55Open =>
-      'Flammable liquid processing (flash point < 55 °C, open vessels)';
-
-  @override
-  String get spActChemProductionContainingFp55Liquids =>
-      'Chemical production (products containing flammable liquid, flash point ≥ 55 °C)';
-
-  @override
-  String get spActSolventBasedPaintVarnishProduction =>
-      'Solvent-based paint and varnish production plants';
-
-  @override
-  String get spActSpraySolventPaintApplication =>
-      'Spray paint shop — flammable solvent-based paint application';
-
-  @override
-  String get spActDryCleaningPerchloroethyleneSolvent =>
-      'Dry cleaning facilities (perchloroethylene / solvent-based)';
-
-  @override
-  String get spActSolventExtractionFacilities =>
-      'Solvent extraction facilities';
-
-  @override
-  String get spActPrintingGravureFlammableInk =>
-      'Printing / gravure facilities using flammable ink';
-
-  @override
-  String get spActSprayCoatingBoothsFlammableLiquid =>
-      'Spray coating / painting booths using flammable liquid';
-
-  @override
-  String get spActRubberMasticFlammableRawMaterialProcessing =>
-      'Rubber mastic and flammable raw material processing plants';
-
-  @override
-  String get spActPaintInkVarnishPackagingFilling =>
-      'Paint, ink or varnish packaging and filling plants';
-
-  @override
-  String get spActHighRackPalletStorageSolidAbove4m =>
-      'High-rack pallet storage — solid materials, stack height > 4 m';
-
-  @override
-  String get spActTyresRubberProductsStorage =>
-      'Vehicle tyres and rubber products storage';
-
-  @override
-  String get spActPaperRollsReelsStorage => 'Paper rolls and reels storage';
-
-  @override
-  String get spActSolidPlasticRawProductStoragePalletRack =>
-      'Solid plastic raw material and product storage (palletised/racked)';
-
-  @override
-  String get spActBaledCottonTextileSyntheticFibreStorage =>
-      'Baled cotton, textile raw material and synthetic fibre storage';
-
-  @override
-  String get spActHighRackPalletStorageFlammableLiquidAbove4m =>
-      'High-rack pallet storage — products containing flammable liquid, > 4 m  ⚠ High-density water system';
-
-  @override
-  String get spActAerosolStoreFlammablePropellantHighRack =>
-      'Aerosol product stores (flammable propellant, high-rack)  ⚠ Special system required';
-
-  @override
-  String get spActFlammableLiquidPackagedProductStorage =>
-      'Flammable liquid packaged product storage (paint, solvent, varnish)  ⚠ Special system';
-
-  @override
-  String get spActHighDensityStorageWaterSensitiveHighCalorific =>
-      'High-density storage of water-sensitive or high-calorific-value products';
 
   @override
   String get spActNoncombustibleStorageMetalGlassCeramicConcrete =>
